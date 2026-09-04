@@ -19,6 +19,7 @@ import { SCHEMA_REF, scaffoldProject } from './scaffold.js'
 import { applyAutoDeclare } from './autodeclare.js'
 import { listTemplates, templateWorkspace, registerTemplate, materializeTemplate } from './templates.js'
 import { buildPreview } from './preview-server.js'
+import { findPowerPoint, renderPptxToPng } from './msrender.js'
 import { runPythonExport, findPython } from './pptxPy.js'
 import { imageInfo } from './imgmeta.js'
 import { loadProject, loadSession } from './state.js'
@@ -199,6 +200,35 @@ export function registerTools(ctx) {
   })
 
   reg({
+    name: 'ppt_visual',
+    description: 'Office 真渲染通道（v0.8.0）：用本机 PowerPoint COM 把 .pptx 逐页渲染成 PNG（1920×1080）——① 理解用户原稿（参考任务先看后做）② 成品视觉审核（导出后对 pptx 审核真实观感）。无 Office 时不可用（自动降级 HTML 预览+结构断言）。渲染后请逐页 read_image 查看；视觉理解写入设计摘要/交付说明',
+    parameters: {
+      pptx: { type: 'string', required: true, description: '源/成品 .pptx 绝对路径（用户原稿或 out.pptx）' },
+      out: { type: 'string', description: '输出目录（相对当前目录或绝对；缺省 <pptx 同目录>/..-rendered）' },
+    },
+    output: markdownResult(),
+    async execute(args) {
+      try {
+        if (!findPowerPoint()) {
+          return '⚠ 本机无 Microsoft Office（PowerPoint COM 不可用）：Office 真渲染通道不可用。可继续使用 HTML 预览（ppt_preview）+ 结构断言；本步骤不影响其他工作流。'
+        }
+        const outDir = args.out ?? join(dirname(args.pptx), 'rendered')
+        const r = await renderPptxToPng(args.pptx, outDir)
+        if (!r.pages) throw new Error('渲染结果为空（请检查 pptx 是否可打开）')
+        return [
+          `✓ Office 真渲染完成（${r.pages} 页 → ${outDir}）：`,
+          '',
+          ...r.files.map((f) => `  - ${f}`),
+          '',
+          '下一步：逐页 read_image 查看（理解原稿/审核成品观感）。',
+        ].join('\n')
+      } catch (error) {
+        return `✗ Office 真渲染失败：${error?.message ?? String(error)}\n（可降级：ppt_preview HTML 预览 + ppt_verify 结构断言）`
+      }
+    },
+  })
+
+  reg({
     name: 'ppt_templates',
     description: '内置模板库列表（id/名称/风格/适用场景/预览图路径）。从头任务的 S0/S2 展示给用户选择；选定后用 ppt_new dir=... template=<id> 或 /ppt template <id> 生成工作区',
     parameters: {},
@@ -353,8 +383,19 @@ export function registerTools(ctx) {
         const { quality } = await qualityOf(ctx, dir)
         const audit = blockedByAudit(quality)
         const withAudit = async (file, extra = '') => {
-          if (!audit) return extra
-          return `${extra}\n${await auditExportCheck(ctx0, file, ctx0.minFontSize)}`
+          let note = extra
+          // v0.8.0：audit 档 + 本机有 Office → 导出后自动 Office 真渲染（成品视觉审核，可 read_image 复核）
+          if (audit && findPowerPoint()) {
+            try {
+              const visDir = join(dir, 'preview', 'office-render')
+              const r = await renderPptxToPng(file, visDir)
+              note += `\nOffice 真渲染审核（audit 档自动）：${r.pages} 页 → ${visDir}\n请逐页 read_image 复核成品观感（无 Office 机器自动跳过此步）。`
+            } catch (e) {
+              note += `\nOffice 真渲染审核失败（已降级为 HTML 预览+结构断言）：${e?.message ?? e}`
+            }
+          }
+          if (!audit) return note
+          return `${note}\n${await auditExportCheck(ctx0, file, ctx0.minFontSize)}`
         }
         if (eff.engine === 'python-pptx' && !eff.allowFallback) {
           const py = findPython()

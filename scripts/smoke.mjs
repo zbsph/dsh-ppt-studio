@@ -551,5 +551,19 @@ ok('v0.6.3：previewOrigin 动态适配（host/port 契约 + 0.0.0.0 回退）',
   && previewOrigin({ port: 9000, host: 'localhost' }) === 'http://localhost:9000',
   `本地=${previewOrigin({ port: 3080, host: '127.0.0.1' })}`)
 
+// ── 22. v0.8.0：Office 真渲染通道（无 Office 自动隐藏；有则条件实测）──────
+const msMod = await import('../lib/msrender.js')
+const hasOffice = msMod.findPowerPoint() !== null
+console.log(`[v0.8.0] Office 能力探测：${hasOffice ? '有（COM 通道可用）' : '无（通道自动隐藏，不影响工作流）'}`)
+if (hasOffice) {
+  const visOut = join(root, 'examples', 'rendered-check')
+  await rm(visOut, { recursive: true, force: true })
+  const rv = await msMod.renderPptxToPng(bandExp.file, visOut, { width: 960, height: 540, timeoutMs: 180000 })
+  ok('v0.8.0：Office 真渲染（成品 pptx → 逐页 PNG）', rv.pages === 3 && rv.files.length === 3, `pages=${rv.pages} files=${rv.files.length}`)
+  await rm(visOut, { recursive: true, force: true })
+} else {
+  ok('v0.8.0：无 Office 跳过渲染（无需验证的降级路径）', true)
+}
+
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)
