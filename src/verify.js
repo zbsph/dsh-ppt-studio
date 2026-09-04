@@ -3,7 +3,7 @@
  * 输出机器结果 + markdown 报告。
  *
  * 断言（v1）：
- *  - ERROR out-of-page    元素超出页面边界（容差 1px）
+ *  - ERROR out-of-page    元素超出页面边界（永远不可声明）/ 超出安全区（声明制：expectedOutOfSafeArea）
  *  - ERROR overlap        AABB 相交（容差 1px；排除 id 前缀同源组）
  *  - ERROR text-overflow  文本估算高度/宽度超出容器（wrap=false 时宽度计入）
  *  - WARN  near-align     疑似未对齐：同缘差 ∈ (1, 6]px
@@ -204,21 +204,36 @@ export function analyzePage(page, size) {
   const maxX = pw - (sa?.right ?? 0)
   const maxY = ph - (sa?.bottom ?? 0)
   const declared = buildDeclaredSet(page.expectedOverlaps ?? [])
+  const outOfSafe = new Set(page.expectedOutOfSafeArea ?? []) // 出界分级声明制（C3 修订）
   const lenient = page.overlapMode === 'lenient'
   const pairKey = (a, b) => [a, b].sort().join(' × ')
 
   for (const el of els) {
-    // decoration 完全豁免（重叠 + 出界，C3 决定：装饰层可合法落在页眉页脚带上）
-    if (roleOf(el) === 'decoration') continue
     const b = el.bounds
-    // out-of-page（含 safeArea：模板背景的非内容区）
-    if (b.x < minX - TOL || b.y < minY - TOL || b.x + b.w > maxX + TOL || b.y + b.h > maxY + TOL) {
-      const saNote = sa ? `（安全区 ${fmtSa(sa)}）` : ''
+    // 出界分级：超页面边界 = 永远 ERROR（不可声明）；超安全区（仍在页面内）= 声明制
+    const outOfPage = b.x < -TOL || b.y < -TOL || b.x + b.w > pw + TOL || b.y + b.h > ph + TOL
+    const outOfSafeArea = !outOfPage && sa && (b.x < minX - TOL || b.y < minY - TOL || b.x + b.w > maxX + TOL || b.y + b.h > maxY + TOL)
+    if (outOfPage) {
       findings.push({
         severity: 'error', code: 'out-of-page', id: el.id,
-        message: `元素 "${el.id}" 超出页面${sa ? '安全区' : ''}：${fmtRect(b)}（页面 ${pw}×${ph}）${saNote}`,
+        message: `元素 "${el.id}" 超出页面边界：${fmtRect(b)}（页面 ${pw}×${ph}）—— 超页面边界不可声明，请修正`,
         area: b,
       })
+    } else if (outOfSafeArea) {
+      if (outOfSafe.has(el.id)) {
+        // 设计声明确认：有意落在模板页眉页脚带（✓ 预期出界）
+        findings.push({
+          severity: 'confirmed', code: 'expected-out-of-safe', id: el.id,
+          message: `预期出界（安全区外，设计声明确认）："${el.id}"（安全区 ${fmtSa(sa)}）`,
+          area: b,
+        })
+      } else {
+        findings.push({
+          severity: 'error', code: 'out-of-page', id: el.id,
+          message: `元素 "${el.id}" 超出页面安全区：${fmtRect(b)}（页面 ${pw}×${ph}，安全区 ${fmtSa(sa)}）—— 如属有意设计（logo/角标等），请将 "${el.id}" 加入本页 expectedOutOfSafeArea 后重验`,
+          area: b,
+        })
+      }
     }
     // text overflow（wrap=true 只判垂直；wrap=false 判水平）
     if (el.kind === 'text') {
@@ -358,7 +373,9 @@ export function verifyDeck(layout) {
     const errors = findings.filter((f) => f.severity === 'error')
     const warns = findings.filter((f) => f.severity === 'warning')
     total += findings.length + suggestions.length
-    const confirmNote = confirmed.length > 0 ? ` / ${confirmed.length} 预期重叠✓` : ''
+    const confOverlap = confirmed.filter((f) => f.code === 'expected-overlap').length
+    const confOut = confirmed.filter((f) => f.code === 'expected-out-of-safe').length
+    const confirmNote = [confOverlap ? `${confOverlap} 预期重叠✓` : '', confOut ? `${confOut} 预期出界✓` : ''].filter(Boolean).join(' / ')
     out.push(`## 第 ${page.index + 1} 页（${page.name}） ｜ ${errors.length} 错误 / ${warns.length} 警告 / ${suggestions.length} 建议${confirmNote}`)
     if (findings.length === 0) out.push('  ✓ 核心断言无问题')
     for (const f of findings) {

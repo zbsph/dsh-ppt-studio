@@ -17,6 +17,7 @@
  *   background: '#hex' | '$themeRef' | {type: solid, color} | {type: image, src, fit?}  # fit: cover|contain|fill
  *   safeArea: {top, bottom, left, right}      # 可选，覆盖主题安全区
  *   expectedOverlaps: [{pair: [idA, idB]}, ...]   # 设计阶段声明的有意重叠（审阅与声明对照）
+ *   expectedOutOfSafeArea: [idA, ...]         # 有意落在模板页眉页脚带/安全区外的元素（出界分级声明制）
  *   overlapMode: declared | lenient
  *   notes: str
  *   elements:
@@ -132,6 +133,18 @@ export function validatePage(page, file) {
   }
   if (page.safeArea !== undefined && !validSafeArea(page.safeArea)) {
     errors.push(`[${file}] safeArea: {top,bottom,left,right} numbers ≥ 0（页面级覆盖主题安全区）`)
+  }
+  if (page.expectedOutOfSafeArea !== undefined) {
+    // 出界分级声明制（C3 修订，v0.3.2）：有意落在模板页眉页脚带/安全区外的元素，逐元素手工声明；
+    // id 必须存在于本页（防呆：声明无效当场报错，避免"以为声明了却仍报错"）
+    if (!Array.isArray(page.expectedOutOfSafeArea)) {
+      errors.push(`[${file}] expectedOutOfSafeArea: array of element ids（有意落在安全区外的元素；仅对"超安全区"级生效，超页面边界永远不可声明）`)
+    } else {
+      page.expectedOutOfSafeArea.forEach((idX, i) => {
+        if (typeof idX !== 'string') errors.push(`[${file}] expectedOutOfSafeArea[${i}]: element id string`)
+        else if (!ids.has(idX)) errors.push(`[${file}] expectedOutOfSafeArea[${i}]: "${idX}" 不是本页元素 id（防呆：声明必须指向真实元素）`)
+      })
+    }
   }
   validateBackground(page.background, file, errors)
   return errors.length ? fail(errors) : null

@@ -260,6 +260,11 @@ await (await import('node:fs/promises')).writeFile(join(v3Deck, 'pages', '01_lay
   '    bounds: [60, 2, 40, 12]',
   '    fill: "$primary"',
   '    role: decoration',
+  '  - elementId: outPage',
+  '    elementType: shape',
+  '    kind: rect',
+  '    bounds: [900, 520, 100, 60]',
+  '    fill: "$primary"',
   '',
 ].join('\n'))
 await (await import('node:fs/promises')).writeFile(join(v3Deck, 'pages', '02_declare.yaml'), [
@@ -295,9 +300,10 @@ const rV3 = await renderDeck(ctxV3, {})
 const L1 = rV3.layout.pages[0].elements.find((e) => e.id === 'L1')
 ok('v0.3：line bounds 由 points 自动推导（AABB）', L1 && L1.bounds.w === 200 && L1.bounds.h === 1, JSON.stringify(L1?.bounds))
 const vV3 = verifyDeck(rV3.layout)
-ok('v0.3：safeArea 外元素 → out-of-page 错误（D5）', vV3.text.includes('超出页面安全区') && vV3.text.includes('badbox'), vV3.text.split('\n').filter((l) => l.includes('[✗]')).slice(0, 2).join('; '))
+ok('v0.3：safeArea 外元素 → out-of-page 错误（D5）', vV3.text.includes('超出页面安全区') && vV3.text.includes('badbox'), vV3.text.split('\n').filter((l) => l.includes('[✗]')).slice(0, 3).join('; '))
 ok('v0.3：安全区内元素不报出界', !vV3.text.includes('okbox'))
-ok('v0.3：decoration 在安全区外不报出界（C3）', !vV3.text.includes('decoBand'))
+ok('v0.3.2：未声明安全区出界（含 decoration）→ ERROR（C3 修订：修饰不再豁免）', vV3.text.includes('decoBand') && vV3.text.includes('expectedOutOfSafeArea'))
+ok('v0.3.2：超页面边界 → ERROR（不可声明级）', vV3.text.includes('outPage') && vV3.text.includes('超出页面边界'))
 ok('v0.3：未声明层叠 → unexpected-overlap', vV3.text.includes('unexpected-overlap') && vV3.text.includes('ptext'))
 ok('v0.3：对比度建议（白字浅底，D6）', vV3.text.includes('aesthetic-contrast'))
 ok('v0.3：孤字/破句建议（D7）', vV3.text.includes('text') && vV3.text.includes('孤字'))
@@ -305,11 +311,19 @@ const autod = await applyAutoDeclare(ctxV3, rV3.layout)
 ok('v0.3：一键声明写入 1 对（D2）', autod.length === 1 && autod[0].added === 1, JSON.stringify(autod))
 const declareYaml = await (await import('node:fs/promises')).readFile(join(v3Deck, 'pages', '02_declare.yaml'), 'utf8')
 ok('v0.3：声明写入 yaml（含注释保留）', declareYaml.includes('expectedOverlaps') && declareYaml.includes('panel') && declareYaml.includes('ptext'))
+
+// v0.3.2：01_layout 加出界声明（decoBand 有意 + outPage 超页——后者声明应无效），验证分级声明制
+const layoutYaml = await (await import('node:fs/promises')).readFile(join(v3Deck, 'pages', '01_layout.yaml'), 'utf8')
+const layoutYaml2 = layoutYaml.replace('elements:', 'expectedOutOfSafeArea:\n  - decoBand\n  - outPage\nelements:')
+await (await import('node:fs/promises')).writeFile(join(v3Deck, 'pages', '01_layout.yaml'), layoutYaml2)
 const ctxV3b = await resolveDeck(v3Deck) // 重新加载（声明写盘后）
 const rV3b = await renderDeck(ctxV3b, {})
 const vV3b = verifyDeck(rV3b.layout)
 const v3bErrors = vV3b.text.split('\n').filter((l) => l.includes('[✗]'))
-ok('v0.3：声明后重验：unexpected 消除，仅剩故意错误（badbox/small）', vV3b.text.includes('1 预期重叠✓') && !vV3b.text.includes('unexpected-overlap') && v3bErrors.length === 2 && v3bErrors.every((l) => l.includes('badbox') || l.includes('small')), v3bErrors.join('; '))
+ok('v0.3.2：出界声明命中 → 预期出界✓（confirmed）', vV3b.text.includes('1 预期出界✓'), v3bErrors.join('; '))
+ok('v0.3.2：声明后 decoBand 不再报错', !vV3b.text.includes('decoBand'))
+ok('v0.3.2：超页面边界声明无效，仍 ERROR（分级不可声明）', vV3b.text.includes('outPage') && vV3b.text.includes('超出页面边界'))
+ok('v0.3.2：声明后重验：unexpected 消除，仅剩故意错误（badbox/outPage/small）', vV3b.text.includes('1 预期重叠✓') && !vV3b.text.includes('unexpected-overlap') && v3bErrors.length === 3 && v3bErrors.every((l) => l.includes('badbox') || l.includes('outPage') || l.includes('small')), v3bErrors.join('; '))
 const rV3d = await renderDeck(ctxV3, { debug: true })
 const debugHtml = await (await import('node:fs/promises')).readFile(join(v3Deck, 'preview', '01_pages_01_layout.html'), 'utf8')
 ok('v0.3：debug 渲染带安全区参考框', debugHtml.includes('sa-guide') && rV3d.htmlFiles.length === 3)
@@ -340,6 +354,40 @@ const toolsMod = await import('../lib/tools.js')
 ok('v0.3.1：resolveEngine auto=pptd 且允许回退（C1）', toolsMod.resolveEngine('auto').engine === 'pptd' && toolsMod.resolveEngine('auto').allowFallback === true)
 ok('v0.3.1：显式 pptd/python-pptx 不回退（C1）', toolsMod.resolveEngine('pptd').allowFallback === false && toolsMod.resolveEngine('python-pptx').engine === 'python-pptx' && toolsMod.resolveEngine('python-pptx').allowFallback === false)
 ok('v0.3.1：blockedByAudit 仅 audit 档生效（C2）', toolsMod.blockedByAudit('audit') === true && toolsMod.blockedByAudit('standard') === false && toolsMod.blockedByAudit('quick') === false)
+
+// ── 15. v0.3.2：出界声明防呆（坏 id 当场报错）+ D4 导入建议 safeArea ──────
+const { validatePage } = await import('../lib/pptd/schema.js')
+const badOutPage = { elements: [{ elementId: 'a', elementType: 'text', bounds: [0, 0, 10, 10], content: { text: 'x' } }], expectedOutOfSafeArea: ['ghost'] }
+const badOutErr = validatePage(badOutPage, 'test.yaml')
+ok('v0.3.2：expectedOutOfSafeArea 坏 id 当场报错（防呆）', badOutErr !== null && badOutErr.messages.some((m) => m.includes('ghost')), badOutErr?.messages?.join('; '))
+// 3 页同位置元素（顶部/底部）→ 导入探测跨页带 → deck.yaml 写入建议 safeArea 注释
+const bandDeck = join(root, 'examples', 'band-smoke')
+await rm(bandDeck, { recursive: true, force: true })
+await mkdir(join(bandDeck, 'pages'), { recursive: true })
+await (await import('node:fs/promises')).writeFile(join(bandDeck, 'deck.yaml'), [
+  'version: 1', 'title: band-smoke', 'size: [960, 540]',
+  'theme: {colors: {primary: "#2563EB"}}',
+  'pages:',
+  '  - pages/01.yaml', '  - pages/02.yaml', '  - pages/03.yaml', '',
+].join('\n'))
+for (const p of ['01', '02', '03']) {
+  await (await import('node:fs/promises')).writeFile(join(bandDeck, 'pages', `${p}.yaml`), [
+    'pageType: content',
+    'elements:',
+    '  - elementId: header', '    elementType: text', '    bounds: [40, 10, 200, 30]',
+    '    content: {text: "页眉", style: "$b"}',
+    '  - elementId: footer', '    elementType: text', '    bounds: [40, 505, 200, 30]',
+    '    content: {text: "页脚", style: "$b"}',
+    '  - elementId: body', '    elementType: text', '    bounds: [40, 200, 400, 60]',
+    `    content: {text: "第${p}页正文", style: "$b"}`,
+    '',
+  ].join('\n'))
+}
+const bandCtx = await resolveDeck(bandDeck)
+const bandExp = await exportPptx(bandCtx, { out: 'out-band.pptx', engine: 'pptd' })
+const bandImp = await importPptx(bandExp.file, join(bandDeck, 'imported'))
+const bandDeckYaml = await (await import('node:fs/promises')).readFile(join(bandDeck, 'imported', 'deck.yaml'), 'utf8')
+ok('v0.3.2：D4 导入探测跨页带 → 建议 safeArea 注释（未启用）', bandDeckYaml.includes('safeArea') && bandDeckYaml.includes('top: 40') && bandDeckYaml.includes('bottom: 35'), bandDeckYaml.split('\n').slice(0, 4).join(' | '))
 
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)

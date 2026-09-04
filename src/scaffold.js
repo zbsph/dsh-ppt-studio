@@ -88,6 +88,8 @@ background: "#FFFFFF"        # 或 "$themeRef" / {type: solid, color} / {type: i
 safeArea: {top: 20}          # 可选：覆盖主题安全区
 expectedOverlaps:            # 设计阶段声明"有意"重叠（审阅与声明对照）
   - {pair: [card, t1]}       # 色块衬底/图片标注等；内容互压 text×text 不可声明，永远错误
+expectedOutOfSafeArea:       # 有意落在"安全区外/模板页眉页脚带"的元素（logo/角标/水印）
+  - logo                     # 逐元素手工声明（autoDeclare 不自动生成出界声明）；id 必须存在
 overlapMode: declared        # declared（默认）| lenient（草稿缓冲：未声明仅提示）
 \`\`\`
 
@@ -95,7 +97,9 @@ overlapMode: declared        # declared（默认）| lenient（草稿缓冲：�
 - text/table/chart = content；shape/image = background（承载）；line = line（引脚线/箭头）。
 - content×content 重叠 → ERROR content-collision（不可声明豁免）。
 - content×background / line×任意 → 警告级，未声明则 ERROR unexpected-overlap（修正布局或补声明）。
-- role: decoration → 完全豁免（重叠 + 出界，可合法落在模板页眉页脚带）；页面 overlapMode: lenient → 未声明仅提示。
+- role: decoration → 只豁免**重叠**（装饰性是设计意图声明）；**不豁免出界**（要落在页眉页脚带 → 走 expectedOutOfSafeArea 声明）。
+- **出界分级**：超页面边界（放映不可见）→ 永远 ERROR，不可声明；超安全区（模板带内）→ 声明制（expectedOutOfSafeArea 命中 ✓ 预期出界，未命中 ERROR）；页面 overlapMode: lenient → 未声明仅提示。
+- 声明自证（D1）：autoDeclare 写入后应输出"声明清单"（每对附一句意图，如色块衬底/图上标注/箭头跨越）；说不清意图的对子必须改布局而不是声明。
 
 ## 审阅/导出约定
 - ppt_render → preview/*.html + layout.json；ppt_verify 错误（[✗]）清零是门禁，

@@ -139,6 +139,7 @@ export async function renderDeck(ctx, { out = 'preview', debug = false } = {}) {
       background: bgRes.record,
       safeArea: sa,
       expectedOverlaps: page.page.expectedOverlaps ?? [],
+      expectedOutOfSafeArea: page.page.expectedOutOfSafeArea ?? [],
       overlapMode: page.page.overlapMode ?? 'declared',
       elements: snaps,
     })

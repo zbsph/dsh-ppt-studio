@@ -95,6 +95,7 @@ ppt_export(dir)  → 导出 .pptx（默认 pptd 引擎；python-pptx 需 python 
 - 素材、中间层、预览一律 **UTF-8**；pwsh 处理中文文件请显式 `-Encoding UTF8` / `[System.IO.File]::ReadAllText($p, [System.Text.Encoding]::UTF8)`，否则中文会变乱码（含 HTML 重写入）。
 - 分析 .pptx 内部（xml/媒体/关系）**不要手动解压**：插件已内置 `zips.js`（zip 读写）与 XML 解析，`ppt_import` 会正确提取媒体（兼容 UTF-16 的 WPS 文件）；如需自定义读取，用受管工具或 node 脚本调用 `lib/zips.js`。
 - 沙箱在 workspace-write 模式会拦截**手动启动** Edge/Chrome——截图请走受管工具 `ppt_shot`（spawn 自身允许）。
+- **导入模板时**：`ppt_import` 会自动探测跨页页眉/页脚带并把建议 `safeArea` 写入 deck.yaml **注释**（不自动启用）；确认是模板后取消注释并微调即可。
 
 ## PPTD v1 视觉子集（当前支持，超出部分导出时近似/降级）
 
@@ -118,10 +119,13 @@ ppt_export(dir)  → 导出 .pptx（默认 pptd 引擎；python-pptx 需 python 
   - 命中设计声明 → **✓ 预期重叠（确认）**，不出现在错误/警告中；
   - 未命中声明 → **ERROR `unexpected-overlap`（设计预期外重叠）**：修正布局，或若确为有意 → 补声明后重验；
   - **内容互压**（text/table/chart 相互遮挡，code `content-collision`）→ **永远 ERROR，不支持声明豁免**（"元素区块冲突"真正要防的）；
-  - `role: decoration` 元素 → 完全豁免（重叠 + 出界；装饰层可合法落在模板页眉页脚带）；
+  - `role: decoration` 元素 → 只豁免**重叠**（装饰性=设计意图声明；**不豁免出界**——要落在模板页眉页脚带请走下方声明制）；
   - 页面级 `overlapMode: lenient` → 未声明重叠仅提示（草稿/旧项目缓冲）；
-  - **批量声明**：`ppt_verify autoDeclare=true` 一键写入全部警告级未声明重叠对（v0.3.0；audit 质量档禁用）。
-- 出界（含 safeArea）/ 文本溢出 → ERROR 门禁；美学建议 `[·]` 辅助、非门禁。
+  - **批量声明**：`ppt_verify autoDeclare=true` 一键写入全部警告级未声明重叠对（写入后附"声明清单+每对一句意图"，说不清意图的对子必须改布局；audit 质量档禁用）。
+- **出界分级声明制**（与重叠同构，v0.3.2）：
+  - 超**页面边界**（放映不可见）= 永远 ERROR，**不可声明**；
+  - 超**安全区**（模板页眉页脚带内）= 声明制：有意元素（logo/角标/水印）逐项写入页面 `expectedOutOfSafeArea: [idA, ...]`（**必须手工**，id 必须存在，防呆校验）→ 命中 ✓ 预期出界（确认）；未命中 ERROR。
+- 出界 / 文本溢出 → ERROR 门禁；美学建议 `[·]` 辅助、非门禁。
 - 元素 ≥15 时提示信息密度；网格密集区（≥5）提示重点审阅。
 - 建议中文长句在语义断点处显式使用 `\n`；导出缩字不低于主题 `minFontSize`，到下限仍溢出会明确报告（v0.3.0）。
 

@@ -189,7 +189,7 @@ export function registerTools(ctx) {
 
   reg({
     name: 'ppt_verify',
-    description: '数字审阅：基于 preview/layout.json（缺失时先渲染）断言 重叠/出界(含 safeArea)/文本溢出/对齐/密集区；[✗] 错误清零是页级门禁，[·] 为审美建议（非门禁）。含对比度/孤字等启发式建议',
+    description: '数字审阅：基于 preview/layout.json（缺失时先渲染）断言 重叠/出界/文本溢出/对齐/密集区；[✗] 错误清零是页级门禁，[·] 为审美建议（非门禁）。出界分级：超页面边界=永远错误；超安全区=声明制（页面 expectedOutOfSafeArea 声明命中→✓预期出界）。含对比度/孤字等启发式建议',
     parameters: {
       dir: dirSchema,
       autoDeclare: { type: 'boolean', description: 'true = 把未声明的警告级重叠（色块衬底/图片标注/箭头跨越等，不含内容互压）一键写入页面 expectedOverlaps 后重验（对应"设计意图声明制"的批量声明，仍会报告剩余不可声明错误）' },
@@ -240,7 +240,7 @@ export function registerTools(ctx) {
 
   reg({
     name: 'ppt_export',
-    description: '导出 .pptx。engine 缺省 auto（=pptd 自研主引擎，图表矢量拼绘）；python-pptx 仅显式指定（其图表降级为表格，是兜底路线）。pptd 失败时报告原因，可用 /ppt engine python-pptx 切换重试。out 支持绝对路径（原样使用）或文件名（相对 deck 目录）',
+    description: '导出 .pptx。engine 缺省 auto（=pptd 自研主引擎，图表矢量拼绘；hard 失败时自动回退 python-pptx 并醒目标注降级）；python-pptx 仅显式指定（其图表降级为表格）。out 支持绝对路径（原样使用）或文件名（相对 deck 目录）。audit 质量档自动追加回读断言（页数/尺寸/最小字号）',
     parameters: {
       dir: dirSchema,
       engine: { type: 'string', enum: ['auto', 'pptd', 'python-pptx'], description: '缺省 auto（=pptd）；python-pptx 需 python 环境' },
@@ -252,11 +252,17 @@ export function registerTools(ctx) {
         const ctx0 = await loadCtx(dir)
         const outName = out ?? 'out.pptx'
         const eff = resolveEngine(engine) // auto/缺省 = pptd（主引擎），pptd 硬失败时允许回退 python-pptx（C1 决定）
+        const { quality } = await qualityOf(ctx, dir)
+        const audit = blockedByAudit(quality)
+        const withAudit = async (file, extra = '') => {
+          if (!audit) return extra
+          return `${extra}\n${await auditExportCheck(ctx0, file, ctx0.minFontSize)}`
+        }
         if (eff.engine === 'python-pptx' && !eff.allowFallback) {
           const py = findPython()
           if (!py.has) return `⚠ python-pptx 引擎不可用（未检测到 python + python-pptx 环境）：${py.cmd ? '请 pip install python-pptx' : '未找到 python 解释器'}。可改用默认 pptd 引擎。`
           const r = await runPythonExport(ctx0, outName)
-          return `✓ 已导出（python-pptx 引擎）：${r.file}\n图表已降级为表格（引擎 A 才支持矢量拼绘图表）。`
+          return `✓ 已导出（python-pptx 引擎）：${r.file}\n图表已降级为表格（引擎 A 才支持矢量拼绘图表）。${await withAudit(r.file)}`
         }
         try {
           const r = await exportPptx(ctx0, { out: outName, engine: 'pptd' })
@@ -266,7 +272,7 @@ export function registerTools(ctx) {
             ? `\n\n⚠ auto-fit 缩放 ${r.autoFit.length} 处文本：\n${fitLines.join('\n')}`
             : ''
           const floorNote = floorHits ? `\n\n✗ ${floorHits} 处达到字号下限（theme.minFontSize）仍溢出——建议修复后再交付，避免放映时文字溢出容器。` : ''
-          return `✓ 已导出（pptd 引擎，${r.slides} 页）：${r.file}${fit}${floorNote}`
+          return `✓ 已导出（pptd 引擎，${r.slides} 页）：${r.file}${fit}${floorNote}${await withAudit(r.file)}`
         } catch (error) {
           // 自动回退链（C1 决定）：auto 且 pptd 硬失败 → 有 python-pptx 则兜底并醒目标注降级（绝不静默）
           if (eff.allowFallback) {
@@ -274,7 +280,7 @@ export function registerTools(ctx) {
             if (py.has) {
               try {
                 const r2 = await runPythonExport(ctx0, outName)
-                return `⚠ pptd 引擎失败，已自动降级 python-pptx（图表降级为表格）：${error?.message ?? error}\n✓ 已导出（python-pptx 兜底）：${r2.file}\n建议排查 pptd 失败原因（见上）或改用质量更高的模式。`
+                return `⚠ pptd 引擎失败，已自动降级 python-pptx（图表降级为表格）：${error?.message ?? error}\n✓ 已导出（python-pptx 兜底）：${r2.file}\n建议排查 pptd 失败原因（见上）或改用质量更高的模式。${await withAudit(r2.file)}`
               } catch (e2) {
                 return `✗ pptd 失败（${error?.message ?? error}）且 python-pptx 兜底也失败：${e2?.message ?? e2}`
               }
@@ -402,6 +408,39 @@ async function snapshotPptxShapes(dir) {
     return `产物快照（pptx XML）：${n} 个顶层形状（参与导出几何与中间层一致性）`
   } catch {
     return ''
+  }
+}
+
+/**
+ * audit 档导出回读断言（D2 决定，v0.3.2）：页数 / 尺寸 / 最小字号 ≥ minFontSize。
+ * 产物档（XML 权威坐标）与中间层一致性校验；audit 档自动追加到导出报告。
+ */
+async function auditExportCheck(ctx, file, minFontSize) {
+  try {
+    const { zipRead } = await import('./zips.js')
+    const buf = await readFile(file)
+    const parts = zipRead(buf)
+    let slideCount = 0
+    let minSz = Infinity
+    for (let i = 1; parts.has(`ppt/slides/slide${i}.xml`); i++) {
+      slideCount++
+      const xml = parts.get(`ppt/slides/slide${i}.xml`).toString('utf8')
+      for (const m of xml.matchAll(/sz="(\d+)"/g)) {
+        const v = Number(m[1])
+        if (v < minSz) minSz = v
+      }
+    }
+    const pres = parts.get('ppt/presentation.xml')?.toString('utf8') ?? ''
+    const cx = Number(pres.match(/cx="(\d+)"/)?.[1] ?? 0)
+    const cy = Number(pres.match(/cy="(\d+)"/)?.[1] ?? 0)
+    const sizeOk = cx === ctx.size.width * 12700 && cy === ctx.size.height * 12700
+    const fontOk = minSz / 100 >= minFontSize
+    const lines = [
+      `audit 回读断言（产物 OOXML）：页数 ${slideCount}/${ctx.pages.length} ${slideCount === ctx.pages.length ? '✓' : '✗'}；尺寸 ${(cx / 12700).toFixed(0)}×${(cy / 12700).toFixed(0)}pt（期望 ${ctx.size.width}×${ctx.size.height}）${sizeOk ? '✓' : '✗'}；最小字号 ${minSz / 100}pt（下限 ${minFontSize}pt）${fontOk ? '✓' : '✗'}`,
+    ]
+    return lines.join('\n')
+  } catch (e) {
+    return `audit 回读断言失败（无法校验产物）：${e?.message ?? e}`
   }
 }
 

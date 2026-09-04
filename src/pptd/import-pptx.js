@@ -64,6 +64,7 @@ export async function importPptx(pptxPath, outDir) {
   await mkdir(outDir, { recursive: true })
   await mkdir(join(outDir, 'pages'), { recursive: true })
   await mkdir(join(outDir, 'media'), { recursive: true })
+  const band = detectBands(pages, { width, height }) // D4：跨页页眉/页脚带探测（写入建议，不自动启用）
   const pageRefs = []
   for (const page of pages) {
     const name = `slide_${String(page.index + 1).padStart(2, '0')}`
@@ -72,7 +73,7 @@ export async function importPptx(pptxPath, outDir) {
     const yaml = pageYaml(page, name)
     await writeFile(join(outDir, ref), yaml)
   }
-  const deckYaml = yamlDeck({ title: basename(pptxPath).replace(/\.pptx$/i, ''), width, height, pageRefs })
+  const deckYaml = yamlDeck({ title: basename(pptxPath).replace(/\.pptx$/i, ''), width, height, pageRefs, band })
   await writeFile(join(outDir, 'deck.yaml'), deckYaml)
   for (const name of mediaNames) {
     const data = files.get('ppt/media/' + name)
@@ -81,8 +82,47 @@ export async function importPptx(pptxPath, outDir) {
   const bgCount = pages.filter((p) => p.background).length
   return {
     outDir, pages: pages.length, media: [...mediaNames], size: { width, height },
-    warnings: ['chart 降级为文本占位；复杂形状近似映射', ...(bgCount ? [`已提取 ${bgCount} 页背景（含背景图/色/满页图）`] : [])],
+    warnings: ['chart 降级为文本占位；复杂形状近似映射', ...(bgCount ? [`已提取 ${bgCount} 页背景（含背景图/色/满页图）`] : []),
+      ...(band ? [`检测到跨页页眉/页脚带（上 ${band.top}px / 下 ${band.bottom}px）：deck.yaml 已写入建议 safeArea（注释呈现，未启用；确认为模板后取消注释并微调）`] : [])],
   }
+}
+
+/**
+ * D4：跨页重复元素带探测 → safeArea 建议（只写注释，不自动启用）。
+ * 原理：页眉/页脚/logo 通常"跨页同位置重复"；统计元素矩形签名出现页数，
+ * 重复率 ≥ max(2, 60% 页数) 且位于顶部 30% / 底部 30% 页高 → 形成带。
+ */
+function detectBands(pages, size, minPages = 3) {
+  if (pages.length < minPages) return null
+  const sigOf = (el) => {
+    const b = el.bounds
+    return `${el.elementType}:${el.kind ?? ''}:${Math.round(b.x)},${Math.round(b.y)},${Math.round(b.w)},${Math.round(b.h)}`
+  }
+  const counts = new Map()
+  for (const p of pages) {
+    const seen = new Set()
+    for (const el of p.elements) {
+      const s = sigOf(el)
+      if (seen.has(s)) continue
+      seen.add(s)
+      counts.set(s, (counts.get(s) ?? 0) + 1)
+    }
+  }
+  const need = Math.max(2, Math.ceil(pages.length * 0.6))
+  const tops = []
+  const bottoms = []
+  for (const p of pages) {
+    for (const el of p.elements) {
+      if ((counts.get(sigOf(el)) ?? 0) < need) continue
+      const b = el.bounds
+      if (b.y + b.h <= size.height * 0.3) tops.push(b.y + b.h)
+      else if (b.y >= size.height * 0.7) bottoms.push(b.y)
+    }
+  }
+  const hint = {}
+  if (tops.length) hint.top = Math.max(...tops)
+  if (bottoms.length) hint.bottom = size.height - Math.min(...bottoms)
+  return Object.keys(hint).length ? hint : null
 }
 
 function parseShapes(spTree, slideRels, mediaNames, pageSize) {
@@ -261,10 +301,13 @@ function isFullPagePic(bounds, size) {
   return bounds && bounds.w >= size.width * 0.95 && bounds.h >= size.height * 0.95
 }
 
-function yamlDeck({ title, width, height, pageRefs }) {
+function yamlDeck({ title, width, height, pageRefs, band }) {
   const pages = pageRefs.map((r) => `  - ${r}`).join('\n')
+  const bandNote = band
+    ? `# 检测到跨页页眉/页脚带（模板特征）：建议安全区如下（注释呈现，未启用；确认为模板后取消注释并微调）\n# safeArea: {top: ${band.top}, bottom: ${band.bottom}}\n`
+    : ''
   return `# 由 dsh-ppt-studio 从 pptx 导入（内容保真，版式可从新）
-version: 1
+${bandNote}version: 1
 title: ${JSON.stringify(title)}
 size: [${width}, ${height}]
 pages:

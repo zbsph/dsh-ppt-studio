@@ -13,6 +13,7 @@ examples/media-smoke/
 examples/overlap-smoke/
 examples/v3-smoke/
 examples/scaffold-smoke/
+examples/band-smoke/
 examples/import-realtest/
 examples/import-realtest2/
 examples/import-realtest-regression/
