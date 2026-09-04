@@ -3,12 +3,12 @@ pageType: content
 elements:
   - elementId: "图片_1"
     elementType: image
-    bounds: [678, 0, 282, 79]
+    bounds: [ 678, 0, 282, 79 ]
     fit: cover
     src: "media/image8.png"
   - elementId: "文本框_2"
     elementType: text
-    bounds: [68, 2, 358, 58]
+    bounds: [ 68, 2, 358, 58 ]
     content:
       text: "添加论文内容第四部分标题"
       color: "#4B649F"
@@ -16,13 +16,13 @@ elements:
       lineHeight: 1.5
   - elementId: "矩形_4"
     elementType: shape
-    bounds: [0, 530, 960, 11]
+    bounds: [ 0, 530, 960, 11 ]
     kind: rect
     fill: "#4B649F"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
   - elementId: "Title_13"
     elementType: text
-    bounds: [577, 123, 303, 56]
+    bounds: [ 577, 123, 303, 56 ]
     content:
       text: "这里添加文字标题"
       fontSize: 24
@@ -30,7 +30,7 @@ elements:
       lineHeight: 1
   - elementId: "Title_13-2"
     elementType: text
-    bounds: [577, 229, 303, 56]
+    bounds: [ 577, 229, 303, 56 ]
     content:
       text: "这里添加文字标题"
       fontSize: 24
@@ -38,7 +38,7 @@ elements:
       lineHeight: 1
   - elementId: "Title_13-3"
     elementType: text
-    bounds: [577, 340, 303, 56]
+    bounds: [ 577, 340, 303, 56 ]
     content:
       text: "这里添加文字标题"
       fontSize: 24
@@ -46,36 +46,38 @@ elements:
       lineHeight: 1
   - elementId: "文本框_21"
     elementType: text
-    bounds: [577, 167, 303, 52]
+    bounds: [ 577, 167, 303, 52 ]
     content:
       text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
       fontSize: 16
       color: "#808080"
   - elementId: "文本框_22"
     elementType: text
-    bounds: [577, 274, 303, 52]
+    bounds: [ 577, 274, 303, 52 ]
     content:
       text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
       fontSize: 16
       color: "#808080"
   - elementId: "文本框_23"
     elementType: text
-    bounds: [577, 386, 303, 52]
+    bounds: [ 577, 386, 303, 52 ]
     content:
       text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
       fontSize: 16
       color: "#808080"
   - elementId: "对象_27"
     elementType: text
-    bounds: [-20, 134, 548, 318]
+    bounds: [ -20, 134, 548, 318 ]
     content:
       text: "[chart: 对象 27] 图表已降级为文本占位，请重新生成图表样式"
   - elementId: "文本框_26"
     elementType: text
-    bounds: [171, 222, 176, 104]
+    bounds: [ 171, 222, 176, 104 ]
     content:
       text: "26%"
       fontSize: 80
       color: "#4B649F"
       bold: true
       lineHeight: 1
+expectedOutOfSafeArea:
+  - 对象_27

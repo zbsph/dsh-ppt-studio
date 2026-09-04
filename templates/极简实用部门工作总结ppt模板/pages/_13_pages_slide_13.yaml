@@ -183,6 +183,8 @@ elements:
       bold: true
       fontFamily: "Arial"
       align: center
+expectedOutOfSafeArea:
+  - Text_Box_7
 expectedOverlaps:
   - pair:
       - Freeform_2

@@ -87,12 +87,12 @@ ppt_preview(dir)   # 链接附在交付信息里（绝对地址，点击即可�
 
 ```text
 ppt_templates              # 清单 + 风格/场景/预览图路径（S0 展示给用户选）
-ppt_new dir=<目录> template=<id>   # 从模板复制工作区（theme 完整 + 母版页 _*.yaml）
-ppt_template_add dir=<导入工程>    # 外部模板收纳（v0.5.1）：任意 deck 工程 → 模板库（theme/页面/媒体入包 + 自动缩略图）
+ppt_new dir=<目录> template=<id>   # 从模板复制工作区（v0.7：母版=参考不进门禁；01_opening=正式页先 autoDeclare）
+ppt_template_add dir=<导入工程>    # 外部模板收纳（v0.5.1）：任意 deck 工程 → 模板库（theme/页面/媒体入包 + 自动缩略图 + 洗涤：有意叠层/出界自动声明 + 剩余分类元数据）
 /ppt template <id>         # 记录本会话默认模板
 ```
 
-- **模板 = 版式母版包**：新页从 `pages/_*.yaml` 复制并改成正式页名 → 页眉/页脚/标题栏自动继承（需求 4"统一模板保持基础样式"）。
+- **模板工作区语义（v0.7.0）**：`pages/_*.yaml` 是**参考母版**（不注册进 deck.pages，**不进 render/verify 门禁**——模板设计叠层是"设计意料之内"，加载阶段不需"设计"步骤）；`pages/01_opening.yaml` 是模板首母版的**正式副本**（注册进门禁，先 `ppt_verify autoDeclare=true` 声明模板固有叠层 → 剩余错误是模板原文案残留，替换后自然干净）。新增正式页 = 复制母版去 `_` 前缀 + 注册进 deck.yaml pages。
 - **外部模板收纳（v0.5.1）**：你自己的模板 / 公司采购模板 / 任何你有权使用的模板 → `ppt_import` → `ppt_template_add` → 永久进库（**用户模板 > 导入模板 > 内置模板** 三级增长；模板数量随使用增长，不必预置几百套）。
 - **模板一致性门禁**：verify `theme-conformance`（strict 默认）——页面颜色必须 ∈ `theme.colors` 或中性灰，出板=ERROR；字号/字体为 `[·]` 建议；`theme.themeConformance: suggest|off` 可降档。模板文件路径也可用：`ppt_import` 模板 → 启用其 theme 聚合块。
 - 维护：`node scripts/build-templates.mjs` 重建全部 preview.png（render+截图）。

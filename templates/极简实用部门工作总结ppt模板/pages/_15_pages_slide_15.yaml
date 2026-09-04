@@ -3,31 +3,31 @@ pageType: content
 elements:
   - elementId: "椭圆_5"
     elementType: shape
-    bounds: [790, 303, 14, 14]
+    bounds: [ 790, 303, 14, 14 ]
     kind: ellipse
     fill: "#000000"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
   - elementId: "椭圆_12"
     elementType: shape
-    bounds: [172, 303, 14, 14]
+    bounds: [ 172, 303, 14, 14 ]
     kind: ellipse
     fill: "#000000"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
   - elementId: "椭圆_13"
     elementType: shape
-    bounds: [473, 172, 14, 14]
+    bounds: [ 473, 172, 14, 14 ]
     kind: ellipse
     fill: "#000000"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
   - elementId: "椭圆_14"
     elementType: shape
-    bounds: [473, 449, 14, 14]
+    bounds: [ 473, 449, 14, 14 ]
     kind: ellipse
     fill: "#000000"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
   - elementId: "文本框_21"
     elementType: text
-    bounds: [201, 339, 147, 29]
+    bounds: [ 201, 339, 147, 29 ]
     content:
       text: "工作未完成说明"
       color: "#000000"
@@ -35,7 +35,7 @@ elements:
       fontFamily: "Arial"
   - elementId: "文本框_22"
     elementType: text
-    bounds: [517, 185, 147, 29]
+    bounds: [ 517, 185, 147, 29 ]
     content:
       text: "工作未完成说明"
       color: "#000000"
@@ -43,7 +43,7 @@ elements:
       fontFamily: "Arial"
   - elementId: "文本框_23"
     elementType: text
-    bounds: [201, 185, 142, 29]
+    bounds: [ 201, 185, 142, 29 ]
     content:
       text: "工作未完成说明"
       color: "#000000"
@@ -51,7 +51,7 @@ elements:
       fontFamily: "Arial"
   - elementId: "文本框_24"
     elementType: text
-    bounds: [517, 339, 147, 29]
+    bounds: [ 517, 339, 147, 29 ]
     content:
       text: "工作未完成说明"
       color: "#000000"
@@ -59,7 +59,7 @@ elements:
       fontFamily: "Arial"
   - elementId: "矩形_25"
     elementType: text
-    bounds: [518, 211, 219, 65]
+    bounds: [ 518, 211, 219, 65 ]
     content:
       text: "点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容"
       fontSize: 12
@@ -67,7 +67,7 @@ elements:
       fontFamily: "Arial"
   - elementId: "矩形_26"
     elementType: text
-    bounds: [199, 366, 219, 65]
+    bounds: [ 199, 366, 219, 65 ]
     content:
       text: "点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容"
       fontSize: 12
@@ -75,7 +75,7 @@ elements:
       fontFamily: "Arial"
   - elementId: "矩形_27"
     elementType: text
-    bounds: [201, 213, 219, 65]
+    bounds: [ 201, 213, 219, 65 ]
     content:
       text: "点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容"
       fontSize: 12
@@ -83,7 +83,7 @@ elements:
       fontFamily: "Arial"
   - elementId: "矩形_28"
     elementType: text
-    bounds: [517, 362, 219, 65]
+    bounds: [ 517, 362, 219, 65 ]
     content:
       text: "点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容"
       fontSize: 12
@@ -91,7 +91,7 @@ elements:
       fontFamily: "Arial"
   - elementId: "Text_Box_7"
     elementType: text
-    bounds: [-1, 25, 963, 34]
+    bounds: [ -1, 25, 963, 34 ]
     content:
       text: "工作完成情况"
       fontSize: 24
@@ -99,3 +99,5 @@ elements:
       bold: true
       fontFamily: "Arial"
       align: center
+expectedOutOfSafeArea:
+  - Text_Box_7

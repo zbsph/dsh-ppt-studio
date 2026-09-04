@@ -122,6 +122,9 @@ elements:
       color: "#000000"
       fontFamily: "+mj-ea"
       align: center
+expectedOutOfSafeArea:
+  - 直角三角形_18
+  - 直角三角形_19
 expectedOverlaps:
   - pair:
       - 直角三角形_18

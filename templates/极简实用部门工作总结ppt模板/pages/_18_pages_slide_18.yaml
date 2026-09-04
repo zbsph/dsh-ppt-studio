@@ -130,6 +130,8 @@ elements:
       text: "点击此处填写文字，体现本页核心内容,提炼一句中心主题"
       color: "#DF3F4E"
       fontFamily: "Arial"
+expectedOutOfSafeArea:
+  - Text_Box_7
 expectedOverlaps:
   - pair:
       - Freeform_6-2

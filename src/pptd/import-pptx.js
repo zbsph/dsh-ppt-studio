@@ -437,7 +437,7 @@ function isFullPagePic(bounds, size) {
 function yamlDeck({ title, width, height, pageRefs, band, stats }) {
   const pages = pageRefs.map((r) => `  - ${r}`).join('\n')
   const bandNote = band
-    ? `# 检测到跨页页眉/页脚带（模板特征）：建议安全区如下（注释呈现，未启用；确认为模板后取消注释并微调）\n# safeArea: {top: ${band.top}, bottom: ${band.bottom}}\n`
+    ? `# 检测到跨页页眉/页脚带（模板特征）：建议安全区如下（注释呈现，未启用；确认为模板后取消注释并微调）\n# safeArea: {${['top', 'bottom'].filter((k) => band[k] !== undefined).map((k) => `${k}: ${band[k]}`).join(', ')}}\n`
     : ''
   // P0-1：样式聚合 → theme 建议块（聚合自原稿；页面本身已带内联样式，此块供"改版求一致"直接复用）
   const themeNote = stats ? themePresetOf(stats) : null

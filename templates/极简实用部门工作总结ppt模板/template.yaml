@@ -33,4 +33,5 @@ pages:
   - pages/_20_pages_slide_20.yaml
   - pages/_21_pages_slide_21.yaml
   - pages/_22_pages_slide_22.yaml
-cleanup: 收纳时已自动声明 69 对预期重叠；剩余数字/出界/内容互压错误 27 条（复制工作区后自行修复）
+cleanup: 已声明 7 个出界元素为模板有意设计；已声明 69 对预期重叠；剩余 27
+  条（text×6、out×7、content×14——模板固有内容问题，复制工作区后按 verify 修复）

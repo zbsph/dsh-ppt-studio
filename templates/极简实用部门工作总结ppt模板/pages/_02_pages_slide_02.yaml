@@ -89,6 +89,8 @@ elements:
       color: "#000000"
       fontFamily: "Arial"
       align: center
+expectedOutOfSafeArea:
+  - 矩形_2
 expectedOverlaps:
   - pair:
       - 矩形_20

@@ -52,6 +52,8 @@ elements:
       fontSize: 12
       color: "#FFFFFF"
       fontFamily: "微软雅黑"
+expectedOutOfSafeArea:
+  - 任意多边形_9
 expectedOverlaps:
   - pair:
       - 矩形_1

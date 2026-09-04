@@ -3,9 +3,11 @@ pageType: content
 elements:
   - elementId: "TextBox_3"
     elementType: text
-    bounds: [0, -2, 43, 9]
+    bounds: [ 0, -2, 43, 9 ]
     content:
       text: "PPT模板 http://www.1ppt.com/moban/"
       fontSize: 1
       fontFamily: "微软雅黑"
       lineHeight: 2
+expectedOutOfSafeArea:
+  - TextBox_3

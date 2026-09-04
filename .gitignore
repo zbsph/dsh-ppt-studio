@@ -17,6 +17,7 @@ examples/band-smoke/
 examples/tpl-check-*/
 examples/tpl-dbg-*/
 examples/tpl-work/
+examples/tpl-work-ext/
 examples/tpl-preview-work/
 examples/import-realtest/
 examples/import-realtest2/

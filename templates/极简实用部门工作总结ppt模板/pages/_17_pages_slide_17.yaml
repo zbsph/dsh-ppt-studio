@@ -88,6 +88,8 @@ elements:
       fontSize: 14
       color: "#000000"
       fontFamily: "Arial"
+expectedOutOfSafeArea:
+  - Text_Box_7
 expectedOverlaps:
   - pair:
       - Rectangle_3

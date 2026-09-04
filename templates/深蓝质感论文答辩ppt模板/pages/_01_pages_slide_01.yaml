@@ -58,6 +58,9 @@ elements:
       fontSize: 14
       color: "#000000"
       fontFamily: "方正准圆简体"
+expectedOutOfSafeArea:
+  - 直角三角形_346
+  - 直角三角形_11
 expectedOverlaps:
   - pair:
       - 直角三角形_346

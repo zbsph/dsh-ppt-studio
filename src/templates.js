@@ -36,7 +36,7 @@ export async function listTemplates() {
   return out
 }
 
-/** 模板详情（模板工作区复制用）：deck.yaml 全文 + 母版页 {ref, yaml}。 */
+/** 模板详情（模板工作区复制用）：deck.yaml 全文 + 母版页 {ref, yaml} + 媒体清单。 */
 export async function templateWorkspace(id) {
   const dir = join(TEMPLATES_DIR, id)
   const deckFile = join(dir, 'deck.yaml')
@@ -49,7 +49,9 @@ export async function templateWorkspace(id) {
     const p = join(dir, ref)
     if (existsSync(p)) pages.push({ ref, yaml: await readFile(p, 'utf8') })
   }
-  return { id, dir, meta, deck, pages }
+  const mediaDir = join(dir, 'media')
+  const media = existsSync(mediaDir) ? (await import('node:fs/promises').then((f) => f.readdir(mediaDir))).filter((n) => !n.startsWith('.')) : []
+  return { id, dir, meta, deck, pages, media }
 }
 
 /**
@@ -91,23 +93,57 @@ export async function registerTemplate(dir, opts = {}, { targetDir = TEMPLATES_D
   // 模板 deck.yaml：引用全部母版页（保留原 theme；pages 段整体替换，不动前导换行）
   const deckTxt = (await readFile(join(dir, 'deck.yaml'), 'utf8')).replace(/pages:\n[\s\S]*$/, `pages:\n${refs.map((r) => `  - ${r}`).join('\n')}\n`)
   await writeFile(join(tplDir, 'deck.yaml'), deckTxt)
-  // 收纳后自动声明清理（外部模板 = 参考资产：视觉叠层是有意的原始设计 → expectedOverlaps 批量声明；
-  // 剩余错误统计记入 meta.note，供使用者预知需要修什么）
-  let cleanup = { declared: 0, remainingErrors: 0 }
+  // 收纳后自动声明清理（外部模板 = 参考资产：视觉叠层/页脚出血是有意的原始设计 → 批量声明；
+  // 剩余错误按类型统计记入 meta.cleanup，供使用者预知）
+  let cleanup = { declared: 0, outSafe: 0, remainingErrors: 0, detail: {} }
   try {
     const { renderDeck } = await import('./pptd/render-html.js')
-    const { verifyDeck } = await import('./verify.js')
+    const { verifyDeck, collectDeclarable } = await import('./verify.js')
     const { applyAutoDeclare } = await import('./autodeclare.js')
+    const YAML = await import('yaml').then((m) => m.default)
+    // ① 出界声明：模板页超出安全区的元素（页脚带/出血/占位）批量写入 expectedOutOfSafeArea（有意设计）
+    const ctxA = await resolveDeck(tplDir)
+    const rA = await renderDeck(ctxA, { out: '_cleanup-tmp' })
+    let outSafe = 0
+    for (const pageL of rA.layout.pages) {
+      const sa = pageL.safeArea ?? null
+      if (!sa) continue
+      const outer = pageL.elements.filter((e) => {
+        const b = e.bounds
+        return b.x < sa.left - 1 || b.y < sa.top - 1 || b.x + b.w > ctxA.size.width - sa.right + 1 || b.y + b.h > ctxA.size.height - sa.bottom + 1
+      })
+      if (!outer.length) continue
+      const file = ctxA.pages[pageL.index].file
+      const text = await readFile(file, 'utf8')
+      const doc = YAML.parseDocument(text)
+      const add = outer.map((e) => e.id)
+      const all = [...(doc.get('expectedOutOfSafeArea') ?? []).map(String), ...add]
+      doc.setIn(['expectedOutOfSafeArea'], doc.createNode([...new Set(all)]))
+      await writeFile(file, String(doc))
+      outSafe += add.length
+    }
+    // ② 重叠声明 + 分类统计
     const ctx2 = await resolveDeck(tplDir)
     const r2 = await renderDeck(ctx2, { out: '_cleanup-tmp' })
     cleanup.declared = (await applyAutoDeclare(ctx2, r2.layout)).reduce((n, a) => n + a.added, 0)
     const ctx3 = await resolveDeck(tplDir)
     const r3 = await renderDeck(ctx3, { out: '_cleanup-tmp' })
-    cleanup.remainingErrors = verifyDeck(r3.layout).text.split('\n').filter((l) => l.includes('[✗]')).length
+    const v3 = verifyDeck(r3.layout)
+    const detail = {}
+    for (const line of v3.text.split('\n').filter((l) => l.includes('[✗]'))) {
+      const code = (line.match(/\[✗\] (\w+)/) ?? [])[1] ?? 'other'
+      detail[code] = (detail[code] ?? 0) + 1
+    }
+    cleanup = { declared: cleanup.declared, outSafe, remainingErrors: Object.values(detail).reduce((a, b) => a + b, 0), detail }
   } catch { /* 清理失败不阻塞收纳（模板仍可用） */
   } finally {
     await rm(join(tplDir, '_cleanup-tmp'), { recursive: true, force: true }).catch(() => {})
   }
+  const cleanupNote = [
+    cleanup.outSafe ? `已声明 ${cleanup.outSafe} 个出界元素为模板有意设计` : '',
+    cleanup.declared ? `已声明 ${cleanup.declared} 对预期重叠` : '',
+    cleanup.remainingErrors ? `剩余 ${cleanup.remainingErrors} 条（${Object.entries(cleanup.detail).map(([k, v]) => `${k}×${v}`).join('、')}——模板固有内容问题，复制工作区后按 verify 修复）` : '',
+  ].filter(Boolean).join('；') || '模板已洁净'
   // template.yaml 元数据
   const meta = {
     id,
@@ -118,7 +154,7 @@ export async function registerTemplate(dir, opts = {}, { targetDir = TEMPLATES_D
     words: opts.words ?? '',
     colors: Object.values(ctx.colors ?? {}).filter((c) => typeof c === 'string'),
     pages: refs,
-    cleanup: cleanup.declared ? `收纳时已自动声明 ${cleanup.declared} 对预期重叠；剩余数字/出界/内容互压错误 ${cleanup.remainingErrors} 条（复制工作区后自行修复）` : undefined,
+    cleanup: cleanupNote,
   }
   await writeFile(join(tplDir, 'template.yaml'), YAML.stringify(meta))
   // 缩略图：从**模板目录**自身渲染（ctx.dir=tplDir，out 相对名）+ Edge 截图 → preview.png
@@ -144,6 +180,50 @@ export async function registerTemplate(dir, opts = {}, { targetDir = TEMPLATES_D
   } catch (e) { /* 无浏览器/渲染失败：template.yaml 仍生成，preview 留空 */ }
   await rm(join(tplDir, '_preview-tmp'), { recursive: true, force: true }).catch(() => {})
   return { id, dir: tplDir, preview, pages: refs.length, meta }
+}
+
+/** 模板渲染预览根（无 webServer 依赖）：用于展示与测试。 */
+
+/**
+ * 从模板物化工作区（v0.7.0：参考素材与正式页分离）：
+ * - 母版页 pages/_*.yaml：参考素材，**不注册进 deck.pages**（不进 render/verify 门禁）；
+ * - 正式页 pages/01_opening.yaml：模板第一母版的正式化副本，**注册进门禁**（先 autoDeclare 声明模板固有叠层，
+ *   剩余为模板原文案残留，替换后自然干净）；
+ * - media/ 跟随复制（外部模板含图片）。
+ * @returns { dir, formal, refs, mediaCount, cleanup }
+ */
+export async function materializeTemplate(dir, id, { name } = {}) {
+  const { writeFile, mkdir, copyFile, access } = await import('node:fs/promises')
+  try {
+    await access(join(dir, 'deck.yaml'))
+    throw new Error(`目标目录已存在 deck.yaml（${join(dir, 'deck.yaml')}），拒绝覆盖；请换一个空目录`)
+  } catch (e) {
+    if ((e?.message ?? '').includes('拒绝覆盖')) throw e
+    // access 失败（目录不存在）：放行
+  }
+  const t = await templateWorkspace(id)
+  await mkdir(join(dir, 'pages'), { recursive: true })
+  await mkdir(join(dir, 'media'), { recursive: true })
+  const first = t.pages[0]
+  const formal = 'pages/01_opening.yaml'
+  const firstYaml = first ? first.yaml.replace(/^pageType:.*$/m, 'pageType: content') : 'pageType: content\nelements: []\n'
+  await writeFile(join(dir, formal), firstYaml)
+  const deck = t.deck
+    .replace(/^title:.*$/m, `title: ${JSON.stringify(name ?? t.meta.name ?? '未命名')}`)
+    .replace(/pages:\n[\s\S]*$/, `pages:\n  - ${formal}\n`)
+  await writeFile(join(dir, 'deck.yaml'), deck)
+  const refs = []
+  for (const p of t.pages) {
+    if (p.ref === first.ref) continue // 首母版已正式化
+    await writeFile(join(dir, p.ref), p.yaml)
+    refs.push(p.ref)
+  }
+  let mediaCount = 0
+  for (const m of t.media) {
+    await copyFile(join(t.dir, 'media', m), join(dir, 'media', m))
+    mediaCount++
+  }
+  return { dir, formal, refs, mediaCount, cleanup: t.meta.cleanup ?? null, meta: t.meta, firstRef: first?.ref }
 }
 
 async function cp(src, dest) {

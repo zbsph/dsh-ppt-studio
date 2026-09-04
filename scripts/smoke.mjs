@@ -471,15 +471,29 @@ const confPage = { elements: [{ id: 'x', kind: 'shape', fill: '#123456', bounds:
 ok('v0.5：theme-conformance strict 出板颜色 → ERROR', verifyDeck({ size: size960, theme: { colors: { a: '#2563EB' } }, pages: [{ index: 0, name: 'p', safeArea: null, overlapMode: 'declared', expectedOverlaps: [], expectedOutOfSafeArea: [], elements: [{ id: 'x', kind: 'shape', fill: '#123456', bounds: { x: 0, y: 0, w: 10, h: 10 } }] }] }).text.includes('[✗] theme-conformance'))
 ok('v0.5：中性色豁免 + 主题色通过', !verifyDeck({ size: size960, theme: { colors: { a: '#2563EB' } }, pages: [{ index: 0, name: 'p', safeArea: null, overlapMode: 'declared', expectedOverlaps: [], expectedOutOfSafeArea: [], elements: [{ id: 'x', kind: 'shape', fill: '#FFFFFF', bounds: { x: 0, y: 0, w: 10, h: 10 } }, { id: 'y', kind: 'shape', fill: '#2563EB', bounds: { x: 0, y: 0, w: 10, h: 10 } }] }] }).text.includes('theme-conformance'))
 ok('v0.5：themeConformance off 跳过', !verifyDeck({ size: size960, theme: { colors: { a: '#2563EB' }, themeConformance: 'off' }, pages: [{ index: 0, name: 'p', safeArea: null, overlapMode: 'declared', expectedOverlaps: [], expectedOutOfSafeArea: [], elements: [{ id: 'x', kind: 'shape', fill: '#123456', bounds: { x: 0, y: 0, w: 10, h: 10 } }] }] }).text.includes('theme-conformance'))
-// ppt_new --template 复制工作区
+// ppt_new --template 复制工作区（v0.7：母版=参考不注册；正式页=首母版副本注册）
 const tplWS = join(root, 'examples', 'tpl-work')
 await rm(tplWS, { recursive: true, force: true })
-const tplT = await tplMod.templateWorkspace('business-blue')
-await mkdir(join(tplWS, 'pages'), { recursive: true })
-await (await import('node:fs/promises')).writeFile(join(tplWS, 'deck.yaml'), tplT.deck.replace(/^title:.*$/m, 'title: "demo"'))
-for (const p of tplT.pages) await (await import('node:fs/promises')).writeFile(join(tplWS, p.ref), p.yaml)
-const ctxTW = await resolveDeck(tplWS)
-ok('v0.5：模板工作区可校验（theme 完整）', ctxTW.theme.colors.primary === '#1E4E8C' && tplT.pages.length >= 6, `${tplT.pages.length} pages`)
+const { materializeTemplate } = await import('../lib/templates.js')
+const mat = await materializeTemplate(tplWS, 'business-blue', { name: 'demo' })
+const ctxTW2 = await resolveDeck(tplWS)
+ok('v0.7：模板工作区——正式页单页注册 + 母版不进门禁', ctxTW2.pages.length === 1 && ctxTW2.pages[0].ref === mat.formal && mat.firstRef === 'pages/_cover.yaml', `pages=${ctxTW2.pages.length} ref=${ctxTW2.pages[0]?.ref}`)
+const tplV0 = verifyDeck((await renderDeck(ctxTW2, {})).layout)
+ok('v0.7：内置模板正式页（首母版副本）0 错误', tplV0.text.split('\n').filter((l) => l.includes('[✗]')).length === 0)
+// 外部模板工作区：母版未注册不报错（用户反馈场景：加载模板不再被门禁拦住）
+const extT = externals[0]
+if (extT) {
+  const extWS = join(root, 'examples', 'tpl-work-ext')
+  await rm(extWS, { recursive: true, force: true })
+  const matE = await materializeTemplate(extWS, extT.id, {})
+  const extCtx = await resolveDeck(extWS)
+  ok('v0.7：外部模板工作区——只注册 1 个正式页（母版参考不报错）', extCtx.pages.length === 1 && matE.refs.length > 5 && matE.mediaCount >= 0, `registered=${extCtx.pages.length} refs=${matE.refs.length}`)
+  ok('v0.7：外部模板媒体跟随复制', matE.mediaCount > 0, `media=${matE.mediaCount}`)
+}
+// 收纳清洗升级：registerTemplate 声明出界元素 + 剩余错误分类（bandDeck safeArea 外元素）
+const reg2 = await tplMod.registerTemplate(bandDeck, { id: `smoke-wash-${Date.now().toString(36)}`, name: '洗涤测试' }, {})
+ok('v0.7：收纳清洗——出界声明/重叠声明/剩余分类进入 meta', typeof reg2.meta.cleanup === 'string' && reg2.meta.cleanup.includes('剩余'), reg2.meta.cleanup ?? '')
+await (await import('node:fs/promises')).rm(join(tplMod.TEMPLATES_DIR, reg2.id), { recursive: true, force: true })
 
 // ── 18. v0.5.1：外部模板收纳（ppt_template_add）——导入工程 → 模板库 ──────
 const regId = `smoke-tpl-${Date.now().toString(36)}`

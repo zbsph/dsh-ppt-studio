@@ -17,7 +17,7 @@ import { importPptx } from './pptd/import-pptx.js'
 import { verifyDeck } from './verify.js'
 import { SCHEMA_REF, scaffoldProject } from './scaffold.js'
 import { applyAutoDeclare } from './autodeclare.js'
-import { listTemplates, templateWorkspace, registerTemplate } from './templates.js'
+import { listTemplates, templateWorkspace, registerTemplate, materializeTemplate } from './templates.js'
 import { buildPreview } from './preview-server.js'
 import { runPythonExport, findPython } from './pptxPy.js'
 import { imageInfo } from './imgmeta.js'
@@ -145,21 +145,17 @@ export function registerTools(ctx) {
     async execute({ dir, name, template }) {
       try {
         if (template) {
-          const t = await templateWorkspace(template)
-          // 模板工作区：deck.yaml（标题改写）+ 母版页写入 pages/（_ 前缀，供新页复制参照）
-          const { mkdir, writeFile } = await import('node:fs/promises')
-          const { access } = await import('node:fs/promises')
-          try { await access(join(dir, 'deck.yaml')); return `✗ 生成失败：目标目录已存在 deck.yaml（${join(dir, 'deck.yaml')}），拒绝覆盖；请换一个空目录` } catch { /* ok */ }
-          await mkdir(join(dir, 'pages'), { recursive: true })
-          await mkdir(join(dir, 'media'), { recursive: true })
-          const deck = t.deck.replace(/^title:.*$/m, `title: ${JSON.stringify(name ?? t.meta.name ?? '未命名')}`)
-          await writeFile(join(dir, 'deck.yaml'), deck)
-          const refs = []
-          for (const p of t.pages) {
-            await writeFile(join(dir, p.ref), p.yaml)
-            refs.push(p.ref)
-          }
-          return `✓ 已从模板「${t.meta.name ?? template}」生成工作区：${dir}\n  - deck.yaml（模板 theme 已就位，themeConformance 默认 strict=模板一致性门禁）\n  - 母版页 ${refs.join('、')}（_ 前缀，新页复制后可删）\n下一步：把 pages/_*.yaml 复制成正式页 → ppt_render → ppt_verify（0 错误）→ ppt_export`
+          // v0.7.0：母版页 = 参考素材（不进门禁）；正式页 = 模板首母版副本（accept 门禁，先 autoDeclare）
+          const { mkdir } = await import('node:fs/promises')
+          await mkdir(dir, { recursive: true })
+          const w = await materializeTemplate(dir, template, { name })
+          const cleanup = w.cleanup ? `\n⚠ 模板自带清理说明：${w.cleanup}` : ''
+          return `✓ 已从模板「${w.meta.name ?? template}」生成工作区：${dir}\n`
+            + `  - deck.yaml（模板 theme 已就位；themeConformance=strict 模板一致性门禁）\n`
+            + `  - 正式页：${w.formal}（注册进门禁；先跑 ppt_verify autoDeclare=true 声明模板固有有意叠层，剩余错误为模板原文案残留 → 替换内容后自然干净）\n`
+            + `  - 参考母版页（_ 前缀，不注册不进门禁）：${w.refs.length ? w.refs.join('、') : '（无）'}\n`
+            + `  - 媒体：${w.mediaCount} 个（已复制）${cleanup}\n`
+            + `下一步：ppt_render → ppt_verify（autoDeclare=true）→ 替换正式页文案 → 逐页制作 → ppt_export`
         }
         const r = await scaffoldProject(dir, { name })
         return `✓ 已生成样例工程：${r.dir}\n${r.files.map((f) => `  - ${f}`).join('\n')}\n下一步：ppt_check → ppt_render → ppt_verify（应 0 错误）`

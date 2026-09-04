@@ -77,6 +77,8 @@ elements:
     kind: rect
     fill: "#4B649F"
     line: { color: "#000000" }
+expectedOutOfSafeArea:
+  - 任意多边形_47
 expectedOverlaps:
   - pair:
       - 任意多边形_47

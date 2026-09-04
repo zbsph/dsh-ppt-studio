@@ -138,6 +138,8 @@ elements:
       fontSize: 21
       bold: true
       fontFamily: "微软雅黑"
+expectedOutOfSafeArea:
+  - 任意多边形_4
 expectedOverlaps:
   - pair:
       - 矩形_3

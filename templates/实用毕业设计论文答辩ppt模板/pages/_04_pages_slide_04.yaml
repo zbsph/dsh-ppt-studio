@@ -66,6 +66,8 @@ elements:
       bold: true
       align: center
       lineHeight: 1.5
+expectedOutOfSafeArea:
+  - 任意多边形_10
 expectedOverlaps:
   - pair:
       - 任意多边形_10
