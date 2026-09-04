@@ -1,0 +1,91 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "矩形_15"
+    elementType: shape
+    bounds: [ 40, 165, 437, 237 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#4B649F" }
+  - elementId: "任意多边形_10"
+    elementType: shape
+    bounds: [ 148, -112, 72, 369 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_1"
+    elementType: shape
+    bounds: [ 26, 20, 105, 105 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#4B649F", width: 3 }
+  - elementId: "文本框_11"
+    elementType: text
+    bounds: [ 137, 44, 196, 51 ]
+    content:
+      text: "背景及意义"
+      fontSize: 36
+      color: "#FFFFFF"
+      lineHeight: 1
+  - elementId: "图片_12"
+    elementType: image
+    bounds: [ 498, 410, 462, 131 ]
+    fit: cover
+    src: "media/image6.png"
+  - elementId: "文本框_13"
+    elementType: text
+    bounds: [ 53, 179, 406, 204 ]
+    content:
+      text: "撰写毕业论文是检验学生在校学习成果的重要措施，也是提高教学质量的重要环节。 大学生在毕业前都必须完成毕业论文的撰写任务。
+        申请学位必须提交相应的学位论文，经答辩通过后，方可取得学位。 可以这么说，毕业论文是结束大学学习生活走向社会的一个中介和桥梁。"
+      color: "#FFFFFF"
+      fontFamily: "微软雅黑"
+      lineHeight: 1.5
+  - elementId: "矩形_14"
+    elementType: text
+    bounds: [ 510, 179, 375, 204 ]
+    content:
+      text: "毕业论文是大学生才华的第一次显露，是向祖国和人民所交的一份有份量的答卷，是投身社会主义现代化建设事业的报到书。
+        一篇毕业论文虽然不能全面地反映出一个人的才华，也不一定能对社会直接带来巨大的效益，对专业产生开拓性的影响。"
+      color: "#4B649F"
+      fontFamily: "微软雅黑"
+      lineHeight: 1.5
+  - elementId: "矩形_16"
+    elementType: shape
+    bounds: [ 477, 165, 437, 237 ]
+    kind: rect
+    line: { color: "#4B649F" }
+  - elementId: "矩形_17"
+    elementType: shape
+    bounds: [ 888, 166, 27, 27 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "矩形_18"
+    elementType: shape
+    bounds: [ 888, 376, 27, 27 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+expectedOverlaps:
+  - pair:
+      - 矩形_15
+      - 任意多边形_10
+  - pair:
+      - 矩形_15
+      - 文本框_13
+  - pair:
+      - 任意多边形_10
+      - 文本框_11
+  - pair:
+      - 任意多边形_10
+      - 文本框_13
+  - pair:
+      - 矩形_14
+      - 矩形_16
+  - pair:
+      - 矩形_16
+      - 矩形_17
+  - pair:
+      - 矩形_16
+      - 矩形_18

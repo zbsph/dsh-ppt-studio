@@ -1,0 +1,13 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "文本框_1"
+    elementType: text
+    bounds: [156, 113, 647, 36]
+    content:
+      text: "全年业绩实现XXX万，超出全年任务目标XXX万。"
+      fontSize: 24
+      color: "#DF3F4E"
+      bold: true
+      fontFamily: "Arial"
+      align: center

@@ -1,0 +1,189 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "右箭头_21"
+    elementType: shape
+    bounds: [ 86, 186, 807, 92 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "MH_Other_1"
+    elementType: shape
+    bounds: [ 312, 167, 130, 130 ]
+    kind: ellipse
+    fill: "#7DB1CD"
+    line: { color: "#000000" }
+  - elementId: "MH_Other_3"
+    elementType: shape
+    bounds: [ 136, 167, 130, 130 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "MH_Other_6"
+    elementType: shape
+    bounds: [ 489, 167, 130, 130 ]
+    kind: ellipse
+    fill: "#5E80B0"
+    line: { color: "#000000" }
+  - elementId: "MH_Other_8"
+    elementType: shape
+    bounds: [ 666, 167, 130, 130 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "KSO_Shape"
+    elementType: shape
+    bounds: [ 532, 205, 44, 53 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "KSO_Shape-2"
+    elementType: shape
+    bounds: [ 179, 209, 45, 45 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "KSO_Shape-3"
+    elementType: shape
+    bounds: [ 704, 209, 53, 45 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "KSO_Shape-4"
+    elementType: shape
+    bounds: [ 359, 205, 36, 53 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "文本框_13"
+    elementType: text
+    bounds: [ 100, 348, 180, 95 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      fontSize: 16
+      color: "#595959"
+      align: center
+      lineHeight: 1.5
+  - elementId: "矩形_14"
+    elementType: text
+    bounds: [ 102, 316, 176, 32 ]
+    content:
+      text: "这里添加文字标题"
+      fontSize: 20
+      color: "#4B649F"
+      bold: true
+      align: center
+      lineHeight: 1
+  - elementId: "文本框_15"
+    elementType: text
+    bounds: [ 289, 348, 180, 95 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      fontSize: 16
+      color: "#595959"
+      align: center
+      lineHeight: 1.5
+  - elementId: "矩形_16"
+    elementType: text
+    bounds: [ 291, 316, 176, 32 ]
+    content:
+      text: "这里添加文字标题"
+      fontSize: 20
+      color: "#7DB1CD"
+      bold: true
+      align: center
+      lineHeight: 1
+  - elementId: "文本框_17"
+    elementType: text
+    bounds: [ 469, 348, 180, 95 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      fontSize: 16
+      color: "#595959"
+      align: center
+      lineHeight: 1.5
+  - elementId: "矩形_18"
+    elementType: text
+    bounds: [ 471, 316, 176, 32 ]
+    content:
+      text: "这里添加文字标题"
+      fontSize: 20
+      color: "#5E80B0"
+      bold: true
+      align: center
+      lineHeight: 1
+  - elementId: "文本框_19"
+    elementType: text
+    bounds: [ 651, 348, 180, 95 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      fontSize: 16
+      color: "#595959"
+      align: center
+      lineHeight: 1.5
+  - elementId: "矩形_20"
+    elementType: text
+    bounds: [ 653, 316, 176, 32 ]
+    content:
+      text: "这里添加文字标题"
+      fontSize: 20
+      color: "#000000"
+      bold: true
+      fontFamily: "+mn-lt"
+      align: center
+  - elementId: "图片_22"
+    elementType: image
+    bounds: [ 678, 0, 282, 79 ]
+    fit: cover
+    src: "media/image8.png"
+  - elementId: "文本框_27"
+    elementType: text
+    bounds: [ 68, 2, 358, 58 ]
+    content:
+      text: "添加论文内容第一部分标题"
+      color: "#4B649F"
+      bold: true
+      lineHeight: 1.5
+  - elementId: "矩形_29"
+    elementType: shape
+    bounds: [ 0, 530, 960, 11 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+expectedOverlaps:
+  - pair:
+      - 右箭头_21
+      - MH_Other_1
+  - pair:
+      - 右箭头_21
+      - MH_Other_3
+  - pair:
+      - 右箭头_21
+      - MH_Other_6
+  - pair:
+      - 右箭头_21
+      - MH_Other_8
+  - pair:
+      - 右箭头_21
+      - KSO_Shape
+  - pair:
+      - 右箭头_21
+      - KSO_Shape-2
+  - pair:
+      - 右箭头_21
+      - KSO_Shape-3
+  - pair:
+      - 右箭头_21
+      - KSO_Shape-4
+  - pair:
+      - MH_Other_1
+      - KSO_Shape-4
+  - pair:
+      - MH_Other_3
+      - KSO_Shape-2
+  - pair:
+      - MH_Other_6
+      - KSO_Shape
+  - pair:
+      - MH_Other_8
+      - KSO_Shape-3

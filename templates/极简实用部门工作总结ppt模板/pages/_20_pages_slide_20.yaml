@@ -1,0 +1,32 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "TextBox_152"
+    elementType: text
+    bounds: [282, 169, 386, 55]
+    content:
+      text: "点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "TextBox_173"
+    elementType: text
+    bounds: [355, 123, 251, 32]
+    content:
+      text: "明年业绩目标XXX万"
+      fontSize: 20
+      color: "#DF3F4E"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.5
+  - elementId: "矩形_56"
+    elementType: text
+    bounds: [402, 22, 160, 36]
+    content:
+      text: "明年工作计划"
+      fontSize: 24
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"

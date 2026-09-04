@@ -1,0 +1,8362 @@
+{
+  "size": {
+    "width": 960,
+    "height": 540
+  },
+  "theme": {
+    "colors": {
+      "c1": "#4B649F",
+      "c2": "#FFFFFF",
+      "c3": "#595959",
+      "c4": "#808080",
+      "c5": "#404040",
+      "c6": "#000000",
+      "c7": "#5E80B0"
+    },
+    "textStyles": {
+      "title": {
+        "fontSize": 80,
+        "color": "#4B649F",
+        "bold": true
+      },
+      "body": {
+        "fontSize": 18,
+        "color": "#4B649F"
+      },
+      "label": {
+        "fontSize": 12,
+        "color": "#4B649F"
+      }
+    },
+    "grid": {
+      "base": 8
+    },
+    "safeArea": null,
+    "minFontSize": 12,
+    "themeConformance": "strict"
+  },
+  "pages": [
+    {
+      "index": 0,
+      "file": "pages/_01_pages_slide_01.yaml",
+      "name": "pages/_01_pages_slide_01",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [
+        {
+          "pair": [
+            "任意多边形_47",
+            "文本框_62"
+          ]
+        },
+        {
+          "pair": [
+            "任意多边形_47",
+            "文本框_1066"
+          ]
+        },
+        {
+          "pair": [
+            "任意多边形_47",
+            "矩形_1067"
+          ]
+        },
+        {
+          "pair": [
+            "任意多边形_47",
+            "矩形_118"
+          ]
+        },
+        {
+          "pair": [
+            "文本框_62",
+            "矩形_1067"
+          ]
+        },
+        {
+          "pair": [
+            "文本框_1027",
+            "矩形_1067"
+          ]
+        },
+        {
+          "pair": [
+            "文本框_112",
+            "矩形_1067"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_1067",
+            "矩形_1068"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_1067",
+            "矩形_116"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_1067",
+            "矩形_117"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_1067",
+            "矩形_118"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_1068",
+            "矩形_116"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_117",
+            "矩形_118"
+          ]
+        }
+      ],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "图片_6",
+          "kind": "image",
+          "bounds": {
+            "x": 498,
+            "y": 410,
+            "w": 462,
+            "h": 131
+          },
+          "src": "media/image6.png",
+          "fit": "cover"
+        },
+        {
+          "id": "任意多边形_47",
+          "kind": "shape",
+          "bounds": {
+            "x": 148,
+            "y": -112,
+            "w": 72,
+            "h": 369
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_9",
+          "kind": "shape",
+          "bounds": {
+            "x": 26,
+            "y": 20,
+            "w": 105,
+            "h": 105
+          },
+          "shape": "ellipse",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_62",
+          "kind": "text",
+          "bounds": {
+            "x": 158,
+            "y": 207,
+            "w": 681,
+            "h": 87
+          },
+          "style": {
+            "fontSize": 66,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 660,
+            "textH": 66,
+            "lines": 1,
+            "lineWidths": [
+              660
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "简洁毕业论文答辩模板"
+        },
+        {
+          "id": "文本框_1027",
+          "kind": "text",
+          "bounds": {
+            "x": 190,
+            "y": 303,
+            "w": 142,
+            "h": 29
+          },
+          "style": {
+            "lineHeight": 1,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 126,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              126
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "答辩人：代用名"
+        },
+        {
+          "id": "文本框_112",
+          "kind": "text",
+          "bounds": {
+            "x": 389,
+            "y": 303,
+            "w": 160,
+            "h": 29
+          },
+          "style": {
+            "lineHeight": 1,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 144,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "指导教师：代用名"
+        },
+        {
+          "id": "文本框_1066",
+          "kind": "text",
+          "bounds": {
+            "x": 139,
+            "y": 47,
+            "w": 207,
+            "h": 46
+          },
+          "style": {
+            "fontSize": 32,
+            "color": "#FFFFFF",
+            "bold": true,
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 232,
+            "textH": 64,
+            "lines": 2,
+            "lineWidths": [
+              200,
+              32
+            ],
+            "overflowY": 18,
+            "overflowX": 25
+          },
+          "text": "中国*****大学"
+        },
+        {
+          "id": "矩形_1067",
+          "kind": "shape",
+          "bounds": {
+            "x": 116,
+            "y": 192,
+            "w": 762,
+            "h": 167
+          },
+          "shape": "rect",
+          "rotation": 0
+        },
+        {
+          "id": "矩形_1068",
+          "kind": "shape",
+          "bounds": {
+            "x": 859,
+            "y": 334,
+            "w": 38,
+            "h": 38
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "矩形_116",
+          "kind": "shape",
+          "bounds": {
+            "x": 838,
+            "y": 316,
+            "w": 37,
+            "h": 37
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "矩形_117",
+          "kind": "shape",
+          "bounds": {
+            "x": 103,
+            "y": 176,
+            "w": 37,
+            "h": 37
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "矩形_118",
+          "kind": "shape",
+          "bounds": {
+            "x": 115,
+            "y": 188,
+            "w": 37,
+            "h": 37
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "file": "pages/_02_pages_slide_02.yaml",
+      "name": "pages/_02_pages_slide_02",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [
+        {
+          "pair": [
+            "圆角矩形_5",
+            "图片_1"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_5",
+            "圆角矩形_4"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_5",
+            "矩形_6"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_5",
+            "矩形_7"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_5",
+            "矩形_8"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_5",
+            "矩形_9"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_5",
+            "文本框_10"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_5",
+            "文本框_14"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_5",
+            "文本框_15"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_5",
+            "文本框_16"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_5",
+            "文本框_17"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_5",
+            "文本框_18"
+          ]
+        },
+        {
+          "pair": [
+            "图片_1",
+            "圆角矩形_4"
+          ]
+        },
+        {
+          "pair": [
+            "图片_1",
+            "矩形_8"
+          ]
+        },
+        {
+          "pair": [
+            "图片_1",
+            "矩形_9"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_4",
+            "矩形_6"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_4",
+            "矩形_7"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_4",
+            "矩形_8"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_4",
+            "矩形_9"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_4",
+            "文本框_10"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_4",
+            "文本框_14"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_4",
+            "文本框_15"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_4",
+            "文本框_16"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_4",
+            "文本框_17"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_4",
+            "文本框_18"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_6",
+            "矩形_7"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_7",
+            "文本框_18"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_8",
+            "矩形_9"
+          ]
+        }
+      ],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "圆角矩形_5",
+          "kind": "shape",
+          "bounds": {
+            "x": 105,
+            "y": 148,
+            "w": 747,
+            "h": 328
+          },
+          "shape": "roundRect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "图片_1",
+          "kind": "image",
+          "bounds": {
+            "x": 0,
+            "y": 0,
+            "w": 620,
+            "h": 175
+          },
+          "src": "media/image7.png",
+          "fit": "cover"
+        },
+        {
+          "id": "文本框_2",
+          "kind": "text",
+          "bounds": {
+            "x": 764,
+            "y": 50,
+            "w": 103,
+            "h": 61
+          },
+          "style": {
+            "fontSize": 44,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 88,
+            "textH": 44,
+            "lines": 1,
+            "lineWidths": [
+              88
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "摘要"
+        },
+        {
+          "id": "矩形_3",
+          "kind": "text",
+          "bounds": {
+            "x": 698,
+            "y": 107,
+            "w": 180,
+            "h": 41
+          },
+          "style": {
+            "color": "#4B649F",
+            "lineHeight": 1,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 86.39999999999999,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              86.39999999999999
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "ABSTRACT"
+        },
+        {
+          "id": "圆角矩形_4",
+          "kind": "shape",
+          "bounds": {
+            "x": 120,
+            "y": 163,
+            "w": 747,
+            "h": 328
+          },
+          "shape": "roundRect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "矩形_6",
+          "kind": "shape",
+          "bounds": {
+            "x": 845,
+            "y": 468,
+            "w": 37,
+            "h": 37
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "矩形_7",
+          "kind": "shape",
+          "bounds": {
+            "x": 823,
+            "y": 450,
+            "w": 38,
+            "h": 37
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "矩形_8",
+          "kind": "shape",
+          "bounds": {
+            "x": 96,
+            "y": 148,
+            "w": 38,
+            "h": 38
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "矩形_9",
+          "kind": "shape",
+          "bounds": {
+            "x": 108,
+            "y": 160,
+            "w": 38,
+            "h": 38
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_10",
+          "kind": "text",
+          "bounds": {
+            "x": 157,
+            "y": 193,
+            "w": 692,
+            "h": 105
+          },
+          "style": {
+            "color": "#404040",
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 1872,
+            "textH": 81,
+            "lines": 3,
+            "lineWidths": [
+              684,
+              684,
+              504
+            ],
+            "overflowY": 0,
+            "overflowX": 1180
+          },
+          "text": "毕业论文，泛指专科毕业论文、本科毕业论文（学士学位毕业论文）、硕士研究生毕业论文（硕士学位论文）、博士研究生毕业论文（博士学位论文）等，即需要在学业完成前写作并提交的论文，是教学或科研活动的重要组成部分之一。"
+        },
+        {
+          "id": "文本框_14",
+          "kind": "text",
+          "bounds": {
+            "x": 157,
+            "y": 301,
+            "w": 156,
+            "h": 41
+          },
+          "style": {
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 90,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              90
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "填写关键词"
+        },
+        {
+          "id": "文本框_15",
+          "kind": "text",
+          "bounds": {
+            "x": 328,
+            "y": 301,
+            "w": 156,
+            "h": 41
+          },
+          "style": {
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 90,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              90
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "填写关键词"
+        },
+        {
+          "id": "文本框_16",
+          "kind": "text",
+          "bounds": {
+            "x": 499,
+            "y": 301,
+            "w": 156,
+            "h": 41
+          },
+          "style": {
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 90,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              90
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "填写关键词"
+        },
+        {
+          "id": "文本框_17",
+          "kind": "text",
+          "bounds": {
+            "x": 676,
+            "y": 301,
+            "w": 156,
+            "h": 41
+          },
+          "style": {
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 90,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              90
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "填写关键词"
+        },
+        {
+          "id": "文本框_18",
+          "kind": "text",
+          "bounds": {
+            "x": 157,
+            "y": 347,
+            "w": 674,
+            "h": 116
+          },
+          "style": {
+            "color": "#808080",
+            "lineHeight": 1,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 4091.40000000002,
+            "textH": 108,
+            "lines": 6,
+            "lineWidths": [
+              606.6,
+              649.8,
+              643.5,
+              661.4999999999999,
+              637.2,
+              518.3999999999999
+            ],
+            "overflowY": 0,
+            "overflowX": 3417
+          },
+          "text": "Graduation thesis, refers to the specialized graduation thesis, undergraduate graduation thesis (graduated with a bachelor's degree thesis), master's graduate student graduation thesis (M.A. thesis, doctoral students graduation thesis (Doctoral Dissertation), namely the need in studies of writing and submitting the is one of an important part of the teaching and scientific research activities"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "file": "pages/_03_pages_slide_03.yaml",
+      "name": "pages/_03_pages_slide_03",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [
+        {
+          "pair": [
+            "矩形_15",
+            "任意多边形_10"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_15",
+            "文本框_13"
+          ]
+        },
+        {
+          "pair": [
+            "任意多边形_10",
+            "文本框_11"
+          ]
+        },
+        {
+          "pair": [
+            "任意多边形_10",
+            "文本框_13"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_14",
+            "矩形_16"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_16",
+            "矩形_17"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_16",
+            "矩形_18"
+          ]
+        }
+      ],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "矩形_15",
+          "kind": "shape",
+          "bounds": {
+            "x": 40,
+            "y": 165,
+            "w": 437,
+            "h": 237
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "任意多边形_10",
+          "kind": "shape",
+          "bounds": {
+            "x": 148,
+            "y": -112,
+            "w": 72,
+            "h": 369
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_1",
+          "kind": "shape",
+          "bounds": {
+            "x": 26,
+            "y": 20,
+            "w": 105,
+            "h": 105
+          },
+          "shape": "ellipse",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_11",
+          "kind": "text",
+          "bounds": {
+            "x": 137,
+            "y": 44,
+            "w": 196,
+            "h": 51
+          },
+          "style": {
+            "fontSize": 36,
+            "color": "#FFFFFF",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 180,
+            "textH": 36,
+            "lines": 1,
+            "lineWidths": [
+              180
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "背景及意义"
+        },
+        {
+          "id": "图片_12",
+          "kind": "image",
+          "bounds": {
+            "x": 498,
+            "y": 410,
+            "w": 462,
+            "h": 131
+          },
+          "src": "media/image6.png",
+          "fit": "cover"
+        },
+        {
+          "id": "文本框_13",
+          "kind": "text",
+          "bounds": {
+            "x": 53,
+            "y": 179,
+            "w": 406,
+            "h": 204
+          },
+          "style": {
+            "fontFamily": "微软雅黑",
+            "color": "#FFFFFF",
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 2199.6000000000004,
+            "textH": 162,
+            "lines": 6,
+            "lineWidths": [
+              414,
+              396,
+              396,
+              396,
+              396,
+              180
+            ],
+            "overflowY": 0,
+            "overflowX": 1794
+          },
+          "text": "撰写毕业论文是检验学生在校学习成果的重要措施，也是提高教学质量的重要环节。 大学生在毕业前都必须完成毕业论文的撰写任务。 申请学位必须提交相应的学位论文，经答辩通过后，方可取得学位。 可以这么说，毕业论文是结束大学学习生活走向社会的一个中介和桥梁。"
+        },
+        {
+          "id": "矩形_14",
+          "kind": "text",
+          "bounds": {
+            "x": 510,
+            "y": 179,
+            "w": 375,
+            "h": 204
+          },
+          "style": {
+            "fontFamily": "微软雅黑",
+            "color": "#4B649F",
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 1951.2,
+            "textH": 162,
+            "lines": 6,
+            "lineWidths": [
+              360,
+              360,
+              360,
+              360,
+              360,
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 1576
+          },
+          "text": "毕业论文是大学生才华的第一次显露，是向祖国和人民所交的一份有份量的答卷，是投身社会主义现代化建设事业的报到书。 一篇毕业论文虽然不能全面地反映出一个人的才华，也不一定能对社会直接带来巨大的效益，对专业产生开拓性的影响。"
+        },
+        {
+          "id": "矩形_16",
+          "kind": "shape",
+          "bounds": {
+            "x": 477,
+            "y": 165,
+            "w": 437,
+            "h": 237
+          },
+          "shape": "rect",
+          "rotation": 0
+        },
+        {
+          "id": "矩形_17",
+          "kind": "shape",
+          "bounds": {
+            "x": 888,
+            "y": 166,
+            "w": 27,
+            "h": 27
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "矩形_18",
+          "kind": "shape",
+          "bounds": {
+            "x": 888,
+            "y": 376,
+            "w": 27,
+            "h": 27
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "file": "pages/_04_pages_slide_04.yaml",
+      "name": "pages/_04_pages_slide_04",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [
+        {
+          "pair": [
+            "任意多边形_10",
+            "文本框_11"
+          ]
+        }
+      ],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "任意多边形_10",
+          "kind": "shape",
+          "bounds": {
+            "x": 158,
+            "y": -122,
+            "w": 72,
+            "h": 389
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_1",
+          "kind": "shape",
+          "bounds": {
+            "x": 26,
+            "y": 20,
+            "w": 105,
+            "h": 105
+          },
+          "shape": "ellipse",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_11",
+          "kind": "text",
+          "bounds": {
+            "x": 137,
+            "y": 46,
+            "w": 233,
+            "h": 51
+          },
+          "style": {
+            "fontSize": 36,
+            "color": "#FFFFFF",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 216,
+            "textH": 36,
+            "lines": 1,
+            "lineWidths": [
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "论文主要内容"
+        },
+        {
+          "id": "图片_12",
+          "kind": "image",
+          "bounds": {
+            "x": 498,
+            "y": 410,
+            "w": 462,
+            "h": 131
+          },
+          "src": "media/image6.png",
+          "fit": "cover"
+        },
+        {
+          "id": "文本框_44",
+          "kind": "text",
+          "bounds": {
+            "x": 99,
+            "y": 297,
+            "w": 164,
+            "h": 95
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#404040",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 288,
+            "textH": 72,
+            "lines": 2,
+            "lineWidths": [
+              144,
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 124
+          },
+          "text": "添加论文内容第一部分标题"
+        },
+        {
+          "id": "文本框_45",
+          "kind": "text",
+          "bounds": {
+            "x": 297,
+            "y": 297,
+            "w": 170,
+            "h": 95
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#404040",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 288,
+            "textH": 72,
+            "lines": 2,
+            "lineWidths": [
+              168,
+              120
+            ],
+            "overflowY": 0,
+            "overflowX": 118
+          },
+          "text": "添加论文内容第二部分标题"
+        },
+        {
+          "id": "文本框_46",
+          "kind": "text",
+          "bounds": {
+            "x": 490,
+            "y": 297,
+            "w": 170,
+            "h": 95
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#404040",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 288,
+            "textH": 72,
+            "lines": 2,
+            "lineWidths": [
+              168,
+              120
+            ],
+            "overflowY": 0,
+            "overflowX": 118
+          },
+          "text": "添加论文内容第三部分标题"
+        },
+        {
+          "id": "文本框_47",
+          "kind": "text",
+          "bounds": {
+            "x": 680,
+            "y": 297,
+            "w": 181,
+            "h": 95
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#404040",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 288,
+            "textH": 72,
+            "lines": 2,
+            "lineWidths": [
+              168,
+              120
+            ],
+            "overflowY": 0,
+            "overflowX": 107
+          },
+          "text": "添加论文内容第四部分标题"
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "file": "pages/_05_pages_slide_05.yaml",
+      "name": "pages/_05_pages_slide_05",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [
+        {
+          "pair": [
+            "任意多边形_10",
+            "文本框_11"
+          ]
+        }
+      ],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "任意多边形_10",
+          "kind": "shape",
+          "bounds": {
+            "x": 158,
+            "y": -122,
+            "w": 72,
+            "h": 389
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_1",
+          "kind": "shape",
+          "bounds": {
+            "x": 26,
+            "y": 20,
+            "w": 105,
+            "h": 105
+          },
+          "shape": "ellipse",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_11",
+          "kind": "text",
+          "bounds": {
+            "x": 137,
+            "y": 46,
+            "w": 233,
+            "h": 51
+          },
+          "style": {
+            "fontSize": 36,
+            "color": "#FFFFFF",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 216,
+            "textH": 36,
+            "lines": 1,
+            "lineWidths": [
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "论文主要内容"
+        },
+        {
+          "id": "图片_12",
+          "kind": "image",
+          "bounds": {
+            "x": 498,
+            "y": 410,
+            "w": 462,
+            "h": 131
+          },
+          "src": "media/image6.png",
+          "fit": "cover"
+        },
+        {
+          "id": "文本框_39",
+          "kind": "text",
+          "bounds": {
+            "x": 100,
+            "y": 269,
+            "w": 112,
+            "h": 36
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 96,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              96
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "第一部分"
+        },
+        {
+          "id": "文本框_40",
+          "kind": "text",
+          "bounds": {
+            "x": 258,
+            "y": 269,
+            "w": 112,
+            "h": 36
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 96,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              96
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "第二部分"
+        },
+        {
+          "id": "文本框_41",
+          "kind": "text",
+          "bounds": {
+            "x": 422,
+            "y": 269,
+            "w": 112,
+            "h": 36
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 96,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              96
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "第三部分"
+        },
+        {
+          "id": "文本框_42",
+          "kind": "text",
+          "bounds": {
+            "x": 585,
+            "y": 269,
+            "w": 112,
+            "h": 36
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 96,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              96
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "第四部分"
+        },
+        {
+          "id": "文本框_43",
+          "kind": "text",
+          "bounds": {
+            "x": 749,
+            "y": 269,
+            "w": 112,
+            "h": 36
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 96,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              96
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "第五部分"
+        },
+        {
+          "id": "文本框_44",
+          "kind": "text",
+          "bounds": {
+            "x": 83,
+            "y": 303,
+            "w": 138,
+            "h": 76
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#404040",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 240,
+            "textH": 60,
+            "lines": 2,
+            "lineWidths": [
+              120,
+              120
+            ],
+            "overflowY": 0,
+            "overflowX": 102
+          },
+          "text": "添加论文内容第一部分标题"
+        },
+        {
+          "id": "文本框_45",
+          "kind": "text",
+          "bounds": {
+            "x": 242,
+            "y": 303,
+            "w": 143,
+            "h": 76
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#404040",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 240,
+            "textH": 60,
+            "lines": 2,
+            "lineWidths": [
+              140,
+              100
+            ],
+            "overflowY": 0,
+            "overflowX": 97
+          },
+          "text": "添加论文内容第二部分标题"
+        },
+        {
+          "id": "文本框_46",
+          "kind": "text",
+          "bounds": {
+            "x": 407,
+            "y": 303,
+            "w": 143,
+            "h": 76
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#404040",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 240,
+            "textH": 60,
+            "lines": 2,
+            "lineWidths": [
+              140,
+              100
+            ],
+            "overflowY": 0,
+            "overflowX": 97
+          },
+          "text": "添加论文内容第三部分标题"
+        },
+        {
+          "id": "文本框_47",
+          "kind": "text",
+          "bounds": {
+            "x": 565,
+            "y": 303,
+            "w": 152,
+            "h": 76
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#404040",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 240,
+            "textH": 60,
+            "lines": 2,
+            "lineWidths": [
+              140,
+              100
+            ],
+            "overflowY": 0,
+            "overflowX": 88
+          },
+          "text": "添加论文内容第四部分标题"
+        },
+        {
+          "id": "文本框_48",
+          "kind": "text",
+          "bounds": {
+            "x": 732,
+            "y": 303,
+            "w": 150,
+            "h": 76
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#404040",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 240,
+            "textH": 60,
+            "lines": 2,
+            "lineWidths": [
+              140,
+              100
+            ],
+            "overflowY": 0,
+            "overflowX": 90
+          },
+          "text": "添加论文内容第五部分标题"
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "file": "pages/_06_pages_slide_06.yaml",
+      "name": "pages/_06_pages_slide_06",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "矩形_1",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 200,
+            "w": 443,
+            "h": 155
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_2",
+          "kind": "text",
+          "bounds": {
+            "x": 461,
+            "y": 181,
+            "w": 450,
+            "h": 73
+          },
+          "style": {
+            "fontSize": 36,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 432,
+            "textH": 54,
+            "lines": 1,
+            "lineWidths": [
+              432
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "添加论文内容第一部分标题"
+        },
+        {
+          "id": "文本框_4",
+          "kind": "text",
+          "bounds": {
+            "x": 461,
+            "y": 253,
+            "w": 450,
+            "h": 102
+          },
+          "style": {
+            "color": "#808080",
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 1080,
+            "textH": 81,
+            "lines": 3,
+            "lineWidths": [
+              450,
+              450,
+              180
+            ],
+            "overflowY": 0,
+            "overflowX": 630
+          },
+          "text": "培养学生综合运用、巩固与扩展所学的基础理论和专业知识，培养学生独立分析、解决实际问题能力、培养学生处理数据和信息的能力。"
+        },
+        {
+          "id": "图片_9",
+          "kind": "image",
+          "bounds": {
+            "x": 498,
+            "y": 410,
+            "w": 462,
+            "h": 131
+          },
+          "src": "media/image6.png",
+          "fit": "cover"
+        },
+        {
+          "id": "图片_10",
+          "kind": "image",
+          "bounds": {
+            "x": 0,
+            "y": 0,
+            "w": 620,
+            "h": 175
+          },
+          "src": "media/image7.png",
+          "fit": "cover"
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "file": "pages/_07_pages_slide_07.yaml",
+      "name": "pages/_07_pages_slide_07",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [
+        {
+          "pair": [
+            "KSO_Shape",
+            "KSO_Shape-2"
+          ]
+        },
+        {
+          "pair": [
+            "KSO_Shape",
+            "文本框_6"
+          ]
+        },
+        {
+          "pair": [
+            "KSO_Shape",
+            "KSO_Shape-4"
+          ]
+        },
+        {
+          "pair": [
+            "KSO_Shape-2",
+            "KSO_Shape-3"
+          ]
+        },
+        {
+          "pair": [
+            "KSO_Shape-2",
+            "KSO_Shape-5"
+          ]
+        },
+        {
+          "pair": [
+            "KSO_Shape-3",
+            "KSO_Shape-6"
+          ]
+        },
+        {
+          "pair": [
+            "圆角矩形_15",
+            "文本框_16"
+          ]
+        }
+      ],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "KSO_Shape",
+          "kind": "shape",
+          "bounds": {
+            "x": 474,
+            "y": 205,
+            "w": 256,
+            "h": 252
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape-2",
+          "kind": "shape",
+          "bounds": {
+            "x": 336,
+            "y": 138,
+            "w": 174,
+            "h": 171
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape-3",
+          "kind": "shape",
+          "bounds": {
+            "x": 254,
+            "y": 286,
+            "w": 128,
+            "h": 126
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_5",
+          "kind": "text",
+          "bounds": {
+            "x": 730,
+            "y": 372,
+            "w": 180,
+            "h": 86
+          },
+          "style": {
+            "color": "#808080",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 64.8,
+            "lines": 3,
+            "lineWidths": [
+              180,
+              180,
+              108
+            ],
+            "overflowY": 0,
+            "overflowX": 288
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_6",
+          "kind": "text",
+          "bounds": {
+            "x": 728,
+            "y": 335,
+            "w": 160,
+            "h": 36
+          },
+          "style": {
+            "fontSize": 24,
+            "fontFamily": "+mn-lt",
+            "color": "#000000",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 144,
+            "textH": 28.799999999999997,
+            "lines": 1,
+            "lineWidths": [
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加标题"
+        },
+        {
+          "id": "KSO_Shape-4",
+          "kind": "shape",
+          "bounds": {
+            "x": 559,
+            "y": 290,
+            "w": 87,
+            "h": 83
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape-5",
+          "kind": "shape",
+          "bounds": {
+            "x": 388,
+            "y": 199,
+            "w": 71,
+            "h": 48
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_9",
+          "kind": "text",
+          "bounds": {
+            "x": 512,
+            "y": 138,
+            "w": 278,
+            "h": 60
+          },
+          "style": {
+            "color": "#808080",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 43.199999999999996,
+            "lines": 2,
+            "lineWidths": [
+              270,
+              198
+            ],
+            "overflowY": 0,
+            "overflowX": 190
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_10",
+          "kind": "text",
+          "bounds": {
+            "x": 510,
+            "y": 102,
+            "w": 160,
+            "h": 36
+          },
+          "style": {
+            "fontSize": 24,
+            "fontFamily": "+mn-lt",
+            "color": "#000000",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 144,
+            "textH": 28.799999999999997,
+            "lines": 1,
+            "lineWidths": [
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加标题"
+        },
+        {
+          "id": "KSO_Shape-6",
+          "kind": "shape",
+          "bounds": {
+            "x": 294,
+            "y": 324,
+            "w": 53,
+            "h": 52
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_13",
+          "kind": "text",
+          "bounds": {
+            "x": 97,
+            "y": 428,
+            "w": 278,
+            "h": 60
+          },
+          "style": {
+            "color": "#808080",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 43.199999999999996,
+            "lines": 2,
+            "lineWidths": [
+              270,
+              198
+            ],
+            "overflowY": 0,
+            "overflowX": 190
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_14",
+          "kind": "text",
+          "bounds": {
+            "x": 94,
+            "y": 391,
+            "w": 160,
+            "h": 36
+          },
+          "style": {
+            "fontSize": 24,
+            "fontFamily": "+mn-lt",
+            "color": "#000000",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 144,
+            "textH": 28.799999999999997,
+            "lines": 1,
+            "lineWidths": [
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加标题"
+        },
+        {
+          "id": "圆角矩形_15",
+          "kind": "shape",
+          "bounds": {
+            "x": 57,
+            "y": 102,
+            "w": 192,
+            "h": 55
+          },
+          "shape": "roundRect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_16",
+          "kind": "text",
+          "bounds": {
+            "x": 75,
+            "y": 111,
+            "w": 160,
+            "h": 36
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 144,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加标题"
+        },
+        {
+          "id": "图片_17",
+          "kind": "image",
+          "bounds": {
+            "x": 678,
+            "y": 0,
+            "w": 282,
+            "h": 79
+          },
+          "src": "media/image8.png",
+          "fit": "cover"
+        },
+        {
+          "id": "文本框_22",
+          "kind": "text",
+          "bounds": {
+            "x": 68,
+            "y": 2,
+            "w": 358,
+            "h": 58
+          },
+          "style": {
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 216,
+            "textH": 27,
+            "lines": 1,
+            "lineWidths": [
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "添加论文内容第一部分标题"
+        },
+        {
+          "id": "矩形_24",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 530,
+            "w": 960,
+            "h": 11
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "file": "pages/_08_pages_slide_08.yaml",
+      "name": "pages/_08_pages_slide_08",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [
+        {
+          "pair": [
+            "矩形_1",
+            "文本框_5"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_1",
+            "文本框_6"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_1",
+            "文本框_7"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_1",
+            "文本框_8"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_1",
+            "文本框_9"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_1",
+            "文本框_10"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_1",
+            "Freeform_19"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_1",
+            "Freeform_28"
+          ]
+        }
+      ],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "矩形_1",
+          "kind": "shape",
+          "bounds": {
+            "x": 494,
+            "y": 0,
+            "w": 467,
+            "h": 540
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "对象_2",
+          "kind": "text",
+          "bounds": {
+            "x": 39,
+            "y": 54,
+            "w": 439,
+            "h": 427
+          },
+          "style": {
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 517.5,
+            "textH": 43.199999999999996,
+            "lines": 2,
+            "lineWidths": [
+              423.9,
+              72
+            ],
+            "overflowY": 0,
+            "overflowX": 79
+          },
+          "text": "[chart: 对象 2] 图表已降级为文本占位，请重新生成图表样式"
+        },
+        {
+          "id": "文本框_5",
+          "kind": "text",
+          "bounds": {
+            "x": 641,
+            "y": 139,
+            "w": 266,
+            "h": 60
+          },
+          "style": {
+            "color": "#FFFFFF",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 43.199999999999996,
+            "lines": 2,
+            "lineWidths": [
+              252,
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 202
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_6",
+          "kind": "text",
+          "bounds": {
+            "x": 641,
+            "y": 103,
+            "w": 160,
+            "h": 36
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 144,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加标题"
+        },
+        {
+          "id": "文本框_7",
+          "kind": "text",
+          "bounds": {
+            "x": 641,
+            "y": 266,
+            "w": 266,
+            "h": 60
+          },
+          "style": {
+            "color": "#FFFFFF",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 43.199999999999996,
+            "lines": 2,
+            "lineWidths": [
+              252,
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 202
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_8",
+          "kind": "text",
+          "bounds": {
+            "x": 641,
+            "y": 230,
+            "w": 160,
+            "h": 36
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 144,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加标题"
+        },
+        {
+          "id": "文本框_9",
+          "kind": "text",
+          "bounds": {
+            "x": 641,
+            "y": 398,
+            "w": 266,
+            "h": 60
+          },
+          "style": {
+            "color": "#FFFFFF",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 43.199999999999996,
+            "lines": 2,
+            "lineWidths": [
+              252,
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 202
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_10",
+          "kind": "text",
+          "bounds": {
+            "x": 641,
+            "y": 362,
+            "w": 160,
+            "h": 36
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 144,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加标题"
+        },
+        {
+          "id": "Freeform_19",
+          "kind": "shape",
+          "bounds": {
+            "x": 556,
+            "y": 255,
+            "w": 53,
+            "h": 49
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "Freeform_28",
+          "kind": "shape",
+          "bounds": {
+            "x": 561,
+            "y": 379,
+            "w": 54,
+            "h": 53
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "file": "pages/_09_pages_slide_09.yaml",
+      "name": "pages/_09_pages_slide_09",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [
+        {
+          "pair": [
+            "右箭头_21",
+            "MH_Other_1"
+          ]
+        },
+        {
+          "pair": [
+            "右箭头_21",
+            "MH_Other_3"
+          ]
+        },
+        {
+          "pair": [
+            "右箭头_21",
+            "MH_Other_6"
+          ]
+        },
+        {
+          "pair": [
+            "右箭头_21",
+            "MH_Other_8"
+          ]
+        },
+        {
+          "pair": [
+            "右箭头_21",
+            "KSO_Shape"
+          ]
+        },
+        {
+          "pair": [
+            "右箭头_21",
+            "KSO_Shape-2"
+          ]
+        },
+        {
+          "pair": [
+            "右箭头_21",
+            "KSO_Shape-3"
+          ]
+        },
+        {
+          "pair": [
+            "右箭头_21",
+            "KSO_Shape-4"
+          ]
+        },
+        {
+          "pair": [
+            "MH_Other_1",
+            "KSO_Shape-4"
+          ]
+        },
+        {
+          "pair": [
+            "MH_Other_3",
+            "KSO_Shape-2"
+          ]
+        },
+        {
+          "pair": [
+            "MH_Other_6",
+            "KSO_Shape"
+          ]
+        },
+        {
+          "pair": [
+            "MH_Other_8",
+            "KSO_Shape-3"
+          ]
+        }
+      ],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "右箭头_21",
+          "kind": "shape",
+          "bounds": {
+            "x": 86,
+            "y": 186,
+            "w": 807,
+            "h": 92
+          },
+          "shape": "rect",
+          "fill": "#000000",
+          "rotation": 0
+        },
+        {
+          "id": "MH_Other_1",
+          "kind": "shape",
+          "bounds": {
+            "x": 312,
+            "y": 167,
+            "w": 130,
+            "h": 130
+          },
+          "shape": "ellipse",
+          "fill": "#7DB1CD",
+          "rotation": 0
+        },
+        {
+          "id": "MH_Other_3",
+          "kind": "shape",
+          "bounds": {
+            "x": 136,
+            "y": 167,
+            "w": 130,
+            "h": 130
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "MH_Other_6",
+          "kind": "shape",
+          "bounds": {
+            "x": 489,
+            "y": 167,
+            "w": 130,
+            "h": 130
+          },
+          "shape": "ellipse",
+          "fill": "#5E80B0",
+          "rotation": 0
+        },
+        {
+          "id": "MH_Other_8",
+          "kind": "shape",
+          "bounds": {
+            "x": 666,
+            "y": 167,
+            "w": 130,
+            "h": 130
+          },
+          "shape": "ellipse",
+          "fill": "#000000",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape",
+          "kind": "shape",
+          "bounds": {
+            "x": 532,
+            "y": 205,
+            "w": 44,
+            "h": 53
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape-2",
+          "kind": "shape",
+          "bounds": {
+            "x": 179,
+            "y": 209,
+            "w": 45,
+            "h": 45
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape-3",
+          "kind": "shape",
+          "bounds": {
+            "x": 704,
+            "y": 209,
+            "w": 53,
+            "h": 45
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape-4",
+          "kind": "shape",
+          "bounds": {
+            "x": 359,
+            "y": 205,
+            "w": 36,
+            "h": 53
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_13",
+          "kind": "text",
+          "bounds": {
+            "x": 100,
+            "y": 348,
+            "w": 180,
+            "h": 95
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#595959",
+            "align": "center",
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 416,
+            "textH": 72,
+            "lines": 3,
+            "lineWidths": [
+              176,
+              176,
+              64
+            ],
+            "overflowY": 0,
+            "overflowX": 236
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "矩形_14",
+          "kind": "text",
+          "bounds": {
+            "x": 102,
+            "y": 316,
+            "w": 176,
+            "h": 32
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#4B649F",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 160,
+            "textH": 20,
+            "lines": 1,
+            "lineWidths": [
+              160
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加文字标题"
+        },
+        {
+          "id": "文本框_15",
+          "kind": "text",
+          "bounds": {
+            "x": 289,
+            "y": 348,
+            "w": 180,
+            "h": 95
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#595959",
+            "align": "center",
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 416,
+            "textH": 72,
+            "lines": 3,
+            "lineWidths": [
+              176,
+              176,
+              64
+            ],
+            "overflowY": 0,
+            "overflowX": 236
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "矩形_16",
+          "kind": "text",
+          "bounds": {
+            "x": 291,
+            "y": 316,
+            "w": 176,
+            "h": 32
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#7DB1CD",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 160,
+            "textH": 20,
+            "lines": 1,
+            "lineWidths": [
+              160
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加文字标题"
+        },
+        {
+          "id": "文本框_17",
+          "kind": "text",
+          "bounds": {
+            "x": 469,
+            "y": 348,
+            "w": 180,
+            "h": 95
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#595959",
+            "align": "center",
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 416,
+            "textH": 72,
+            "lines": 3,
+            "lineWidths": [
+              176,
+              176,
+              64
+            ],
+            "overflowY": 0,
+            "overflowX": 236
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "矩形_18",
+          "kind": "text",
+          "bounds": {
+            "x": 471,
+            "y": 316,
+            "w": 176,
+            "h": 32
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#5E80B0",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 160,
+            "textH": 20,
+            "lines": 1,
+            "lineWidths": [
+              160
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加文字标题"
+        },
+        {
+          "id": "文本框_19",
+          "kind": "text",
+          "bounds": {
+            "x": 651,
+            "y": 348,
+            "w": 180,
+            "h": 95
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#595959",
+            "align": "center",
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 416,
+            "textH": 72,
+            "lines": 3,
+            "lineWidths": [
+              176,
+              176,
+              64
+            ],
+            "overflowY": 0,
+            "overflowX": 236
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "矩形_20",
+          "kind": "text",
+          "bounds": {
+            "x": 653,
+            "y": 316,
+            "w": 176,
+            "h": 32
+          },
+          "style": {
+            "fontSize": 20,
+            "fontFamily": "+mn-lt",
+            "color": "#000000",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 160,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              160
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加文字标题"
+        },
+        {
+          "id": "图片_22",
+          "kind": "image",
+          "bounds": {
+            "x": 678,
+            "y": 0,
+            "w": 282,
+            "h": 79
+          },
+          "src": "media/image8.png",
+          "fit": "cover"
+        },
+        {
+          "id": "文本框_27",
+          "kind": "text",
+          "bounds": {
+            "x": 68,
+            "y": 2,
+            "w": 358,
+            "h": 58
+          },
+          "style": {
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 216,
+            "textH": 27,
+            "lines": 1,
+            "lineWidths": [
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "添加论文内容第一部分标题"
+        },
+        {
+          "id": "矩形_29",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 530,
+            "w": 960,
+            "h": 11
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "file": "pages/_10_pages_slide_10.yaml",
+      "name": "pages/_10_pages_slide_10",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "图片_1",
+          "kind": "image",
+          "bounds": {
+            "x": 678,
+            "y": 0,
+            "w": 282,
+            "h": 79
+          },
+          "src": "media/image8.png",
+          "fit": "cover"
+        },
+        {
+          "id": "文本框_6",
+          "kind": "text",
+          "bounds": {
+            "x": 68,
+            "y": 2,
+            "w": 358,
+            "h": 58
+          },
+          "style": {
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 216,
+            "textH": 27,
+            "lines": 1,
+            "lineWidths": [
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "添加论文内容第一部分标题"
+        },
+        {
+          "id": "矩形_8",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 530,
+            "w": 960,
+            "h": 11
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_9",
+          "kind": "text",
+          "bounds": {
+            "x": 145,
+            "y": 181,
+            "w": 180,
+            "h": 86
+          },
+          "style": {
+            "color": "#595959",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 64.8,
+            "lines": 3,
+            "lineWidths": [
+              180,
+              180,
+              108
+            ],
+            "overflowY": 0,
+            "overflowX": 288
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_10",
+          "kind": "text",
+          "bounds": {
+            "x": 383,
+            "y": 181,
+            "w": 180,
+            "h": 86
+          },
+          "style": {
+            "color": "#595959",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 64.8,
+            "lines": 3,
+            "lineWidths": [
+              180,
+              180,
+              108
+            ],
+            "overflowY": 0,
+            "overflowX": 288
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_11",
+          "kind": "text",
+          "bounds": {
+            "x": 622,
+            "y": 181,
+            "w": 180,
+            "h": 86
+          },
+          "style": {
+            "color": "#595959",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 64.8,
+            "lines": 3,
+            "lineWidths": [
+              180,
+              180,
+              108
+            ],
+            "overflowY": 0,
+            "overflowX": 288
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_12",
+          "kind": "text",
+          "bounds": {
+            "x": 145,
+            "y": 368,
+            "w": 180,
+            "h": 86
+          },
+          "style": {
+            "color": "#595959",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 64.8,
+            "lines": 3,
+            "lineWidths": [
+              180,
+              180,
+              108
+            ],
+            "overflowY": 0,
+            "overflowX": 288
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_13",
+          "kind": "text",
+          "bounds": {
+            "x": 383,
+            "y": 368,
+            "w": 180,
+            "h": 86
+          },
+          "style": {
+            "color": "#595959",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 64.8,
+            "lines": 3,
+            "lineWidths": [
+              180,
+              180,
+              108
+            ],
+            "overflowY": 0,
+            "overflowX": 288
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_14",
+          "kind": "text",
+          "bounds": {
+            "x": 622,
+            "y": 368,
+            "w": 180,
+            "h": 86
+          },
+          "style": {
+            "color": "#595959",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 64.8,
+            "lines": 3,
+            "lineWidths": [
+              180,
+              180,
+              108
+            ],
+            "overflowY": 0,
+            "overflowX": 288
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "Freeform_15",
+          "kind": "shape",
+          "bounds": {
+            "x": 443,
+            "y": 131,
+            "w": 44,
+            "h": 44
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "Freeform_16",
+          "kind": "shape",
+          "bounds": {
+            "x": 689,
+            "y": 128,
+            "w": 48,
+            "h": 47
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "Freeform_33",
+          "kind": "shape",
+          "bounds": {
+            "x": 212,
+            "y": 320,
+            "w": 40,
+            "h": 48
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "Freeform_37",
+          "kind": "shape",
+          "bounds": {
+            "x": 682,
+            "y": 323,
+            "w": 61,
+            "h": 42
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "任意多边形_31",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 216,
+            "w": 67,
+            "h": 133
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "任意多边形_32",
+          "kind": "shape",
+          "bounds": {
+            "x": 893,
+            "y": 216,
+            "w": 67,
+            "h": 133
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "file": "pages/_11_pages_slide_11.yaml",
+      "name": "pages/_11_pages_slide_11",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "矩形_1",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 200,
+            "w": 443,
+            "h": 155
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_2",
+          "kind": "text",
+          "bounds": {
+            "x": 461,
+            "y": 181,
+            "w": 450,
+            "h": 73
+          },
+          "style": {
+            "fontSize": 36,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 432,
+            "textH": 54,
+            "lines": 1,
+            "lineWidths": [
+              432
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "添加论文内容第二部分标题"
+        },
+        {
+          "id": "文本框_4",
+          "kind": "text",
+          "bounds": {
+            "x": 461,
+            "y": 253,
+            "w": 450,
+            "h": 102
+          },
+          "style": {
+            "color": "#808080",
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 1080,
+            "textH": 81,
+            "lines": 3,
+            "lineWidths": [
+              450,
+              450,
+              180
+            ],
+            "overflowY": 0,
+            "overflowX": 630
+          },
+          "text": "培养学生综合运用、巩固与扩展所学的基础理论和专业知识，培养学生独立分析、解决实际问题能力、培养学生处理数据和信息的能力。"
+        },
+        {
+          "id": "图片_9",
+          "kind": "image",
+          "bounds": {
+            "x": 498,
+            "y": 410,
+            "w": 462,
+            "h": 131
+          },
+          "src": "media/image6.png",
+          "fit": "cover"
+        },
+        {
+          "id": "图片_10",
+          "kind": "image",
+          "bounds": {
+            "x": 0,
+            "y": 0,
+            "w": 620,
+            "h": 175
+          },
+          "src": "media/image7.png",
+          "fit": "cover"
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "file": "pages/_12_pages_slide_12.yaml",
+      "name": "pages/_12_pages_slide_12",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [
+        {
+          "pair": [
+            "MH_SubTitle_1",
+            "MH_Other_1"
+          ]
+        },
+        {
+          "pair": [
+            "MH_SubTitle_1",
+            "文本框_21"
+          ]
+        },
+        {
+          "pair": [
+            "MH_SubTitle_2",
+            "MH_Other_2"
+          ]
+        },
+        {
+          "pair": [
+            "MH_SubTitle_2",
+            "文本框_22"
+          ]
+        },
+        {
+          "pair": [
+            "MH_SubTitle_3",
+            "MH_Other_3"
+          ]
+        },
+        {
+          "pair": [
+            "MH_SubTitle_3",
+            "文本框_23"
+          ]
+        },
+        {
+          "pair": [
+            "MH_SubTitle_4",
+            "MH_Other_4"
+          ]
+        },
+        {
+          "pair": [
+            "MH_SubTitle_4",
+            "文本框_24"
+          ]
+        },
+        {
+          "pair": [
+            "MH_SubTitle_5",
+            "MH_Other_5"
+          ]
+        },
+        {
+          "pair": [
+            "MH_SubTitle_5",
+            "文本框_25"
+          ]
+        },
+        {
+          "pair": [
+            "MH_SubTitle_6",
+            "MH_Other_6"
+          ]
+        },
+        {
+          "pair": [
+            "MH_SubTitle_6",
+            "文本框_26"
+          ]
+        }
+      ],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "图片_1",
+          "kind": "image",
+          "bounds": {
+            "x": 678,
+            "y": 0,
+            "w": 282,
+            "h": 79
+          },
+          "src": "media/image8.png",
+          "fit": "cover"
+        },
+        {
+          "id": "文本框_2",
+          "kind": "text",
+          "bounds": {
+            "x": 68,
+            "y": 2,
+            "w": 358,
+            "h": 58
+          },
+          "style": {
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 216,
+            "textH": 27,
+            "lines": 1,
+            "lineWidths": [
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "添加论文内容第二部分标题"
+        },
+        {
+          "id": "矩形_4",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 530,
+            "w": 960,
+            "h": 11
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "MH_SubTitle_1",
+          "kind": "shape",
+          "bounds": {
+            "x": 132,
+            "y": 147,
+            "w": 213,
+            "h": 136
+          },
+          "shape": "rect",
+          "rotation": 0
+        },
+        {
+          "id": "MH_SubTitle_2",
+          "kind": "shape",
+          "bounds": {
+            "x": 371,
+            "y": 147,
+            "w": 213,
+            "h": 136
+          },
+          "shape": "rect",
+          "rotation": 0
+        },
+        {
+          "id": "MH_SubTitle_3",
+          "kind": "shape",
+          "bounds": {
+            "x": 609,
+            "y": 147,
+            "w": 213,
+            "h": 136
+          },
+          "shape": "rect",
+          "rotation": 0
+        },
+        {
+          "id": "MH_SubTitle_4",
+          "kind": "shape",
+          "bounds": {
+            "x": 132,
+            "y": 320,
+            "w": 213,
+            "h": 136
+          },
+          "shape": "rect",
+          "rotation": 0
+        },
+        {
+          "id": "MH_SubTitle_5",
+          "kind": "shape",
+          "bounds": {
+            "x": 371,
+            "y": 320,
+            "w": 213,
+            "h": 136
+          },
+          "shape": "rect",
+          "rotation": 0
+        },
+        {
+          "id": "MH_SubTitle_6",
+          "kind": "shape",
+          "bounds": {
+            "x": 609,
+            "y": 320,
+            "w": 213,
+            "h": 136
+          },
+          "shape": "rect",
+          "rotation": 0
+        },
+        {
+          "id": "MH_Other_1",
+          "kind": "text",
+          "bounds": {
+            "x": 281,
+            "y": 134,
+            "w": 47,
+            "h": 43
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#FFFFFF",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 24,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              24
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "01"
+        },
+        {
+          "id": "MH_Other_2",
+          "kind": "text",
+          "bounds": {
+            "x": 519,
+            "y": 134,
+            "w": 47,
+            "h": 43
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#FFFFFF",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 24,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              24
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "02"
+        },
+        {
+          "id": "MH_Other_3",
+          "kind": "text",
+          "bounds": {
+            "x": 757,
+            "y": 134,
+            "w": 47,
+            "h": 43
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#FFFFFF",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 24,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              24
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "03"
+        },
+        {
+          "id": "MH_Other_4",
+          "kind": "text",
+          "bounds": {
+            "x": 281,
+            "y": 306,
+            "w": 47,
+            "h": 42
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#FFFFFF",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 24,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              24
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "04"
+        },
+        {
+          "id": "MH_Other_5",
+          "kind": "text",
+          "bounds": {
+            "x": 519,
+            "y": 306,
+            "w": 47,
+            "h": 42
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#FFFFFF",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 24,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              24
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "05"
+        },
+        {
+          "id": "MH_Other_6",
+          "kind": "text",
+          "bounds": {
+            "x": 757,
+            "y": 306,
+            "w": 47,
+            "h": 42
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#FFFFFF",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 24,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              24
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "06"
+        },
+        {
+          "id": "文本框_21",
+          "kind": "text",
+          "bounds": {
+            "x": 148,
+            "y": 184,
+            "w": 180,
+            "h": 86
+          },
+          "style": {
+            "color": "#595959",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 64.8,
+            "lines": 3,
+            "lineWidths": [
+              180,
+              180,
+              108
+            ],
+            "overflowY": 0,
+            "overflowX": 288
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_22",
+          "kind": "text",
+          "bounds": {
+            "x": 386,
+            "y": 184,
+            "w": 180,
+            "h": 86
+          },
+          "style": {
+            "color": "#595959",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 64.8,
+            "lines": 3,
+            "lineWidths": [
+              180,
+              180,
+              108
+            ],
+            "overflowY": 0,
+            "overflowX": 288
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_23",
+          "kind": "text",
+          "bounds": {
+            "x": 625,
+            "y": 184,
+            "w": 180,
+            "h": 86
+          },
+          "style": {
+            "color": "#595959",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 64.8,
+            "lines": 3,
+            "lineWidths": [
+              180,
+              180,
+              108
+            ],
+            "overflowY": 0,
+            "overflowX": 288
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_24",
+          "kind": "text",
+          "bounds": {
+            "x": 148,
+            "y": 351,
+            "w": 180,
+            "h": 86
+          },
+          "style": {
+            "color": "#595959",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 64.8,
+            "lines": 3,
+            "lineWidths": [
+              180,
+              180,
+              108
+            ],
+            "overflowY": 0,
+            "overflowX": 288
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_25",
+          "kind": "text",
+          "bounds": {
+            "x": 386,
+            "y": 351,
+            "w": 180,
+            "h": 86
+          },
+          "style": {
+            "color": "#595959",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 64.8,
+            "lines": 3,
+            "lineWidths": [
+              180,
+              180,
+              108
+            ],
+            "overflowY": 0,
+            "overflowX": 288
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_26",
+          "kind": "text",
+          "bounds": {
+            "x": 625,
+            "y": 351,
+            "w": 180,
+            "h": 86
+          },
+          "style": {
+            "color": "#595959",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 64.8,
+            "lines": 3,
+            "lineWidths": [
+              180,
+              180,
+              108
+            ],
+            "overflowY": 0,
+            "overflowX": 288
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "file": "pages/_13_pages_slide_13.yaml",
+      "name": "pages/_13_pages_slide_13",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [
+        {
+          "pair": [
+            "矩形_9",
+            "KSO_Shape"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_9",
+            "KSO_Shape-2"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_9",
+            "KSO_Shape-3"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_9",
+            "KSO_Shape-4"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_9",
+            "文本框_14"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_9",
+            "文本框_15"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_9",
+            "文本框_16"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_9",
+            "文本框_17"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_9",
+            "文本框_18"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_9",
+            "文本框_19"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_9",
+            "文本框_20"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_9",
+            "文本框_21"
+          ]
+        }
+      ],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "图片_1",
+          "kind": "image",
+          "bounds": {
+            "x": 678,
+            "y": 0,
+            "w": 282,
+            "h": 79
+          },
+          "src": "media/image8.png",
+          "fit": "cover"
+        },
+        {
+          "id": "文本框_2",
+          "kind": "text",
+          "bounds": {
+            "x": 68,
+            "y": 2,
+            "w": 358,
+            "h": 58
+          },
+          "style": {
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 216,
+            "textH": 27,
+            "lines": 1,
+            "lineWidths": [
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "添加论文内容第二部分标题"
+        },
+        {
+          "id": "矩形_4",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 530,
+            "w": 960,
+            "h": 11
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "矩形_9",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 155,
+            "w": 960,
+            "h": 256
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape",
+          "kind": "shape",
+          "bounds": {
+            "x": 90,
+            "y": 192,
+            "w": 99,
+            "h": 74
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape-2",
+          "kind": "shape",
+          "bounds": {
+            "x": 355,
+            "y": 192,
+            "w": 37,
+            "h": 74
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape-3",
+          "kind": "shape",
+          "bounds": {
+            "x": 557,
+            "y": 192,
+            "w": 71,
+            "h": 74
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape-4",
+          "kind": "shape",
+          "bounds": {
+            "x": 792,
+            "y": 189,
+            "w": 87,
+            "h": 79
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_14",
+          "kind": "text",
+          "bounds": {
+            "x": 47,
+            "y": 307,
+            "w": 172,
+            "h": 68
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#FFFFFF",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 364,
+            "textH": 50.400000000000006,
+            "lines": 3,
+            "lineWidths": [
+              168,
+              168,
+              28
+            ],
+            "overflowY": 0,
+            "overflowX": 192
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_15",
+          "kind": "text",
+          "bounds": {
+            "x": 45,
+            "y": 279,
+            "w": 176,
+            "h": 32
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 160,
+            "textH": 20,
+            "lines": 1,
+            "lineWidths": [
+              160
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "请在这里添加标题"
+        },
+        {
+          "id": "文本框_16",
+          "kind": "text",
+          "bounds": {
+            "x": 284,
+            "y": 307,
+            "w": 172,
+            "h": 68
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#FFFFFF",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 364,
+            "textH": 50.400000000000006,
+            "lines": 3,
+            "lineWidths": [
+              168,
+              168,
+              28
+            ],
+            "overflowY": 0,
+            "overflowX": 192
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_17",
+          "kind": "text",
+          "bounds": {
+            "x": 282,
+            "y": 279,
+            "w": 176,
+            "h": 32
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 160,
+            "textH": 20,
+            "lines": 1,
+            "lineWidths": [
+              160
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "请在这里添加标题"
+        },
+        {
+          "id": "文本框_18",
+          "kind": "text",
+          "bounds": {
+            "x": 503,
+            "y": 307,
+            "w": 172,
+            "h": 68
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#FFFFFF",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 364,
+            "textH": 50.400000000000006,
+            "lines": 3,
+            "lineWidths": [
+              168,
+              168,
+              28
+            ],
+            "overflowY": 0,
+            "overflowX": 192
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_19",
+          "kind": "text",
+          "bounds": {
+            "x": 501,
+            "y": 279,
+            "w": 176,
+            "h": 32
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 160,
+            "textH": 20,
+            "lines": 1,
+            "lineWidths": [
+              160
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "请在这里添加标题"
+        },
+        {
+          "id": "文本框_20",
+          "kind": "text",
+          "bounds": {
+            "x": 754,
+            "y": 307,
+            "w": 172,
+            "h": 68
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#FFFFFF",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 364,
+            "textH": 50.400000000000006,
+            "lines": 3,
+            "lineWidths": [
+              168,
+              168,
+              28
+            ],
+            "overflowY": 0,
+            "overflowX": 192
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_21",
+          "kind": "text",
+          "bounds": {
+            "x": 752,
+            "y": 279,
+            "w": 176,
+            "h": 32
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 160,
+            "textH": 20,
+            "lines": 1,
+            "lineWidths": [
+              160
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "请在这里添加标题"
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "file": "pages/_14_pages_slide_14.yaml",
+      "name": "pages/_14_pages_slide_14",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [
+        {
+          "pair": [
+            "椭圆_9",
+            "KSO_Shape"
+          ]
+        },
+        {
+          "pair": [
+            "椭圆_10",
+            "KSO_Shape-3"
+          ]
+        },
+        {
+          "pair": [
+            "椭圆_11",
+            "KSO_Shape-2"
+          ]
+        },
+        {
+          "pair": [
+            "椭圆_12",
+            "KSO_Shape-4"
+          ]
+        }
+      ],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "图片_1",
+          "kind": "image",
+          "bounds": {
+            "x": 678,
+            "y": 0,
+            "w": 282,
+            "h": 79
+          },
+          "src": "media/image8.png",
+          "fit": "cover"
+        },
+        {
+          "id": "文本框_2",
+          "kind": "text",
+          "bounds": {
+            "x": 68,
+            "y": 2,
+            "w": 358,
+            "h": 58
+          },
+          "style": {
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 216,
+            "textH": 27,
+            "lines": 1,
+            "lineWidths": [
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "添加论文内容第二部分标题"
+        },
+        {
+          "id": "矩形_4",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 530,
+            "w": 960,
+            "h": 11
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_9",
+          "kind": "shape",
+          "bounds": {
+            "x": 144,
+            "y": 205,
+            "w": 112,
+            "h": 112
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_10",
+          "kind": "shape",
+          "bounds": {
+            "x": 329,
+            "y": 205,
+            "w": 112,
+            "h": 112
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_11",
+          "kind": "shape",
+          "bounds": {
+            "x": 514,
+            "y": 205,
+            "w": 112,
+            "h": 112
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_12",
+          "kind": "shape",
+          "bounds": {
+            "x": 703,
+            "y": 205,
+            "w": 112,
+            "h": 112
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape",
+          "kind": "shape",
+          "bounds": {
+            "x": 177,
+            "y": 233,
+            "w": 46,
+            "h": 55
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape-2",
+          "kind": "shape",
+          "bounds": {
+            "x": 548,
+            "y": 229,
+            "w": 55,
+            "h": 52
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape-3",
+          "kind": "shape",
+          "bounds": {
+            "x": 358,
+            "y": 229,
+            "w": 55,
+            "h": 55
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape-4",
+          "kind": "shape",
+          "bounds": {
+            "x": 738,
+            "y": 229,
+            "w": 45,
+            "h": 55
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_21",
+          "kind": "text",
+          "bounds": {
+            "x": 148,
+            "y": 330,
+            "w": 112,
+            "h": 65
+          },
+          "style": {
+            "fontSize": 48,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 88.8,
+            "textH": 48,
+            "lines": 1,
+            "lineWidths": [
+              88.8
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "30%"
+        },
+        {
+          "id": "文本框_22",
+          "kind": "text",
+          "bounds": {
+            "x": 335,
+            "y": 330,
+            "w": 112,
+            "h": 65
+          },
+          "style": {
+            "fontSize": 48,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 88.8,
+            "textH": 48,
+            "lines": 1,
+            "lineWidths": [
+              88.8
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "70%"
+        },
+        {
+          "id": "文本框_23",
+          "kind": "text",
+          "bounds": {
+            "x": 517,
+            "y": 330,
+            "w": 112,
+            "h": 65
+          },
+          "style": {
+            "fontSize": 48,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 88.8,
+            "textH": 48,
+            "lines": 1,
+            "lineWidths": [
+              88.8
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "85%"
+        },
+        {
+          "id": "文本框_24",
+          "kind": "text",
+          "bounds": {
+            "x": 705,
+            "y": 330,
+            "w": 112,
+            "h": 65
+          },
+          "style": {
+            "fontSize": 48,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 88.8,
+            "textH": 48,
+            "lines": 1,
+            "lineWidths": [
+              88.8
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "60%"
+        },
+        {
+          "id": "文本框_25",
+          "kind": "text",
+          "bounds": {
+            "x": 121,
+            "y": 395,
+            "w": 158,
+            "h": 68
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#808080",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 364,
+            "textH": 50.400000000000006,
+            "lines": 3,
+            "lineWidths": [
+              154,
+              154,
+              56
+            ],
+            "overflowY": 0,
+            "overflowX": 206
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_26",
+          "kind": "text",
+          "bounds": {
+            "x": 306,
+            "y": 395,
+            "w": 158,
+            "h": 68
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#808080",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 364,
+            "textH": 50.400000000000006,
+            "lines": 3,
+            "lineWidths": [
+              154,
+              154,
+              56
+            ],
+            "overflowY": 0,
+            "overflowX": 206
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_27",
+          "kind": "text",
+          "bounds": {
+            "x": 491,
+            "y": 395,
+            "w": 158,
+            "h": 68
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#808080",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 364,
+            "textH": 50.400000000000006,
+            "lines": 3,
+            "lineWidths": [
+              154,
+              154,
+              56
+            ],
+            "overflowY": 0,
+            "overflowX": 206
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_28",
+          "kind": "text",
+          "bounds": {
+            "x": 680,
+            "y": 395,
+            "w": 158,
+            "h": 68
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#808080",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 364,
+            "textH": 50.400000000000006,
+            "lines": 3,
+            "lineWidths": [
+              154,
+              154,
+              56
+            ],
+            "overflowY": 0,
+            "overflowX": 206
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_29",
+          "kind": "text",
+          "bounds": {
+            "x": 119,
+            "y": 154,
+            "w": 160,
+            "h": 36
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#4B649F",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 144,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加标题"
+        },
+        {
+          "id": "文本框_30",
+          "kind": "text",
+          "bounds": {
+            "x": 305,
+            "y": 154,
+            "w": 160,
+            "h": 36
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#4B649F",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 144,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加标题"
+        },
+        {
+          "id": "文本框_31",
+          "kind": "text",
+          "bounds": {
+            "x": 489,
+            "y": 154,
+            "w": 160,
+            "h": 36
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#4B649F",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 144,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加标题"
+        },
+        {
+          "id": "文本框_32",
+          "kind": "text",
+          "bounds": {
+            "x": 678,
+            "y": 154,
+            "w": 160,
+            "h": 36
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#4B649F",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 144,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加标题"
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "file": "pages/_15_pages_slide_15.yaml",
+      "name": "pages/_15_pages_slide_15",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "矩形_1",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 200,
+            "w": 443,
+            "h": 155
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_2",
+          "kind": "text",
+          "bounds": {
+            "x": 461,
+            "y": 181,
+            "w": 450,
+            "h": 73
+          },
+          "style": {
+            "fontSize": 36,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 432,
+            "textH": 54,
+            "lines": 1,
+            "lineWidths": [
+              432
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "添加论文内容第三部分标题"
+        },
+        {
+          "id": "文本框_4",
+          "kind": "text",
+          "bounds": {
+            "x": 461,
+            "y": 253,
+            "w": 450,
+            "h": 102
+          },
+          "style": {
+            "color": "#808080",
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 1080,
+            "textH": 81,
+            "lines": 3,
+            "lineWidths": [
+              450,
+              450,
+              180
+            ],
+            "overflowY": 0,
+            "overflowX": 630
+          },
+          "text": "培养学生综合运用、巩固与扩展所学的基础理论和专业知识，培养学生独立分析、解决实际问题能力、培养学生处理数据和信息的能力。"
+        },
+        {
+          "id": "图片_9",
+          "kind": "image",
+          "bounds": {
+            "x": 498,
+            "y": 410,
+            "w": 462,
+            "h": 131
+          },
+          "src": "media/image6.png",
+          "fit": "cover"
+        },
+        {
+          "id": "图片_10",
+          "kind": "image",
+          "bounds": {
+            "x": 0,
+            "y": 0,
+            "w": 620,
+            "h": 175
+          },
+          "src": "media/image7.png",
+          "fit": "cover"
+        }
+      ]
+    },
+    {
+      "index": 15,
+      "file": "pages/_16_pages_slide_16.yaml",
+      "name": "pages/_16_pages_slide_16",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [
+        {
+          "pair": [
+            "任意多边形_9",
+            "椭圆_18"
+          ]
+        },
+        {
+          "pair": [
+            "任意多边形_9",
+            "椭圆_20"
+          ]
+        },
+        {
+          "pair": [
+            "任意多边形_9",
+            "椭圆_21"
+          ]
+        }
+      ],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "图片_1",
+          "kind": "image",
+          "bounds": {
+            "x": 678,
+            "y": 0,
+            "w": 282,
+            "h": 79
+          },
+          "src": "media/image8.png",
+          "fit": "cover"
+        },
+        {
+          "id": "文本框_2",
+          "kind": "text",
+          "bounds": {
+            "x": 68,
+            "y": 2,
+            "w": 358,
+            "h": 58
+          },
+          "style": {
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 216,
+            "textH": 27,
+            "lines": 1,
+            "lineWidths": [
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "添加论文内容第三部分标题"
+        },
+        {
+          "id": "矩形_4",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 530,
+            "w": 960,
+            "h": 11
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "任意多边形_9",
+          "kind": "text",
+          "bounds": {
+            "x": 92,
+            "y": 259,
+            "w": 223,
+            "h": 74
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 0.9,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 120,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              120
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加文字"
+        },
+        {
+          "id": "椭圆_10",
+          "kind": "shape",
+          "bounds": {
+            "x": 92,
+            "y": 237,
+            "w": 18,
+            "h": 18
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_11",
+          "kind": "shape",
+          "bounds": {
+            "x": 104,
+            "y": 212,
+            "w": 18,
+            "h": 18
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_12",
+          "kind": "shape",
+          "bounds": {
+            "x": 134,
+            "y": 217,
+            "w": 28,
+            "h": 28
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_13",
+          "kind": "shape",
+          "bounds": {
+            "x": 159,
+            "y": 190,
+            "w": 18,
+            "h": 18
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_14",
+          "kind": "shape",
+          "bounds": {
+            "x": 191,
+            "y": 180,
+            "w": 18,
+            "h": 18
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_15",
+          "kind": "shape",
+          "bounds": {
+            "x": 231,
+            "y": 197,
+            "w": 18,
+            "h": 18
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_16",
+          "kind": "shape",
+          "bounds": {
+            "x": 256,
+            "y": 210,
+            "w": 28,
+            "h": 28
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_17",
+          "kind": "shape",
+          "bounds": {
+            "x": 291,
+            "y": 237,
+            "w": 18,
+            "h": 18
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_18",
+          "kind": "shape",
+          "bounds": {
+            "x": 306,
+            "y": 264,
+            "w": 18,
+            "h": 18
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_19",
+          "kind": "shape",
+          "bounds": {
+            "x": 176,
+            "y": 212,
+            "w": 46,
+            "h": 46
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_20",
+          "kind": "shape",
+          "bounds": {
+            "x": 79,
+            "y": 307,
+            "w": 18,
+            "h": 18
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_21",
+          "kind": "shape",
+          "bounds": {
+            "x": 94,
+            "y": 329,
+            "w": 28,
+            "h": 28
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_22",
+          "kind": "shape",
+          "bounds": {
+            "x": 132,
+            "y": 349,
+            "w": 41,
+            "h": 41
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_23",
+          "kind": "shape",
+          "bounds": {
+            "x": 184,
+            "y": 381,
+            "w": 18,
+            "h": 18
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_24",
+          "kind": "shape",
+          "bounds": {
+            "x": 194,
+            "y": 349,
+            "w": 28,
+            "h": 28
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_25",
+          "kind": "shape",
+          "bounds": {
+            "x": 219,
+            "y": 384,
+            "w": 18,
+            "h": 18
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_26",
+          "kind": "shape",
+          "bounds": {
+            "x": 241,
+            "y": 344,
+            "w": 41,
+            "h": 41
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_27",
+          "kind": "shape",
+          "bounds": {
+            "x": 296,
+            "y": 334,
+            "w": 28,
+            "h": 28
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "燕尾形_28",
+          "kind": "shape",
+          "bounds": {
+            "x": 324,
+            "y": 217,
+            "w": 82,
+            "h": 157
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "任意多边形_29",
+          "kind": "text",
+          "bounds": {
+            "x": 406,
+            "y": 217,
+            "w": 224,
+            "h": 157
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 0.9,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 120,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              120
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加文字"
+        },
+        {
+          "id": "燕尾形_30",
+          "kind": "shape",
+          "bounds": {
+            "x": 630,
+            "y": 217,
+            "w": 82,
+            "h": 157
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "任意多边形_31",
+          "kind": "text",
+          "bounds": {
+            "x": 721,
+            "y": 204,
+            "w": 190,
+            "h": 190
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 0.9,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 120,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              120
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加文字"
+        }
+      ]
+    },
+    {
+      "index": 16,
+      "file": "pages/_17_pages_slide_17.yaml",
+      "name": "pages/_17_pages_slide_17",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "图片_1",
+          "kind": "image",
+          "bounds": {
+            "x": 678,
+            "y": 0,
+            "w": 282,
+            "h": 79
+          },
+          "src": "media/image8.png",
+          "fit": "cover"
+        },
+        {
+          "id": "文本框_2",
+          "kind": "text",
+          "bounds": {
+            "x": 68,
+            "y": 2,
+            "w": 358,
+            "h": 58
+          },
+          "style": {
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 216,
+            "textH": 27,
+            "lines": 1,
+            "lineWidths": [
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "添加论文内容第三部分标题"
+        },
+        {
+          "id": "矩形_4",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 530,
+            "w": 960,
+            "h": 11
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "Title_13",
+          "kind": "text",
+          "bounds": {
+            "x": 128,
+            "y": 345,
+            "w": 220,
+            "h": 42
+          },
+          "style": {
+            "fontSize": 26.65,
+            "fontFamily": "+mn-lt",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 90.60999999999999,
+            "textH": 31.979999999999997,
+            "lines": 1,
+            "lineWidths": [
+              79.94999999999999
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "Step 1"
+        },
+        {
+          "id": "Title_13-2",
+          "kind": "text",
+          "bounds": {
+            "x": 369,
+            "y": 345,
+            "w": 220,
+            "h": 42
+          },
+          "style": {
+            "fontSize": 26.65,
+            "fontFamily": "+mn-lt",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 90.60999999999999,
+            "textH": 31.979999999999997,
+            "lines": 1,
+            "lineWidths": [
+              79.94999999999999
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "Step 2"
+        },
+        {
+          "id": "Title_13-3",
+          "kind": "text",
+          "bounds": {
+            "x": 610,
+            "y": 345,
+            "w": 220,
+            "h": 42
+          },
+          "style": {
+            "fontSize": 26.65,
+            "fontFamily": "+mn-lt",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 90.60999999999999,
+            "textH": 31.979999999999997,
+            "lines": 1,
+            "lineWidths": [
+              79.94999999999999
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "Step 3"
+        },
+        {
+          "id": "文本框_22",
+          "kind": "text",
+          "bounds": {
+            "x": 176,
+            "y": 252,
+            "w": 124,
+            "h": 29
+          },
+          "style": {
+            "color": "#FFFFFF",
+            "lineHeight": 1,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 108,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              108
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加文字"
+        },
+        {
+          "id": "文本框_23",
+          "kind": "text",
+          "bounds": {
+            "x": 418,
+            "y": 266,
+            "w": 124,
+            "h": 29
+          },
+          "style": {
+            "color": "#FFFFFF",
+            "lineHeight": 1,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 108,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              108
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加文字"
+        },
+        {
+          "id": "文本框_24",
+          "kind": "text",
+          "bounds": {
+            "x": 658,
+            "y": 252,
+            "w": 124,
+            "h": 29
+          },
+          "style": {
+            "color": "#FFFFFF",
+            "lineHeight": 1,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 108,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              108
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加文字"
+        }
+      ]
+    },
+    {
+      "index": 17,
+      "file": "pages/_18_pages_slide_18.yaml",
+      "name": "pages/_18_pages_slide_18",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [
+        {
+          "pair": [
+            "Oval_33",
+            "Freeform_6"
+          ]
+        },
+        {
+          "pair": [
+            "Oval_22",
+            "Freeform_11"
+          ]
+        },
+        {
+          "pair": [
+            "Oval_22",
+            "Oval_29"
+          ]
+        },
+        {
+          "pair": [
+            "Oval_29",
+            "Freeform_16"
+          ]
+        },
+        {
+          "pair": [
+            "Oval_23",
+            "Freeform_21"
+          ]
+        },
+        {
+          "pair": [
+            "Oval_32",
+            "Freeform_26"
+          ]
+        },
+        {
+          "pair": [
+            "Oval_24",
+            "Freeform_31"
+          ]
+        }
+      ],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "图片_1",
+          "kind": "image",
+          "bounds": {
+            "x": 678,
+            "y": 0,
+            "w": 282,
+            "h": 79
+          },
+          "src": "media/image8.png",
+          "fit": "cover"
+        },
+        {
+          "id": "文本框_2",
+          "kind": "text",
+          "bounds": {
+            "x": 68,
+            "y": 2,
+            "w": 358,
+            "h": 58
+          },
+          "style": {
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 216,
+            "textH": 27,
+            "lines": 1,
+            "lineWidths": [
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "添加论文内容第三部分标题"
+        },
+        {
+          "id": "矩形_4",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 530,
+            "w": 960,
+            "h": 11
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "Oval_30",
+          "kind": "shape",
+          "bounds": {
+            "x": 419,
+            "y": 325,
+            "w": 38,
+            "h": 38
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "Oval_33",
+          "kind": "shape",
+          "bounds": {
+            "x": 470,
+            "y": 251,
+            "w": 91,
+            "h": 91
+          },
+          "shape": "ellipse",
+          "fill": "#7DB1CD",
+          "rotation": 0
+        },
+        {
+          "id": "Freeform_6",
+          "kind": "shape",
+          "bounds": {
+            "x": 497,
+            "y": 278,
+            "w": 37,
+            "h": 37
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "Oval_22",
+          "kind": "shape",
+          "bounds": {
+            "x": 182,
+            "y": 229,
+            "w": 106,
+            "h": 106
+          },
+          "shape": "ellipse",
+          "fill": "#7DB1CD",
+          "rotation": 0
+        },
+        {
+          "id": "Freeform_11",
+          "kind": "shape",
+          "bounds": {
+            "x": 203,
+            "y": 251,
+            "w": 63,
+            "h": 56
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "Oval_29",
+          "kind": "shape",
+          "bounds": {
+            "x": 280,
+            "y": 327,
+            "w": 76,
+            "h": 76
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "Freeform_16",
+          "kind": "shape",
+          "bounds": {
+            "x": 308,
+            "y": 349,
+            "w": 19,
+            "h": 32
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "Oval_23",
+          "kind": "shape",
+          "bounds": {
+            "x": 98,
+            "y": 146,
+            "w": 61,
+            "h": 61
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "Freeform_21",
+          "kind": "shape",
+          "bounds": {
+            "x": 113,
+            "y": 161,
+            "w": 30,
+            "h": 21
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "Oval_32",
+          "kind": "shape",
+          "bounds": {
+            "x": 357,
+            "y": 199,
+            "w": 49,
+            "h": 49
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "Freeform_26",
+          "kind": "shape",
+          "bounds": {
+            "x": 369,
+            "y": 211,
+            "w": 25,
+            "h": 25
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "Oval_24",
+          "kind": "shape",
+          "bounds": {
+            "x": 68,
+            "y": 365,
+            "w": 60,
+            "h": 61
+          },
+          "shape": "ellipse",
+          "fill": "#5E80B0",
+          "rotation": 0
+        },
+        {
+          "id": "Freeform_31",
+          "kind": "shape",
+          "bounds": {
+            "x": 82,
+            "y": 381,
+            "w": 34,
+            "h": 30
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_35",
+          "kind": "text",
+          "bounds": {
+            "x": 627,
+            "y": 183,
+            "w": 266,
+            "h": 60
+          },
+          "style": {
+            "color": "#808080",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 43.199999999999996,
+            "lines": 2,
+            "lineWidths": [
+              252,
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 202
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_36",
+          "kind": "text",
+          "bounds": {
+            "x": 624,
+            "y": 147,
+            "w": 160,
+            "h": 36
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#4B649F",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 144,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加标题"
+        },
+        {
+          "id": "文本框_37",
+          "kind": "text",
+          "bounds": {
+            "x": 627,
+            "y": 289,
+            "w": 266,
+            "h": 60
+          },
+          "style": {
+            "color": "#808080",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 43.199999999999996,
+            "lines": 2,
+            "lineWidths": [
+              252,
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 202
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_38",
+          "kind": "text",
+          "bounds": {
+            "x": 624,
+            "y": 253,
+            "w": 160,
+            "h": 36
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#4B649F",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 144,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加标题"
+        },
+        {
+          "id": "文本框_39",
+          "kind": "text",
+          "bounds": {
+            "x": 627,
+            "y": 389,
+            "w": 266,
+            "h": 60
+          },
+          "style": {
+            "color": "#808080",
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 468,
+            "textH": 43.199999999999996,
+            "lines": 2,
+            "lineWidths": [
+              252,
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 202
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_40",
+          "kind": "text",
+          "bounds": {
+            "x": 624,
+            "y": 353,
+            "w": 160,
+            "h": 36
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#4B649F",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 144,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加标题"
+        }
+      ]
+    },
+    {
+      "index": 18,
+      "file": "pages/_19_pages_slide_19.yaml",
+      "name": "pages/_19_pages_slide_19",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "矩形_1",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 200,
+            "w": 443,
+            "h": 155
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_2",
+          "kind": "text",
+          "bounds": {
+            "x": 461,
+            "y": 181,
+            "w": 450,
+            "h": 73
+          },
+          "style": {
+            "fontSize": 36,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 432,
+            "textH": 54,
+            "lines": 1,
+            "lineWidths": [
+              432
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "添加论文内容第四部分标题"
+        },
+        {
+          "id": "文本框_4",
+          "kind": "text",
+          "bounds": {
+            "x": 461,
+            "y": 253,
+            "w": 450,
+            "h": 102
+          },
+          "style": {
+            "color": "#808080",
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 1080,
+            "textH": 81,
+            "lines": 3,
+            "lineWidths": [
+              450,
+              450,
+              180
+            ],
+            "overflowY": 0,
+            "overflowX": 630
+          },
+          "text": "培养学生综合运用、巩固与扩展所学的基础理论和专业知识，培养学生独立分析、解决实际问题能力、培养学生处理数据和信息的能力。"
+        },
+        {
+          "id": "图片_9",
+          "kind": "image",
+          "bounds": {
+            "x": 498,
+            "y": 410,
+            "w": 462,
+            "h": 131
+          },
+          "src": "media/image6.png",
+          "fit": "cover"
+        },
+        {
+          "id": "图片_10",
+          "kind": "image",
+          "bounds": {
+            "x": 0,
+            "y": 0,
+            "w": 620,
+            "h": 175
+          },
+          "src": "media/image7.png",
+          "fit": "cover"
+        }
+      ]
+    },
+    {
+      "index": 19,
+      "file": "pages/_20_pages_slide_20.yaml",
+      "name": "pages/_20_pages_slide_20",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "图片_1",
+          "kind": "image",
+          "bounds": {
+            "x": 678,
+            "y": 0,
+            "w": 282,
+            "h": 79
+          },
+          "src": "media/image8.png",
+          "fit": "cover"
+        },
+        {
+          "id": "文本框_2",
+          "kind": "text",
+          "bounds": {
+            "x": 68,
+            "y": 2,
+            "w": 358,
+            "h": 58
+          },
+          "style": {
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 216,
+            "textH": 27,
+            "lines": 1,
+            "lineWidths": [
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "添加论文内容第四部分标题"
+        },
+        {
+          "id": "矩形_4",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 530,
+            "w": 960,
+            "h": 11
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "Title_13",
+          "kind": "text",
+          "bounds": {
+            "x": 577,
+            "y": 123,
+            "w": 303,
+            "h": 56
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#595959",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 192,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              192
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加文字标题"
+        },
+        {
+          "id": "Title_13-2",
+          "kind": "text",
+          "bounds": {
+            "x": 577,
+            "y": 229,
+            "w": 303,
+            "h": 56
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#595959",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 192,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              192
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加文字标题"
+        },
+        {
+          "id": "Title_13-3",
+          "kind": "text",
+          "bounds": {
+            "x": 577,
+            "y": 340,
+            "w": 303,
+            "h": 56
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#595959",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 192,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              192
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "这里添加文字标题"
+        },
+        {
+          "id": "文本框_21",
+          "kind": "text",
+          "bounds": {
+            "x": 577,
+            "y": 167,
+            "w": 303,
+            "h": 52
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#808080",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 416,
+            "textH": 38.4,
+            "lines": 2,
+            "lineWidths": [
+              288,
+              128
+            ],
+            "overflowY": 0,
+            "overflowX": 113
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_22",
+          "kind": "text",
+          "bounds": {
+            "x": 577,
+            "y": 274,
+            "w": 303,
+            "h": 52
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#808080",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 416,
+            "textH": 38.4,
+            "lines": 2,
+            "lineWidths": [
+              288,
+              128
+            ],
+            "overflowY": 0,
+            "overflowX": 113
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_23",
+          "kind": "text",
+          "bounds": {
+            "x": 577,
+            "y": 386,
+            "w": 303,
+            "h": 52
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#808080",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 416,
+            "textH": 38.4,
+            "lines": 2,
+            "lineWidths": [
+              288,
+              128
+            ],
+            "overflowY": 0,
+            "overflowX": 113
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "对象_27",
+          "kind": "text",
+          "bounds": {
+            "x": -20,
+            "y": 134,
+            "w": 548,
+            "h": 318
+          },
+          "style": {
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 528.3,
+            "textH": 21.599999999999998,
+            "lines": 1,
+            "lineWidths": [
+              506.7
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "[chart: 对象 27] 图表已降级为文本占位，请重新生成图表样式"
+        },
+        {
+          "id": "文本框_26",
+          "kind": "text",
+          "bounds": {
+            "x": 171,
+            "y": 222,
+            "w": 176,
+            "h": 104
+          },
+          "style": {
+            "fontSize": 80,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 148,
+            "textH": 80,
+            "lines": 1,
+            "lineWidths": [
+              148
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "26%"
+        }
+      ]
+    },
+    {
+      "index": 20,
+      "file": "pages/_21_pages_slide_21.yaml",
+      "name": "pages/_21_pages_slide_21",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [
+        {
+          "pair": [
+            "Title_13",
+            "矩形_15"
+          ]
+        },
+        {
+          "pair": [
+            "Title_13-2",
+            "矩形_18"
+          ]
+        },
+        {
+          "pair": [
+            "Title_13-3",
+            "矩形_21"
+          ]
+        }
+      ],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "图片_1",
+          "kind": "image",
+          "bounds": {
+            "x": 678,
+            "y": 0,
+            "w": 282,
+            "h": 79
+          },
+          "src": "media/image8.png",
+          "fit": "cover"
+        },
+        {
+          "id": "文本框_2",
+          "kind": "text",
+          "bounds": {
+            "x": 68,
+            "y": 2,
+            "w": 358,
+            "h": 58
+          },
+          "style": {
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 216,
+            "textH": 27,
+            "lines": 1,
+            "lineWidths": [
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "添加论文内容第四部分标题"
+        },
+        {
+          "id": "矩形_4",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 530,
+            "w": 960,
+            "h": 11
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "对象_22",
+          "kind": "text",
+          "bounds": {
+            "x": 67,
+            "y": 124,
+            "w": 829,
+            "h": 216
+          },
+          "style": {
+            "fontSize": 18,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 528.3,
+            "textH": 21.599999999999998,
+            "lines": 1,
+            "lineWidths": [
+              506.7
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "[chart: 对象 22] 图表已降级为文本占位，请重新生成图表样式"
+        },
+        {
+          "id": "Title_13",
+          "kind": "text",
+          "bounds": {
+            "x": 90,
+            "y": 351,
+            "w": 303,
+            "h": 56
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#595959",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 62.4,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              62.4
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "类别1"
+        },
+        {
+          "id": "文本框_11",
+          "kind": "text",
+          "bounds": {
+            "x": 90,
+            "y": 395,
+            "w": 164,
+            "h": 77
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#808080",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 416,
+            "textH": 57.599999999999994,
+            "lines": 3,
+            "lineWidths": [
+              160,
+              160,
+              96
+            ],
+            "overflowY": 0,
+            "overflowX": 252
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "矩形_12",
+          "kind": "shape",
+          "bounds": {
+            "x": 75,
+            "y": 369,
+            "w": 15,
+            "h": 15
+          },
+          "shape": "rect",
+          "rotation": 0
+        },
+        {
+          "id": "Title_13-2",
+          "kind": "text",
+          "bounds": {
+            "x": 300,
+            "y": 351,
+            "w": 303,
+            "h": 56
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#595959",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 62.4,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              62.4
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "类别2"
+        },
+        {
+          "id": "文本框_14",
+          "kind": "text",
+          "bounds": {
+            "x": 300,
+            "y": 395,
+            "w": 164,
+            "h": 77
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#808080",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 416,
+            "textH": 57.599999999999994,
+            "lines": 3,
+            "lineWidths": [
+              160,
+              160,
+              96
+            ],
+            "overflowY": 0,
+            "overflowX": 252
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "矩形_15",
+          "kind": "shape",
+          "bounds": {
+            "x": 285,
+            "y": 369,
+            "w": 15,
+            "h": 15
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "Title_13-3",
+          "kind": "text",
+          "bounds": {
+            "x": 514,
+            "y": 351,
+            "w": 303,
+            "h": 56
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#595959",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 62.4,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              62.4
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "类别3"
+        },
+        {
+          "id": "文本框_17",
+          "kind": "text",
+          "bounds": {
+            "x": 514,
+            "y": 395,
+            "w": 164,
+            "h": 77
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#808080",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 416,
+            "textH": 57.599999999999994,
+            "lines": 3,
+            "lineWidths": [
+              160,
+              160,
+              96
+            ],
+            "overflowY": 0,
+            "overflowX": 252
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "矩形_18",
+          "kind": "shape",
+          "bounds": {
+            "x": 499,
+            "y": 369,
+            "w": 15,
+            "h": 15
+          },
+          "shape": "rect",
+          "fill": "#5E80B0",
+          "rotation": 0
+        },
+        {
+          "id": "Title_13-4",
+          "kind": "text",
+          "bounds": {
+            "x": 718,
+            "y": 351,
+            "w": 105,
+            "h": 56
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#595959",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 62.4,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              62.4
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "类别4"
+        },
+        {
+          "id": "文本框_20",
+          "kind": "text",
+          "bounds": {
+            "x": 718,
+            "y": 395,
+            "w": 164,
+            "h": 77
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#808080",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 416,
+            "textH": 57.599999999999994,
+            "lines": 3,
+            "lineWidths": [
+              160,
+              160,
+              96
+            ],
+            "overflowY": 0,
+            "overflowX": 252
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "矩形_21",
+          "kind": "shape",
+          "bounds": {
+            "x": 703,
+            "y": 369,
+            "w": 15,
+            "h": 15
+          },
+          "shape": "rect",
+          "fill": "#7DB1CD",
+          "rotation": 0
+        }
+      ]
+    },
+    {
+      "index": 21,
+      "file": "pages/_22_pages_slide_22.yaml",
+      "name": "pages/_22_pages_slide_22",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [
+        {
+          "pair": [
+            "Rectangle_86",
+            "Oval_6"
+          ]
+        },
+        {
+          "pair": [
+            "Rectangle_86",
+            "Freeform_26"
+          ]
+        },
+        {
+          "pair": [
+            "Rectangle_84",
+            "Oval_3"
+          ]
+        },
+        {
+          "pair": [
+            "Oval_3",
+            "Oval_4"
+          ]
+        },
+        {
+          "pair": [
+            "Oval_4",
+            "Oval_6"
+          ]
+        },
+        {
+          "pair": [
+            "Oval_6",
+            "Freeform_26"
+          ]
+        }
+      ],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "图片_1",
+          "kind": "image",
+          "bounds": {
+            "x": 678,
+            "y": 0,
+            "w": 282,
+            "h": 79
+          },
+          "src": "media/image8.png",
+          "fit": "cover"
+        },
+        {
+          "id": "文本框_2",
+          "kind": "text",
+          "bounds": {
+            "x": 68,
+            "y": 2,
+            "w": 358,
+            "h": 58
+          },
+          "style": {
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 216,
+            "textH": 27,
+            "lines": 1,
+            "lineWidths": [
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "添加论文内容第四部分标题"
+        },
+        {
+          "id": "矩形_4",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 530,
+            "w": 960,
+            "h": 11
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "Rectangle_86",
+          "kind": "shape",
+          "bounds": {
+            "x": 714,
+            "y": 192,
+            "w": 247,
+            "h": 94
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "Rectangle_84",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 192,
+            "w": 247,
+            "h": 94
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "Oval_3",
+          "kind": "shape",
+          "bounds": {
+            "x": 166,
+            "y": 126,
+            "w": 225,
+            "h": 225
+          },
+          "shape": "ellipse",
+          "fill": "#5E80B0",
+          "rotation": 0
+        },
+        {
+          "id": "Oval_4",
+          "kind": "shape",
+          "bounds": {
+            "x": 368,
+            "y": 126,
+            "w": 225,
+            "h": 225
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "Oval_6",
+          "kind": "shape",
+          "bounds": {
+            "x": 569,
+            "y": 126,
+            "w": 225,
+            "h": 225
+          },
+          "shape": "ellipse",
+          "fill": "#5E80B0",
+          "rotation": 0
+        },
+        {
+          "id": "Freeform_26",
+          "kind": "shape",
+          "bounds": {
+            "x": 637,
+            "y": 187,
+            "w": 102,
+            "h": 98
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "Title_13",
+          "kind": "text",
+          "bounds": {
+            "x": 233,
+            "y": 352,
+            "w": 105,
+            "h": 56
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#595959",
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 48,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              48
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "标题"
+        },
+        {
+          "id": "文本框_35",
+          "kind": "text",
+          "bounds": {
+            "x": 204,
+            "y": 396,
+            "w": 164,
+            "h": 77
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#808080",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 416,
+            "textH": 57.599999999999994,
+            "lines": 3,
+            "lineWidths": [
+              160,
+              160,
+              96
+            ],
+            "overflowY": 0,
+            "overflowX": 252
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "Title_13-2",
+          "kind": "text",
+          "bounds": {
+            "x": 430,
+            "y": 352,
+            "w": 105,
+            "h": 56
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#595959",
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 48,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              48
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "标题"
+        },
+        {
+          "id": "文本框_37",
+          "kind": "text",
+          "bounds": {
+            "x": 401,
+            "y": 396,
+            "w": 164,
+            "h": 77
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#808080",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 416,
+            "textH": 57.599999999999994,
+            "lines": 3,
+            "lineWidths": [
+              160,
+              160,
+              96
+            ],
+            "overflowY": 0,
+            "overflowX": 252
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "Title_13-3",
+          "kind": "text",
+          "bounds": {
+            "x": 627,
+            "y": 352,
+            "w": 105,
+            "h": 56
+          },
+          "style": {
+            "fontSize": 24,
+            "color": "#595959",
+            "align": "center",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 48,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              48
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "标题"
+        },
+        {
+          "id": "文本框_39",
+          "kind": "text",
+          "bounds": {
+            "x": 598,
+            "y": 396,
+            "w": 164,
+            "h": 77
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#808080",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 416,
+            "textH": 57.599999999999994,
+            "lines": 3,
+            "lineWidths": [
+              160,
+              160,
+              96
+            ],
+            "overflowY": 0,
+            "overflowX": 252
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        }
+      ]
+    },
+    {
+      "index": 22,
+      "file": "pages/_23_pages_slide_23.yaml",
+      "name": "pages/_23_pages_slide_23",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [
+        {
+          "pair": [
+            "椭圆_27",
+            "椭圆_28"
+          ]
+        },
+        {
+          "pair": [
+            "椭圆_27",
+            "KSO_Shape-7"
+          ]
+        },
+        {
+          "pair": [
+            "椭圆_27",
+            "文本框_30"
+          ]
+        },
+        {
+          "pair": [
+            "椭圆_28",
+            "KSO_Shape-7"
+          ]
+        },
+        {
+          "pair": [
+            "椭圆_28",
+            "文本框_30"
+          ]
+        }
+      ],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "图片_1",
+          "kind": "image",
+          "bounds": {
+            "x": 678,
+            "y": 0,
+            "w": 282,
+            "h": 79
+          },
+          "src": "media/image8.png",
+          "fit": "cover"
+        },
+        {
+          "id": "文本框_2",
+          "kind": "text",
+          "bounds": {
+            "x": 68,
+            "y": 2,
+            "w": 358,
+            "h": 58
+          },
+          "style": {
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1.5,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 216,
+            "textH": 27,
+            "lines": 1,
+            "lineWidths": [
+              216
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "添加论文内容第四部分标题"
+        },
+        {
+          "id": "矩形_4",
+          "kind": "shape",
+          "bounds": {
+            "x": 0,
+            "y": 530,
+            "w": 960,
+            "h": 11
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_9",
+          "kind": "text",
+          "bounds": {
+            "x": 702,
+            "y": 171,
+            "w": 172,
+            "h": 48
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#595959",
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 312,
+            "textH": 36,
+            "lines": 2,
+            "lineWidths": [
+              168,
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 140
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_10",
+          "kind": "text",
+          "bounds": {
+            "x": 702,
+            "y": 153,
+            "w": 144,
+            "h": 27
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 128,
+            "textH": 16,
+            "lines": 1,
+            "lineWidths": [
+              128
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "请在这里添加标题"
+        },
+        {
+          "id": "文本框_11",
+          "kind": "text",
+          "bounds": {
+            "x": 702,
+            "y": 262,
+            "w": 172,
+            "h": 48
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#595959",
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 312,
+            "textH": 36,
+            "lines": 2,
+            "lineWidths": [
+              168,
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 140
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_12",
+          "kind": "text",
+          "bounds": {
+            "x": 702,
+            "y": 244,
+            "w": 144,
+            "h": 27
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 128,
+            "textH": 16,
+            "lines": 1,
+            "lineWidths": [
+              128
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "请在这里添加标题"
+        },
+        {
+          "id": "文本框_13",
+          "kind": "text",
+          "bounds": {
+            "x": 702,
+            "y": 354,
+            "w": 172,
+            "h": 48
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#595959",
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 312,
+            "textH": 36,
+            "lines": 2,
+            "lineWidths": [
+              168,
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 140
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_14",
+          "kind": "text",
+          "bounds": {
+            "x": 702,
+            "y": 336,
+            "w": 144,
+            "h": 27
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 128,
+            "textH": 16,
+            "lines": 1,
+            "lineWidths": [
+              128
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "请在这里添加标题"
+        },
+        {
+          "id": "文本框_15",
+          "kind": "text",
+          "bounds": {
+            "x": 86,
+            "y": 175,
+            "w": 172,
+            "h": 48
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#595959",
+            "align": "right",
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 312,
+            "textH": 36,
+            "lines": 2,
+            "lineWidths": [
+              168,
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 140
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_16",
+          "kind": "text",
+          "bounds": {
+            "x": 115,
+            "y": 157,
+            "w": 144,
+            "h": 27
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#4B649F",
+            "bold": true,
+            "align": "right",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 128,
+            "textH": 16,
+            "lines": 1,
+            "lineWidths": [
+              128
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "请在这里添加标题"
+        },
+        {
+          "id": "文本框_17",
+          "kind": "text",
+          "bounds": {
+            "x": 86,
+            "y": 267,
+            "w": 172,
+            "h": 48
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#595959",
+            "align": "right",
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 312,
+            "textH": 36,
+            "lines": 2,
+            "lineWidths": [
+              168,
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 140
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_18",
+          "kind": "text",
+          "bounds": {
+            "x": 115,
+            "y": 249,
+            "w": 144,
+            "h": 27
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#4B649F",
+            "bold": true,
+            "align": "right",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 128,
+            "textH": 16,
+            "lines": 1,
+            "lineWidths": [
+              128
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "请在这里添加标题"
+        },
+        {
+          "id": "文本框_19",
+          "kind": "text",
+          "bounds": {
+            "x": 86,
+            "y": 359,
+            "w": 172,
+            "h": 48
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#595959",
+            "align": "right",
+            "lineHeight": 1.5,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 312,
+            "textH": 36,
+            "lines": 2,
+            "lineWidths": [
+              168,
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 140
+          },
+          "text": "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+        },
+        {
+          "id": "文本框_20",
+          "kind": "text",
+          "bounds": {
+            "x": 115,
+            "y": 341,
+            "w": 144,
+            "h": 27
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#4B649F",
+            "bold": true,
+            "align": "right",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 128,
+            "textH": 16,
+            "lines": 1,
+            "lineWidths": [
+              128
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "请在这里添加标题"
+        },
+        {
+          "id": "KSO_Shape",
+          "kind": "shape",
+          "bounds": {
+            "x": 280,
+            "y": 166,
+            "w": 41,
+            "h": 42
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape-2",
+          "kind": "shape",
+          "bounds": {
+            "x": 280,
+            "y": 262,
+            "w": 40,
+            "h": 49
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape-3",
+          "kind": "shape",
+          "bounds": {
+            "x": 280,
+            "y": 350,
+            "w": 41,
+            "h": 34
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape-4",
+          "kind": "shape",
+          "bounds": {
+            "x": 653,
+            "y": 165,
+            "w": 37,
+            "h": 38
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape-5",
+          "kind": "shape",
+          "bounds": {
+            "x": 653,
+            "y": 256,
+            "w": 40,
+            "h": 43
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape-6",
+          "kind": "shape",
+          "bounds": {
+            "x": 653,
+            "y": 344,
+            "w": 40,
+            "h": 40
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_27",
+          "kind": "shape",
+          "bounds": {
+            "x": 358,
+            "y": 157,
+            "w": 246,
+            "h": 246
+          },
+          "shape": "ellipse",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_28",
+          "kind": "shape",
+          "bounds": {
+            "x": 368,
+            "y": 168,
+            "w": 225,
+            "h": 224
+          },
+          "shape": "ellipse",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "KSO_Shape-7",
+          "kind": "shape",
+          "bounds": {
+            "x": 441,
+            "y": 214,
+            "w": 82,
+            "h": 70
+          },
+          "shape": "rect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_30",
+          "kind": "text",
+          "bounds": {
+            "x": 393,
+            "y": 307,
+            "w": 176,
+            "h": 32
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "right",
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 160,
+            "textH": 20,
+            "lines": 1,
+            "lineWidths": [
+              160
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "请在这里添加标题"
+        }
+      ]
+    },
+    {
+      "index": 23,
+      "file": "pages/_24_pages_slide_24.yaml",
+      "name": "pages/_24_pages_slide_24",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [
+        {
+          "pair": [
+            "任意多边形_47",
+            "文本框_62"
+          ]
+        },
+        {
+          "pair": [
+            "任意多边形_47",
+            "文本框_1066"
+          ]
+        },
+        {
+          "pair": [
+            "任意多边形_47",
+            "矩形_1067"
+          ]
+        },
+        {
+          "pair": [
+            "任意多边形_47",
+            "矩形_118"
+          ]
+        },
+        {
+          "pair": [
+            "文本框_62",
+            "矩形_1067"
+          ]
+        },
+        {
+          "pair": [
+            "文本框_62",
+            "矩形_118"
+          ]
+        },
+        {
+          "pair": [
+            "文本框_1027",
+            "矩形_1067"
+          ]
+        },
+        {
+          "pair": [
+            "文本框_112",
+            "矩形_1067"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_1067",
+            "矩形_1068"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_1067",
+            "矩形_116"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_1067",
+            "矩形_117"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_1067",
+            "矩形_118"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_1068",
+            "矩形_116"
+          ]
+        },
+        {
+          "pair": [
+            "矩形_117",
+            "矩形_118"
+          ]
+        }
+      ],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "elements": [
+        {
+          "id": "图片_6",
+          "kind": "image",
+          "bounds": {
+            "x": 498,
+            "y": 410,
+            "w": 462,
+            "h": 131
+          },
+          "src": "media/image6.png",
+          "fit": "cover"
+        },
+        {
+          "id": "任意多边形_47",
+          "kind": "shape",
+          "bounds": {
+            "x": 148,
+            "y": -112,
+            "w": 72,
+            "h": 369
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "椭圆_9",
+          "kind": "shape",
+          "bounds": {
+            "x": 26,
+            "y": 20,
+            "w": 105,
+            "h": 105
+          },
+          "shape": "ellipse",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "文本框_62",
+          "kind": "text",
+          "bounds": {
+            "x": 150,
+            "y": 207,
+            "w": 737,
+            "h": 87
+          },
+          "style": {
+            "fontSize": 66,
+            "color": "#4B649F",
+            "bold": true,
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 686.4,
+            "textH": 66,
+            "lines": 1,
+            "lineWidths": [
+              660
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "展示完毕 感谢您的聆听"
+        },
+        {
+          "id": "文本框_1027",
+          "kind": "text",
+          "bounds": {
+            "x": 190,
+            "y": 303,
+            "w": 142,
+            "h": 29
+          },
+          "style": {
+            "lineHeight": 1,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 126,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              126
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "答辩人：代用名"
+        },
+        {
+          "id": "文本框_112",
+          "kind": "text",
+          "bounds": {
+            "x": 389,
+            "y": 303,
+            "w": 160,
+            "h": 29
+          },
+          "style": {
+            "lineHeight": 1,
+            "fontSize": 18,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 144,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              144
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "指导教师：代用名"
+        },
+        {
+          "id": "文本框_1066",
+          "kind": "text",
+          "bounds": {
+            "x": 139,
+            "y": 47,
+            "w": 207,
+            "h": 46
+          },
+          "style": {
+            "fontSize": 32,
+            "color": "#FFFFFF",
+            "bold": true,
+            "lineHeight": 1,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 232,
+            "textH": 64,
+            "lines": 2,
+            "lineWidths": [
+              200,
+              32
+            ],
+            "overflowY": 18,
+            "overflowX": 25
+          },
+          "text": "中国*****大学"
+        },
+        {
+          "id": "矩形_1067",
+          "kind": "shape",
+          "bounds": {
+            "x": 116,
+            "y": 192,
+            "w": 762,
+            "h": 167
+          },
+          "shape": "rect",
+          "rotation": 0
+        },
+        {
+          "id": "矩形_1068",
+          "kind": "shape",
+          "bounds": {
+            "x": 859,
+            "y": 334,
+            "w": 38,
+            "h": 38
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "矩形_116",
+          "kind": "shape",
+          "bounds": {
+            "x": 838,
+            "y": 316,
+            "w": 37,
+            "h": 37
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "矩形_117",
+          "kind": "shape",
+          "bounds": {
+            "x": 103,
+            "y": 176,
+            "w": 37,
+            "h": 37
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        },
+        {
+          "id": "矩形_118",
+          "kind": "shape",
+          "bounds": {
+            "x": 115,
+            "y": 188,
+            "w": 37,
+            "h": 37
+          },
+          "shape": "rect",
+          "fill": "#4B649F",
+          "rotation": 0
+        }
+      ]
+    }
+  ]
+}

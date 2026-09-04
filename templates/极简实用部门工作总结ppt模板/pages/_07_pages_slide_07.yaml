@@ -1,0 +1,103 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "TextBox_15"
+    elementType: text
+    bounds: [447, 94, 70, 67]
+    content:
+      text: "vs"
+      fontSize: 49.5
+      color: "#DF3F4E"
+      fontFamily: "Arial"
+  - elementId: "TextBox_222"
+    elementType: text
+    bounds: [249, 111, 103, 38]
+    content:
+      text: "2016年"
+      fontSize: 24
+      color: "#DF3F4E"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.5
+  - elementId: "TextBox_228"
+    elementType: text
+    bounds: [613, 112, 103, 38]
+    content:
+      text: "2017年"
+      fontSize: 24
+      color: "#DF3F4E"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.5
+  - elementId: "矩形_86"
+    elementType: text
+    bounds: [178, 194, 225, 32]
+    content:
+      text: "销售额：*****亿"
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "矩形_87"
+    elementType: text
+    bounds: [179, 250, 225, 32]
+    content:
+      text: "市场规模：******亿"
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "矩形_88"
+    elementType: text
+    bounds: [178, 302, 225, 32]
+    content:
+      text: "客户量：*****万"
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "矩形_89"
+    elementType: text
+    bounds: [577, 194, 225, 32]
+    content:
+      text: "销售额：*****亿"
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "矩形_90"
+    elementType: text
+    bounds: [578, 250, 225, 32]
+    content:
+      text: "市场规模：******亿"
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "矩形_91"
+    elementType: text
+    bounds: [577, 302, 225, 32]
+    content:
+      text: "客户量：*****万"
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_92"
+    elementType: text
+    bounds: [337, 383, 287, 32]
+    content:
+      text: "全年业绩相对去年大幅增长"
+      fontSize: 20
+      fontFamily: "Arial"
+      align: center
+  - elementId: "等腰三角形_93"
+    elementType: shape
+    bounds: [434, 447, 31, 27]
+    kind: triangle
+    fill: "#C00000"
+    line: {color: "#C00000"}
+  - elementId: "矩形_95"
+    elementType: text
+    bounds: [481, 438, 79, 46]
+    content:
+      text: "50%"
+      fontSize: 32
+      color: "#DF3F4E"
+      bold: true
+      fontFamily: "Arial"
+      align: center

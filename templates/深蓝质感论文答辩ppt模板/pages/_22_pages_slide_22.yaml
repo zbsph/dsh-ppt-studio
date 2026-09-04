@@ -1,0 +1,134 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "矩形_25"
+    elementType: text
+    bounds: [ 468, 157, 210, 110 ]
+    content:
+      text: "在此添加相关文献内容在此添加相关文献内容在此添加相关文献内容在此添加相关文献内容在此添加相关文献内容在此添加相关文献内容"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "微软雅黑"
+  - elementId: "矩形_26"
+    elementType: text
+    bounds: [ 468, 133, 221, 25 ]
+    content:
+      text: "国外相关文献"
+      color: "#000000"
+      bold: true
+      fontFamily: "微软雅黑"
+  - elementId: "矩形_27"
+    elementType: text
+    bounds: [ 468, 87, 187, 40 ]
+    content:
+      text: "在此添加相关文献内容在此添加相关文献内容"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "微软雅黑"
+  - elementId: "矩形_28"
+    elementType: text
+    bounds: [ 468, 64, 187, 26 ]
+    content:
+      text: "国内相关文献"
+      fontSize: 14
+      color: "#000000"
+      bold: true
+      fontFamily: "微软雅黑"
+  - elementId: "矩形_29"
+    elementType: text
+    bounds: [ 470, 300, 210, 58 ]
+    content:
+      text: "在此添加相关文献内容在此添加相关文献内容在此添加相关文献内容"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "微软雅黑"
+  - elementId: "矩形_30"
+    elementType: text
+    bounds: [ 468, 273, 221, 25 ]
+    content:
+      text: "网络相关文献"
+      color: "#000000"
+      bold: true
+      fontFamily: "微软雅黑"
+  - elementId: "矩形_31"
+    elementType: shape
+    bounds: [ 472, 53, 69, 3 ]
+    kind: rect
+    fill: "#404040"
+    line: { color: "#000000" }
+  - elementId: "图片_18"
+    elementType: image
+    bounds: [ 74, 0, 329, 405 ]
+    fit: cover
+    src: "media/image14.jpg"
+  - elementId: "矩形_19"
+    elementType: shape
+    bounds: [ 74, -1, 329, 405 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "矩形_20"
+    elementType: shape
+    bounds: [ 190, 25, 237, 353 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "矩形_21"
+    elementType: text
+    bounds: [ 203, 163, 261, 42 ]
+    content:
+      text: "参考文献"
+      fontSize: 30
+      bold: true
+      fontFamily: "微软雅黑"
+  - elementId: "矩形_24"
+    elementType: text
+    bounds: [ 203, 209, 169, 19 ]
+    content:
+      text: "references"
+      fontSize: 11
+      color: "#FFFFFF"
+      fontFamily: "微软雅黑"
+  - elementId: "signing-contract_66138"
+    elementType: shape
+    bounds: [ 211, 86, 42, 42 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+expectedOverlaps:
+  - pair:
+      - 图片_18
+      - 矩形_19
+  - pair:
+      - 图片_18
+      - 矩形_20
+  - pair:
+      - 图片_18
+      - 矩形_21
+  - pair:
+      - 图片_18
+      - 矩形_24
+  - pair:
+      - 图片_18
+      - signing-contract_66138
+  - pair:
+      - 矩形_19
+      - 矩形_20
+  - pair:
+      - 矩形_19
+      - 矩形_21
+  - pair:
+      - 矩形_19
+      - 矩形_24
+  - pair:
+      - 矩形_19
+      - signing-contract_66138
+  - pair:
+      - 矩形_20
+      - 矩形_21
+  - pair:
+      - 矩形_20
+      - 矩形_24
+  - pair:
+      - 矩形_20
+      - signing-contract_66138

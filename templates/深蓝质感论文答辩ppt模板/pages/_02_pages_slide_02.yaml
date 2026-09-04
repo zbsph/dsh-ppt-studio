@@ -1,0 +1,137 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "直角三角形_18"
+    elementType: shape
+    bounds: [ 506, 190, 217, 217 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "直角三角形_19"
+    elementType: shape
+    bounds: [ -2, 0, 217, 217 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "文本框_6"
+    elementType: text
+    bounds: [ 72, 151, 144, 27 ]
+    content:
+      text: "选题的背景与意义"
+      fontSize: 16
+      color: "#000000"
+      bold: true
+      fontFamily: "+mj-ea"
+  - elementId: "矩形_81"
+    elementType: text
+    bounds: [ 92, 173, 226, 20 ]
+    content:
+      text: "Background and significance of the selected topic"
+      fontSize: 10.5
+      color: "#000000"
+      fontFamily: "Calibri Light"
+      align: center
+  - elementId: "椭圆_82"
+    elementType: shape
+    bounds: [ 41, 157, 30, 30 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "文本框_6-2"
+    elementType: text
+    bounds: [ 421, 151, 128, 27 ]
+    content:
+      text: "研究方法及过程"
+      fontSize: 16
+      color: "#000000"
+      bold: true
+      fontFamily: "+mj-ea"
+  - elementId: "矩形_85"
+    elementType: text
+    bounds: [ 421, 173, 157, 20 ]
+    content:
+      text: "Research methods and processes"
+      fontSize: 10.5
+      color: "#000000"
+      fontFamily: "Calibri Light"
+  - elementId: "椭圆_86"
+    elementType: shape
+    bounds: [ 390, 157, 30, 30 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "文本框_6-3"
+    elementType: text
+    bounds: [ 72, 249, 160, 27 ]
+    content:
+      text: "研究成果展示及应用"
+      fontSize: 16
+      color: "#000000"
+      bold: true
+      fontFamily: "+mj-ea"
+  - elementId: "矩形_89"
+    elementType: text
+    bounds: [ 72, 272, 229, 20 ]
+    content:
+      text: "Demonstration and application of research results"
+      fontSize: 10.5
+      color: "#000000"
+      fontFamily: "Calibri Light"
+  - elementId: "椭圆_90"
+    elementType: shape
+    bounds: [ 41, 255, 30, 30 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "文本框_6-4"
+    elementType: text
+    bounds: [ 421, 249, 79, 27 ]
+    content:
+      text: "论文总结"
+      fontSize: 16
+      color: "#000000"
+      bold: true
+      fontFamily: "+mj-ea"
+  - elementId: "矩形_93"
+    elementType: text
+    bounds: [ 421, 272, 82, 20 ]
+    content:
+      text: "Paper Summary"
+      fontSize: 10.5
+      color: "#000000"
+      fontFamily: "Calibri Light"
+  - elementId: "椭圆_94"
+    elementType: shape
+    bounds: [ 390, 255, 30, 30 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "文本框_96"
+    elementType: text
+    bounds: [ 284, 91, 153, 27 ]
+    content:
+      text: "CONTENTS"
+      fontSize: 16
+      color: "#000000"
+      fontFamily: "+mj-lt"
+      align: center
+  - elementId: "文本框_155"
+    elementType: text
+    bounds: [ 289, 47, 142, 51 ]
+    content:
+      text: "目 录"
+      fontSize: 36
+      color: "#000000"
+      fontFamily: "+mj-ea"
+      align: center
+expectedOverlaps:
+  - pair:
+      - 直角三角形_18
+      - 矩形_85
+  - pair:
+      - 直角三角形_19
+      - 文本框_6
+  - pair:
+      - 直角三角形_19
+      - 矩形_81
+  - pair:
+      - 直角三角形_19
+      - 椭圆_82

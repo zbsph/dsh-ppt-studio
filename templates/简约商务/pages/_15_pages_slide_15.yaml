@@ -1,0 +1,201 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "椭圆_3"
+    elementType: shape
+    bounds: [ 358, 169, 235, 235 ]
+    kind: ellipse
+    line: { color: "#FFFFFF" }
+  - elementId: "Freeform_Shape_8"
+    elementType: text
+    bounds: [ 561, 253, 61, 61 ]
+    content:
+      text: "3"
+      fontSize: 28
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "Freeform_Shape_11"
+    elementType: text
+    bounds: [ 509, 359, 61, 61 ]
+    content:
+      text: "4"
+      fontSize: 28
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "Freeform_Shape_20"
+    elementType: text
+    bounds: [ 331, 249, 61, 61 ]
+    content:
+      text: "6"
+      fontSize: 28
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "Freeform_Shape_5"
+    elementType: text
+    bounds: [ 513, 153, 61, 61 ]
+    content:
+      text: "2"
+      fontSize: 28
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "Freeform_Shape_14"
+    elementType: text
+    bounds: [ 391, 359, 61, 61 ]
+    content:
+      text: "5"
+      fontSize: 28
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "Freeform_Shape_17"
+    elementType: text
+    bounds: [ 390, 152, 61, 61 ]
+    content:
+      text: "1"
+      fontSize: 28
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "矩形_10"
+    elementType: text
+    bounds: [ 629, 132, 197, 26 ]
+    content:
+      text: "标题文字添加"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "矩形_11"
+    elementType: text
+    bounds: [ 629, 376, 197, 26 ]
+    content:
+      text: "标题文字添加"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "矩形_12"
+    elementType: text
+    bounds: [ 134, 132, 197, 26 ]
+    content:
+      text: "标题文字添加"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "Arial"
+      align: right
+  - elementId: "文本框_13"
+    elementType: text
+    bounds: [ 97, 158, 234, 44 ]
+    content:
+      text: "点击输入简要文字内容，文字内容需概括精炼，言简意赅的说明分项内容点击输入"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "Arial"
+      align: right
+      lineHeight: 1.3
+  - elementId: "矩形_14"
+    elementType: text
+    bounds: [ 134, 376, 197, 26 ]
+    content:
+      text: "标题文字添加"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "Arial"
+      align: right
+  - elementId: "矩形_15"
+    elementType: text
+    bounds: [ 629, 254, 197, 26 ]
+    content:
+      text: "标题文字添加"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "矩形_16"
+    elementType: text
+    bounds: [ 134, 254, 197, 26 ]
+    content:
+      text: "标题文字添加"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "Arial"
+      align: right
+  - elementId: "文本框_17"
+    elementType: text
+    bounds: [ 94, 280, 234, 44 ]
+    content:
+      text: "点击输入简要文字内容，文字内容需概括精炼，言简意赅的说明分项内容点击输入"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "Arial"
+      align: right
+      lineHeight: 1.3
+  - elementId: "文本框_18"
+    elementType: text
+    bounds: [ 97, 402, 234, 44 ]
+    content:
+      text: "点击输入简要文字内容，文字内容需概括精炼，言简意赅的说明分项内容点击输入"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "Arial"
+      align: right
+      lineHeight: 1.3
+  - elementId: "文本框_19"
+    elementType: text
+    bounds: [ 626, 157, 234, 44 ]
+    content:
+      text: "点击输入简要文字内容，文字内容需概括精炼，言简意赅的说明分项内容点击输入"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "Arial"
+      align: right
+      lineHeight: 1.3
+  - elementId: "文本框_20"
+    elementType: text
+    bounds: [ 623, 278, 234, 44 ]
+    content:
+      text: "点击输入简要文字内容，文字内容需概括精炼，言简意赅的说明分项内容点击输入"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "Arial"
+      align: right
+      lineHeight: 1.3
+  - elementId: "文本框_21"
+    elementType: text
+    bounds: [ 627, 402, 234, 44 ]
+    content:
+      text: "点击输入简要文字内容，文字内容需概括精炼，言简意赅的说明分项内容点击输入"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "Arial"
+      align: right
+      lineHeight: 1.3
+  - elementId: "文本框_1"
+    elementType: text
+    bounds: [ 269, 37, 423, 41 ]
+    content:
+      text: "上半年工作情况"
+      fontSize: 28
+      bold: true
+      fontFamily: "思源黑体 CN Heavy"
+      align: center
+expectedOverlaps:
+  - pair:
+      - 椭圆_3
+      - Freeform_Shape_8
+  - pair:
+      - 椭圆_3
+      - Freeform_Shape_11
+  - pair:
+      - 椭圆_3
+      - Freeform_Shape_20
+  - pair:
+      - 椭圆_3
+      - Freeform_Shape_5
+  - pair:
+      - 椭圆_3
+      - Freeform_Shape_14
+  - pair:
+      - 椭圆_3
+      - Freeform_Shape_17

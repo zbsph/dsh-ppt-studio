@@ -1,0 +1,29 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "矩形_3"
+    elementType: shape
+    bounds: [ 0, 259, 351, 38 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "矩形_4"
+    elementType: shape
+    bounds: [ 0, 306, 960, 10 ]
+    kind: rect
+    fill: "#DF3F4E"
+    line: { color: "#000000" }
+  - elementId: "文本框_1"
+    elementType: text
+    bounds: [ 410, 226, 414, 87 ]
+    content:
+      text: "感谢一路有你"
+      fontSize: 66
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+expectedOverlaps:
+  - pair:
+      - 矩形_4
+      - 文本框_1

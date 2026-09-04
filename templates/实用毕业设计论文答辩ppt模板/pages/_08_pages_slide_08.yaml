@@ -1,0 +1,99 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "矩形_1"
+    elementType: shape
+    bounds: [ 494, 0, 467, 540 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "对象_2"
+    elementType: text
+    bounds: [ 39, 54, 439, 427 ]
+    content:
+      text: "[chart: 对象 2] 图表已降级为文本占位，请重新生成图表样式"
+  - elementId: "文本框_5"
+    elementType: text
+    bounds: [ 641, 139, 266, 60 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      color: "#FFFFFF"
+  - elementId: "文本框_6"
+    elementType: text
+    bounds: [ 641, 103, 160, 36 ]
+    content:
+      text: "这里添加标题"
+      fontSize: 24
+      color: "#FFFFFF"
+      bold: true
+      align: center
+      lineHeight: 1
+  - elementId: "文本框_7"
+    elementType: text
+    bounds: [ 641, 266, 266, 60 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      color: "#FFFFFF"
+  - elementId: "文本框_8"
+    elementType: text
+    bounds: [ 641, 230, 160, 36 ]
+    content:
+      text: "这里添加标题"
+      fontSize: 24
+      color: "#FFFFFF"
+      bold: true
+      align: center
+      lineHeight: 1
+  - elementId: "文本框_9"
+    elementType: text
+    bounds: [ 641, 398, 266, 60 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      color: "#FFFFFF"
+  - elementId: "文本框_10"
+    elementType: text
+    bounds: [ 641, 362, 160, 36 ]
+    content:
+      text: "这里添加标题"
+      fontSize: 24
+      color: "#FFFFFF"
+      bold: true
+      align: center
+      lineHeight: 1
+  - elementId: "Freeform_19"
+    elementType: shape
+    bounds: [ 556, 255, 53, 49 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "Freeform_28"
+    elementType: shape
+    bounds: [ 561, 379, 54, 53 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+expectedOverlaps:
+  - pair:
+      - 矩形_1
+      - 文本框_5
+  - pair:
+      - 矩形_1
+      - 文本框_6
+  - pair:
+      - 矩形_1
+      - 文本框_7
+  - pair:
+      - 矩形_1
+      - 文本框_8
+  - pair:
+      - 矩形_1
+      - 文本框_9
+  - pair:
+      - 矩形_1
+      - 文本框_10
+  - pair:
+      - 矩形_1
+      - Freeform_19
+  - pair:
+      - 矩形_1
+      - Freeform_28

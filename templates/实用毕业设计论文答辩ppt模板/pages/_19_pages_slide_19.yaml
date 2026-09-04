@@ -1,0 +1,35 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "矩形_1"
+    elementType: shape
+    bounds: [0, 200, 443, 155]
+    kind: rect
+    fill: "#4B649F"
+    line: {color: "#000000"}
+  - elementId: "文本框_2"
+    elementType: text
+    bounds: [461, 181, 450, 73]
+    content:
+      text: "添加论文内容第四部分标题"
+      fontSize: 36
+      color: "#4B649F"
+      bold: true
+      lineHeight: 1.5
+  - elementId: "文本框_4"
+    elementType: text
+    bounds: [461, 253, 450, 102]
+    content:
+      text: "培养学生综合运用、巩固与扩展所学的基础理论和专业知识，培养学生独立分析、解决实际问题能力、培养学生处理数据和信息的能力。"
+      color: "#808080"
+      lineHeight: 1.5
+  - elementId: "图片_9"
+    elementType: image
+    bounds: [498, 410, 462, 131]
+    fit: cover
+    src: "media/image6.png"
+  - elementId: "图片_10"
+    elementType: image
+    bounds: [0, 0, 620, 175]
+    fit: cover
+    src: "media/image7.png"

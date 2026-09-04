@@ -1,0 +1,88 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "矩形_圆角_1"
+    elementType: shape
+    bounds: [257, 122, 203, 203]
+    kind: roundRect
+    fill: "#FFFFFF"
+    line: {color: "#000000"}
+  - elementId: "文本框_5"
+    elementType: text
+    bounds: [225, 7, 269, 41]
+    content:
+      text: "研究成果展示及应用"
+      fontSize: 28
+      color: "#000000"
+      bold: true
+      fontFamily: "+mj-ea"
+      align: center
+  - elementId: "文本框_6"
+    elementType: text
+    bounds: [272, 42, 176, 22]
+    content:
+      text: "Research methods and processes"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "方正兰亭黑_GBK"
+      align: center
+  - elementId: "灯片编号占位符_2"
+    elementType: text
+    bounds: [0, 0, 200, 50]
+    content:
+      text: "14"
+  - elementId: "TextBox_8"
+    elementType: text
+    bounds: [499, 107, 134, 29]
+    content:
+      text: "研究成果应用"
+  - elementId: "TextBox_9"
+    elementType: text
+    bounds: [502, 130, 214, 63]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      fontSize: 10.5
+      color: "#000000"
+      lineHeight: 1.5
+  - elementId: "TextBox_8-2"
+    elementType: text
+    bounds: [497, 263, 141, 29]
+    content:
+      text: "研究成果应用"
+  - elementId: "TextBox_9-2"
+    elementType: text
+    bounds: [502, 284, 214, 63]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      fontSize: 10.5
+      color: "#000000"
+      lineHeight: 1.5
+  - elementId: "TextBox_8-3"
+    elementType: text
+    bounds: [100, 109, 127, 29]
+    content:
+      text: "研究成果应用"
+      align: right
+  - elementId: "TextBox_9-3"
+    elementType: text
+    bounds: [7, 130, 214, 63]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      fontSize: 10.5
+      color: "#000000"
+      align: right
+      lineHeight: 1.5
+  - elementId: "TextBox_8-4"
+    elementType: text
+    bounds: [94, 264, 127, 29]
+    content:
+      text: "研究成果应用"
+  - elementId: "TextBox_9-4"
+    elementType: text
+    bounds: [7, 284, 214, 63]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      fontSize: 10.5
+      color: "#000000"
+      align: right
+      lineHeight: 1.5

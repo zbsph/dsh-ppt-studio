@@ -1,0 +1,172 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "文本框_5"
+    elementType: text
+    bounds: [ 225, 7, 269, 41 ]
+    content:
+      text: "研究成果展示及应用"
+      fontSize: 28
+      color: "#000000"
+      bold: true
+      fontFamily: "+mj-ea"
+      align: center
+  - elementId: "文本框_6"
+    elementType: text
+    bounds: [ 272, 42, 176, 22 ]
+    content:
+      text: "Research methods and processes"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "方正兰亭黑_GBK"
+      align: center
+  - elementId: "灯片编号占位符_1"
+    elementType: text
+    bounds: [ 0, 0, 200, 50 ]
+    content:
+      text: "13"
+  - elementId: "图片占位符_11"
+    elementType: image
+    bounds: [ 368, 104, 164, 112 ]
+    fit: cover
+    src: "media/image5.jpg"
+  - elementId: "图片占位符_8"
+    elementType: image
+    bounds: [ 191, 221, 164, 111 ]
+    fit: cover
+    src: "media/image6.jpg"
+  - elementId: "图片占位符_4"
+    elementType: image
+    bounds: [ 14, 104, 164, 112 ]
+    fit: cover
+    src: "media/image7.jpg"
+  - elementId: "图片占位符_13"
+    elementType: image
+    bounds: [ 544, 221, 164, 111 ]
+    fit: cover
+    src: "media/image8.jpg"
+  - elementId: "矩形_29"
+    elementType: shape
+    bounds: [ 14, 221, 164, 112 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "矩形_30"
+    elementType: shape
+    bounds: [ 191, 103, 164, 112 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "矩形_31"
+    elementType: shape
+    bounds: [ 368, 221, 164, 112 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "矩形_32"
+    elementType: shape
+    bounds: [ 544, 103, 164, 112 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "矩形_33"
+    elementType: text
+    bounds: [ 21, 259, 151, 65 ]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
+        nibh sit amet sem."
+      fontSize: 10.5
+      color: "#FFFFFF"
+      align: center
+      lineHeight: 1.5
+  - elementId: "文本框_37"
+    elementType: text
+    bounds: [ 27, 236, 139, 29 ]
+    content:
+      text: "研究成果展示"
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "+mj-ea"
+      align: center
+  - elementId: "矩形_38"
+    elementType: text
+    bounds: [ 198, 138, 151, 65 ]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
+        nibh sit amet sem."
+      fontSize: 10.5
+      color: "#FFFFFF"
+      align: center
+      lineHeight: 1.5
+  - elementId: "文本框_39"
+    elementType: text
+    bounds: [ 204, 115, 139, 29 ]
+    content:
+      text: "研究成果展示"
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "+mj-ea"
+      align: center
+  - elementId: "矩形_49"
+    elementType: text
+    bounds: [ 374, 258, 151, 65 ]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
+        nibh sit amet sem."
+      fontSize: 10.5
+      color: "#FFFFFF"
+      align: center
+      lineHeight: 1.5
+  - elementId: "文本框_50"
+    elementType: text
+    bounds: [ 380, 235, 139, 29 ]
+    content:
+      text: "研究成果展示"
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "+mj-ea"
+      align: center
+  - elementId: "矩形_51"
+    elementType: text
+    bounds: [ 551, 138, 151, 65 ]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
+        nibh sit amet sem."
+      fontSize: 10.5
+      color: "#FFFFFF"
+      align: center
+      lineHeight: 1.5
+  - elementId: "文本框_52"
+    elementType: text
+    bounds: [ 557, 115, 139, 29 ]
+    content:
+      text: "研究成果展示"
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "+mj-ea"
+      align: center
+expectedOverlaps:
+  - pair:
+      - 矩形_29
+      - 矩形_33
+  - pair:
+      - 矩形_29
+      - 文本框_37
+  - pair:
+      - 矩形_30
+      - 矩形_38
+  - pair:
+      - 矩形_30
+      - 文本框_39
+  - pair:
+      - 矩形_31
+      - 矩形_49
+  - pair:
+      - 矩形_31
+      - 文本框_50
+  - pair:
+      - 矩形_32
+      - 矩形_51
+  - pair:
+      - 矩形_32
+      - 文本框_52

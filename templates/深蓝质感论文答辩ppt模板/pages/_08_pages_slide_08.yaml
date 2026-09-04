@@ -1,0 +1,178 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "矩形_3"
+    elementType: shape
+    bounds: [ 0, 101, 720, 244 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "文本框_5"
+    elementType: text
+    bounds: [ 254, 7, 212, 41 ]
+    content:
+      text: "研究方法及过程"
+      fontSize: 28
+      color: "#000000"
+      bold: true
+      fontFamily: "+mj-ea"
+      align: center
+  - elementId: "文本框_6"
+    elementType: text
+    bounds: [ 272, 42, 176, 22 ]
+    content:
+      text: "Research methods and processes"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "方正兰亭黑_GBK"
+      align: center
+  - elementId: "椭圆_36"
+    elementType: shape
+    bounds: [ 51, 120, 90, 90 ]
+    kind: ellipse
+    line: { color: "#FFFFFF" }
+  - elementId: "椭圆_37"
+    elementType: shape
+    bounds: [ 227, 120, 90, 90 ]
+    kind: ellipse
+    line: { color: "#FFFFFF" }
+  - elementId: "椭圆_38"
+    elementType: shape
+    bounds: [ 404, 120, 90, 90 ]
+    kind: ellipse
+    line: { color: "#FFFFFF" }
+  - elementId: "椭圆_39"
+    elementType: shape
+    bounds: [ 581, 120, 90, 90 ]
+    kind: ellipse
+    line: { color: "#FFFFFF" }
+  - elementId: "矩形_40"
+    elementType: text
+    bounds: [ 28, 256, 136, 84 ]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
+        nibh sit amet sem"
+      fontSize: 10.5
+      color: "#FFFFFF"
+      align: center
+      lineHeight: 1.5
+  - elementId: "文本框_5-2"
+    elementType: text
+    bounds: [ 48, 222, 95, 32 ]
+    content:
+      text: "研究方法"
+      fontSize: 20
+      color: "#FFFFFF"
+      fontFamily: "+mj-ea"
+      align: center
+  - elementId: "矩形_43"
+    elementType: text
+    bounds: [ 204, 256, 136, 84 ]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
+        nibh sit amet sem"
+      fontSize: 10.5
+      color: "#FFFFFF"
+      align: center
+      lineHeight: 1.5
+  - elementId: "文本框_5-3"
+    elementType: text
+    bounds: [ 224, 222, 95, 32 ]
+    content:
+      text: "研究方法"
+      fontSize: 20
+      color: "#FFFFFF"
+      fontFamily: "+mj-ea"
+      align: center
+  - elementId: "矩形_46"
+    elementType: text
+    bounds: [ 381, 256, 136, 84 ]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
+        nibh sit amet sem"
+      fontSize: 10.5
+      color: "#FFFFFF"
+      align: center
+      lineHeight: 1.5
+  - elementId: "文本框_5-4"
+    elementType: text
+    bounds: [ 401, 222, 95, 32 ]
+    content:
+      text: "研究方法"
+      fontSize: 20
+      color: "#FFFFFF"
+      fontFamily: "+mj-ea"
+      align: center
+  - elementId: "矩形_49"
+    elementType: text
+    bounds: [ 558, 256, 136, 84 ]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
+        nibh sit amet sem"
+      fontSize: 10.5
+      color: "#FFFFFF"
+      align: center
+      lineHeight: 1.5
+  - elementId: "文本框_5-5"
+    elementType: text
+    bounds: [ 579, 222, 95, 32 ]
+    content:
+      text: "研究方法"
+      fontSize: 20
+      color: "#FFFFFF"
+      fontFamily: "+mj-ea"
+      align: center
+  - elementId: "AutoShape_59"
+    elementType: shape
+    bounds: [ 430, 147, 38, 37 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "灯片编号占位符_1"
+    elementType: text
+    bounds: [ 0, 0, 200, 50 ]
+    content:
+      text: "8"
+expectedOverlaps:
+  - pair:
+      - 矩形_3
+      - 椭圆_36
+  - pair:
+      - 矩形_3
+      - 椭圆_37
+  - pair:
+      - 矩形_3
+      - 椭圆_38
+  - pair:
+      - 矩形_3
+      - 椭圆_39
+  - pair:
+      - 矩形_3
+      - 矩形_40
+  - pair:
+      - 矩形_3
+      - 文本框_5-2
+  - pair:
+      - 矩形_3
+      - 矩形_43
+  - pair:
+      - 矩形_3
+      - 文本框_5-3
+  - pair:
+      - 矩形_3
+      - 矩形_46
+  - pair:
+      - 矩形_3
+      - 文本框_5-4
+  - pair:
+      - 矩形_3
+      - 矩形_49
+  - pair:
+      - 矩形_3
+      - 文本框_5-5
+  - pair:
+      - 矩形_3
+      - AutoShape_59
+  - pair:
+      - 椭圆_38
+      - AutoShape_59

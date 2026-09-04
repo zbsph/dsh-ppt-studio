@@ -1,0 +1,157 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "Text_Box_7"
+    elementType: text
+    bounds: [ -1, 25, 963, 34 ]
+    content:
+      text: "工作不足的完善"
+      fontSize: 24
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "Freeform_6"
+    elementType: shape
+    bounds: [ 312, 167, 161, 160 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Freeform_7"
+    elementType: shape
+    bounds: [ 312, 326, 161, 160 ]
+    kind: rect
+    fill: "#DF3F4E"
+    line: { color: "#000000" }
+  - elementId: "Freeform_8"
+    elementType: shape
+    bounds: [ 472, 167, 161, 160 ]
+    kind: rect
+    fill: "#DF3F4E"
+    line: { color: "#000000" }
+  - elementId: "Freeform_9"
+    elementType: shape
+    bounds: [ 472, 326, 161, 160 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Freeform_6-2"
+    elementType: shape
+    bounds: [ 56, 190, 221, 102 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_6-3"
+    elementType: shape
+    bounds: [ 56, 350, 221, 102 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_6-4"
+    elementType: shape
+    bounds: [ 669, 199, 221, 102 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_6-5"
+    elementType: shape
+    bounds: [ 669, 356, 221, 102 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "文本框_50"
+    elementType: text
+    bounds: [ 85, 205, 132, 27 ]
+    content:
+      text: "点击填写短标题"
+      fontSize: 16
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "矩形_51"
+    elementType: text
+    bounds: [ 85, 232, 151, 47 ]
+    content:
+      text: "点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "文本框_52"
+    elementType: text
+    bounds: [ 85, 368, 132, 27 ]
+    content:
+      text: "点击填写短标题"
+      fontSize: 16
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "矩形_53"
+    elementType: text
+    bounds: [ 85, 394, 151, 47 ]
+    content:
+      text: "点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "文本框_54"
+    elementType: text
+    bounds: [ 710, 212, 132, 27 ]
+    content:
+      text: "点击填写短标题"
+      fontSize: 16
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "矩形_55"
+    elementType: text
+    bounds: [ 710, 239, 151, 47 ]
+    content:
+      text: "点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "文本框_56"
+    elementType: text
+    bounds: [ 710, 371, 132, 27 ]
+    content:
+      text: "点击填写短标题"
+      fontSize: 16
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "矩形_57"
+    elementType: text
+    bounds: [ 710, 398, 151, 47 ]
+    content:
+      text: "点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "Text_Box_7-2"
+    elementType: text
+    bounds: [ 110, 101, 791, 34 ]
+    content:
+      text: "点击此处填写文字，体现本页核心内容,提炼一句中心主题"
+      color: "#DF3F4E"
+      fontFamily: "Arial"
+expectedOverlaps:
+  - pair:
+      - Freeform_6-2
+      - 文本框_50
+  - pair:
+      - Freeform_6-2
+      - 矩形_51
+  - pair:
+      - Freeform_6-3
+      - 文本框_52
+  - pair:
+      - Freeform_6-3
+      - 矩形_53
+  - pair:
+      - Freeform_6-4
+      - 文本框_54
+  - pair:
+      - Freeform_6-4
+      - 矩形_55
+  - pair:
+      - Freeform_6-5
+      - 文本框_56
+  - pair:
+      - Freeform_6-5
+      - 矩形_57

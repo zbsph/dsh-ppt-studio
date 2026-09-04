@@ -1,0 +1,209 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "图片_1"
+    elementType: image
+    bounds: [ 678, 0, 282, 79 ]
+    fit: cover
+    src: "media/image8.png"
+  - elementId: "文本框_2"
+    elementType: text
+    bounds: [ 68, 2, 358, 58 ]
+    content:
+      text: "添加论文内容第四部分标题"
+      color: "#4B649F"
+      bold: true
+      lineHeight: 1.5
+  - elementId: "矩形_4"
+    elementType: shape
+    bounds: [ 0, 530, 960, 11 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "文本框_9"
+    elementType: text
+    bounds: [ 702, 171, 172, 48 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      fontSize: 12
+      color: "#595959"
+      lineHeight: 1.5
+  - elementId: "文本框_10"
+    elementType: text
+    bounds: [ 702, 153, 144, 27 ]
+    content:
+      text: "请在这里添加标题"
+      fontSize: 16
+      color: "#4B649F"
+      bold: true
+      lineHeight: 1
+  - elementId: "文本框_11"
+    elementType: text
+    bounds: [ 702, 262, 172, 48 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      fontSize: 12
+      color: "#595959"
+      lineHeight: 1.5
+  - elementId: "文本框_12"
+    elementType: text
+    bounds: [ 702, 244, 144, 27 ]
+    content:
+      text: "请在这里添加标题"
+      fontSize: 16
+      color: "#4B649F"
+      bold: true
+      lineHeight: 1
+  - elementId: "文本框_13"
+    elementType: text
+    bounds: [ 702, 354, 172, 48 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      fontSize: 12
+      color: "#595959"
+      lineHeight: 1.5
+  - elementId: "文本框_14"
+    elementType: text
+    bounds: [ 702, 336, 144, 27 ]
+    content:
+      text: "请在这里添加标题"
+      fontSize: 16
+      color: "#4B649F"
+      bold: true
+      lineHeight: 1
+  - elementId: "文本框_15"
+    elementType: text
+    bounds: [ 86, 175, 172, 48 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      fontSize: 12
+      color: "#595959"
+      align: right
+      lineHeight: 1.5
+  - elementId: "文本框_16"
+    elementType: text
+    bounds: [ 115, 157, 144, 27 ]
+    content:
+      text: "请在这里添加标题"
+      fontSize: 16
+      color: "#4B649F"
+      bold: true
+      align: right
+      lineHeight: 1
+  - elementId: "文本框_17"
+    elementType: text
+    bounds: [ 86, 267, 172, 48 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      fontSize: 12
+      color: "#595959"
+      align: right
+      lineHeight: 1.5
+  - elementId: "文本框_18"
+    elementType: text
+    bounds: [ 115, 249, 144, 27 ]
+    content:
+      text: "请在这里添加标题"
+      fontSize: 16
+      color: "#4B649F"
+      bold: true
+      align: right
+      lineHeight: 1
+  - elementId: "文本框_19"
+    elementType: text
+    bounds: [ 86, 359, 172, 48 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      fontSize: 12
+      color: "#595959"
+      align: right
+      lineHeight: 1.5
+  - elementId: "文本框_20"
+    elementType: text
+    bounds: [ 115, 341, 144, 27 ]
+    content:
+      text: "请在这里添加标题"
+      fontSize: 16
+      color: "#4B649F"
+      bold: true
+      align: right
+      lineHeight: 1
+  - elementId: "KSO_Shape"
+    elementType: shape
+    bounds: [ 280, 166, 41, 42 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000", width: 1 }
+  - elementId: "KSO_Shape-2"
+    elementType: shape
+    bounds: [ 280, 262, 40, 49 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000", width: 1 }
+  - elementId: "KSO_Shape-3"
+    elementType: shape
+    bounds: [ 280, 350, 41, 34 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "KSO_Shape-4"
+    elementType: shape
+    bounds: [ 653, 165, 37, 38 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "KSO_Shape-5"
+    elementType: shape
+    bounds: [ 653, 256, 40, 43 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "KSO_Shape-6"
+    elementType: shape
+    bounds: [ 653, 344, 40, 40 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_27"
+    elementType: shape
+    bounds: [ 358, 157, 246, 246 ]
+    kind: ellipse
+    line: { color: "#000000" }
+  - elementId: "椭圆_28"
+    elementType: shape
+    bounds: [ 368, 168, 225, 224 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "KSO_Shape-7"
+    elementType: shape
+    bounds: [ 441, 214, 82, 70 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "文本框_30"
+    elementType: text
+    bounds: [ 393, 307, 176, 32 ]
+    content:
+      text: "请在这里添加标题"
+      fontSize: 20
+      color: "#FFFFFF"
+      bold: true
+      align: right
+      lineHeight: 1
+expectedOverlaps:
+  - pair:
+      - 椭圆_27
+      - 椭圆_28
+  - pair:
+      - 椭圆_27
+      - KSO_Shape-7
+  - pair:
+      - 椭圆_27
+      - 文本框_30
+  - pair:
+      - 椭圆_28
+      - KSO_Shape-7
+  - pair:
+      - 椭圆_28
+      - 文本框_30

@@ -178,7 +178,8 @@ function detectBands(pages, size, minPages = 3) {
   const hint = {}
   if (tops.length) hint.top = Math.max(...tops)
   if (bottoms.length) hint.bottom = size.height - Math.min(...bottoms)
-  return Object.keys(hint).length ? hint : null
+  if (!Object.keys(hint).length) return null
+  return hint
 }
 
 function parseShapes(spTree, slideRels, mediaNames, pageSize, styleCtx) {
@@ -223,6 +224,17 @@ function xfrmOf(node) {
   const ext = x ? first(x, 'ext') : undefined
   if (!off || !ext) return null
   return { x: px(Number(off.attrs.x ?? 0)), y: px(Number(off.attrs.y ?? 0)), w: Math.max(1, px(Number(ext.attrs.cx ?? 0))), h: Math.max(1, px(Number(ext.attrs.cy ?? 0))) }
+}
+
+/** 防御性 bounds（占位符/异常几何兜底为默认占位，避免 undefined/NaN 进入校验）。输入数组/对象均可，输出对象 {x,y,w,h}（内部契约）。 */
+function safeBounds(b) {
+  const obj = Array.isArray(b) ? { x: b[0], y: b[1], w: b[2], h: b[3] } : (b && typeof b === 'object' ? b : null)
+  const x = Number(obj?.x)
+  const y = Number(obj?.y)
+  const w = Number(obj?.w)
+  const h = Number(obj?.h)
+  if ([x, y, w, h].every((n) => Number.isFinite(n)) && w > 0 && h > 0) return { x, y, w, h }
+  return { x: 0, y: 0, w: 200, h: 50 }
 }
 
 function solidColor(node) {
@@ -312,7 +324,7 @@ function spToEl(node, styleCtx) {
     raw.lineHeight = lineHeight
     return {
       elementId: sanitize(id), elementType: 'text',
-      bounds: bounds ?? [0, 0, 200, 50],
+      bounds: safeBounds(bounds ?? {x: 0, y: 0, w: 200, h: 50}),
       content: {
         text: text.join(' '),
         ...(szAttr !== 18 ? { fontSize: szAttr } : {}),
@@ -329,7 +341,7 @@ function spToEl(node, styleCtx) {
   const kind = prst === 'ellipse' ? 'ellipse' : prst === 'triangle' ? 'triangle' : prst === 'roundRect' ? 'roundRect' : 'rect'
   const out = {
     elementId: sanitize(id), elementType: 'shape', kind,
-    bounds: bounds ?? [0, 0, 100, 100],
+    bounds: safeBounds(bounds ?? {x: 0, y: 0, w: 100, h: 100}),
   }
   if (fill.color) out.fill = fill.color
   if (fill.gradient) out._styleRaw = { ...raw, ...(fill.gradient ? { gradient: fill.gradient } : {}) }
@@ -354,7 +366,7 @@ function picToEl(node, slideRels, mediaNames) {
       src = 'media/' + bn
     }
   }
-  return { elementId: sanitize(id), elementType: 'image', bounds: xfrmOf(node) ?? [0, 0, 200, 150], src, fit: 'cover' }
+  return { elementId: sanitize(id), elementType: 'image', bounds: safeBounds(xfrmOf(node) ?? {x: 0, y: 0, w: 200, h: 150}), src, fit: 'cover' }
 }
 
 function tableToEl(node, tbl) {
@@ -371,7 +383,7 @@ function tableToEl(node, tbl) {
     }
     rows.push(row)
   }
-  return { elementId: sanitize(id), elementType: 'table', bounds: xfrmOf(node) ?? [0, 0, 400, 200], cols, rows }
+  return { elementId: sanitize(id), elementType: 'table', bounds: safeBounds(xfrmOf(node) ?? {x: 0, y: 0, w: 400, h: 200}), cols, rows }
 }
 
 function chartToEl(node) {
@@ -380,7 +392,7 @@ function chartToEl(node) {
   const id = cNvPr?.attrs?.name ?? cNvPr?.attrs?.id ?? 'chart'
   return {
     elementId: sanitize(id), elementType: 'text',
-    bounds: xfrmOf(node) ?? [0, 0, 400, 220],
+    bounds: safeBounds(xfrmOf(node) ?? {x: 0, y: 0, w: 400, h: 220}),
     content: { text: `[chart: ${id}] 图表已降级为文本占位，请重新生成图表样式` },
   }
 }

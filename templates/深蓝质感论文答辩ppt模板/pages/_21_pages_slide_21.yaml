@@ -1,0 +1,88 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "矩形_1"
+    elementType: shape
+    bounds: [ 269, -1, 451, 406 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "任意多边形_5"
+    elementType: shape
+    bounds: [ 0, -1, 361, 406 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "任意多边形_9"
+    elementType: shape
+    bounds: [ 323, -2, 69, 406 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "文本框_10"
+    elementType: text
+    bounds: [ 38, 70, 192, 38 ]
+    content:
+      text: "生活的理想"
+      fontSize: 27
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "微软雅黑"
+  - elementId: "文本框_11"
+    elementType: text
+    bounds: [ 96, 113, 265, 38 ]
+    content:
+      text: "就是为了理想的生活"
+      fontSize: 27
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "微软雅黑"
+  - elementId: "1"
+    elementType: text
+    bounds: [ 42, 237, 243, 70 ]
+    content:
+      text: "单击此处编辑您要的内容，建议您在展示时采用微软雅黑字体，本模版所有图形线条及其相应素材均可自由编辑、改色、替换。
+        更多使用说明和作品请详阅模版最末的使用手册。"
+      fontSize: 12
+      color: "#FFFFFF"
+  - elementId: "1-2"
+    elementType: text
+    bounds: [ 42, 178, 243, 35 ]
+    content:
+      text: "小奕PPT工作室更专业的模板。 小奕，色彩纷呈，潮流时尚。"
+      fontSize: 12
+      color: "#FFFFFF"
+      fontFamily: "微软雅黑"
+expectedOverlaps:
+  - pair:
+      - 矩形_1
+      - 任意多边形_5
+  - pair:
+      - 矩形_1
+      - 任意多边形_9
+  - pair:
+      - 矩形_1
+      - 文本框_11
+  - pair:
+      - 矩形_1
+      - "1"
+  - pair:
+      - 矩形_1
+      - 1-2
+  - pair:
+      - 任意多边形_5
+      - 任意多边形_9
+  - pair:
+      - 任意多边形_5
+      - 文本框_10
+  - pair:
+      - 任意多边形_5
+      - 文本框_11
+  - pair:
+      - 任意多边形_5
+      - "1"
+  - pair:
+      - 任意多边形_5
+      - 1-2
+  - pair:
+      - 任意多边形_9
+      - 文本框_11

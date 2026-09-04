@@ -1,0 +1,121 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "图片占位符_9"
+    elementType: image
+    bounds: [ 0, 95, 720, 148 ]
+    fit: cover
+    src: "media/image2.jpg"
+  - elementId: "文本框_5"
+    elementType: text
+    bounds: [ 240, 7, 241, 41 ]
+    content:
+      text: "选题的背景与意义"
+      fontSize: 28
+      color: "#000000"
+      bold: true
+      fontFamily: "+mj-ea"
+      align: center
+  - elementId: "文本框_6"
+    elementType: text
+    bounds: [ 233, 42, 255, 22 ]
+    content:
+      text: "Background and significance of the selected topic"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "方正兰亭黑_GBK"
+      align: center
+  - elementId: "灯片编号占位符_1"
+    elementType: text
+    bounds: [ 0, 0, 200, 50 ]
+    content:
+      text: "4"
+  - elementId: "椭圆_26"
+    elementType: shape
+    bounds: [ 45, 277, 38, 38 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "矩形_32"
+    elementType: text
+    bounds: [ 85, 275, 177, 63 ]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
+        nibh sit amet sem"
+      fontSize: 10.5
+      color: "#000000"
+      lineHeight: 1.5
+  - elementId: "椭圆_33"
+    elementType: shape
+    bounds: [ 254, 277, 38, 38 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "矩形_34"
+    elementType: text
+    bounds: [ 294, 275, 177, 63 ]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
+        nibh sit amet sem"
+      fontSize: 10.5
+      color: "#000000"
+      lineHeight: 1.5
+  - elementId: "矩形_10"
+    elementType: shape
+    bounds: [ 371, 95, 338, 148 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "矩形_29"
+    elementType: text
+    bounds: [ 383, 139, 314, 92 ]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
+        ligula eget dolor. Lorem ipsum dolor sit amet, consectetuer adipiscing
+        elit. Aenean commodo ligula eget dolor."
+      fontSize: 12
+      color: "#FFFFFF"
+      lineHeight: 1.5
+  - elementId: "矩形_30"
+    elementType: text
+    bounds: [ 383, 107, 136, 36 ]
+    content:
+      text: "选题的背景"
+      fontSize: 24
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "+mj-ea"
+  - elementId: "椭圆_27"
+    elementType: shape
+    bounds: [ 471, 277, 38, 38 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "矩形_28"
+    elementType: text
+    bounds: [ 511, 275, 177, 63 ]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec luctus
+        nibh sit amet sem"
+      fontSize: 10.5
+      color: "#000000"
+      lineHeight: 1.5
+expectedOverlaps:
+  - pair:
+      - 图片占位符_9
+      - 矩形_10
+  - pair:
+      - 图片占位符_9
+      - 矩形_29
+  - pair:
+      - 图片占位符_9
+      - 矩形_30
+  - pair:
+      - 矩形_32
+      - 椭圆_33
+  - pair:
+      - 矩形_10
+      - 矩形_29
+  - pair:
+      - 矩形_10
+      - 矩形_30

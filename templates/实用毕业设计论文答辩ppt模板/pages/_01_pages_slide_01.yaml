@@ -1,0 +1,119 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "图片_6"
+    elementType: image
+    bounds: [ 498, 410, 462, 131 ]
+    fit: cover
+    src: "media/image6.png"
+  - elementId: "任意多边形_47"
+    elementType: shape
+    bounds: [ 148, -112, 72, 369 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_9"
+    elementType: shape
+    bounds: [ 26, 20, 105, 105 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#4B649F", width: 3 }
+  - elementId: "文本框_62"
+    elementType: text
+    bounds: [ 158, 207, 681, 87 ]
+    content:
+      text: "简洁毕业论文答辩模板"
+      fontSize: 66
+      color: "#4B649F"
+      bold: true
+      lineHeight: 1
+  - elementId: "文本框_1027"
+    elementType: text
+    bounds: [ 190, 303, 142, 29 ]
+    content:
+      text: "答辩人：代用名"
+      lineHeight: 1
+  - elementId: "文本框_112"
+    elementType: text
+    bounds: [ 389, 303, 160, 29 ]
+    content:
+      text: "指导教师：代用名"
+      lineHeight: 1
+  - elementId: "文本框_1066"
+    elementType: text
+    bounds: [ 139, 47, 207, 46 ]
+    content:
+      text: "中国*****大学"
+      fontSize: 32
+      color: "#FFFFFF"
+      bold: true
+      lineHeight: 1
+  - elementId: "矩形_1067"
+    elementType: shape
+    bounds: [ 116, 192, 762, 167 ]
+    kind: rect
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "矩形_1068"
+    elementType: shape
+    bounds: [ 859, 334, 38, 38 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "矩形_116"
+    elementType: shape
+    bounds: [ 838, 316, 37, 37 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "矩形_117"
+    elementType: shape
+    bounds: [ 103, 176, 37, 37 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "矩形_118"
+    elementType: shape
+    bounds: [ 115, 188, 37, 37 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+expectedOverlaps:
+  - pair:
+      - 任意多边形_47
+      - 文本框_62
+  - pair:
+      - 任意多边形_47
+      - 文本框_1066
+  - pair:
+      - 任意多边形_47
+      - 矩形_1067
+  - pair:
+      - 任意多边形_47
+      - 矩形_118
+  - pair:
+      - 文本框_62
+      - 矩形_1067
+  - pair:
+      - 文本框_1027
+      - 矩形_1067
+  - pair:
+      - 文本框_112
+      - 矩形_1067
+  - pair:
+      - 矩形_1067
+      - 矩形_1068
+  - pair:
+      - 矩形_1067
+      - 矩形_116
+  - pair:
+      - 矩形_1067
+      - 矩形_117
+  - pair:
+      - 矩形_1067
+      - 矩形_118
+  - pair:
+      - 矩形_1068
+      - 矩形_116
+  - pair:
+      - 矩形_117
+      - 矩形_118

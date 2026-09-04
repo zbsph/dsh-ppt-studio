@@ -1,0 +1,260 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+background: { "type": "image", "src": "media/placeholder.png", "fit": "cover" }
+elements:
+  - elementId: "矩形_160"
+    elementType: shape
+    bounds: [ 0, 0, 720, 405 ]
+    kind: rect
+    line: { color: "#000000", width: 1 }
+  - elementId: "矩形_170"
+    elementType: shape
+    bounds: [ 56, 32, 608, 342 ]
+    kind: rect
+    line: { color: "#FFFFFF", width: 2 }
+  - elementId: "文本框_13"
+    elementType: text
+    bounds: [ 104, 98, 110, 93 ]
+    content:
+      text: "与"
+      fontSize: 72
+      fontFamily: "汉仪尚巍手书W"
+      align: center
+  - elementId: "文本框_14"
+    elementType: text
+    bounds: [ 167, 115, 110, 65 ]
+    content:
+      text: "有"
+      fontSize: 50
+      fontFamily: "汉仪尚巍手书W"
+      align: center
+  - elementId: "文本框_15"
+    elementType: text
+    bounds: [ 228, 93, 110, 96 ]
+    content:
+      text: "肝"
+      fontSize: 72
+      fontFamily: "汉仪尚巍手书W"
+      align: center
+  - elementId: "文本框_16"
+    elementType: text
+    bounds: [ 280, 114, 110, 60 ]
+    content:
+      text: "胆"
+      fontSize: 45
+      fontFamily: "汉仪尚巍手书W"
+      align: center
+  - elementId: "文本框_17"
+    elementType: text
+    bounds: [ 329, 109, 110, 78 ]
+    content:
+      text: "人"
+      fontSize: 60
+      fontFamily: "汉仪尚巍手书W"
+      align: center
+  - elementId: "文本框_18"
+    elementType: text
+    bounds: [ 391, 87, 110, 101 ]
+    content:
+      text: "共"
+      fontSize: 79
+      fontFamily: "汉仪尚巍手书W"
+      align: center
+  - elementId: "文本框_19"
+    elementType: text
+    bounds: [ 446, 115, 110, 65 ]
+    content:
+      text: "事"
+      fontSize: 50
+      fontFamily: "汉仪尚巍手书W"
+      align: center
+  - elementId: "文本框_21"
+    elementType: text
+    bounds: [ 162, 165, 110, 101 ]
+    content:
+      text: "从"
+      fontSize: 79
+      fontFamily: "汉仪尚巍手书W"
+      align: center
+  - elementId: "文本框_22"
+    elementType: text
+    bounds: [ 220, 192, 110, 71 ]
+    content:
+      text: "无"
+      fontSize: 54
+      fontFamily: "汉仪尚巍手书W"
+      align: center
+  - elementId: "文本框_23"
+    elementType: text
+    bounds: [ 279, 164, 110, 110 ]
+    content:
+      text: "字"
+      fontSize: 86
+      fontFamily: "汉仪尚巍手书W"
+      align: center
+  - elementId: "文本框_24"
+    elementType: text
+    bounds: [ 330, 191, 110, 65 ]
+    content:
+      text: "句"
+      fontSize: 50
+      fontFamily: "汉仪尚巍手书W"
+      align: center
+  - elementId: "文本框_25"
+    elementType: text
+    bounds: [ 385, 174, 110, 93 ]
+    content:
+      text: "处"
+      fontSize: 72
+      fontFamily: "汉仪尚巍手书W"
+      align: center
+  - elementId: "文本框_26"
+    elementType: text
+    bounds: [ 442, 184, 110, 71 ]
+    content:
+      text: "读"
+      fontSize: 54
+      fontFamily: "汉仪尚巍手书W"
+      align: center
+  - elementId: "文本框_27"
+    elementType: text
+    bounds: [ 498, 172, 110, 101 ]
+    content:
+      text: "书"
+      fontSize: 79
+      fontFamily: "汉仪尚巍手书W"
+      align: center
+  - elementId: "矩形_28"
+    elementType: text
+    bounds: [ 157, 301, 406, 40 ]
+    content:
+      text: "实现目标的道路也许很漫长，无论如何，我将继续努力，与大家一起共同见证我们银行更加美好的未来。"
+      fontSize: 12
+      fontFamily: "思源黑体 CN ExtraLight"
+      align: center
+  - elementId: "等腰三角形_20"
+    elementType: shape
+    bounds: [ 296, 266, 13, 11 ]
+    kind: triangle
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "1"
+    elementType: text
+    bounds: [ 303, 265, 124, 13 ]
+    content:
+      text: "【汉仪尚巍手】书字体"
+      fontSize: 11
+      fontFamily: "微软雅黑"
+      align: center
+expectedOverlaps:
+  - pair:
+      - 矩形_160
+      - 矩形_170
+  - pair:
+      - 矩形_160
+      - 文本框_13
+  - pair:
+      - 矩形_160
+      - 文本框_14
+  - pair:
+      - 矩形_160
+      - 文本框_15
+  - pair:
+      - 矩形_160
+      - 文本框_16
+  - pair:
+      - 矩形_160
+      - 文本框_17
+  - pair:
+      - 矩形_160
+      - 文本框_18
+  - pair:
+      - 矩形_160
+      - 文本框_19
+  - pair:
+      - 矩形_160
+      - 文本框_21
+  - pair:
+      - 矩形_160
+      - 文本框_22
+  - pair:
+      - 矩形_160
+      - 文本框_23
+  - pair:
+      - 矩形_160
+      - 文本框_24
+  - pair:
+      - 矩形_160
+      - 文本框_25
+  - pair:
+      - 矩形_160
+      - 文本框_26
+  - pair:
+      - 矩形_160
+      - 文本框_27
+  - pair:
+      - 矩形_160
+      - 矩形_28
+  - pair:
+      - 矩形_160
+      - 等腰三角形_20
+  - pair:
+      - 矩形_160
+      - "1"
+  - pair:
+      - 矩形_170
+      - 文本框_13
+  - pair:
+      - 矩形_170
+      - 文本框_14
+  - pair:
+      - 矩形_170
+      - 文本框_15
+  - pair:
+      - 矩形_170
+      - 文本框_16
+  - pair:
+      - 矩形_170
+      - 文本框_17
+  - pair:
+      - 矩形_170
+      - 文本框_18
+  - pair:
+      - 矩形_170
+      - 文本框_19
+  - pair:
+      - 矩形_170
+      - 文本框_21
+  - pair:
+      - 矩形_170
+      - 文本框_22
+  - pair:
+      - 矩形_170
+      - 文本框_23
+  - pair:
+      - 矩形_170
+      - 文本框_24
+  - pair:
+      - 矩形_170
+      - 文本框_25
+  - pair:
+      - 矩形_170
+      - 文本框_26
+  - pair:
+      - 矩形_170
+      - 文本框_27
+  - pair:
+      - 矩形_170
+      - 矩形_28
+  - pair:
+      - 矩形_170
+      - 等腰三角形_20
+  - pair:
+      - 矩形_170
+      - "1"
+  - pair:
+      - 文本框_23
+      - 等腰三角形_20
+  - pair:
+      - 等腰三角形_20
+      - "1"

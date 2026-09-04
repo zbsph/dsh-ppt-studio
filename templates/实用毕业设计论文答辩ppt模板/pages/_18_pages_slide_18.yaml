@@ -1,0 +1,170 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "图片_1"
+    elementType: image
+    bounds: [ 678, 0, 282, 79 ]
+    fit: cover
+    src: "media/image8.png"
+  - elementId: "文本框_2"
+    elementType: text
+    bounds: [ 68, 2, 358, 58 ]
+    content:
+      text: "添加论文内容第三部分标题"
+      color: "#4B649F"
+      bold: true
+      lineHeight: 1.5
+  - elementId: "矩形_4"
+    elementType: shape
+    bounds: [ 0, 530, 960, 11 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "Oval_30"
+    elementType: shape
+    bounds: [ 419, 325, 38, 38 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "Oval_33"
+    elementType: shape
+    bounds: [ 470, 251, 91, 91 ]
+    kind: ellipse
+    fill: "#7DB1CD"
+    line: { color: "#000000" }
+  - elementId: "Freeform_6"
+    elementType: shape
+    bounds: [ 497, 278, 37, 37 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "Oval_22"
+    elementType: shape
+    bounds: [ 182, 229, 106, 106 ]
+    kind: ellipse
+    fill: "#7DB1CD"
+    line: { color: "#000000" }
+  - elementId: "Freeform_11"
+    elementType: shape
+    bounds: [ 203, 251, 63, 56 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "Oval_29"
+    elementType: shape
+    bounds: [ 280, 327, 76, 76 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "Freeform_16"
+    elementType: shape
+    bounds: [ 308, 349, 19, 32 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "Oval_23"
+    elementType: shape
+    bounds: [ 98, 146, 61, 61 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "Freeform_21"
+    elementType: shape
+    bounds: [ 113, 161, 30, 21 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "Oval_32"
+    elementType: shape
+    bounds: [ 357, 199, 49, 49 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "Freeform_26"
+    elementType: shape
+    bounds: [ 369, 211, 25, 25 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "Oval_24"
+    elementType: shape
+    bounds: [ 68, 365, 60, 61 ]
+    kind: ellipse
+    fill: "#5E80B0"
+    line: { color: "#000000" }
+  - elementId: "Freeform_31"
+    elementType: shape
+    bounds: [ 82, 381, 34, 30 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "文本框_35"
+    elementType: text
+    bounds: [ 627, 183, 266, 60 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      color: "#808080"
+  - elementId: "文本框_36"
+    elementType: text
+    bounds: [ 624, 147, 160, 36 ]
+    content:
+      text: "这里添加标题"
+      fontSize: 24
+      color: "#4B649F"
+      bold: true
+      align: center
+      lineHeight: 1
+  - elementId: "文本框_37"
+    elementType: text
+    bounds: [ 627, 289, 266, 60 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      color: "#808080"
+  - elementId: "文本框_38"
+    elementType: text
+    bounds: [ 624, 253, 160, 36 ]
+    content:
+      text: "这里添加标题"
+      fontSize: 24
+      color: "#4B649F"
+      bold: true
+      align: center
+      lineHeight: 1
+  - elementId: "文本框_39"
+    elementType: text
+    bounds: [ 627, 389, 266, 60 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      color: "#808080"
+  - elementId: "文本框_40"
+    elementType: text
+    bounds: [ 624, 353, 160, 36 ]
+    content:
+      text: "这里添加标题"
+      fontSize: 24
+      color: "#4B649F"
+      bold: true
+      align: center
+      lineHeight: 1
+expectedOverlaps:
+  - pair:
+      - Oval_33
+      - Freeform_6
+  - pair:
+      - Oval_22
+      - Freeform_11
+  - pair:
+      - Oval_22
+      - Oval_29
+  - pair:
+      - Oval_29
+      - Freeform_16
+  - pair:
+      - Oval_23
+      - Freeform_21
+  - pair:
+      - Oval_32
+      - Freeform_26
+  - pair:
+      - Oval_24
+      - Freeform_31

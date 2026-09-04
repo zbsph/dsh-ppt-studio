@@ -1,0 +1,120 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "图片_1"
+    elementType: image
+    bounds: [ 678, 0, 282, 79 ]
+    fit: cover
+    src: "media/image8.png"
+  - elementId: "文本框_2"
+    elementType: text
+    bounds: [ 68, 2, 358, 58 ]
+    content:
+      text: "添加论文内容第四部分标题"
+      color: "#4B649F"
+      bold: true
+      lineHeight: 1.5
+  - elementId: "矩形_4"
+    elementType: shape
+    bounds: [ 0, 530, 960, 11 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "对象_22"
+    elementType: text
+    bounds: [ 67, 124, 829, 216 ]
+    content:
+      text: "[chart: 对象 22] 图表已降级为文本占位，请重新生成图表样式"
+  - elementId: "Title_13"
+    elementType: text
+    bounds: [ 90, 351, 303, 56 ]
+    content:
+      text: "类别1"
+      fontSize: 24
+      color: "#595959"
+      lineHeight: 1
+  - elementId: "文本框_11"
+    elementType: text
+    bounds: [ 90, 395, 164, 77 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      fontSize: 16
+      color: "#808080"
+  - elementId: "矩形_12"
+    elementType: shape
+    bounds: [ 75, 369, 15, 15 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Title_13-2"
+    elementType: text
+    bounds: [ 300, 351, 303, 56 ]
+    content:
+      text: "类别2"
+      fontSize: 24
+      color: "#595959"
+      lineHeight: 1
+  - elementId: "文本框_14"
+    elementType: text
+    bounds: [ 300, 395, 164, 77 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      fontSize: 16
+      color: "#808080"
+  - elementId: "矩形_15"
+    elementType: shape
+    bounds: [ 285, 369, 15, 15 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "Title_13-3"
+    elementType: text
+    bounds: [ 514, 351, 303, 56 ]
+    content:
+      text: "类别3"
+      fontSize: 24
+      color: "#595959"
+      lineHeight: 1
+  - elementId: "文本框_17"
+    elementType: text
+    bounds: [ 514, 395, 164, 77 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      fontSize: 16
+      color: "#808080"
+  - elementId: "矩形_18"
+    elementType: shape
+    bounds: [ 499, 369, 15, 15 ]
+    kind: rect
+    fill: "#5E80B0"
+    line: { color: "#000000" }
+  - elementId: "Title_13-4"
+    elementType: text
+    bounds: [ 718, 351, 105, 56 ]
+    content:
+      text: "类别4"
+      fontSize: 24
+      color: "#595959"
+      lineHeight: 1
+  - elementId: "文本框_20"
+    elementType: text
+    bounds: [ 718, 395, 164, 77 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      fontSize: 16
+      color: "#808080"
+  - elementId: "矩形_21"
+    elementType: shape
+    bounds: [ 703, 369, 15, 15 ]
+    kind: rect
+    fill: "#7DB1CD"
+    line: { color: "#000000" }
+expectedOverlaps:
+  - pair:
+      - Title_13
+      - 矩形_15
+  - pair:
+      - Title_13-2
+      - 矩形_18
+  - pair:
+      - Title_13-3
+      - 矩形_21

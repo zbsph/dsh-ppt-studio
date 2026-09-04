@@ -1,0 +1,17 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "文本框_5"
+    elementType: text
+    bounds: [230, 102, 498, 36]
+    content:
+      text: "全年营销费用投入XX万，费效比达60%"
+      fontFamily: "Arial"
+  - elementId: "Text_Box_10"
+    elementType: text
+    bounds: [61, 417, 393, 63]
+    content:
+      text: "点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "Arial"

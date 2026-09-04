@@ -1,0 +1,63 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+background: { "type": "solid", "color": "#F2F2F2" }
+elements:
+  - elementId: "矩形_2"
+    elementType: shape
+    bounds: [ 0, 0, 720, 221 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "矩形_3"
+    elementType: shape
+    bounds: [ 21, 59, 676, 287 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "文本框_5"
+    elementType: text
+    bounds: [ 207, 149, 305, 51 ]
+    content:
+      text: "选题的背景与意义"
+      fontSize: 36
+      color: "#000000"
+      bold: true
+      fontFamily: "+mj-ea"
+      align: center
+  - elementId: "文本框_6"
+    elementType: text
+    bounds: [ 209, 197, 302, 22 ]
+    content:
+      text: "Background and significance of the selected topic"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "方正准圆简体"
+      align: center
+  - elementId: "矩形_21"
+    elementType: text
+    bounds: [ 207, 221, 305, 43 ]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
+        ligula eget dolor"
+      fontSize: 10.5
+      color: "#000000"
+      align: center
+      lineHeight: 1.5
+expectedOverlaps:
+  - pair:
+      - 矩形_2
+      - 矩形_3
+  - pair:
+      - 矩形_2
+      - 文本框_5
+  - pair:
+      - 矩形_2
+      - 文本框_6
+  - pair:
+      - 矩形_3
+      - 文本框_5
+  - pair:
+      - 矩形_3
+      - 文本框_6
+  - pair:
+      - 矩形_3
+      - 矩形_21

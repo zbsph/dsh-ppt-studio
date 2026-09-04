@@ -1,0 +1,182 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "图片_1"
+    elementType: image
+    bounds: [ 678, 0, 282, 79 ]
+    fit: cover
+    src: "media/image8.png"
+  - elementId: "文本框_2"
+    elementType: text
+    bounds: [ 68, 2, 358, 58 ]
+    content:
+      text: "添加论文内容第三部分标题"
+      color: "#4B649F"
+      bold: true
+      lineHeight: 1.5
+  - elementId: "矩形_4"
+    elementType: shape
+    bounds: [ 0, 530, 960, 11 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "任意多边形_9"
+    elementType: text
+    bounds: [ 92, 259, 223, 74 ]
+    content:
+      text: "这里添加文字"
+      fontSize: 20
+      color: "#FFFFFF"
+      bold: true
+      align: center
+      lineHeight: 0.9
+  - elementId: "椭圆_10"
+    elementType: shape
+    bounds: [ 92, 237, 18, 18 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_11"
+    elementType: shape
+    bounds: [ 104, 212, 18, 18 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_12"
+    elementType: shape
+    bounds: [ 134, 217, 28, 28 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_13"
+    elementType: shape
+    bounds: [ 159, 190, 18, 18 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_14"
+    elementType: shape
+    bounds: [ 191, 180, 18, 18 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_15"
+    elementType: shape
+    bounds: [ 231, 197, 18, 18 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_16"
+    elementType: shape
+    bounds: [ 256, 210, 28, 28 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_17"
+    elementType: shape
+    bounds: [ 291, 237, 18, 18 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_18"
+    elementType: shape
+    bounds: [ 306, 264, 18, 18 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_19"
+    elementType: shape
+    bounds: [ 176, 212, 46, 46 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_20"
+    elementType: shape
+    bounds: [ 79, 307, 18, 18 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_21"
+    elementType: shape
+    bounds: [ 94, 329, 28, 28 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_22"
+    elementType: shape
+    bounds: [ 132, 349, 41, 41 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_23"
+    elementType: shape
+    bounds: [ 184, 381, 18, 18 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_24"
+    elementType: shape
+    bounds: [ 194, 349, 28, 28 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_25"
+    elementType: shape
+    bounds: [ 219, 384, 18, 18 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_26"
+    elementType: shape
+    bounds: [ 241, 344, 41, 41 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_27"
+    elementType: shape
+    bounds: [ 296, 334, 28, 28 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "燕尾形_28"
+    elementType: shape
+    bounds: [ 324, 217, 82, 157 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "任意多边形_29"
+    elementType: text
+    bounds: [ 406, 217, 224, 157 ]
+    content:
+      text: "这里添加文字"
+      fontSize: 20
+      color: "#FFFFFF"
+      bold: true
+      align: center
+      lineHeight: 0.9
+  - elementId: "燕尾形_30"
+    elementType: shape
+    bounds: [ 630, 217, 82, 157 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "任意多边形_31"
+    elementType: text
+    bounds: [ 721, 204, 190, 190 ]
+    content:
+      text: "这里添加文字"
+      fontSize: 20
+      color: "#FFFFFF"
+      bold: true
+      align: center
+      lineHeight: 0.9
+expectedOverlaps:
+  - pair:
+      - 任意多边形_9
+      - 椭圆_18
+  - pair:
+      - 任意多边形_9
+      - 椭圆_20
+  - pair:
+      - 任意多边形_9
+      - 椭圆_21

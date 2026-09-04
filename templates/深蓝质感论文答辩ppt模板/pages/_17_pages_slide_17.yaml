@@ -1,0 +1,103 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "图片_4"
+    elementType: image
+    bounds: [ 295, 113, 139, 255 ]
+    fit: cover
+    src: "media/image10.jpeg"
+  - elementId: "文本框_5"
+    elementType: text
+    bounds: [ 296, 7, 128, 41 ]
+    content:
+      text: "论文总结"
+      fontSize: 28
+      color: "#000000"
+      bold: true
+      fontFamily: "+mj-ea"
+      align: center
+  - elementId: "文本框_6"
+    elementType: text
+    bounds: [ 314, 42, 91, 22 ]
+    content:
+      text: "Paper Summary"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "方正兰亭黑_GBK"
+      align: center
+  - elementId: "灯片编号占位符_3"
+    elementType: text
+    bounds: [ 0, 0, 200, 50 ]
+    content:
+      text: "17"
+  - elementId: "矩形_圆角_6"
+    elementType: shape
+    bounds: [ 145, 110, 97, 34 ]
+    kind: roundRect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "TextBox_9"
+    elementType: text
+    bounds: [ 14, 150, 228, 63 ]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum
+        dolor sit amet, consectetur adipiscing elit."
+      fontSize: 10.5
+      color: "#000000"
+      align: right
+      lineHeight: 1.5
+  - elementId: "矩形_圆角_89"
+    elementType: shape
+    bounds: [ 148, 237, 97, 34 ]
+    kind: roundRect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "TextBox_9-2"
+    elementType: text
+    bounds: [ 17, 274, 228, 63 ]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum
+        dolor sit amet, consectetur adipiscing elit."
+      fontSize: 10.5
+      color: "#000000"
+      align: right
+      lineHeight: 1.5
+  - elementId: "矩形_圆角_93"
+    elementType: shape
+    bounds: [ 492, 112, 97, 34 ]
+    kind: roundRect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "TextBox_9-3"
+    elementType: text
+    bounds: [ 480, 152, 228, 63 ]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum
+        dolor sit amet, consectetur adipiscing elit."
+      fontSize: 10.5
+      color: "#000000"
+      lineHeight: 1.5
+  - elementId: "矩形_圆角_95"
+    elementType: shape
+    bounds: [ 495, 239, 97, 34 ]
+    kind: roundRect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "TextBox_9-4"
+    elementType: text
+    bounds: [ 483, 276, 228, 63 ]
+    content:
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum
+        dolor sit amet, consectetur adipiscing elit."
+      fontSize: 10.5
+      color: "#000000"
+      lineHeight: 1.5
+  - elementId: "图片_2"
+    elementType: image
+    bounds: [ 284, 77, 155, 322 ]
+    fit: cover
+    src: "media/image11.png"
+expectedOverlaps:
+  - pair:
+      - 图片_4
+      - 图片_2

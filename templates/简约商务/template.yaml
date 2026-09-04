@@ -1,0 +1,35 @@
+id: 简约商务
+name: 简约商务
+style: 商务
+scene: 商务演示
+desc: 由用户导入的 deck 工程收纳（主题/版式取自原工程；可编辑后复用）
+words: ""
+colors:
+  - "#000000"
+  - "#FFFFFF"
+  - "#79C9E2"
+  - "#0485A8"
+  - "#4D4D4D"
+  - "#2C3139"
+pages:
+  - pages/_01_pages_slide_01.yaml
+  - pages/_02_pages_slide_02.yaml
+  - pages/_03_pages_slide_03.yaml
+  - pages/_04_pages_slide_04.yaml
+  - pages/_05_pages_slide_05.yaml
+  - pages/_06_pages_slide_06.yaml
+  - pages/_07_pages_slide_07.yaml
+  - pages/_08_pages_slide_08.yaml
+  - pages/_09_pages_slide_09.yaml
+  - pages/_10_pages_slide_10.yaml
+  - pages/_11_pages_slide_11.yaml
+  - pages/_12_pages_slide_12.yaml
+  - pages/_13_pages_slide_13.yaml
+  - pages/_14_pages_slide_14.yaml
+  - pages/_15_pages_slide_15.yaml
+  - pages/_16_pages_slide_16.yaml
+  - pages/_17_pages_slide_17.yaml
+  - pages/_18_pages_slide_18.yaml
+  - pages/_19_pages_slide_19.yaml
+  - pages/_20_pages_slide_20.yaml
+cleanup: 收纳时已自动声明 97 对预期重叠；剩余数字/出界/内容互压错误 22 条（复制工作区后自行修复）

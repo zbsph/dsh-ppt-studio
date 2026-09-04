@@ -1,0 +1,254 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "圆角矩形_3"
+    elementType: shape
+    bounds: [ 148, 130, 649, 169 ]
+    kind: roundRect
+    line: { color: "#000000" }
+  - elementId: "椭圆_4"
+    elementType: shape
+    bounds: [ 739, 363, 7, 7 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "椭圆_5"
+    elementType: shape
+    bounds: [ 739, 349, 7, 7 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000", width: 1 }
+  - elementId: "椭圆_6"
+    elementType: shape
+    bounds: [ 739, 334, 7, 7 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000", width: 1 }
+  - elementId: "椭圆_7"
+    elementType: shape
+    bounds: [ 565, 363, 7, 7 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "椭圆_8"
+    elementType: shape
+    bounds: [ 565, 349, 7, 7 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000", width: 1 }
+  - elementId: "椭圆_9"
+    elementType: shape
+    bounds: [ 565, 334, 7, 7 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000", width: 1 }
+  - elementId: "椭圆_10"
+    elementType: shape
+    bounds: [ 392, 363, 7, 7 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "椭圆_11"
+    elementType: shape
+    bounds: [ 392, 349, 7, 7 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000", width: 1 }
+  - elementId: "椭圆_12"
+    elementType: shape
+    bounds: [ 392, 334, 7, 7 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000", width: 1 }
+  - elementId: "椭圆_13"
+    elementType: shape
+    bounds: [ 218, 363, 7, 7 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "椭圆_14"
+    elementType: shape
+    bounds: [ 218, 349, 7, 7 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "椭圆_15"
+    elementType: shape
+    bounds: [ 218, 334, 7, 7 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "椭圆_16"
+    elementType: shape
+    bounds: [ 189, 267, 64, 64 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#000000", width: 2 }
+  - elementId: "椭圆_17"
+    elementType: shape
+    bounds: [ 195, 273, 52, 52 ]
+    kind: ellipse
+    fill: "#0485A8"
+    line: { color: "#000000", width: 2 }
+  - elementId: "椭圆_18"
+    elementType: shape
+    bounds: [ 363, 267, 64, 64 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#000000", width: 2 }
+  - elementId: "椭圆_19"
+    elementType: shape
+    bounds: [ 369, 273, 52, 52 ]
+    kind: ellipse
+    fill: "#79C9E2"
+    line: { color: "#000000", width: 2 }
+  - elementId: "椭圆_20"
+    elementType: shape
+    bounds: [ 537, 267, 64, 64 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#000000", width: 2 }
+  - elementId: "椭圆_21"
+    elementType: shape
+    bounds: [ 543, 273, 52, 52 ]
+    kind: ellipse
+    fill: "#0485A8"
+    line: { color: "#000000", width: 2 }
+  - elementId: "椭圆_22"
+    elementType: shape
+    bounds: [ 711, 267, 64, 64 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#000000", width: 2 }
+  - elementId: "椭圆_23"
+    elementType: shape
+    bounds: [ 716, 273, 52, 52 ]
+    kind: ellipse
+    fill: "#79C9E2"
+    line: { color: "#000000", width: 2 }
+  - elementId: "文本框_24"
+    elementType: text
+    bounds: [ 165, 383, 111, 24 ]
+    content:
+      text: "输入小标题"
+      fontSize: 14
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_25"
+    elementType: text
+    bounds: [ 148, 411, 149, 62 ]
+    content:
+      text: "单击此处输入您的文本内容，可更改文字的颜色或者大小等属性"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.3
+  - elementId: "文本框_26"
+    elementType: text
+    bounds: [ 339, 383, 111, 24 ]
+    content:
+      text: "输入小标题"
+      fontSize: 14
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_27"
+    elementType: text
+    bounds: [ 322, 411, 149, 62 ]
+    content:
+      text: "单击此处输入您的文本内容，可更改文字的颜色或者大小等属性"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.3
+  - elementId: "文本框_28"
+    elementType: text
+    bounds: [ 513, 383, 111, 24 ]
+    content:
+      text: "输入小标题"
+      fontSize: 14
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_29"
+    elementType: text
+    bounds: [ 496, 411, 149, 62 ]
+    content:
+      text: "单击此处输入您的文本内容，可更改文字的颜色或者大小等属性"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.3
+  - elementId: "文本框_30"
+    elementType: text
+    bounds: [ 686, 383, 111, 24 ]
+    content:
+      text: "输入小标题"
+      fontSize: 14
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_31"
+    elementType: text
+    bounds: [ 669, 411, 149, 62 ]
+    content:
+      text: "单击此处输入您的文本内容，可更改文字的颜色或者大小等属性"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.3
+  - elementId: "文本框_1"
+    elementType: text
+    bounds: [ 269, 37, 423, 41 ]
+    content:
+      text: "上半年工作情况"
+      fontSize: 28
+      bold: true
+      fontFamily: "思源黑体 CN Heavy"
+      align: center
+expectedOverlaps:
+  - pair:
+      - 圆角矩形_3
+      - 椭圆_16
+  - pair:
+      - 圆角矩形_3
+      - 椭圆_17
+  - pair:
+      - 圆角矩形_3
+      - 椭圆_18
+  - pair:
+      - 圆角矩形_3
+      - 椭圆_19
+  - pair:
+      - 圆角矩形_3
+      - 椭圆_20
+  - pair:
+      - 圆角矩形_3
+      - 椭圆_21
+  - pair:
+      - 圆角矩形_3
+      - 椭圆_22
+  - pair:
+      - 圆角矩形_3
+      - 椭圆_23
+  - pair:
+      - 椭圆_16
+      - 椭圆_17
+  - pair:
+      - 椭圆_18
+      - 椭圆_19
+  - pair:
+      - 椭圆_20
+      - 椭圆_21
+  - pair:
+      - 椭圆_22
+      - 椭圆_23

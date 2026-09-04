@@ -1,0 +1,33 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "矩形_2"
+    elementType: shape
+    bounds: [ 0, 207, 960, 134 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "矩形_3"
+    elementType: text
+    bounds: [ 402, 174, 156, 72 ]
+    content:
+      text: "02"
+      fontSize: 60
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_13"
+    elementType: text
+    bounds: [ 389, 271, 183, 36 ]
+    content:
+      text: "工作完成情况"
+      fontSize: 24
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+expectedOverlaps:
+  - pair:
+      - 矩形_2
+      - 矩形_3
+  - pair:
+      - 矩形_2
+      - 文本框_13

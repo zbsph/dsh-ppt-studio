@@ -91,6 +91,23 @@ export async function registerTemplate(dir, opts = {}, { targetDir = TEMPLATES_D
   // 模板 deck.yaml：引用全部母版页（保留原 theme；pages 段整体替换，不动前导换行）
   const deckTxt = (await readFile(join(dir, 'deck.yaml'), 'utf8')).replace(/pages:\n[\s\S]*$/, `pages:\n${refs.map((r) => `  - ${r}`).join('\n')}\n`)
   await writeFile(join(tplDir, 'deck.yaml'), deckTxt)
+  // 收纳后自动声明清理（外部模板 = 参考资产：视觉叠层是有意的原始设计 → expectedOverlaps 批量声明；
+  // 剩余错误统计记入 meta.note，供使用者预知需要修什么）
+  let cleanup = { declared: 0, remainingErrors: 0 }
+  try {
+    const { renderDeck } = await import('./pptd/render-html.js')
+    const { verifyDeck } = await import('./verify.js')
+    const { applyAutoDeclare } = await import('./autodeclare.js')
+    const ctx2 = await resolveDeck(tplDir)
+    const r2 = await renderDeck(ctx2, { out: '_cleanup-tmp' })
+    cleanup.declared = (await applyAutoDeclare(ctx2, r2.layout)).reduce((n, a) => n + a.added, 0)
+    const ctx3 = await resolveDeck(tplDir)
+    const r3 = await renderDeck(ctx3, { out: '_cleanup-tmp' })
+    cleanup.remainingErrors = verifyDeck(r3.layout).text.split('\n').filter((l) => l.includes('[✗]')).length
+  } catch { /* 清理失败不阻塞收纳（模板仍可用） */
+  } finally {
+    await rm(join(tplDir, '_cleanup-tmp'), { recursive: true, force: true }).catch(() => {})
+  }
   // template.yaml 元数据
   const meta = {
     id,
@@ -101,28 +118,30 @@ export async function registerTemplate(dir, opts = {}, { targetDir = TEMPLATES_D
     words: opts.words ?? '',
     colors: Object.values(ctx.colors ?? {}).filter((c) => typeof c === 'string'),
     pages: refs,
+    cleanup: cleanup.declared ? `收纳时已自动声明 ${cleanup.declared} 对预期重叠；剩余数字/出界/内容互压错误 ${cleanup.remainingErrors} 条（复制工作区后自行修复）` : undefined,
   }
   await writeFile(join(tplDir, 'template.yaml'), YAML.stringify(meta))
-  // 缩略图：第一页 render + Edge 截图
+  // 缩略图：从**模板目录**自身渲染（ctx.dir=tplDir，out 相对名）+ Edge 截图 → preview.png
   const edge = ['C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
     'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
     'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
     'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'].find((p) => existsSync(p))
   let preview = null
   try {
-    const r = await renderDeck(ctx, { out: join(tplDir, '_preview-tmp') })
+    const ctxT = await resolveDeck(tplDir)
+    const r = await renderDeck(ctxT, { out: '_preview-tmp' })
     if (edge) {
       const { spawn } = await import('node:child_process')
       const url = 'file:///' + join(tplDir, '_preview-tmp', r.htmlFiles[0]).replace(/\\/g, '/')
       preview = join(tplDir, 'preview.png')
       await new Promise((resolve, reject) => {
         const child = spawn(edge, ['--headless=new', '--disable-gpu', '--no-first-run', '--hide-scrollbars',
-          `--window-size=${ctx.size.width},${ctx.size.height}`, `--screenshot=${preview}`, url], { stdio: 'ignore', windowsHide: true })
+          `--window-size=${ctxT.size.width},${ctxT.size.height}`, `--screenshot=${preview}`, url], { stdio: 'ignore', windowsHide: true })
         child.on('exit', (code) => code === 0 ? resolve() : reject(new Error(`Edge 退出码 ${code}`)))
         child.on('error', reject)
       })
     }
-  } catch { /* 无浏览器/渲染失败：template.yaml 仍生成，preview 留空 */ }
+  } catch (e) { /* 无浏览器/渲染失败：template.yaml 仍生成，preview 留空 */ }
   await rm(join(tplDir, '_preview-tmp'), { recursive: true, force: true }).catch(() => {})
   return { id, dir: tplDir, preview, pages: refs.length, meta }
 }

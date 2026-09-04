@@ -1,0 +1,174 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "矩形_3"
+    elementType: shape
+    bounds: [ 130, 285, 288, 20 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "圆角矩形_4"
+    elementType: shape
+    bounds: [ 130, 285, 239, 20 ]
+    kind: roundRect
+    fill: "#79C9E2"
+    line: { color: "#000000" }
+  - elementId: "矩形_5"
+    elementType: shape
+    bounds: [ 130, 355, 288, 20 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "圆角矩形_6"
+    elementType: shape
+    bounds: [ 130, 355, 185, 20 ]
+    kind: roundRect
+    fill: "#0485A8"
+    line: { color: "#000000" }
+  - elementId: "矩形_7"
+    elementType: shape
+    bounds: [ 130, 424, 288, 20 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "圆角矩形_8"
+    elementType: shape
+    bounds: [ 130, 424, 227, 20 ]
+    kind: roundRect
+    fill: "#79C9E2"
+    line: { color: "#000000" }
+  - elementId: "文本框_9"
+    elementType: text
+    bounds: [ 346, 259, 69, 22 ]
+    content:
+      text: "添加标题"
+      fontSize: 12
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "文本框_10"
+    elementType: text
+    bounds: [ 346, 328, 69, 22 ]
+    content:
+      text: "添加标题"
+      fontSize: 12
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "文本框_11"
+    elementType: text
+    bounds: [ 346, 397, 69, 22 ]
+    content:
+      text: "添加标题"
+      fontSize: 12
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "文本框_12"
+    elementType: text
+    bounds: [ 429, 274, 85, 36 ]
+    content:
+      text: "76%"
+      fontSize: 24
+      fontFamily: "Arial"
+  - elementId: "文本框_13"
+    elementType: text
+    bounds: [ 429, 344, 85, 36 ]
+    content:
+      text: "49%"
+      fontSize: 24
+      fontFamily: "Arial"
+  - elementId: "文本框_14"
+    elementType: text
+    bounds: [ 429, 413, 85, 36 ]
+    content:
+      text: "71%"
+      fontSize: 24
+      fontFamily: "Arial"
+  - elementId: "文本框_15"
+    elementType: text
+    bounds: [ 122, 128, 236, 41 ]
+    content:
+      text: "BUSINESS DATA"
+      fontSize: 28
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "文本框_16"
+    elementType: text
+    bounds: [ 122, 176, 327, 58 ]
+    content:
+      text: "感谢您使用我们的PPT模板，请在此输入您需要的文字内容，感谢您使用我们的PPT模板。 感谢您使用我们的PPT模板，请在此输入您需要的文字内容。"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+      lineHeight: 1.3
+  - elementId: "文本框_17"
+    elementType: text
+    bounds: [ 547, 175, 150, 27 ]
+    content:
+      text: "请输入数据 2%"
+      fontSize: 16
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "文本框_18"
+    elementType: text
+    bounds: [ 570, 203, 254, 41 ]
+    content:
+      text: "感谢您使用我们的PPT模板，请在此输入您需要的文字内容，感谢您使用我们的PPT模板。"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+      lineHeight: 1.3
+  - elementId: "文本框_19"
+    elementType: text
+    bounds: [ 547, 279, 160, 27 ]
+    content:
+      text: "请输入数据 13%"
+      fontSize: 16
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "文本框_20"
+    elementType: text
+    bounds: [ 570, 307, 254, 41 ]
+    content:
+      text: "感谢您使用我们的PPT模板，请在此输入您需要的文字内容，感谢您使用我们的PPT模板。"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+      lineHeight: 1.3
+  - elementId: "文本框_21"
+    elementType: text
+    bounds: [ 547, 384, 160, 27 ]
+    content:
+      text: "请输入数据 57%"
+      fontSize: 16
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "文本框_22"
+    elementType: text
+    bounds: [ 570, 412, 254, 41 ]
+    content:
+      text: "感谢您使用我们的PPT模板，请在此输入您需要的文字内容，感谢您使用我们的PPT模板。"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+      lineHeight: 1.3
+  - elementId: "文本框_1"
+    elementType: text
+    bounds: [ 269, 37, 423, 41 ]
+    content:
+      text: "上半年工作情况"
+      fontSize: 28
+      bold: true
+      fontFamily: "思源黑体 CN Heavy"
+      align: center
+expectedOverlaps:
+  - pair:
+      - 矩形_3
+      - 圆角矩形_4
+  - pair:
+      - 矩形_5
+      - 圆角矩形_6
+  - pair:
+      - 矩形_7
+      - 圆角矩形_8

@@ -1,0 +1,173 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "图片_1"
+    elementType: image
+    bounds: [ 678, 0, 282, 79 ]
+    fit: cover
+    src: "media/image8.png"
+  - elementId: "文本框_2"
+    elementType: text
+    bounds: [ 68, 2, 358, 58 ]
+    content:
+      text: "添加论文内容第二部分标题"
+      color: "#4B649F"
+      bold: true
+      lineHeight: 1.5
+  - elementId: "矩形_4"
+    elementType: shape
+    bounds: [ 0, 530, 960, 11 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "MH_SubTitle_1"
+    elementType: shape
+    bounds: [ 132, 147, 213, 136 ]
+    kind: rect
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "MH_SubTitle_2"
+    elementType: shape
+    bounds: [ 371, 147, 213, 136 ]
+    kind: rect
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "MH_SubTitle_3"
+    elementType: shape
+    bounds: [ 609, 147, 213, 136 ]
+    kind: rect
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "MH_SubTitle_4"
+    elementType: shape
+    bounds: [ 132, 320, 213, 136 ]
+    kind: rect
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "MH_SubTitle_5"
+    elementType: shape
+    bounds: [ 371, 320, 213, 136 ]
+    kind: rect
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "MH_SubTitle_6"
+    elementType: shape
+    bounds: [ 609, 320, 213, 136 ]
+    kind: rect
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "MH_Other_1"
+    elementType: text
+    bounds: [ 281, 134, 47, 43 ]
+    content:
+      text: "01"
+      fontSize: 20
+      color: "#FFFFFF"
+      align: center
+  - elementId: "MH_Other_2"
+    elementType: text
+    bounds: [ 519, 134, 47, 43 ]
+    content:
+      text: "02"
+      fontSize: 20
+      color: "#FFFFFF"
+      align: center
+  - elementId: "MH_Other_3"
+    elementType: text
+    bounds: [ 757, 134, 47, 43 ]
+    content:
+      text: "03"
+      fontSize: 20
+      color: "#FFFFFF"
+      align: center
+  - elementId: "MH_Other_4"
+    elementType: text
+    bounds: [ 281, 306, 47, 42 ]
+    content:
+      text: "04"
+      fontSize: 20
+      color: "#FFFFFF"
+      align: center
+  - elementId: "MH_Other_5"
+    elementType: text
+    bounds: [ 519, 306, 47, 42 ]
+    content:
+      text: "05"
+      fontSize: 20
+      color: "#FFFFFF"
+      align: center
+  - elementId: "MH_Other_6"
+    elementType: text
+    bounds: [ 757, 306, 47, 42 ]
+    content:
+      text: "06"
+      fontSize: 20
+      color: "#FFFFFF"
+      align: center
+  - elementId: "文本框_21"
+    elementType: text
+    bounds: [ 148, 184, 180, 86 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      color: "#595959"
+  - elementId: "文本框_22"
+    elementType: text
+    bounds: [ 386, 184, 180, 86 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      color: "#595959"
+  - elementId: "文本框_23"
+    elementType: text
+    bounds: [ 625, 184, 180, 86 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      color: "#595959"
+  - elementId: "文本框_24"
+    elementType: text
+    bounds: [ 148, 351, 180, 86 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      color: "#595959"
+  - elementId: "文本框_25"
+    elementType: text
+    bounds: [ 386, 351, 180, 86 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      color: "#595959"
+  - elementId: "文本框_26"
+    elementType: text
+    bounds: [ 625, 351, 180, 86 ]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      color: "#595959"
+expectedOverlaps:
+  - pair:
+      - MH_SubTitle_1
+      - MH_Other_1
+  - pair:
+      - MH_SubTitle_1
+      - 文本框_21
+  - pair:
+      - MH_SubTitle_2
+      - MH_Other_2
+  - pair:
+      - MH_SubTitle_2
+      - 文本框_22
+  - pair:
+      - MH_SubTitle_3
+      - MH_Other_3
+  - pair:
+      - MH_SubTitle_3
+      - 文本框_23
+  - pair:
+      - MH_SubTitle_4
+      - MH_Other_4
+  - pair:
+      - MH_SubTitle_4
+      - 文本框_24
+  - pair:
+      - MH_SubTitle_5
+      - MH_Other_5
+  - pair:
+      - MH_SubTitle_5
+      - 文本框_25
+  - pair:
+      - MH_SubTitle_6
+      - MH_Other_6
+  - pair:
+      - MH_SubTitle_6
+      - 文本框_26

@@ -1,0 +1,175 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "Rectangle_52"
+    elementType: shape
+    bounds: [ 39, 257, 750, 8 ]
+    kind: rect
+    fill: "#79C9E2"
+    line: { color: "#000000", width: 1 }
+  - elementId: "Rectangle_73"
+    elementType: shape
+    bounds: [ 39, 304, 750, 7 ]
+    kind: rect
+    fill: "#0485A8"
+    line: { color: "#000000", width: 1 }
+  - elementId: "Oval_57"
+    elementType: shape
+    bounds: [ 741, 251, 20, 20 ]
+    kind: roundRect
+    fill: "#79C9E2"
+    line: { color: "#FFFFFF", width: 2 }
+  - elementId: "Oval_78"
+    elementType: shape
+    bounds: [ 741, 298, 20, 20 ]
+    kind: roundRect
+    fill: "#0485A8"
+    line: { color: "#FFFFFF", width: 2 }
+  - elementId: "Oval_56"
+    elementType: shape
+    bounds: [ 577, 251, 20, 20 ]
+    kind: roundRect
+    fill: "#79C9E2"
+    line: { color: "#FFFFFF", width: 2 }
+  - elementId: "Oval_77"
+    elementType: shape
+    bounds: [ 577, 298, 20, 20 ]
+    kind: roundRect
+    fill: "#0485A8"
+    line: { color: "#FFFFFF", width: 2 }
+  - elementId: "Oval_54"
+    elementType: shape
+    bounds: [ 413, 251, 20, 20 ]
+    kind: roundRect
+    fill: "#79C9E2"
+    line: { color: "#FFFFFF", width: 2 }
+  - elementId: "Oval_55"
+    elementType: shape
+    bounds: [ 249, 251, 20, 20 ]
+    kind: roundRect
+    fill: "#79C9E2"
+    line: { color: "#FFFFFF", width: 2 }
+  - elementId: "Oval_75"
+    elementType: shape
+    bounds: [ 413, 298, 20, 20 ]
+    kind: roundRect
+    fill: "#0485A8"
+    line: { color: "#FFFFFF", width: 2 }
+  - elementId: "Oval_76"
+    elementType: shape
+    bounds: [ 249, 298, 20, 20 ]
+    kind: roundRect
+    fill: "#0485A8"
+    line: { color: "#FFFFFF", width: 2 }
+  - elementId: "文本框_14"
+    elementType: text
+    bounds: [ 182, 163, 164, 53 ]
+    content:
+      text: "此处为预设文本，请将内容复制粘贴到这里，字体、字号、颜色皆可根据自己的喜好进行更改"
+      fontSize: 10
+      color: "#000000"
+      fontFamily: "Arial"
+      lineHeight: 1.3
+  - elementId: "文本框_15"
+    elementType: text
+    bounds: [ 508, 163, 164, 53 ]
+    content:
+      text: "此处为预设文本，请将内容复制粘贴到这里，字体、字号、颜色皆可根据自己的喜好进行更改"
+      fontSize: 10
+      color: "#000000"
+      fontFamily: "Arial"
+      lineHeight: 1.3
+  - elementId: "文本框_16"
+    elementType: text
+    bounds: [ 352, 350, 164, 53 ]
+    content:
+      text: "此处为预设文本，请将内容复制粘贴到这里，字体、字号、颜色皆可根据自己的喜好进行更改"
+      fontSize: 10
+      color: "#000000"
+      fontFamily: "Arial"
+      lineHeight: 1.3
+  - elementId: "文本框_17"
+    elementType: text
+    bounds: [ 678, 350, 164, 53 ]
+    content:
+      text: "此处为预设文本，请将内容复制粘贴到这里，字体、字号、颜色皆可根据自己的喜好进行更改"
+      fontSize: 10
+      color: "#000000"
+      fontFamily: "Arial"
+      lineHeight: 1.3
+  - elementId: "圆角矩形_18"
+    elementType: shape
+    bounds: [ 133, 169, 42, 42 ]
+    kind: roundRect
+    fill: "#79C9E2"
+    line: { color: "#000000" }
+  - elementId: "圆角矩形_19"
+    elementType: shape
+    bounds: [ 461, 169, 42, 42 ]
+    kind: roundRect
+    fill: "#79C9E2"
+    line: { color: "#000000" }
+  - elementId: "圆角矩形_20"
+    elementType: shape
+    bounds: [ 309, 357, 42, 42 ]
+    kind: roundRect
+    fill: "#0485A8"
+    line: { color: "#000000" }
+  - elementId: "圆角矩形_21"
+    elementType: shape
+    bounds: [ 633, 357, 42, 42 ]
+    kind: roundRect
+    fill: "#0485A8"
+    line: { color: "#000000" }
+  - elementId: "Freeform_15"
+    elementType: shape
+    bounds: [ 317, 364, 27, 27 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "Freeform_15-2"
+    elementType: shape
+    bounds: [ 640, 365, 27, 27 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "文本框_1"
+    elementType: text
+    bounds: [ 269, 37, 423, 41 ]
+    content:
+      text: "上半年工作情况"
+      fontSize: 28
+      bold: true
+      fontFamily: "思源黑体 CN Heavy"
+      align: center
+expectedOverlaps:
+  - pair:
+      - Rectangle_52
+      - Oval_57
+  - pair:
+      - Rectangle_52
+      - Oval_56
+  - pair:
+      - Rectangle_52
+      - Oval_54
+  - pair:
+      - Rectangle_52
+      - Oval_55
+  - pair:
+      - Rectangle_73
+      - Oval_78
+  - pair:
+      - Rectangle_73
+      - Oval_77
+  - pair:
+      - Rectangle_73
+      - Oval_75
+  - pair:
+      - Rectangle_73
+      - Oval_76
+  - pair:
+      - 圆角矩形_20
+      - Freeform_15
+  - pair:
+      - 圆角矩形_21
+      - Freeform_15-2

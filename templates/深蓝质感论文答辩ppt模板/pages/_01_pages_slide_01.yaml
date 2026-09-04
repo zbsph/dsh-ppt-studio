@@ -1,0 +1,79 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "直角三角形_346"
+    elementType: shape
+    bounds: [ 506, 190, 217, 217 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "直角三角形_11"
+    elementType: shape
+    bounds: [ -2, 0, 217, 217 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "文本框_8"
+    elementType: text
+    bounds: [ 149, 154, 425, 56 ]
+    content:
+      text: "深蓝质感简约答辩模板"
+      fontSize: 40
+      color: "#000000"
+      bold: true
+      fontFamily: "+mj-ea"
+      align: center
+  - elementId: "文本框_62"
+    elementType: text
+    bounds: [ 125, 215, 472, 24 ]
+    content:
+      text: "BLUE TEXTURED SIMPLE REPLY TEMPLATE"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "方正准圆简体"
+      align: center
+  - elementId: "椭圆_66"
+    elementType: shape
+    bounds: [ 212, 257, 28, 28 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "文本框_67"
+    elementType: text
+    bounds: [ 239, 261, 163, 24 ]
+    content:
+      text: "日期：2019.4.15"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "方正准圆简体"
+  - elementId: "椭圆_68"
+    elementType: shape
+    bounds: [ 374, 257, 28, 28 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "文本框_69"
+    elementType: text
+    bounds: [ 401, 260, 163, 24 ]
+    content:
+      text: "答辩人：优品PPT"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "方正准圆简体"
+expectedOverlaps:
+  - pair:
+      - 直角三角形_346
+      - 文本框_8
+  - pair:
+      - 直角三角形_346
+      - 文本框_62
+  - pair:
+      - 直角三角形_346
+      - 文本框_69
+  - pair:
+      - 直角三角形_11
+      - 文本框_8
+  - pair:
+      - 直角三角形_11
+      - 文本框_62
+  - pair:
+      - 文本框_67
+      - 椭圆_68

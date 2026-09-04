@@ -1,0 +1,200 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "Oval_9"
+    elementType: shape
+    bounds: [ 485, 259, 28, 28 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Oval_9-2"
+    elementType: shape
+    bounds: [ 485, 325, 28, 28 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Oval_9-3"
+    elementType: shape
+    bounds: [ 46, 258, 28, 28 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Oval_9-4"
+    elementType: shape
+    bounds: [ 261, 259, 28, 28 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Oval_9-5"
+    elementType: shape
+    bounds: [ 261, 320, 28, 28 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Oval_9-6"
+    elementType: shape
+    bounds: [ 46, 324, 28, 28 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "矩形_3"
+    elementType: shape
+    bounds: [ 0, 76, 720, 151 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "图片_4"
+    elementType: image
+    bounds: [ 0, 82, 720, 138 ]
+    fit: cover
+    src: "media/image9.jpg"
+  - elementId: "TextBox_34"
+    elementType: text
+    bounds: [ 77, 250, 105, 22 ]
+    content:
+      text: "应用领域"
+      color: "#2F2F2F"
+      bold: true
+      fontFamily: "微软雅黑"
+  - elementId: "矩形_50"
+    elementType: text
+    bounds: [ 77, 269, 165, 33 ]
+    content:
+      text: "单击此处编辑您要的内容，建议您在展示时采用微软雅黑字体"
+      fontSize: 9
+      color: "#000000"
+      fontFamily: "微软雅黑"
+      lineHeight: 1.25
+  - elementId: "TextBox_34-2"
+    elementType: text
+    bounds: [ 293, 250, 105, 22 ]
+    content:
+      text: "应用领域"
+      color: "#2F2F2F"
+      bold: true
+      fontFamily: "微软雅黑"
+  - elementId: "矩形_57"
+    elementType: text
+    bounds: [ 293, 269, 165, 33 ]
+    content:
+      text: "单击此处编辑您要的内容，建议您在展示时采用微软雅黑字体"
+      fontSize: 9
+      color: "#000000"
+      fontFamily: "微软雅黑"
+      lineHeight: 1.25
+  - elementId: "TextBox_34-3"
+    elementType: text
+    bounds: [ 517, 250, 105, 22 ]
+    content:
+      text: "应用领域"
+      color: "#2F2F2F"
+      bold: true
+      fontFamily: "微软雅黑"
+  - elementId: "矩形_64"
+    elementType: text
+    bounds: [ 517, 269, 165, 33 ]
+    content:
+      text: "单击此处编辑您要的内容，建议您在展示时采用微软雅黑字体"
+      fontSize: 9
+      color: "#000000"
+      fontFamily: "微软雅黑"
+      lineHeight: 1.25
+  - elementId: "TextBox_34-4"
+    elementType: text
+    bounds: [ 293, 311, 105, 22 ]
+    content:
+      text: "应用领域"
+      color: "#2F2F2F"
+      bold: true
+      fontFamily: "微软雅黑"
+  - elementId: "矩形_94"
+    elementType: text
+    bounds: [ 293, 330, 165, 33 ]
+    content:
+      text: "单击此处编辑您要的内容，建议您在展示时采用微软雅黑字体"
+      fontSize: 9
+      color: "#000000"
+      fontFamily: "微软雅黑"
+      lineHeight: 1.25
+  - elementId: "Freeform_5"
+    elementType: shape
+    bounds: [ 267, 325, 16, 16 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "TextBox_34-5"
+    elementType: text
+    bounds: [ 77, 316, 131, 22 ]
+    content:
+      text: "应用领域"
+      color: "#2F2F2F"
+      bold: true
+      fontFamily: "微软雅黑"
+  - elementId: "矩形_91"
+    elementType: text
+    bounds: [ 77, 335, 165, 33 ]
+    content:
+      text: "单击此处编辑您要的内容，建议您在展示时采用微软雅黑字体"
+      fontSize: 9
+      color: "#000000"
+      fontFamily: "微软雅黑"
+      lineHeight: 1.25
+  - elementId: "Freeform_17"
+    elementType: shape
+    bounds: [ 51, 331, 16, 15 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "TextBox_34-6"
+    elementType: text
+    bounds: [ 517, 316, 105, 22 ]
+    content:
+      text: "应用领域"
+      color: "#2F2F2F"
+      bold: true
+      fontFamily: "微软雅黑"
+  - elementId: "矩形_97"
+    elementType: text
+    bounds: [ 517, 335, 165, 33 ]
+    content:
+      text: "单击此处编辑您要的内容，建议您在展示时采用微软雅黑字体"
+      fontSize: 9
+      color: "#000000"
+      fontFamily: "微软雅黑"
+      lineHeight: 1.25
+  - elementId: "KSO_Shape"
+    elementType: shape
+    bounds: [ 492, 329, 15, 18 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "Freeform_134"
+    elementType: shape
+    bounds: [ 269, 262, 8, 19 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "TextBox_13"
+    elementType: text
+    bounds: [ 36, 25, 109, 31 ]
+    content:
+      text: "应用领域"
+      fontSize: 21
+      bold: true
+      fontFamily: "微软雅黑"
+expectedOverlaps:
+  - pair:
+      - Oval_9-2
+      - KSO_Shape
+  - pair:
+      - Oval_9-4
+      - Freeform_134
+  - pair:
+      - Oval_9-5
+      - Freeform_5
+  - pair:
+      - Oval_9-6
+      - Freeform_17
+  - pair:
+      - 矩形_3
+      - 图片_4

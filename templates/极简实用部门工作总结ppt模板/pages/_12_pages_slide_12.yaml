@@ -1,0 +1,162 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "Oval_7"
+    elementType: shape
+    bounds: [ 470, 166, 24, 24 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#DF3F4E" }
+  - elementId: "Oval_8"
+    elementType: shape
+    bounds: [ 470, 237, 24, 24 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#DF3F4E" }
+  - elementId: "Oval_9"
+    elementType: shape
+    bounds: [ 470, 308, 24, 24 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#DF3F4E" }
+  - elementId: "Oval_10"
+    elementType: shape
+    bounds: [ 470, 370, 24, 24 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#DF3F4E" }
+  - elementId: "Oval_11"
+    elementType: shape
+    bounds: [ 470, 437, 24, 24 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#DF3F4E" }
+  - elementId: "椭圆_57"
+    elementType: shape
+    bounds: [ 267, 114, 41, 41 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "椭圆_60"
+    elementType: shape
+    bounds: [ 354, 236, 41, 41 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "椭圆_62"
+    elementType: shape
+    bounds: [ 256, 386, 41, 41 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "椭圆_63"
+    elementType: shape
+    bounds: [ 627, 145, 41, 41 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "椭圆_64"
+    elementType: shape
+    bounds: [ 622, 325, 41, 41 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "文本框_66"
+    elementType: text
+    bounds: [ 128, 121, 132, 27 ]
+    content:
+      text: "点击填写短标题"
+      fontSize: 16
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "矩形_67"
+    elementType: text
+    bounds: [ 118, 148, 151, 47 ]
+    content:
+      text: "点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "文本框_69"
+    elementType: text
+    bounds: [ 204, 246, 132, 27 ]
+    content:
+      text: "点击填写短标题"
+      fontSize: 16
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "矩形_70"
+    elementType: text
+    bounds: [ 194, 273, 151, 47 ]
+    content:
+      text: "点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "文本框_71"
+    elementType: text
+    bounds: [ 114, 383, 132, 27 ]
+    content:
+      text: "点击填写短标题"
+      fontSize: 16
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "矩形_72"
+    elementType: text
+    bounds: [ 105, 410, 151, 47 ]
+    content:
+      text: "点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "文本框_73"
+    elementType: text
+    bounds: [ 679, 151, 132, 27 ]
+    content:
+      text: "点击填写短标题"
+      fontSize: 16
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "矩形_74"
+    elementType: text
+    bounds: [ 670, 178, 151, 47 ]
+    content:
+      text: "点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "文本框_75"
+    elementType: text
+    bounds: [ 673, 362, 132, 27 ]
+    content:
+      text: "点击填写短标题"
+      fontSize: 16
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "矩形_76"
+    elementType: text
+    bounds: [ 663, 389, 151, 47 ]
+    content:
+      text: "点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "Text_Box_7"
+    elementType: text
+    bounds: [ -1, 25, 963, 34 ]
+    content:
+      text: "工作完成情况"
+      fontSize: 24
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+expectedOverlaps:
+  - pair:
+      - 椭圆_57
+      - 矩形_67

@@ -1,0 +1,34 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "文本框_1"
+    elementType: text
+    bounds: [122, 219, 423, 73]
+    content:
+      text: "上半年工作情况"
+      fontSize: 54
+      bold: true
+      fontFamily: "思源黑体 CN Heavy"
+  - elementId: "矩形_圆角_3"
+    elementType: shape
+    bounds: [130, 365, 130, 31]
+    kind: roundRect
+    fill: "#79C9E2"
+    line: {color: "#000000"}
+  - elementId: "文本框_12"
+    elementType: text
+    bounds: [123, 164, 272, 61]
+    content:
+      text: "PART 01"
+      fontSize: 44
+      color: "#0485A8"
+      bold: true
+      fontFamily: "+mj-ea"
+  - elementId: "文本框_13"
+    elementType: text
+    bounds: [123, 288, 421, 45]
+    content:
+      text: "your content is entered here, or by copying your text, select paste in this box and choose to retain only text."
+      fontSize: 11
+      color: "#000000"
+      lineHeight: 1.5

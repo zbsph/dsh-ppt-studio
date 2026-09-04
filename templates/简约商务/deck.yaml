@@ -1,0 +1,40 @@
+# 由 dsh-ppt-studio 从 pptx 导入（内容保真，版式可从新）
+# 检测到跨页页眉/页脚带（模板特征）：建议安全区如下（注释呈现，未启用；确认为模板后取消注释并微调）
+# safeArea: {top: 78, bottom: undefined}
+# 建议主题（P0-1 聚合自原稿样式，可调；页面字段已内联，无需引用也可渲染）
+theme:
+  colors:
+    c1: "#000000"   # 最高频（建议作 ink/主色）
+    c2: "#FFFFFF"
+    c3: "#79C9E2"
+    c4: "#0485A8"
+    c5: "#4D4D4D"
+    c6: "#2C3139"
+  textStyles:
+    title: {fontSize: 60, color: "#000000", bold: true}   # 字体 Arial
+    body: {fontSize: 14, color: "#000000"}
+    label: {fontSize: 1, color: "#000000"}
+version: 1
+title: "简约商务"
+size: [960, 540]
+pages:
+  - pages/_01_pages_slide_01.yaml
+  - pages/_02_pages_slide_02.yaml
+  - pages/_03_pages_slide_03.yaml
+  - pages/_04_pages_slide_04.yaml
+  - pages/_05_pages_slide_05.yaml
+  - pages/_06_pages_slide_06.yaml
+  - pages/_07_pages_slide_07.yaml
+  - pages/_08_pages_slide_08.yaml
+  - pages/_09_pages_slide_09.yaml
+  - pages/_10_pages_slide_10.yaml
+  - pages/_11_pages_slide_11.yaml
+  - pages/_12_pages_slide_12.yaml
+  - pages/_13_pages_slide_13.yaml
+  - pages/_14_pages_slide_14.yaml
+  - pages/_15_pages_slide_15.yaml
+  - pages/_16_pages_slide_16.yaml
+  - pages/_17_pages_slide_17.yaml
+  - pages/_18_pages_slide_18.yaml
+  - pages/_19_pages_slide_19.yaml
+  - pages/_20_pages_slide_20.yaml

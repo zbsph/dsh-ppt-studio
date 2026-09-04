@@ -1,0 +1,72 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "任意多边形_10"
+    elementType: shape
+    bounds: [ 158, -122, 72, 389 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_1"
+    elementType: shape
+    bounds: [ 26, 20, 105, 105 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#4B649F", width: 3 }
+  - elementId: "文本框_11"
+    elementType: text
+    bounds: [ 137, 46, 233, 51 ]
+    content:
+      text: "论文主要内容"
+      fontSize: 36
+      color: "#FFFFFF"
+      lineHeight: 1
+  - elementId: "图片_12"
+    elementType: image
+    bounds: [ 498, 410, 462, 131 ]
+    fit: cover
+    src: "media/image6.png"
+  - elementId: "文本框_44"
+    elementType: text
+    bounds: [ 99, 297, 164, 95 ]
+    content:
+      text: "添加论文内容第一部分标题"
+      fontSize: 24
+      color: "#404040"
+      bold: true
+      align: center
+      lineHeight: 1.5
+  - elementId: "文本框_45"
+    elementType: text
+    bounds: [ 297, 297, 170, 95 ]
+    content:
+      text: "添加论文内容第二部分标题"
+      fontSize: 24
+      color: "#404040"
+      bold: true
+      align: center
+      lineHeight: 1.5
+  - elementId: "文本框_46"
+    elementType: text
+    bounds: [ 490, 297, 170, 95 ]
+    content:
+      text: "添加论文内容第三部分标题"
+      fontSize: 24
+      color: "#404040"
+      bold: true
+      align: center
+      lineHeight: 1.5
+  - elementId: "文本框_47"
+    elementType: text
+    bounds: [ 680, 297, 181, 95 ]
+    content:
+      text: "添加论文内容第四部分标题"
+      fontSize: 24
+      color: "#404040"
+      bold: true
+      align: center
+      lineHeight: 1.5
+expectedOverlaps:
+  - pair:
+      - 任意多边形_10
+      - 文本框_11

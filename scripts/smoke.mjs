@@ -422,12 +422,16 @@ ok('v0.4：density 按内容元素分层（纯图形页不误报，P2-5）', ana
 // ── 17. v0.5.0：模板库（4 套）回归 + 模板一致性断言 + ppt_new --template ──
 const tplMod = await import('../lib/templates.js')
 const tplList = await tplMod.listTemplates()
-ok('v0.5：模板库 4 套齐全', tplList.length === 4, tplList.map((t) => t.id).join(','))
-ok('v0.5：模板元信息完整（含预览图）', tplList.every((t) => t.name && t.style && t.scene && t.preview), tplList.map((t) => `${t.id}:${t.preview ? 'png' : 'MISSING'}`).join(' '))
+const BUILTIN_TPLS = ['business-blue', 'academic-white', 'tech-dark', 'pitch-bold']
+const builtins = tplList.filter((t) => BUILTIN_TPLS.includes(t.id))
+const externals = tplList.filter((t) => !BUILTIN_TPLS.includes(t.id))
+ok('v0.5：内置模板 4 套齐全（含外部收纳的并存）', builtins.length === 4 && tplList.length >= 4, `总 ${tplList.length} 套：${tplList.map((t) => t.id).join(',')}`)
+ok('v0.5：内置模板元信息完整（含预览图）', builtins.every((t) => t.name && t.style && t.scene && t.preview), builtins.map((t) => `${t.id}:${t.preview ? 'png' : 'MISSING'}`).join(' '))
+ok('v0.6.2：外部收纳模板自包含（预览图生成 + 无外部目录引用）', externals.every((t) => t.preview), externals.map((t) => `${t.id}:${t.preview ? 'png' : 'MISSING'}`).join(' '))
 let tplAllOk = true
 const tplReport = []
-for (const t of tplList) {
-  // 母版页全部渲染 + verify 0 错误（模板一致性 strict 门禁一并验证）
+for (const t of builtins) {
+  // 内置模板：母版页全部渲染 + verify 0 错误（模板一致性 strict 门禁一并验证）
   const ws = join(root, 'examples', 'tpl-check-' + t.id)
   await rm(ws, { recursive: true, force: true })
   await mkdir(join(ws, 'pages'), { recursive: true })
@@ -447,7 +451,21 @@ for (const t of tplList) {
     tplReport.push(`${t.id}:FAIL ${e?.message}`)
   }
 }
-ok('v0.5：4 套模板母版页全渲染 + verify 0 错误（含一致性门禁）', tplAllOk, tplReport.join('; '))
+ok('v0.5：内置模板母版页全渲染 + verify 0 错误（含一致性门禁）', tplAllOk, tplReport.join('; '))
+// 外部收纳模板：可渲染（不要求 0 错误——内容参照，收纳时已自动声明预期重叠）
+let extOk = true
+const extReport = []
+for (const t of externals) {
+  const tT = await tplMod.templateWorkspace(t.id)
+  try {
+    await renderDeck(await resolveDeck(tT.dir), {})
+    extReport.push(`${t.id}:render ok`)
+  } catch (e) {
+    extOk = false
+    extReport.push(`${t.id}:FAIL ${e?.message}`)
+  }
+}
+ok('v0.6.2：外部模板可渲染（内容参照，清理后工作区可用）', extOk && externals.length >= 1, extReport.join('; '))
 // theme-conformance：出板颜色=ERROR；suggest 档=warning；off=跳过
 const confPage = { elements: [{ id: 'x', kind: 'shape', fill: '#123456', bounds: { x: 0, y: 0, w: 10, h: 10 } }] }
 ok('v0.5：theme-conformance strict 出板颜色 → ERROR', verifyDeck({ size: size960, theme: { colors: { a: '#2563EB' } }, pages: [{ index: 0, name: 'p', safeArea: null, overlapMode: 'declared', expectedOverlaps: [], expectedOutOfSafeArea: [], elements: [{ id: 'x', kind: 'shape', fill: '#123456', bounds: { x: 0, y: 0, w: 10, h: 10 } }] }] }).text.includes('[✗] theme-conformance'))

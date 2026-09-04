@@ -1,0 +1,35 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "文本框_11"
+    elementType: text
+    bounds: [57, 144, 504, 163]
+    content:
+      text: "简约风部门年中工作计划总结"
+      fontSize: 60
+      color: "#2C3139"
+      fontFamily: "思源黑体 CN Heavy"
+      lineHeight: 1.1
+  - elementId: "文本框_14"
+    elementType: text
+    bounds: [59, 313, 431, 32]
+    content:
+      text: "SUMMARY OF THE MID-YEAR WORK PLAN"
+      fontSize: 20
+      color: "#0485A8"
+      bold: true
+      fontFamily: "+mj-ea"
+  - elementId: "文本框_15"
+    elementType: text
+    bounds: [59, 345, 421, 45]
+    content:
+      text: "your content is entered here, or by copying your text, select paste in this box and choose to retain only text."
+      fontSize: 11
+      color: "#000000"
+      lineHeight: 1.5
+  - elementId: "矩形_圆角_16"
+    elementType: shape
+    bounds: [67, 420, 130, 31]
+    kind: roundRect
+    fill: "#79C9E2"
+    line: {color: "#000000"}

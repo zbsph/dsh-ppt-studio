@@ -1,0 +1,213 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "Oval_4"
+    elementType: shape
+    bounds: [60, 279, 18, 18]
+    kind: roundRect
+    fill: "#0485A8"
+    line: {color: "#000000", width: 1}
+  - elementId: "Oval_5"
+    elementType: shape
+    bounds: [876, 279, 18, 18]
+    kind: roundRect
+    fill: "#0485A8"
+    line: {color: "#000000", width: 1}
+  - elementId: "Oval_6"
+    elementType: shape
+    bounds: [468, 280, 18, 18]
+    kind: roundRect
+    fill: "#79C9E2"
+    line: {color: "#000000", width: 1}
+  - elementId: "Oval_7"
+    elementType: shape
+    bounds: [196, 279, 18, 18]
+    kind: roundRect
+    fill: "#79C9E2"
+    line: {color: "#000000", width: 1}
+  - elementId: "Oval_8"
+    elementType: shape
+    bounds: [604, 280, 18, 18]
+    kind: roundRect
+    fill: "#0485A8"
+    line: {color: "#000000", width: 1}
+  - elementId: "Oval_9"
+    elementType: shape
+    bounds: [332, 280, 18, 18]
+    kind: roundRect
+    fill: "#0485A8"
+    line: {color: "#000000", width: 1}
+  - elementId: "Oval_10"
+    elementType: shape
+    bounds: [740, 280, 18, 18]
+    kind: roundRect
+    fill: "#79C9E2"
+    line: {color: "#000000", width: 1}
+  - elementId: "TextBox_139"
+    elementType: text
+    bounds: [868, 306, 27, 16]
+    content:
+      text: "2020"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "思源黑体 CN Normal"
+      align: center
+  - elementId: "TextBox_140"
+    elementType: text
+    bounds: [735, 307, 27, 16]
+    content:
+      text: "2019"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "思源黑体 CN Normal"
+      align: center
+  - elementId: "TextBox_141"
+    elementType: text
+    bounds: [601, 307, 27, 16]
+    content:
+      text: "2018"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "思源黑体 CN Normal"
+      align: center
+  - elementId: "TextBox_142"
+    elementType: text
+    bounds: [465, 306, 27, 16]
+    content:
+      text: "2017"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "思源黑体 CN Normal"
+      align: center
+  - elementId: "TextBox_143"
+    elementType: text
+    bounds: [328, 306, 27, 16]
+    content:
+      text: "2016"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "思源黑体 CN Normal"
+      align: center
+  - elementId: "TextBox_144"
+    elementType: text
+    bounds: [190, 307, 27, 16]
+    content:
+      text: "2015"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "思源黑体 CN Normal"
+      align: center
+  - elementId: "TextBox_145"
+    elementType: text
+    bounds: [54, 306, 27, 16]
+    content:
+      text: "2014"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "思源黑体 CN Normal"
+      align: center
+  - elementId: "文本框_18"
+    elementType: text
+    bounds: [66, 366, 165, 56]
+    content:
+      text: "此处为预设文本，请将内容复制粘贴到这里，字体、字号、颜色皆可根据自己的喜好进行更改、"
+      fontSize: 10.5
+      color: "#000000"
+      fontFamily: "Arial"
+      lineHeight: 1.3
+  - elementId: "矩形_19"
+    elementType: text
+    bounds: [69, 337, 155, 36]
+    content:
+      text: "标题文本预设"
+      fontSize: 14
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+      lineHeight: 1.5
+  - elementId: "文本框_20"
+    elementType: text
+    bounds: [275, 366, 165, 56]
+    content:
+      text: "此处为预设文本，请将内容复制粘贴到这里，字体、字号、颜色皆可根据自己的喜好进行更改、"
+      fontSize: 10.5
+      color: "#000000"
+      fontFamily: "Arial"
+      lineHeight: 1.3
+  - elementId: "矩形_21"
+    elementType: text
+    bounds: [277, 337, 155, 36]
+    content:
+      text: "标题文本预设"
+      fontSize: 14
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+      lineHeight: 1.5
+  - elementId: "文本框_22"
+    elementType: text
+    bounds: [489, 366, 165, 56]
+    content:
+      text: "此处为预设文本，请将内容复制粘贴到这里，字体、字号、颜色皆可根据自己的喜好进行更改、"
+      fontSize: 10.5
+      color: "#000000"
+      fontFamily: "Arial"
+      lineHeight: 1.3
+  - elementId: "矩形_23"
+    elementType: text
+    bounds: [492, 337, 155, 36]
+    content:
+      text: "标题文本预设"
+      fontSize: 14
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+      lineHeight: 1.5
+  - elementId: "文本框_24"
+    elementType: text
+    bounds: [715, 366, 165, 56]
+    content:
+      text: "此处为预设文本，请将内容复制粘贴到这里，字体、字号、颜色皆可根据自己的喜好进行更改、"
+      fontSize: 10.5
+      color: "#000000"
+      fontFamily: "Arial"
+      lineHeight: 1.3
+  - elementId: "矩形_25"
+    elementType: text
+    bounds: [717, 337, 155, 36]
+    content:
+      text: "标题文本预设"
+      fontSize: 14
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+      lineHeight: 1.5
+  - elementId: "圆角矩形_26"
+    elementType: shape
+    bounds: [66, 171, 137, 85]
+    kind: roundRect
+    line: {color: "#000000"}
+  - elementId: "圆角矩形_27"
+    elementType: shape
+    bounds: [292, 171, 137, 85]
+    kind: roundRect
+    line: {color: "#000000"}
+  - elementId: "圆角矩形_28"
+    elementType: shape
+    bounds: [518, 171, 137, 85]
+    kind: roundRect
+    line: {color: "#000000"}
+  - elementId: "圆角矩形_29"
+    elementType: shape
+    bounds: [743, 172, 137, 85]
+    kind: roundRect
+    line: {color: "#000000"}
+  - elementId: "文本框_1"
+    elementType: text
+    bounds: [269, 37, 423, 41]
+    content:
+      text: "上半年工作情况"
+      fontSize: 28
+      bold: true
+      fontFamily: "思源黑体 CN Heavy"
+      align: center

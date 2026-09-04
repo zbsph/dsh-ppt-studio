@@ -1,0 +1,138 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "文本框_10"
+    elementType: text
+    bounds: [206, 140, 120, 29]
+    content:
+      text: "工作目标"
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_11"
+    elementType: text
+    bounds: [420, 141, 120, 29]
+    content:
+      text: "完成情况"
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_12"
+    elementType: text
+    bounds: [634, 144, 120, 29]
+    content:
+      text: "情况说明"
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_13"
+    elementType: text
+    bounds: [167, 194, 193, 36]
+    content:
+      text: "销售业绩XX万"
+      fontSize: 24
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_14"
+    elementType: text
+    bounds: [420, 189, 120, 46]
+    content:
+      text: "120%"
+      fontSize: 32
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_15"
+    elementType: text
+    bounds: [579, 193, 253, 51]
+    content:
+      text: "全年销售目标XXX万，实际完成XXX万。"
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "文本框_16"
+    elementType: text
+    bounds: [167, 272, 194, 36]
+    content:
+      text: "新项目开发XX个"
+      fontSize: 24
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_17"
+    elementType: text
+    bounds: [420, 264, 120, 46]
+    content:
+      text: "80%"
+      fontSize: 32
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_18"
+    elementType: text
+    bounds: [581, 268, 251, 51]
+    content:
+      text: "要求开发新项目XXX，完成开发XX个，XXX项目正在开发。"
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "文本框_19"
+    elementType: text
+    bounds: [167, 347, 194, 36]
+    content:
+      text: "销售回款XXX万"
+      fontSize: 24
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_20"
+    elementType: text
+    bounds: [417, 345, 120, 46]
+    content:
+      text: "90%"
+      fontSize: 32
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_21"
+    elementType: text
+    bounds: [581, 349, 251, 51]
+    content:
+      text: "全年回款XXX万，追回去年尾款XXX万，待收款XXX万。"
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "文本框_22"
+    elementType: text
+    bounds: [167, 427, 194, 36]
+    content:
+      text: "新客户开发"
+      fontSize: 24
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_23"
+    elementType: text
+    bounds: [417, 420, 120, 46]
+    content:
+      text: "90%"
+      fontSize: 32
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_24"
+    elementType: text
+    bounds: [582, 430, 250, 51]
+    content:
+      text: "已完成新客户发XX家，有XX家意向合作"
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"

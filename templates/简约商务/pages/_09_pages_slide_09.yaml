@@ -1,0 +1,76 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "图形"
+    elementType: shape
+    bounds: [ 104, 166, 207, 273 ]
+    kind: roundRect
+    line: { color: "#000000" }
+  - elementId: "图形-2"
+    elementType: shape
+    bounds: [ 348, 382, 230, 57 ]
+    kind: roundRect
+    fill: "#0485A8"
+    line: { color: "#000000" }
+  - elementId: "文本框_5"
+    elementType: text
+    bounds: [ 334, 189, 254, 160 ]
+    content:
+      text: "感谢您使用我们的PPT模板，请在此输入您需要的文字内容，感谢您使用我们的PPT模板。
+        感谢您使用我们的PPT模板，请在此输入您需要的文字内容，感谢您使用我们的PPT模板。 感谢您使用我们的PPT模板。
+        感谢您使用我们的PPT模板，请在此输入您需要的文字内容，感谢您使用我们的PPT模板。"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+      lineHeight: 1.3
+  - elementId: "图形-3"
+    elementType: shape
+    bounds: [ 615, 382, 230, 57 ]
+    kind: roundRect
+    fill: "#79C9E2"
+    line: { color: "#000000" }
+  - elementId: "文本框_7"
+    elementType: text
+    bounds: [ 601, 189, 254, 160 ]
+    content:
+      text: "感谢您使用我们的PPT模板，请在此输入您需要的文字内容，感谢您使用我们的PPT模板。
+        感谢您使用我们的PPT模板，请在此输入您需要的文字内容，感谢您使用我们的PPT模板。 感谢您使用我们的PPT模板。
+        感谢您使用我们的PPT模板，请在此输入您需要的文字内容，感谢您使用我们的PPT模板。"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+      lineHeight: 1.3
+  - elementId: "文本框_22"
+    elementType: text
+    bounds: [ 427, 395, 130, 30 ]
+    content:
+      text: "标题文本预设"
+      fontSize: 14
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      lineHeight: 1.5
+  - elementId: "文本框_23"
+    elementType: text
+    bounds: [ 694, 395, 130, 30 ]
+    content:
+      text: "标题文本预设"
+      fontSize: 14
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      lineHeight: 1.5
+  - elementId: "文本框_2"
+    elementType: text
+    bounds: [ 269, 37, 423, 41 ]
+    content:
+      text: "上半年工作情况"
+      fontSize: 28
+      bold: true
+      fontFamily: "思源黑体 CN Heavy"
+      align: center
+expectedOverlaps:
+  - pair:
+      - 图形-2
+      - 文本框_22
+  - pair:
+      - 图形-3
+      - 文本框_23

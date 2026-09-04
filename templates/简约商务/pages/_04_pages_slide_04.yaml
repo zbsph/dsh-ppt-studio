@@ -1,0 +1,263 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "17"
+    elementType: shape
+    bounds: [ 196, 288, 35, 35 ]
+    kind: rect
+    fill: "#0485A8"
+    line: { color: "#000000", width: 2 }
+  - elementId: "16"
+    elementType: text
+    bounds: [ 195, 295, 37, 23 ]
+    content:
+      text: "01"
+      fontSize: 15.01
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "15"
+    elementType: shape
+    bounds: [ 330, 288, 35, 35 ]
+    kind: rect
+    fill: "#79C9E2"
+    line: { color: "#000000", width: 2 }
+  - elementId: "14"
+    elementType: text
+    bounds: [ 329, 295, 37, 23 ]
+    content:
+      text: "02"
+      fontSize: 15.01
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "13"
+    elementType: shape
+    bounds: [ 466, 288, 35, 35 ]
+    kind: rect
+    fill: "#0485A8"
+    line: { color: "#000000", width: 2 }
+  - elementId: "12"
+    elementType: text
+    bounds: [ 465, 295, 37, 23 ]
+    content:
+      text: "03"
+      fontSize: 15.01
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "11"
+    elementType: shape
+    bounds: [ 598, 288, 35, 35 ]
+    kind: rect
+    fill: "#79C9E2"
+    line: { color: "#000000", width: 2 }
+  - elementId: "0"
+    elementType: text
+    bounds: [ 597, 295, 37, 23 ]
+    content:
+      text: "04"
+      fontSize: 15.01
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "9"
+    elementType: shape
+    bounds: [ 735, 288, 35, 35 ]
+    kind: rect
+    fill: "#0485A8"
+    line: { color: "#000000", width: 2 }
+  - elementId: "8"
+    elementType: text
+    bounds: [ 734, 295, 37, 23 ]
+    content:
+      text: "05"
+      fontSize: 15.01
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "7"
+    elementType: shape
+    bounds: [ 271, 227, 154, 76 ]
+    kind: rect
+    fill: "#79C9E2"
+    line: { color: "#000000" }
+  - elementId: "6"
+    elementType: shape
+    bounds: [ 137, 308, 154, 76 ]
+    kind: rect
+    fill: "#0485A8"
+    line: { color: "#000000" }
+  - elementId: "5"
+    elementType: shape
+    bounds: [ 539, 227, 154, 76 ]
+    kind: rect
+    fill: "#79C9E2"
+    line: { color: "#000000" }
+  - elementId: "4"
+    elementType: shape
+    bounds: [ 406, 308, 152, 76 ]
+    kind: rect
+    fill: "#0485A8"
+    line: { color: "#000000" }
+  - elementId: "3"
+    elementType: shape
+    bounds: [ 674, 308, 154, 76 ]
+    kind: rect
+    fill: "#0485A8"
+    line: { color: "#000000" }
+  - elementId: "文本框_23"
+    elementType: text
+    bounds: [ 138, 145, 152, 30 ]
+    content:
+      text: "标题文本预设"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.5
+  - elementId: "文本框_24"
+    elementType: text
+    bounds: [ 130, 174, 169, 53 ]
+    content:
+      text: "此处为预设文本，请将内容复制粘贴到这里，字体、字号、颜色皆可根据自己的喜好进行更改"
+      fontSize: 10
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.3
+  - elementId: "文本框_25"
+    elementType: text
+    bounds: [ 407, 145, 152, 30 ]
+    content:
+      text: "标题文本预设"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.5
+  - elementId: "文本框_26"
+    elementType: text
+    bounds: [ 398, 174, 169, 53 ]
+    content:
+      text: "此处为预设文本，请将内容复制粘贴到这里，字体、字号、颜色皆可根据自己的喜好进行更改"
+      fontSize: 10
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.3
+  - elementId: "文本框_27"
+    elementType: text
+    bounds: [ 675, 145, 152, 30 ]
+    content:
+      text: "标题文本预设"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.5
+  - elementId: "文本框_28"
+    elementType: text
+    bounds: [ 666, 174, 169, 53 ]
+    content:
+      text: "此处为预设文本，请将内容复制粘贴到这里，字体、字号、颜色皆可根据自己的喜好进行更改"
+      fontSize: 10
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.3
+  - elementId: "文本框_29"
+    elementType: text
+    bounds: [ 539, 388, 152, 30 ]
+    content:
+      text: "标题文本预设"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.5
+  - elementId: "文本框_30"
+    elementType: text
+    bounds: [ 530, 418, 169, 53 ]
+    content:
+      text: "此处为预设文本，请将内容复制粘贴到这里，字体、字号、颜色皆可根据自己的喜好进行更改"
+      fontSize: 10
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.3
+  - elementId: "文本框_31"
+    elementType: text
+    bounds: [ 272, 388, 152, 30 ]
+    content:
+      text: "标题文本预设"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.5
+  - elementId: "文本框_32"
+    elementType: text
+    bounds: [ 264, 418, 169, 53 ]
+    content:
+      text: "此处为预设文本，请将内容复制粘贴到这里，字体、字号、颜色皆可根据自己的喜好进行更改"
+      fontSize: 10
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.3
+  - elementId: "文本框_2"
+    elementType: text
+    bounds: [ 269, 37, 423, 41 ]
+    content:
+      text: "上半年工作情况"
+      fontSize: 28
+      bold: true
+      fontFamily: "思源黑体 CN Heavy"
+      align: center
+expectedOverlaps:
+  - pair:
+      - "17"
+      - "16"
+  - pair:
+      - "17"
+      - "6"
+  - pair:
+      - "16"
+      - "6"
+  - pair:
+      - "15"
+      - "14"
+  - pair:
+      - "15"
+      - "7"
+  - pair:
+      - "14"
+      - "7"
+  - pair:
+      - "13"
+      - "12"
+  - pair:
+      - "13"
+      - "4"
+  - pair:
+      - "12"
+      - "4"
+  - pair:
+      - "11"
+      - "0"
+  - pair:
+      - "11"
+      - "5"
+  - pair:
+      - "0"
+      - "5"
+  - pair:
+      - "9"
+      - "8"
+  - pair:
+      - "9"
+      - "3"
+  - pair:
+      - "8"
+      - "3"

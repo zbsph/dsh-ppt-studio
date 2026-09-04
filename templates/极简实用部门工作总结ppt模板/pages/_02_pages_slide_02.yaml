@@ -1,0 +1,125 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "矩形_20"
+    elementType: shape
+    bounds: [ 65, 54, 831, 435 ]
+    kind: rect
+    line: { color: "#FFFFFF" }
+  - elementId: "矩形_2"
+    elementType: shape
+    bounds: [ 307, -3, 349, 111 ]
+    kind: rect
+    fill: "#DF3F4E"
+    line: { color: "#000000" }
+  - elementId: "矩形_3"
+    elementType: text
+    bounds: [ 371, 23, 221, 156 ]
+    content:
+      text: "CONTENTS目录"
+      fontSize: 32
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_13"
+    elementType: text
+    bounds: [ 84, 365, 183, 36 ]
+    content:
+      text: "营销业绩回顾"
+      fontSize: 24
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "文本框_15"
+    elementType: text
+    bounds: [ 297, 365, 183, 36 ]
+    content:
+      text: "工作完成情况"
+      fontSize: 24
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "文本框_17"
+    elementType: text
+    bounds: [ 473, 365, 226, 36 ]
+    content:
+      text: "工作不足及改进"
+      fontSize: 24
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_18"
+    elementType: text
+    bounds: [ 720, 365, 183, 36 ]
+    content:
+      text: "明年工作计划"
+      fontSize: 24
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "矩形_16"
+    elementType: text
+    bounds: [ 131, 288, 77, 59 ]
+    content:
+      text: "01"
+      fontSize: 36
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "矩形_17"
+    elementType: text
+    bounds: [ 333, 288, 77, 59 ]
+    content:
+      text: "02"
+      fontSize: 36
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "矩形_18"
+    elementType: text
+    bounds: [ 553, 285, 77, 59 ]
+    content:
+      text: "03"
+      fontSize: 36
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "矩形_19"
+    elementType: text
+    bounds: [ 756, 288, 77, 59 ]
+    content:
+      text: "04"
+      fontSize: 36
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+expectedOverlaps:
+  - pair:
+      - 矩形_20
+      - 矩形_2
+  - pair:
+      - 矩形_20
+      - 矩形_3
+  - pair:
+      - 矩形_20
+      - 文本框_13
+  - pair:
+      - 矩形_20
+      - 文本框_15
+  - pair:
+      - 矩形_20
+      - 文本框_17
+  - pair:
+      - 矩形_20
+      - 文本框_18
+  - pair:
+      - 矩形_20
+      - 矩形_16
+  - pair:
+      - 矩形_20
+      - 矩形_17
+  - pair:
+      - 矩形_20
+      - 矩形_18
+  - pair:
+      - 矩形_20
+      - 矩形_19
+  - pair:
+      - 矩形_2
+      - 矩形_3

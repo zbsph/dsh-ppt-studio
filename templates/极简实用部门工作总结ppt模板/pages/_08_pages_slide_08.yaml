@@ -1,0 +1,233 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "Chart_2"
+    elementType: text
+    bounds: [ 280, 169, 376, 251 ]
+    content:
+      text: "[chart: Chart 2] 图表已降级为文本占位，请重新生成图表样式"
+  - elementId: "Oval_3"
+    elementType: shape
+    bounds: [ 328, 153, 280, 280 ]
+    kind: ellipse
+    line: { color: "#FFFFFF" }
+  - elementId: "Oval_4"
+    elementType: shape
+    bounds: [ 312, 209, 48, 48 ]
+    kind: ellipse
+    fill: "#DF3F4E"
+    line: { color: "#000000" }
+  - elementId: "Oval_5"
+    elementType: shape
+    bounds: [ 552, 174, 48, 48 ]
+    kind: ellipse
+    fill: "#DF3F4E"
+    line: { color: "#000000" }
+  - elementId: "Oval_6"
+    elementType: shape
+    bounds: [ 420, 409, 48, 48 ]
+    kind: ellipse
+    fill: "#DF3F4E"
+    line: { color: "#000000" }
+  - elementId: "Oval_7"
+    elementType: shape
+    bounds: [ 570, 345, 48, 48 ]
+    kind: ellipse
+    fill: "#DF3F4E"
+    line: { color: "#000000" }
+  - elementId: "Oval_9"
+    elementType: shape
+    bounds: [ 221, 126, 62, 63 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000", width: 2 }
+  - elementId: "Oval_15"
+    elementType: shape
+    bounds: [ 234, 375, 62, 63 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000", width: 2 }
+  - elementId: "Oval_21"
+    elementType: shape
+    bounds: [ 651, 147, 62, 63 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000", width: 2 }
+  - elementId: "Oval_26"
+    elementType: shape
+    bounds: [ 648, 393, 62, 63 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000", width: 2 }
+  - elementId: "Text_Box_10"
+    elementType: text
+    bounds: [ 314, 222, 44, 22 ]
+    content:
+      text: "35%"
+      fontSize: 14
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "Text_Box_10-2"
+    elementType: text
+    bounds: [ 554, 186, 44, 22 ]
+    content:
+      text: "25%"
+      fontSize: 14
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "Text_Box_10-3"
+    elementType: text
+    bounds: [ 421, 420, 44, 22 ]
+    content:
+      text: "20%"
+      fontSize: 14
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "Text_Box_10-4"
+    elementType: text
+    bounds: [ 572, 358, 44, 22 ]
+    content:
+      text: "10%"
+      fontSize: 14
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_35"
+    elementType: text
+    bounds: [ 101, 206, 174, 27 ]
+    content:
+      text: "A项目营销业绩XXX万"
+      fontSize: 16
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "矩形_36"
+    elementType: text
+    bounds: [ 106, 228, 161, 47 ]
+    content:
+      text: "点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "文本框_37"
+    elementType: text
+    bounds: [ 59, 383, 173, 27 ]
+    content:
+      text: "B项目营销业绩XXX万"
+      fontSize: 16
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "矩形_38"
+    elementType: text
+    bounds: [ 84, 410, 151, 47 ]
+    content:
+      text: "点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "文本框_39"
+    elementType: text
+    bounds: [ 713, 197, 173, 27 ]
+    content:
+      text: "C项目营销业绩XXX万"
+      fontSize: 16
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "矩形_40"
+    elementType: text
+    bounds: [ 703, 224, 151, 47 ]
+    content:
+      text: "点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "文本框_41"
+    elementType: text
+    bounds: [ 736, 393, 174, 27 ]
+    content:
+      text: "D项目营销业绩XXX万"
+      fontSize: 16
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "矩形_42"
+    elementType: text
+    bounds: [ 735, 420, 174, 47 ]
+    content:
+      text: "点击添加文字内容点击添加文字内容点击添加文字内容点击添加文字内容"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+expectedOverlaps:
+  - pair:
+      - Chart_2
+      - Oval_3
+  - pair:
+      - Chart_2
+      - Oval_4
+  - pair:
+      - Chart_2
+      - Oval_5
+  - pair:
+      - Chart_2
+      - Oval_6
+  - pair:
+      - Chart_2
+      - Oval_7
+  - pair:
+      - Chart_2
+      - Oval_9
+  - pair:
+      - Chart_2
+      - Oval_15
+  - pair:
+      - Chart_2
+      - Oval_21
+  - pair:
+      - Chart_2
+      - Oval_26
+  - pair:
+      - Oval_3
+      - Oval_4
+  - pair:
+      - Oval_3
+      - Oval_5
+  - pair:
+      - Oval_3
+      - Oval_6
+  - pair:
+      - Oval_3
+      - Oval_7
+  - pair:
+      - Oval_3
+      - Text_Box_10
+  - pair:
+      - Oval_3
+      - Text_Box_10-2
+  - pair:
+      - Oval_3
+      - Text_Box_10-3
+  - pair:
+      - Oval_3
+      - Text_Box_10-4
+  - pair:
+      - Oval_4
+      - Text_Box_10
+  - pair:
+      - Oval_5
+      - Text_Box_10-2
+  - pair:
+      - Oval_6
+      - Text_Box_10-3
+  - pair:
+      - Oval_7
+      - Text_Box_10-4

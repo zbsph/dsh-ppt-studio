@@ -1,0 +1,270 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "Freeform_10"
+    elementType: shape
+    bounds: [ 115, 147, 66, 110 ]
+    kind: rect
+    line: { color: "#FFFFFF", width: 1 }
+  - elementId: "Freeform_11"
+    elementType: shape
+    bounds: [ 406, 147, 39, 110 ]
+    kind: rect
+    line: { color: "#FFFFFF", width: 1 }
+  - elementId: "Freeform_12"
+    elementType: shape
+    bounds: [ 668, 147, 41, 110 ]
+    kind: rect
+    line: { color: "#FFFFFF", width: 1 }
+  - elementId: "Freeform_13"
+    elementType: shape
+    bounds: [ 271, 334, 47, 130 ]
+    kind: rect
+    line: { color: "#FFFFFF", width: 1 }
+  - elementId: "Freeform_14"
+    elementType: shape
+    bounds: [ 543, 334, 36, 130 ]
+    kind: rect
+    line: { color: "#FFFFFF", width: 1 }
+  - elementId: "矩形_8"
+    elementType: text
+    bounds: [ 115, 161, 214, 43 ]
+    content:
+      text: "请替换文字内容复制你的内容到此请替换文字内容复制你的内容到此"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "Arial"
+      lineHeight: 1.3
+  - elementId: "矩形_9"
+    elementType: text
+    bounds: [ 118, 140, 110, 24 ]
+    content:
+      text: "此处添加标题"
+      fontSize: 14
+      color: "#4D4D4D"
+      fontFamily: "Arial"
+  - elementId: "Freeform_5"
+    elementType: shape
+    bounds: [ 111, 242, 150, 109 ]
+    kind: rect
+    fill: "#79C9E2"
+    line: { color: "#000000", width: 3 }
+  - elementId: "文本框_11"
+    elementType: text
+    bounds: [ 158, 284, 54, 51 ]
+    content:
+      text: "01"
+      fontSize: 36
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      lineHeight: 1
+  - elementId: "Freeform_8"
+    elementType: shape
+    bounds: [ 243, 237, 150, 109 ]
+    kind: rect
+    fill: "#0485A8"
+    line: { color: "#000000", width: 3 }
+  - elementId: "文本框_13"
+    elementType: text
+    bounds: [ 284, 247, 54, 51 ]
+    content:
+      text: "02"
+      fontSize: 36
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      lineHeight: 1
+  - elementId: "Freeform_6"
+    elementType: shape
+    bounds: [ 374, 242, 150, 109 ]
+    kind: rect
+    fill: "#79C9E2"
+    line: { color: "#000000", width: 3 }
+  - elementId: "文本框_15"
+    elementType: text
+    bounds: [ 415, 284, 54, 51 ]
+    content:
+      text: "03"
+      fontSize: 36
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      lineHeight: 1
+  - elementId: "Freeform_9"
+    elementType: shape
+    bounds: [ 505, 237, 150, 109 ]
+    kind: rect
+    fill: "#0485A8"
+    line: { color: "#000000", width: 3 }
+  - elementId: "文本框_17"
+    elementType: text
+    bounds: [ 547, 247, 54, 51 ]
+    content:
+      text: "04"
+      fontSize: 36
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      lineHeight: 1
+  - elementId: "Freeform_7"
+    elementType: shape
+    bounds: [ 637, 242, 150, 109 ]
+    kind: rect
+    fill: "#79C9E2"
+    line: { color: "#000000", width: 3 }
+  - elementId: "文本框_19"
+    elementType: text
+    bounds: [ 681, 284, 54, 51 ]
+    content:
+      text: "05"
+      fontSize: 36
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      lineHeight: 1
+  - elementId: "矩形_20"
+    elementType: text
+    bounds: [ 271, 398, 214, 43 ]
+    content:
+      text: "请替换文字内容复制你的内容到此请替换文字内容复制你的内容到此"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "Arial"
+      lineHeight: 1.3
+  - elementId: "矩形_21"
+    elementType: text
+    bounds: [ 276, 377, 110, 24 ]
+    content:
+      text: "此处添加标题"
+      fontSize: 14
+      color: "#4D4D4D"
+      fontFamily: "Arial"
+  - elementId: "矩形_22"
+    elementType: text
+    bounds: [ 407, 161, 214, 43 ]
+    content:
+      text: "请替换文字内容复制你的内容到此请替换文字内容复制你的内容到此"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "Arial"
+      lineHeight: 1.3
+  - elementId: "矩形_23"
+    elementType: text
+    bounds: [ 410, 140, 110, 24 ]
+    content:
+      text: "此处添加标题"
+      fontSize: 14
+      color: "#4D4D4D"
+      fontFamily: "Arial"
+  - elementId: "矩形_24"
+    elementType: text
+    bounds: [ 545, 398, 214, 43 ]
+    content:
+      text: "请替换文字内容复制你的内容到此请替换文字内容复制你的内容到此"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "Arial"
+      lineHeight: 1.3
+  - elementId: "矩形_25"
+    elementType: text
+    bounds: [ 550, 377, 110, 24 ]
+    content:
+      text: "此处添加标题"
+      fontSize: 14
+      color: "#4D4D4D"
+      fontFamily: "Arial"
+  - elementId: "矩形_26"
+    elementType: text
+    bounds: [ 669, 161, 228, 43 ]
+    content:
+      text: "请替换文字内容复制你的内容到此请替换文字内容复制你的内容到此"
+      fontSize: 12
+      color: "#000000"
+      fontFamily: "Arial"
+      lineHeight: 1.3
+  - elementId: "矩形_27"
+    elementType: text
+    bounds: [ 672, 140, 110, 24 ]
+    content:
+      text: "此处添加标题"
+      fontSize: 14
+      color: "#4D4D4D"
+      fontFamily: "Arial"
+  - elementId: "文本框_1"
+    elementType: text
+    bounds: [ 269, 37, 423, 41 ]
+    content:
+      text: "上半年工作情况"
+      fontSize: 28
+      bold: true
+      fontFamily: "思源黑体 CN Heavy"
+      align: center
+expectedOverlaps:
+  - pair:
+      - Freeform_10
+      - 矩形_8
+  - pair:
+      - Freeform_10
+      - 矩形_9
+  - pair:
+      - Freeform_10
+      - Freeform_5
+  - pair:
+      - Freeform_11
+      - Freeform_6
+  - pair:
+      - Freeform_11
+      - 矩形_22
+  - pair:
+      - Freeform_11
+      - 矩形_23
+  - pair:
+      - Freeform_12
+      - Freeform_7
+  - pair:
+      - Freeform_12
+      - 矩形_26
+  - pair:
+      - Freeform_12
+      - 矩形_27
+  - pair:
+      - Freeform_13
+      - Freeform_8
+  - pair:
+      - Freeform_13
+      - 矩形_20
+  - pair:
+      - Freeform_13
+      - 矩形_21
+  - pair:
+      - Freeform_14
+      - Freeform_9
+  - pair:
+      - Freeform_14
+      - 矩形_24
+  - pair:
+      - Freeform_14
+      - 矩形_25
+  - pair:
+      - Freeform_5
+      - 文本框_11
+  - pair:
+      - Freeform_5
+      - Freeform_8
+  - pair:
+      - Freeform_8
+      - 文本框_13
+  - pair:
+      - Freeform_8
+      - Freeform_6
+  - pair:
+      - Freeform_6
+      - 文本框_15
+  - pair:
+      - Freeform_6
+      - Freeform_9
+  - pair:
+      - Freeform_9
+      - 文本框_17
+  - pair:
+      - Freeform_9
+      - Freeform_7
+  - pair:
+      - Freeform_7
+      - 文本框_19

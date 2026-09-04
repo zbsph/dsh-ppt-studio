@@ -1,0 +1,210 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "Freeform_2"
+    elementType: shape
+    bounds: [ 49, 118, 177, 104 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Freeform_3"
+    elementType: shape
+    bounds: [ 226, 154, 116, 68 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Freeform_4"
+    elementType: shape
+    bounds: [ 342, 170, 88, 52 ]
+    kind: rect
+    fill: "#0E7FB7"
+    line: { color: "#000000" }
+  - elementId: "Freeform_6"
+    elementType: shape
+    bounds: [ 430, 142, 163, 80 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Right_Brace_7"
+    elementType: shape
+    bounds: [ 616, 110, 16, 372 ]
+    kind: rect
+    line: { color: "#FFFFFF" }
+  - elementId: "Rounded_Rectangle_18"
+    elementType: shape
+    bounds: [ 664, 110, 112, 112 ]
+    kind: roundRect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Rounded_Rectangle_19"
+    elementType: shape
+    bounds: [ 784, 110, 112, 112 ]
+    kind: roundRect
+    fill: "#DF3F4E"
+    line: { color: "#000000" }
+  - elementId: "Rounded_Rectangle_20"
+    elementType: shape
+    bounds: [ 664, 230, 112, 112 ]
+    kind: roundRect
+    fill: "#DF3F4E"
+    line: { color: "#000000" }
+  - elementId: "Rounded_Rectangle_21"
+    elementType: shape
+    bounds: [ 784, 230, 112, 112 ]
+    kind: roundRect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Text_Box_10"
+    elementType: text
+    bounds: [ 111, 187, 52, 27 ]
+    content:
+      text: "35%"
+      fontSize: 18.65
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "Text_Box_10-2"
+    elementType: text
+    bounds: [ 258, 187, 52, 27 ]
+    content:
+      text: "20%"
+      fontSize: 18.65
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "Text_Box_10-3"
+    elementType: text
+    bounds: [ 360, 187, 52, 27 ]
+    content:
+      text: "15%"
+      fontSize: 18.65
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "Text_Box_10-4"
+    elementType: text
+    bounds: [ 486, 187, 52, 27 ]
+    content:
+      text: "30%"
+      fontSize: 18.65
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "內容版面配置區_1"
+    elementType: text
+    bounds: [ 673, 190, 98, 24 ]
+    content:
+      text: "业务一"
+      fontSize: 20
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "內容版面配置區_1-2"
+    elementType: text
+    bounds: [ 790, 191, 98, 24 ]
+    content:
+      text: "业务二"
+      fontSize: 20
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "內容版面配置區_1-3"
+    elementType: text
+    bounds: [ 668, 302, 98, 24 ]
+    content:
+      text: "业务三"
+      fontSize: 20
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "內容版面配置區_1-4"
+    elementType: text
+    bounds: [ 784, 304, 98, 24 ]
+    content:
+      text: "业务四"
+      fontSize: 20
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "Rectangle_3"
+    elementType: text
+    bounds: [ 46, 247, 539, 63 ]
+    content:
+      text: "点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容\
+        点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "Rectangle_3-2"
+    elementType: text
+    bounds: [ 45, 337, 539, 63 ]
+    content:
+      text: "点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容\
+        点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "Rectangle_3-3"
+    elementType: text
+    bounds: [ 40, 423, 539, 63 ]
+    content:
+      text: "点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容\
+        点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "Rectangle_3-4"
+    elementType: text
+    bounds: [ 673, 424, 174, 38 ]
+    content:
+      text: "点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容"
+      fontSize: 10.5
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "內容版面配置區_1-5"
+    elementType: text
+    bounds: [ 673, 392, 212, 36 ]
+    content:
+      text: "添加标题"
+      fontSize: 20
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "Text_Box_7"
+    elementType: text
+    bounds: [ -1, 25, 963, 34 ]
+    content:
+      text: "工作完成情况"
+      fontSize: 24
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+expectedOverlaps:
+  - pair:
+      - Freeform_2
+      - Text_Box_10
+  - pair:
+      - Freeform_3
+      - Text_Box_10-2
+  - pair:
+      - Freeform_4
+      - Text_Box_10-3
+  - pair:
+      - Freeform_6
+      - Text_Box_10-4
+  - pair:
+      - Rounded_Rectangle_18
+      - 內容版面配置區_1
+  - pair:
+      - Rounded_Rectangle_19
+      - 內容版面配置區_1-2
+  - pair:
+      - Rounded_Rectangle_20
+      - 內容版面配置區_1-3
+  - pair:
+      - Rounded_Rectangle_21
+      - 內容版面配置區_1-4

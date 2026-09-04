@@ -1,0 +1,196 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "Freeform_80"
+    elementType: shape
+    bounds: [ 126, 298, 14, 60 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Freeform_83"
+    elementType: shape
+    bounds: [ 245, 252, 14, 61 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Freeform_86"
+    elementType: shape
+    bounds: [ 363, 206, 14, 61 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Freeform_89"
+    elementType: shape
+    bounds: [ 482, 160, 14, 61 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Freeform_92"
+    elementType: shape
+    bounds: [ 601, 114, 14, 61 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Freeform_93"
+    elementType: shape
+    bounds: [ 601, 114, 119, 14 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Oval_61"
+    elementType: shape
+    bounds: [ 171, 249, 40, 40 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Oval_62"
+    elementType: shape
+    bounds: [ 289, 204, 40, 40 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Oval_63"
+    elementType: shape
+    bounds: [ 407, 158, 40, 40 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Oval_64"
+    elementType: shape
+    bounds: [ 524, 113, 40, 40 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Freeform_65"
+    elementType: shape
+    bounds: [ 181, 257, 20, 25 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "Freeform_66"
+    elementType: shape
+    bounds: [ 298, 214, 21, 19 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "Freeform_67"
+    elementType: shape
+    bounds: [ 414, 166, 25, 24 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "Freeform_68"
+    elementType: shape
+    bounds: [ 531, 120, 26, 25 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "1"
+    elementType: text
+    bounds: [ 146, 342, 94, 30 ]
+    content:
+      text: "小奕PPT工作室更专业的模板。 建议您在展示时采用微软雅黑字体。"
+      fontSize: 8
+      color: "#404040"
+      fontFamily: "微软雅黑"
+      align: center
+  - elementId: "1-2"
+    elementType: text
+    bounds: [ 162, 320, 66, 23 ]
+    content:
+      text: "研究过程"
+      fontSize: 12
+      color: "#000000"
+      bold: true
+  - elementId: "2"
+    elementType: text
+    bounds: [ 266, 297, 94, 30 ]
+    content:
+      text: "小奕PPT工作室更专业的模板。 建议您在展示时采用微软雅黑字体。"
+      fontSize: 8
+      color: "#404040"
+      fontFamily: "微软雅黑"
+      align: center
+  - elementId: "12"
+    elementType: text
+    bounds: [ 282, 276, 66, 23 ]
+    content:
+      text: "研究过程"
+      fontSize: 12
+      color: "#000000"
+      bold: true
+  - elementId: "2-2"
+    elementType: text
+    bounds: [ 387, 250, 94, 30 ]
+    content:
+      text: "小奕PPT工作室更专业的模板。 建议您在展示时采用微软雅黑字体。"
+      fontSize: 8
+      color: "#404040"
+      fontFamily: "微软雅黑"
+      align: center
+  - elementId: "2-3"
+    elementType: text
+    bounds: [ 403, 228, 66, 23 ]
+    content:
+      text: "研究过程"
+      fontSize: 12
+      color: "#000000"
+      bold: true
+  - elementId: "2-4"
+    elementType: text
+    bounds: [ 502, 207, 94, 30 ]
+    content:
+      text: "小奕PPT工作室更专业的模板。 建议您在展示时采用微软雅黑字体。"
+      fontSize: 8
+      color: "#404040"
+      fontFamily: "微软雅黑"
+      align: center
+  - elementId: "2-5"
+    elementType: text
+    bounds: [ 519, 185, 66, 23 ]
+    content:
+      text: "研究过程"
+      fontSize: 12
+      color: "#000000"
+      bold: true
+  - elementId: "2-6"
+    elementType: text
+    bounds: [ 620, 162, 94, 30 ]
+    content:
+      text: "小奕PPT工作室更专业的模板。 建议您在展示时采用微软雅黑字体。"
+      fontSize: 8
+      color: "#404040"
+      fontFamily: "微软雅黑"
+      align: center
+  - elementId: "3"
+    elementType: text
+    bounds: [ 637, 140, 66, 23 ]
+    content:
+      text: "研究过程"
+      fontSize: 12
+      color: "#000000"
+      bold: true
+  - elementId: "TextBox_13"
+    elementType: text
+    bounds: [ 36, 25, 109, 31 ]
+    content:
+      text: "研究过程"
+      fontSize: 21
+      bold: true
+      fontFamily: "微软雅黑"
+expectedOverlaps:
+  - pair:
+      - Freeform_92
+      - Freeform_93
+  - pair:
+      - Oval_61
+      - Freeform_65
+  - pair:
+      - Oval_62
+      - Freeform_66
+  - pair:
+      - Oval_63
+      - Freeform_67
+  - pair:
+      - Oval_64
+      - Freeform_68

@@ -1,0 +1,94 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "图片_1"
+    elementType: image
+    bounds: [678, 0, 282, 79]
+    fit: cover
+    src: "media/image8.png"
+  - elementId: "文本框_6"
+    elementType: text
+    bounds: [68, 2, 358, 58]
+    content:
+      text: "添加论文内容第一部分标题"
+      color: "#4B649F"
+      bold: true
+      lineHeight: 1.5
+  - elementId: "矩形_8"
+    elementType: shape
+    bounds: [0, 530, 960, 11]
+    kind: rect
+    fill: "#4B649F"
+    line: {color: "#000000"}
+  - elementId: "文本框_9"
+    elementType: text
+    bounds: [145, 181, 180, 86]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      color: "#595959"
+  - elementId: "文本框_10"
+    elementType: text
+    bounds: [383, 181, 180, 86]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      color: "#595959"
+  - elementId: "文本框_11"
+    elementType: text
+    bounds: [622, 181, 180, 86]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      color: "#595959"
+  - elementId: "文本框_12"
+    elementType: text
+    bounds: [145, 368, 180, 86]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      color: "#595959"
+  - elementId: "文本框_13"
+    elementType: text
+    bounds: [383, 368, 180, 86]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      color: "#595959"
+  - elementId: "文本框_14"
+    elementType: text
+    bounds: [622, 368, 180, 86]
+    content:
+      text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
+      color: "#595959"
+  - elementId: "Freeform_15"
+    elementType: shape
+    bounds: [443, 131, 44, 44]
+    kind: rect
+    fill: "#4B649F"
+    line: {color: "#000000"}
+  - elementId: "Freeform_16"
+    elementType: shape
+    bounds: [689, 128, 48, 47]
+    kind: rect
+    fill: "#4B649F"
+    line: {color: "#000000"}
+  - elementId: "Freeform_33"
+    elementType: shape
+    bounds: [212, 320, 40, 48]
+    kind: rect
+    fill: "#4B649F"
+    line: {color: "#000000"}
+  - elementId: "Freeform_37"
+    elementType: shape
+    bounds: [682, 323, 61, 42]
+    kind: rect
+    fill: "#4B649F"
+    line: {color: "#000000"}
+  - elementId: "任意多边形_31"
+    elementType: shape
+    bounds: [0, 216, 67, 133]
+    kind: rect
+    fill: "#4B649F"
+    line: {color: "#000000"}
+  - elementId: "任意多边形_32"
+    elementType: shape
+    bounds: [893, 216, 67, 133]
+    kind: rect
+    fill: "#4B649F"
+    line: {color: "#000000"}

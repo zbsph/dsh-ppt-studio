@@ -1,0 +1,138 @@
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+pageType: content
+elements:
+  - elementId: "灯片编号占位符_1"
+    elementType: text
+    bounds: [0, 0, 200, 50]
+    content:
+      text: "20"
+  - elementId: "Oval_6"
+    elementType: shape
+    bounds: [376, 113, 59, 59]
+    kind: ellipse
+    fill: "#000000"
+    line: {color: "#000000"}
+  - elementId: "Oval_7"
+    elementType: shape
+    bounds: [422, 190, 59, 59]
+    kind: ellipse
+    fill: "#000000"
+    line: {color: "#000000"}
+  - elementId: "Freeform_9"
+    elementType: shape
+    bounds: [236, 219, 65, 65]
+    kind: rect
+    fill: "#000000"
+    line: {color: "#000000"}
+  - elementId: "Freeform_10"
+    elementType: shape
+    bounds: [322, 193, 65, 65]
+    kind: rect
+    fill: "#000000"
+    line: {color: "#000000"}
+  - elementId: "Freeform_11"
+    elementType: shape
+    bounds: [303, 289, 65, 65]
+    kind: rect
+    fill: "#000000"
+    line: {color: "#000000"}
+  - elementId: "1"
+    elementType: text
+    bounds: [463, 113, 89, 15]
+    content:
+      text: "相关对策或措施"
+      fontSize: 12
+      color: "#000000"
+      bold: true
+      fontFamily: "微软雅黑"
+      align: center
+  - elementId: "1-2"
+    elementType: text
+    bounds: [462, 131, 149, 30]
+    content:
+      text: "单击添加项目内容。 小奕，色彩纷呈，潮流时尚。 单击此处可编辑内容，单击此处可编辑内容。"
+      fontSize: 8
+      color: "#404040"
+      fontFamily: "微软雅黑"
+  - elementId: "1-3"
+    elementType: text
+    bounds: [505, 194, 89, 15]
+    content:
+      text: "相关对策或措施"
+      fontSize: 12
+      color: "#000000"
+      bold: true
+      fontFamily: "微软雅黑"
+      align: center
+  - elementId: "1-4"
+    elementType: text
+    bounds: [504, 212, 149, 30]
+    content:
+      text: "单击添加项目内容。 小奕，色彩纷呈，潮流时尚。 单击此处可编辑内容，单击此处可编辑内容。"
+      fontSize: 8
+      color: "#404040"
+      fontFamily: "微软雅黑"
+  - elementId: "1-5"
+    elementType: text
+    bounds: [389, 302, 89, 15]
+    content:
+      text: "相关对策或措施"
+      fontSize: 12
+      color: "#000000"
+      bold: true
+      fontFamily: "微软雅黑"
+      align: center
+  - elementId: "1-6"
+    elementType: text
+    bounds: [388, 320, 149, 30]
+    content:
+      text: "单击添加项目内容。 小奕，色彩纷呈，潮流时尚。 单击此处可编辑内容，单击此处可编辑内容。"
+      fontSize: 8
+      color: "#404040"
+      fontFamily: "微软雅黑"
+  - elementId: "1-7"
+    elementType: text
+    bounds: [204, 148, 89, 15]
+    content:
+      text: "相关对策或措施"
+      fontSize: 12
+      color: "#000000"
+      bold: true
+      fontFamily: "微软雅黑"
+      align: center
+  - elementId: "1-8"
+    elementType: text
+    bounds: [147, 165, 149, 30]
+    content:
+      text: "单击添加项目内容。 小奕，色彩纷呈，潮流时尚。 单击此处可编辑内容，单击此处可编辑内容"
+      fontSize: 8
+      color: "#404040"
+      fontFamily: "微软雅黑"
+      align: right
+  - elementId: "1-9"
+    elementType: text
+    bounds: [134, 229, 89, 15]
+    content:
+      text: "相关对策或措施"
+      fontSize: 12
+      color: "#000000"
+      bold: true
+      fontFamily: "微软雅黑"
+      align: center
+  - elementId: "1-10"
+    elementType: text
+    bounds: [76, 246, 149, 30]
+    content:
+      text: "单击添加项目内容。 小奕，色彩纷呈，潮流时尚。 单击此处可编辑内容，单击此处可编辑内容"
+      fontSize: 8
+      color: "#404040"
+      fontFamily: "微软雅黑"
+      align: right
+  - elementId: "TextBox_13"
+    elementType: text
+    bounds: [36, 25, 109, 31]
+    content:
+      text: "应对措施"
+      fontSize: 21
+      bold: true
+      fontFamily: "微软雅黑"
