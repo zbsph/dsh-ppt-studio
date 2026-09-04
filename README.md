@@ -101,14 +101,14 @@ ppt_export(dir)  → 导出 .pptx（默认 pptd 引擎；python-pptx 需 python 
 
 | 类别 | 支持 | 说明 |
 |---|---|---|
-| 元素 | text / shape / line / image / table / chart | chart 类型 bar/line/pie |
+| 元素 | text / shape / line / image / table / chart | chart 类型 bar/line/pie；line **仅 2 点**（多点折线请拆多条） |
 | 页面背景 | `'#hex'` / `$themeRef` / `{type: solid}` / **`{type: image, src, fit}`** | 渲染/导出/导入三端一致；导入识别原生 `p:bg` 与满页图并提升为背景 |
 | shape | rect / **roundRect** / ellipse / triangle + **rotation** + 纯色 fill/line | roundRect 圆角 8% |
-| 文本 | 主题引用（$key）、fontSize/family/color/bold/align/lineHeight/wrap | 中文换行带标点禁则 |
+| 文本 | 主题引用（$key）、fontSize/family/color/bold/italic/align/lineHeight/wrap | 中文换行带标点禁则 |
 | 图表 | 矢量拼绘（可编辑形状）；python-pptx 引擎下降级为表格 | — |
-| 不支持 | 渐变填充 / 阴影 / 母版继承 / 动画 / 超链接 / 音视频 | 降级为近似或忽略，导出报告作声明 |
+| **导入保样式（v0.4.0，P0-1）** | fill/line/字体/斜体/对齐/行高/主题色（schemeClr）全映射；**渐变归一为主色**（stops 保留注释 + import-styles.json 原始值）；deck.yaml 自动写 **theme 聚合建议块** | "改版求一致"场景不再需要手工挖 XML |
 
-> ppt_import 对不支持的样式做近似映射（roundRect 保留、渐变→纯色）；chart 降级为文本占位并在导入报告明示。
+> ppt_import 对不支持的样式做近似映射（roundRect 保留、渐变→主色 + import-styles.json 保留 stops、阴影标记）；chart 降级为文本占位并在导入报告明示。
 
 ## 布局工程规则（ppt_verify 的 overlap 语义：设计意图声明制）
 
@@ -118,6 +118,7 @@ ppt_export(dir)  → 导出 .pptx（默认 pptd 引擎；python-pptx 需 python 
 - **审阅阶段**（警示级重叠逐对对照）：
   - 命中设计声明 → **✓ 预期重叠（确认）**，不出现在错误/警告中；
   - 未命中声明 → **ERROR `unexpected-overlap`（设计预期外重叠）**：修正布局，或若确为有意 → 补声明后重验；
+  - **声明闭包**（v0.4.0，P0-2）：嵌套承载（面板→框→文字）**只需声明相邻层对**，隔层组合（如 panel×inText）由包含关系传递自动通过——架构图页声明量约省 1/3；
   - **内容互压**（text/table/chart 相互遮挡，code `content-collision`）→ **永远 ERROR，不支持声明豁免**（"元素区块冲突"真正要防的）；
   - `role: decoration` 元素 → 只豁免**重叠**（装饰性=设计意图声明；**不豁免出界**——要落在模板页眉页脚带请走下方声明制）；
   - 页面级 `overlapMode: lenient` → 未声明重叠仅提示（草稿/旧项目缓冲）；
@@ -126,13 +127,16 @@ ppt_export(dir)  → 导出 .pptx（默认 pptd 引擎；python-pptx 需 python 
   - 超**页面边界**（放映不可见）= 永远 ERROR，**不可声明**；
   - 超**安全区**（模板页眉页脚带内）= 声明制：有意元素（logo/角标/水印）逐项写入页面 `expectedOutOfSafeArea: [idA, ...]`（**必须手工**，id 必须存在，防呆校验）→ 命中 ✓ 预期出界（确认）；未命中 ERROR。
 - 出界 / 文本溢出 → ERROR 门禁；美学建议 `[·]` 辅助、非门禁。
-- 元素 ≥15 时提示信息密度；网格密集区（≥5）提示重点审阅。
+- **对齐/噪声过滤（v0.4.0）**：near-align 只在**同排相邻**元素间比较（跨区块不比）、线元素（line/箭头）豁免；信息密度按**内容元素**（文本/表格/图表 ≥12）计数（纯图形架构页不再误报）；相邻贴边 <4px 输出 `[·]` 建议清单（P2-4）。
+- **对比度按 z-order 最上层承载计算**（v0.4.0，P1-1）：色块上再嵌深色框的架构场景不再假阳性；已确认正常但算法仍建议 → 页级 `contrastExempt: [id]` 豁免（id 必须存在）。
 - 建议中文长句在语义断点处显式使用 `\n`；导出缩字不低于主题 `minFontSize`，到下限仍溢出会明确报告（v0.3.0）。
 
 ## 已知边界（对应设计待细化清单）
 
 - 文本度量是**估算档**（保守系数 + 换行禁则模拟），预览/校验/导出三端共用同一度量；渲染回读**实测档**为下一阶段（浏览器逐字符实测）；pptx XML 几何断言精确。
 - chart 在 python-pptx 引擎下降级为表格（引擎 A 支持矢量拼绘）。
-- 对齐断言仅"疑似未对齐"启发式（布局意图锚定未实现）。
+- 导入的**渐变归一为主色**（stops 保留在 import-styles.json）；阴影/动画/超链接/母版继承不支持。
+- **改一页原稿**的姿势（实测反馈 3.2）：`ppt_import` 单页风格 → **独立单页工程**做改造（不要在全 deck 工程重导出，会降级其余页）→ 完成后复制回原稿。
+- `ppt_shot` 只对 deck 工程（HTML 预览）截图；**直接对 .pptx 产物截图**未实现（路线图 M4）——"导出后视觉回归"目前靠：XML 回读断言 + 用户实机打开。
 - dsh 网页内嵌预览（client 面板）、pptxgenjs 第三引擎未实现（设计后续阶段）。
 - verify 的对比度/孤字/安全区提示均为启发式建议（非门禁），极端样式（渐变、图片上的文字）不参与计算。

@@ -27,11 +27,15 @@ export function parseXml(xml) {
     const tagText = xml.slice(lt + 1, close).trim()
     const selfClose = tagText.endsWith('/')
     const body = selfClose ? tagText.slice(0, -1) : tagText
-    const [name, ...attrParts] = body.split(/\s+/)
+    const spAt = body.search(/\s/)
+    const name = spAt < 0 ? body : body.slice(0, spAt)
+    // attrs：支持带空格/引号的值（如 typeface="Microsoft YaHei"）——按 = 匹配，不按空格拆
     const attrs = {}
-    for (const part of attrParts) {
-      const eq = part.indexOf('=')
-      if (eq > 0) attrs[part.slice(0, eq)] = unquote(part.slice(eq + 1))
+    const attrRe = /([^\s=]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s]+))/g
+    let mm
+    let guard2 = 0
+    while ((mm = attrRe.exec(body)) !== null && guard2++ < 200) {
+      attrs[mm[1]] = mm[2] ?? mm[3] ?? mm[4]
     }
     const node = { tag: local(name), attrs, children: [], text: '' }
     stack[stack.length - 1].children.push(node)

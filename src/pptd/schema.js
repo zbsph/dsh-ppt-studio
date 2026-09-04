@@ -146,6 +146,17 @@ export function validatePage(page, file) {
       })
     }
   }
+  if (page.contrastExempt !== undefined) {
+    // P1-1：对比度豁免声明（已确认承载层深色但算法仍误报时使用；id 必须存在）
+    if (!Array.isArray(page.contrastExempt)) {
+      errors.push(`[${file}] contrastExempt: array of element ids（已确认对比度正常的文本元素；id 必须存在）`)
+    } else {
+      page.contrastExempt.forEach((idX, i) => {
+        if (typeof idX !== 'string') errors.push(`[${file}] contrastExempt[${i}]: element id string`)
+        else if (!ids.has(idX)) errors.push(`[${file}] contrastExempt[${i}]: "${idX}" 不是本页元素 id（防呆：豁免必须指向真实元素）`)
+      })
+    }
+  }
   validateBackground(page.background, file, errors)
   return errors.length ? fail(errors) : null
 }
@@ -205,10 +216,14 @@ function validateShape(el, path, errors) {
 }
 
 function validateLine(el, path, errors) {
-  const pts = Array.isArray(el.points) ? el.points : [el.x1, el.y1, el.x2, el.y2].every((v) => typeof v === 'number') ? [] : null
-  const has = el.points ? Array.isArray(el.points) && el.points.length >= 2 && el.points.every((p) => Array.isArray(p) && p.length === 2 && p.every((n) => typeof n === 'number')) : (typeof el.x1 === 'number' && typeof el.y1 === 'number' && typeof el.x2 === 'number' && typeof el.y2 === 'number')
-  if (!has) errors.push(`${path}.points: [[x,y],...] with >=2 points, or x1,y1,x2,y2 numbers`)
-  void pts
+  const pts = Array.isArray(el.points) ? el.points : null
+  const has = el.points ? pts.length === 2 && pts.every((p) => Array.isArray(p) && p.length === 2 && p.every((n) => typeof n === 'number')) : (typeof el.x1 === 'number' && typeof el.y1 === 'number' && typeof el.x2 === 'number' && typeof el.y2 === 'number')
+  // P2-3：line 仅支持 2 点（多点折线静默截断是真缺陷 → 显式报错引导拆分）
+  if (el.points && Array.isArray(el.points) && el.points.length !== 2) {
+    errors.push(`${path}.points: 仅支持 2 点 [[x1,y1],[x2,y2]]（多点折线不支持，请拆分为多条 line）`)
+  } else if (!has) {
+    errors.push(`${path}.points: [[x1,y1],[x2,y2]] exactly 2 points, or x1,y1,x2,y2 numbers`)
+  }
   if (el.arrow !== undefined && typeof el.arrow !== 'boolean') errors.push(`${path}.arrow: boolean`)
 }
 

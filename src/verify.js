@@ -155,30 +155,33 @@ export function aestheticSuggestions(page, size, theme) {
     }
   }
 
-  // 10. 前景/背景对比度（D6 反馈）：文字色 vs 承载形状/页面实底背景
+  // 10. 前景/背景对比度（D6 反馈，P1-1 修正）：文字 vs **最上层（z-order）承载色块**/页面实底
   {
+    const contrastExempt = new Set(page.contrastExempt ?? []) // P1-1：已确认承载层深色，豁免对比度建议
     const bgColor = typeof page.background?.color === 'string' && /^#[0-9a-fA-F]{6}$/.test(page.background?.color)
       ? page.background.color : null
     for (const el of els) {
       if (el.kind !== 'text' || !el.text?.length) continue
+      if (contrastExempt.has(el.id)) continue // P1-1：已确认承载层深色，豁免
       const fg = el.style?.color
       if (typeof fg !== 'string' || !/^#[0-9a-fA-F]{6}$/.test(fg)) continue
       const cx = el.bounds.x + el.bounds.w / 2
       const cy = el.bounds.y + el.bounds.h / 2
+      // z-order = 数组序（后绘制者在上层）：从上层往下找第一个含文字中心的实底形状
       let holder = null
-      let holderArea = 0
-      for (const other of els) {
+      for (let k = els.length - 1; k >= 0; k--) {
+        const other = els[k]
         if (other.kind !== 'shape' || typeof other.fill !== 'string' || !/^#[0-9a-fA-F]{6}$/.test(other.fill)) continue
         if (!contains(other.bounds, { x: cx, y: cy, w: 1, h: 1 })) continue
-        const area = other.bounds.w * other.bounds.h
-        if (area > holderArea) { holder = other.fill; holderArea = area }
+        holder = other.fill
+        break
       }
       const base = holder ?? bgColor
       if (!base) continue
       const ratio = contrastRatio(fg, base)
       if (ratio !== null && ratio < 3) {
         const tone = ratio < 1.8 ? '极低（接近不可读）' : '偏低'
-        out.push({ severity: 'suggestion', code: 'aesthetic-contrast', id: el.id, message: `文本 "${el.id}" 颜色 ${fg} 与${holder ? '承载色块' : '页面背景'} ${base} 对比度 ${ratio.toFixed(2)}（${tone}），建议深字浅底或浅字深底` })
+        out.push({ severity: 'suggestion', code: 'aesthetic-contrast', id: el.id, message: `文本 "${el.id}" 颜色 ${fg} 与${holder ? '承载色块（最上层）' : '页面背景'} ${base} 对比度 ${ratio.toFixed(2)}（${tone}），建议深字浅底或浅字深底（若已确认承载层深色，可加入本页 contrastExempt 豁免）` })
       }
     }
   }
@@ -187,6 +190,31 @@ export function aestheticSuggestions(page, size, theme) {
   {
     if (page.background?.type === 'image' && !theme?.safeArea && !page.safeArea) {
       out.push({ severity: 'suggestion', code: 'aesthetic-safearea', id: 'safeArea', message: '页面使用图片背景（可能是带 logo/页眉页脚带的模板）：建议在 theme.safeArea（或本页 safeArea）配置非内容区边距，verify 会把安全区外的元素判为出界' })
+    }
+  }
+
+  // 12. 相邻贴边清单（P2-4 反馈）：非重叠但间隙 < 4px（"安全相切"与"真重叠"分开提示）
+  {
+    const isContent = (e) => ['text', 'table', 'chart'].includes(e.kind)
+    let n = 0
+    for (let i = 0; i < els.length && n < 15; i++) {
+      for (let j = i + 1; j < els.length && n < 15; j++) {
+        const a = els[i].bounds
+        const b = els[j].bounds
+        if (els[i].kind === 'line' || els[j].kind === 'line') continue
+        if (!isContent(els[i]) && !isContent(els[j])) continue // 纯形状贴边（芯片网格缝隙）常见合法，不报
+        const vOverlap = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y)
+        const hOverlap = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)
+        const hGap = Math.max(a.x, b.x) - Math.min(a.x + a.w, b.x + b.w)
+        const vGap = Math.max(a.y, b.y) - Math.min(a.y + a.h, b.y + b.h)
+        if (vOverlap > TOL && hGap > TOL && hGap <= 4) {
+          out.push({ severity: 'suggestion', code: 'aesthetic-spacing', id: `${els[i].id} × ${els[j].id}`, message: `相邻贴边："${els[i].id}" 与 "${els[j].id}" 水平间隙仅 ${Math.round(hGap)}px（建议 ≥8px 呼吸空间或确认有意）` })
+          n++
+        } else if (hOverlap > TOL && vGap > TOL && vGap <= 4) {
+          out.push({ severity: 'suggestion', code: 'aesthetic-spacing', id: `${els[i].id} × ${els[j].id}`, message: `相邻贴边："${els[i].id}" 与 "${els[j].id}" 垂直间隙仅 ${Math.round(vGap)}px（建议 ≥8px 呼吸空间或确认有意）` })
+          n++
+        }
+      }
     }
   }
 
@@ -203,7 +231,7 @@ export function analyzePage(page, size) {
   const minY = sa?.top ?? 0
   const maxX = pw - (sa?.right ?? 0)
   const maxY = ph - (sa?.bottom ?? 0)
-  const declared = buildDeclaredSet(page.expectedOverlaps ?? [])
+  const declared = declaredClosure(page) // P0-2：声明闭包（嵌套承载相邻层声明 → 隔层自动通过）
   const outOfSafe = new Set(page.expectedOutOfSafeArea ?? []) // 出界分级声明制（C3 修订）
   const lenient = page.overlapMode === 'lenient'
   const pairKey = (a, b) => [a, b].sort().join(' × ')
@@ -313,13 +341,19 @@ export function analyzePage(page, size) {
     }
   }
 
-  // near-align：左缘/右缘/中线两两差 ∈ (1,6]px
+  // near-align：左缘/右缘/中线两两差 ∈ (1,6]px（P1-2 修正：同区块才比 + 线元素豁免）
   for (const mode of ['x', 'xr', 'cx']) {
     const keys = els.map((el) => ({
       el, v: mode === 'x' ? el.bounds.x : mode === 'xr' ? el.bounds.x + el.bounds.w : el.bounds.x + el.bounds.w / 2,
     }))
     for (let i = 0; i < keys.length; i++) {
       for (let j = i + 1; j < keys.length; j++) {
+        if (keys[i].el.kind === 'line' || keys[j].el.kind === 'line') continue // 引线/箭头天然不对齐
+        const a = keys[i].el.bounds
+        const b = keys[j].el.bounds
+        const vOverlap = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y)
+        // 同区块：垂直方向实质相邻（同排）；跨区块（不同行/上下分离）不比
+        if (vOverlap < Math.min(12, Math.min(a.h, b.h) * 0.5)) continue
         const d = Math.abs(keys[i].v - keys[j].v)
         if (d > TOL && d <= 6) {
           findings.push({
@@ -349,13 +383,15 @@ export function analyzePage(page, size) {
       const gy = cy * (ph / ROWS)
       findings.push({
         severity: 'warning', code: 'hotspot', id: 'density',
-        message: `密集区（${count} 个元素）位于网格 (${k})，建议重点审阅`,
+        message: `密集区（${count} 个元素）位于网格 (${k})，建议重点审阅（线框/架构页常见，可按元素类型比例判断）`,
         area: { x: Math.round(gx), y: Math.round(gy), w: Math.round(pw / COLS), h: Math.round(ph / ROWS) },
       })
     }
   }
-  if (els.length >= 15) {
-    findings.push({ severity: 'warning', code: 'density', id: 'page', message: `页面含 ${els.length} 个元素，信息密度可能过高`, area: { x: 0, y: 0, w: pw, h: ph } })
+  // P2-5：density 分层——按内容元素（text/table/chart）计数，线框图/纯图形页不再误报
+  const contentCount = els.filter((e) => ['text', 'table', 'chart'].includes(e.kind)).length
+  if (contentCount >= 12) {
+    findings.push({ severity: 'warning', code: 'density', id: 'page', message: `页面含 ${contentCount} 个内容元素（文本/表格/图表），信息密度可能过高`, area: { x: 0, y: 0, w: pw, h: ph } })
   }
 
   return findings
@@ -403,7 +439,7 @@ function fmtSa(sa) {
 export function collectDeclarable(page, size) {
   const out = []
   const els = page.elements ?? []
-  const declared = buildDeclaredSet(page.expectedOverlaps ?? [])
+  const declared = declaredClosure(page) // P0-2：闭包后已覆盖的隔层对不再建议
   for (let i = 0; i < els.length; i++) {
     for (let j = i + 1; j < els.length; j++) {
       const a = els[i].bounds
@@ -461,6 +497,43 @@ function buildDeclaredSet(list) {
     }
   }
   return set
+}
+
+/**
+ * 声明闭包（P0-2 反馈 ★★）：嵌套承载只需声明**相邻层**（如 card×inBox、inBox×inText），
+ * 隔层组合（card×inText）由"包含关系传递"自动通过——声明 (a,b)（b 在 a 内）且 c 在 b 内
+ * ⇒ (a,c) 视为已声明（迭代至不动点）。语义：承载沿嵌套链传递，避免声明清单膨胀 1/3 的传递对。
+ */
+function declaredClosure(page) {
+  const els = page.elements ?? []
+  const decl = buildDeclaredSet(page.expectedOverlaps ?? [])
+  const T = 1
+  const byId = new Map(els.map((e) => [e.id, e]))
+  const inside = (innerBounds, outerBounds) => innerBounds.x >= outerBounds.x - T && innerBounds.y >= outerBounds.y - T
+    && innerBounds.x + innerBounds.w <= outerBounds.x + outerBounds.w + T
+    && innerBounds.y + innerBounds.h <= outerBounds.y + outerBounds.h + T
+  const within = (outerId) => {
+    const o = byId.get(outerId)
+    if (!o) return []
+    return els.filter((e) => e.id !== outerId && inside(e.bounds, o.bounds))
+  }
+  let changed = true
+  let guard = 0
+  while (changed && guard++ < 24) {
+    changed = false
+    for (const key of [...decl]) {
+      let [a, b] = key.split(' × ')
+      // 定向：pairKey 排序丢失"容器"信息——若 b 包含 a，则交换使 a 为容器、b 为被承载
+      const A = byId.get(a)
+      const B = byId.get(b)
+      if (A && B && inside(A.bounds, B.bounds)) { const t = a; a = b; b = t }
+      for (const c of within(b)) {
+        const k = [a, c.id].sort().join(' × ')
+        if (!decl.has(k)) { decl.add(k); changed = true }
+      }
+    }
+  }
+  return decl
 }
 
 /** 层叠角色：显式 role（background/content/decoration）覆盖推断；

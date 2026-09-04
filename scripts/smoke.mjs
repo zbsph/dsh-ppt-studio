@@ -340,11 +340,13 @@ ok('v0.3：ppts_schema 速查含 safeArea/expectedOverlaps', scaffoldMod.SCHEMA_
 const scafRoot = join(root, 'examples', 'scaffold-smoke')
 await (await import('node:fs/promises')).rm(scafRoot, { recursive: true, force: true })
 const scaf = await scaffoldMod.scaffoldProject(scafRoot, { name: 'demo' })
-ok('v0.3：ppt_new 样例生成 4 文件', scaf.files.length === 4)
+ok('v0.3：ppt_new 样例生成 5 文件（含架构页）', scaf.files.length === 5)
 const scafCtx = await resolveDeck(scafRoot)
 const scafR = await renderDeck(scafCtx, {})
 const scafV = verifyDeck(scafR.layout)
-ok('v0.3：样例工程可渲染且 verify 0 错误', scafCtx.pages.length === 3 && scafV.text.split('\n').filter((l) => l.includes('[✗]')).length === 0)
+ok('v0.3：样例工程可渲染且 verify 0 错误', scafCtx.pages.length === 4 && scafV.text.split('\n').filter((l) => l.includes('[✗]')).length === 0)
+ok('v0.4：声明闭包——04 页声明 5 命中 + 2 隔层自动 = 7 确认', scafV.text.includes('7 预期重叠✓'))
+ok('v0.4：对比度 z-order 无假阳性 + contrastExempt 生效', !scafV.text.includes('aesthetic-contrast'))
 let refused = false
 try { await scaffoldMod.scaffoldProject(scafRoot) } catch { refused = true }
 ok('v0.3：ppt_new 拒绝覆盖已有工程', refused)
@@ -375,11 +377,11 @@ for (const p of ['01', '02', '03']) {
     'pageType: content',
     'elements:',
     '  - elementId: header', '    elementType: text', '    bounds: [40, 10, 200, 30]',
-    '    content: {text: "页眉", style: "$b"}',
+    '    content: {text: "页眉", style: "$b", color: "#2E4B9F", fontFamily: "Microsoft YaHei", italic: true}',
     '  - elementId: footer', '    elementType: text', '    bounds: [40, 505, 200, 30]',
-    '    content: {text: "页脚", style: "$b"}',
+    '    content: {text: "页脚", style: "$b", color: "#2E4B9F"}',
     '  - elementId: body', '    elementType: text', '    bounds: [40, 200, 400, 60]',
-    `    content: {text: "第${p}页正文", style: "$b"}`,
+    `    content: {text: "第${p}页正文", style: "$b", color: "#2E4B9F"}`,
     '',
   ].join('\n'))
 }
@@ -388,6 +390,34 @@ const bandExp = await exportPptx(bandCtx, { out: 'out-band.pptx', engine: 'pptd'
 const bandImp = await importPptx(bandExp.file, join(bandDeck, 'imported'))
 const bandDeckYaml = await (await import('node:fs/promises')).readFile(join(bandDeck, 'imported', 'deck.yaml'), 'utf8')
 ok('v0.3.2：D4 导入探测跨页带 → 建议 safeArea 注释（未启用）', bandDeckYaml.includes('safeArea') && bandDeckYaml.includes('top: 40') && bandDeckYaml.includes('bottom: 35'), bandDeckYaml.split('\n').slice(0, 4).join(' | '))
+
+// ── 16. v0.4.0：导入保样式（P0-1）/ 多点折线校验（P2-3）/ 对齐区块化（P1-2）/ 贴边清单（P2-4）/ density 分层 ──
+const bandPageYaml = await (await import('node:fs/promises')).readFile(join(bandDeck, 'imported', 'pages', 'slide_01.yaml'), 'utf8')
+ok('v0.4：导入保样式——text color/fontFamily/italic 回环', bandPageYaml.includes('fontFamily') && bandPageYaml.includes('2E4B9F'), bandPageYaml.split('\n').filter((l) => l.includes('fontFamily') || l.includes('color') || l.includes('italic')).join(' | '))
+ok('v0.4：import-styles.json 生成（含样式清单）', (await import('node:fs/promises')).stat(join(bandDeck, 'imported', 'import-styles.json')).then(() => true).catch(() => false))
+ok('v0.4：theme 聚合建议块写入 deck.yaml', bandDeckYaml.includes('# 建议主题') && bandDeckYaml.includes('textStyles'))
+const mnErr = validatePage({ elements: [{ elementId: 'l', elementType: 'line', points: [[10, 10], [100, 10], [200, 10]] }] }, 'test.yaml')
+ok('v0.4：多点折线显式报错（P2-3，不再静默截断）', mnErr !== null && mnErr.messages.some((m) => m.includes('仅支持 2 点')), mnErr?.messages?.join('; '))
+const { analyzePage, aestheticSuggestions } = await import('../lib/verify.js')
+const size960 = { width: 960, height: 540 }
+const naPage = { elements: [
+  { id: 't1', kind: 'text', bounds: { x: 100, y: 40, w: 100, h: 30 } },
+  { id: 't2', kind: 'text', bounds: { x: 104, y: 300, w: 100, h: 30 } },
+  { id: 'ln1', kind: 'line', bounds: { x: 200, y: 40, w: 50, h: 10 } },
+] }
+ok('v0.4：near-align 跨区块不比 + 线元素豁免（P1-2）', analyzePage(naPage, size960).filter((f) => f.code === 'near-align').length === 0)
+const naSame = { elements: [
+  { id: 'a1', kind: 'text', bounds: { x: 100, y: 40, w: 100, h: 30 } },
+  { id: 'b1', kind: 'text', bounds: { x: 103, y: 40, w: 100, h: 30 } },
+] }
+ok('v0.4：同区块近对齐仍报告（对齐断言保留，3 种缘）', analyzePage(naSame, size960).filter((f) => f.code === 'near-align').length === 3)
+const spPage = { elements: [
+  { id: 'xa', kind: 'text', bounds: { x: 0, y: 0, w: 100, h: 30 }, text: 'a' },
+  { id: 'xb', kind: 'text', bounds: { x: 102, y: 0, w: 100, h: 30 }, text: 'b' },
+] }
+ok('v0.4：相邻贴边清单（2px 间隙 → 建议，P2-4）', aestheticSuggestions(spPage, size960, {}).some((s) => s.code.includes('spacing')))
+const denseSheet = { elements: Array.from({ length: 20 }, (_, i) => ({ id: `s${i}`, kind: 'shape', bounds: { x: i * 40, y: 0, w: 20, h: 20 } })) }
+ok('v0.4：density 按内容元素分层（纯图形页不误报，P2-5）', analyzePage(denseSheet, size960).filter((f) => f.code === 'density').length === 0)
 
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)
