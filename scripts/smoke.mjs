@@ -463,5 +463,17 @@ for (const p of tplT.pages) await (await import('node:fs/promises')).writeFile(j
 const ctxTW = await resolveDeck(tplWS)
 ok('v0.5：模板工作区可校验（theme 完整）', ctxTW.theme.colors.primary === '#1E4E8C' && tplT.pages.length >= 6, `${tplT.pages.length} pages`)
 
+// ── 18. v0.5.1：外部模板收纳（ppt_template_add）——导入工程 → 模板库 ──────
+const regId = `smoke-tpl-${Date.now().toString(36)}`
+const reg = await tplMod.registerTemplate(bandDeck, { id: regId, name: '回归收纳模板', style: '测试' }, {})
+ok('v0.5.1：外部模板收纳成功（theme/页面/媒体入包）', reg.pages === 3 && (await (await import('node:fs/promises')).stat(join(reg.dir, 'deck.yaml'))).isFile(), `id=${reg.id} pages=${reg.pages}`)
+const regList = await tplMod.listTemplates()
+ok('v0.5.1：收纳模板出现在模板库清单', regList.some((t) => t.id === regId))
+const regWS = await tplMod.templateWorkspace(regId)
+const ctxReg = await resolveDeck(regWS.dir)
+ok('v0.5.1：收纳模板工作区可校验（theme/页面保留）', ctxReg.theme.colors.primary === '#2563EB' && ctxReg.pages.length === 3, `pages=${ctxReg.pages.length}`)
+// 清理测试模板
+await (await import('node:fs/promises')).rm(join(tplMod.TEMPLATES_DIR, regId), { recursive: true, force: true })
+
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)

@@ -75,10 +75,12 @@ ppt_verify(dir, autoDeclare=true)
 ```text
 ppt_templates              # 清单 + 风格/场景/预览图路径（S0 展示给用户选）
 ppt_new dir=<目录> template=<id>   # 从模板复制工作区（theme 完整 + 母版页 _*.yaml）
+ppt_template_add dir=<导入工程>    # 外部模板收纳（v0.5.1）：任意 deck 工程 → 模板库（theme/页面/媒体入包 + 自动缩略图）
 /ppt template <id>         # 记录本会话默认模板
 ```
 
 - **模板 = 版式母版包**：新页从 `pages/_*.yaml` 复制并改成正式页名 → 页眉/页脚/标题栏自动继承（需求 4"统一模板保持基础样式"）。
+- **外部模板收纳（v0.5.1）**：你自己的模板 / 公司采购模板 / 任何你有权使用的模板 → `ppt_import` → `ppt_template_add` → 永久进库（**用户模板 > 导入模板 > 内置模板** 三级增长；模板数量随使用增长，不必预置几百套）。
 - **模板一致性门禁**：verify `theme-conformance`（strict 默认）——页面颜色必须 ∈ `theme.colors` 或中性灰，出板=ERROR；字号/字体为 `[·]` 建议；`theme.themeConformance: suggest|off` 可降档。模板文件路径也可用：`ppt_import` 模板 → 启用其 theme 聚合块。
 - 维护：`node scripts/build-templates.mjs` 重建全部 preview.png（render+截图）。
 

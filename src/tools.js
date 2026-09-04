@@ -17,7 +17,7 @@ import { importPptx } from './pptd/import-pptx.js'
 import { verifyDeck } from './verify.js'
 import { SCHEMA_REF, scaffoldProject } from './scaffold.js'
 import { applyAutoDeclare } from './autodeclare.js'
-import { listTemplates, templateWorkspace } from './templates.js'
+import { listTemplates, templateWorkspace, registerTemplate } from './templates.js'
 import { runPythonExport, findPython } from './pptxPy.js'
 import { imageInfo } from './imgmeta.js'
 import { loadProject, loadSession } from './state.js'
@@ -164,6 +164,27 @@ export function registerTools(ctx) {
       const list = await listTemplates()
       if (!list.length) return '（模板库为空：templates/ 目录缺失或未打包）'
       return `内置模板库（${list.length} 套 · 风格版权自研）：\n\n${list.map((t) => `## ${t.id} — ${t.name}\n风格：${t.style}\n适用：${t.scene}\n关键词：${t.words}\n色板：${t.colors.join('  ')}\n预览图：${t.preview ?? '（未生成）'}\n`).join('\n---\n')}\n使用：ppt_new dir=<新目录> template=<id>（复制模板工作区；模板一致性断言 themeConformance=strict 默认开启）`
+    },
+  })
+
+  reg({
+    name: 'ppt_template_add',
+    description: '外部模板收纳（模板随使用增长通道）：把任意 deck 工程（通常是 ppt_import 产物，用户自己/签购买的模板文件转出来的）注册为内置模板 → templates/<id>/（theme/全部页面/媒体原样转入 + 自动缩略图）。用户模板文件 > 导入模板 > 内置精磨，三级增长',
+    parameters: {
+      dir: { type: 'string', required: true, description: '源工程目录（含 deck.yaml；先 ppt_import 得到）' },
+      id: { type: 'string', description: '模板 id（缺省按标题 slug 化；冲突自动加后缀）' },
+      name: { type: 'string', description: '模板名称（缺省取工程标题）' },
+      style: { type: 'string', description: '风格标签（如 企业蓝/学术白）' },
+      scene: { type: 'string', description: '适用场景' },
+    },
+    output: markdownResult(),
+    async execute(args) {
+      try {
+        const r = await registerTemplate(args.dir, { id: args.id, name: args.name, style: args.style, scene: args.scene })
+        return `✓ 已收纳为模板「${r.meta.name}」（id=${r.id}，${r.pages} 张母版页）\n  - ${r.dir}\n  - 预览图：${r.preview ?? '（未生成：无浏览器或渲染失败，模板仍可用）'}\n用途：ppt_templates 可列出；下一次 ppt_new dir=<新目录> template=${r.id} 即可复用`
+      } catch (error) {
+        return `✗ 收纳失败：${error?.message ?? String(error)}`
+      }
     },
   })
 
