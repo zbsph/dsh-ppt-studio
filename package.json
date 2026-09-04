@@ -1,6 +1,6 @@
 {
   "name": "@dsh-external/dsh-ppt-studio",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "PPT 工作室：四类任务（从头/补完/修改/总结）工作流 + 布局工程 + PPTD 中间层工具链 + 内置模板库",
   "private": true,
   "type": "module",

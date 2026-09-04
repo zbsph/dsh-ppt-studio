@@ -646,5 +646,108 @@ ok('v0.9.1：referenceSource deck 通过校验', prstRefCtx.deck.referenceSource
 await rm(prstImpDir, { recursive: true, force: true })
 await rm(prstDeck, { recursive: true, force: true })
 
+// ── 25. v0.10.0：手术模式（候选 B）——模板贴内容 + 完整性验证 ─────────────
+const { surgicalPatch, scanSlideXml, matchByDistance, slideOrderOf, verifySurgical } = await import('../lib/surgical.js')
+// 25.1 模板 = exportPptx 自建（3 页：标题文本含粗体 + 表格）
+const surgTplDir = join(root, 'examples', 'surg-tpl')
+await rm(surgTplDir, { recursive: true, force: true })
+await mkdir(join(surgTplDir, 'pages'), { recursive: true })
+await (await import('node:fs/promises')).writeFile(join(surgTplDir, 'deck.yaml'), [
+  'version: 1', 'title: surg-tpl', 'size: [960, 540]',
+  'theme: {colors: {primary: "#1E4E8C", accent: "#EAF1F8"}}',
+  'pages:',
+  '  - pages/01.yaml', '  - pages/02.yaml', '  - pages/03.yaml', '',
+].join('\n'))
+await (await import('node:fs/promises')).writeFile(join(surgTplDir, 'pages', '01.yaml'), [
+  'pageType: content',
+  'elements:',
+  '  - elementId: title', '    elementType: text', '    bounds: [60, 60, 500, 60]',
+  '    content: {text: "模板标题", fontSize: 28, color: "#1E4E8C", bold: true}',
+  '  - elementId: body', '    elementType: text', '    bounds: [60, 160, 500, 80]',
+  '    content: {text: "模板正文内容", fontSize: 16}',
+  '  - elementId: tbl', '    elementType: table', '    bounds: [60, 300, 600, 150]',
+  '    cols: ["指标", "数值"]',
+  '    rows: [["A", "1"], ["B", "2"]]',
+  '', ''].join('\n'))
+for (const p of ['02', '03']) {
+  await (await import('node:fs/promises')).writeFile(join(surgTplDir, 'pages', `${p}.yaml`), [
+    'pageType: content',
+    'elements:',
+    `  - elementId: t${p}`, '    elementType: text', '    bounds: [60, 100, 400, 60]',
+    `    content: {text: "第${p === '02' ? 2 : 3}页固定", fontSize: 20}`,
+    '', ''].join('\n'))
+}
+const surgTplCtx = await resolveDeck(surgTplDir)
+const surgTplExp = await exportPptx(surgTplCtx, { out: 'out-surg-tpl.pptx', engine: 'pptd' })
+// 25.2 工作区 = 同几何新内容（只改文本/表格文本，几何不动）
+const surgWork = join(root, 'examples', 'surg-work')
+await rm(surgWork, { recursive: true, force: true })
+await mkdir(join(surgWork, 'pages'), { recursive: true })
+await (await import('node:fs/promises')).writeFile(join(surgWork, 'deck.yaml'), [
+  'version: 1', 'title: surg-work', 'size: [960, 540]',
+  'theme: {colors: {primary: "#1E4E8C", accent: "#EAF1F8"}}',
+  'pages:',
+  '  - pages/01.yaml', '  - pages/02.yaml', '', ''].join('\n'))
+await (await import('node:fs/promises')).writeFile(join(surgWork, 'pages', '01.yaml'), [
+  'pageType: content',
+  'elements:',
+  '  - elementId: title', '    elementType: text', '    bounds: [60, 60, 500, 60]',
+  '    content: {text: "用户的新标题", fontSize: 28, color: "#1E4E8C", bold: true}',
+  '  - elementId: body', '    elementType: text', '    bounds: [60, 200, 500, 80]',
+  '    content: {text: "用户新正文", fontSize: 16}',
+  '  - elementId: tbl', '    elementType: table', '    bounds: [60, 300, 600, 150]',
+  '    cols: ["指标", "数值"]',
+  '    rows: [["甲", "10"], ["乙", "20"]]',
+  '', ''].join('\n'))
+await (await import('node:fs/promises')).writeFile(join(surgWork, 'pages', '02.yaml'), [
+  'pageType: content',
+  'elements:',
+  '  - elementId: t02', '    elementType: text', '    bounds: [60, 100, 400, 60]',
+  '    content: {text: "第2页固定", fontSize: 20}', // 与模板一致 = 未动 → kept
+  '', ''].join('\n'))
+const surgOut = join(root, 'examples', 'surg-out.pptx')
+await rm(surgOut, { force: true }).catch(() => {})
+const surgRes = await surgicalPatch({ template: surgTplExp.file, deckDir: surgWork, out: surgOut })
+ok('v0.10.0：手术页状态（第1页 patched / 第2页 kept / 第3页 kept）',
+  surgRes.pages[0].action === 'patched' && surgRes.pages[1].action === 'kept' && surgRes.pages[2].action === 'kept' && surgRes.pages[2].note?.includes('无对应'),
+  surgRes.pages.map((p) => `${p.index}:${p.action}`).join(', '))
+ok('v0.10.0：字段替换统计（标题+正文 2 字段；表格 4 cell；清空 0）',
+  surgRes.fields === 2 && surgRes.tableCells === 4 && surgRes.pages[0].fields === 2,
+  JSON.stringify({ fields: surgRes.fields, tableCells: surgRes.tableCells }))
+const surgZip = zipRead(await (await import('node:fs/promises')).readFile(surgOut))
+const surgSlide = surgZip.get('ppt/slides/slide1.xml').toString('utf8')
+ok('v0.10.0：手术页文本已替换（新标题/新正文/表格新值）',
+  surgSlide.includes('用户的新标题') && surgSlide.includes('用户新正文') && surgSlide.includes('甲') && surgSlide.includes('20') && !surgSlide.includes('模板标题'),
+  'slide1 内容替换缺失')
+ok('v0.10.0：rPr 样式原样保留（只改 a:t——粗体 2800/颜色仍在）',
+  surgSlide.includes('sz="2800"') && surgSlide.includes('1E4E8C') || surgSlide.includes('sz="1600"'),
+  'rPr 属性被破坏')
+const surgTplZip = zipRead(await (await import('node:fs/promises')).readFile(surgTplExp.file))
+ok('v0.10.0：完整性验证——未手术条目内容 sha256 全部一致',
+  surgRes.verify.mismatched === 0 && surgRes.verify.identical > 0,
+  `${surgRes.verify.identical}/${surgRes.verify.total}`)
+// 未手术页（slide2）内容与模板逐字节一致
+const tplSlide2 = surgTplZip.get('ppt/slides/slide2.xml')
+const outSlide2 = surgZip.get('ppt/slides/slide2.xml')
+const { createHash } = await import('node:crypto')
+ok('v0.10.0：未手术页 slide2 内容与模板一致（hash）', createHash('sha256').update(tplSlide2).digest('hex') === createHash('sha256').update(outSlide2).digest('hex'), 'slide2 变了！')
+// 25.3 scanSlideXml 直接单元：槽收集（文本 sp 跳过 grpSp/无位置）
+const scan1 = scanSlideXml(surgSlide)
+ok('v0.10.0：scanSlideXml 槽收集（标题/正文/表格分列）', scan1.slots.length === 2 && scan1.tables.length === 1, `slots=${scan1.slots.length} tables=${scan1.tables.length}`)
+// 25.4 有 Office 时：手术成品可被 PowerPoint 打开（COM 渲染无异常 = 结构合法）
+if (hasOffice) {
+  const visSurg = join(root, 'examples', 'surg-rendered')
+  await rm(visSurg, { recursive: true, force: true })
+  const rvSurg = await msMod.renderPptxToPng(surgOut, visSurg, { width: 960, height: 540, timeoutMs: 180000 })
+  ok('v0.10.0：手术成品 Office 可打开渲染（结构合法）', rvSurg.pages === 3, `pages=${rvSurg.pages}`)
+  await rm(visSurg, { recursive: true, force: true })
+} else {
+  ok('v0.10.0：无 Office 跳过成品渲染验证', true)
+}
+// 清理
+await rm(surgOut, { force: true }).catch(() => {})
+await rm(surgTplDir, { recursive: true, force: true })
+await rm(surgWork, { recursive: true, force: true })
+
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)

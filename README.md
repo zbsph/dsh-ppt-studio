@@ -28,6 +28,7 @@ npm run test:real               # 真实资产回归（19 页 deck + WPS fixture
 `ppt_check` 校验 / `ppt_render` 渲染 / `ppt_shot` 截图 / `ppt_verify` 数字审阅（可 `autoDeclare=true` 一键声明；audit 档禁用）/
 `ppt_export` 导出（out 支持绝对路径；auto=pptd 优先，硬失败自动回退 python-pptx 并醒目标注）/ `ppt_import` 导入 / `ppt_status` 工作流状态 / `ppt_media` 图片元数据 / `ppt_state` 会话状态
 + `ppt_schema` **语法速查** / `ppt_new` **一键样例工程**（v0.3.0）
++ `ppt_patch` **手术模式**（v0.10.0，候选 B）：模板真身贴内容——只改文本/表格 <a:t>，rPr/几何/渐变/字体/图片原样保留（"看起来就是模板原样"）；未动页内容 sha256 验证。与 `ppt_export` 并存：常规导出走渲染，贴模板保真走手术
 + `/ppt` 命令面（on/off/**quick/normal**/free|mid|strict/fidelity/review/engine/quality/pause-after/help）。
 
 ## 新手入门（v0.3.0，对应真实任务反馈 B2 ★）

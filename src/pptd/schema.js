@@ -132,6 +132,18 @@ export function validateDeck(deck) {
       if (rs.previews !== undefined && (!Array.isArray(rs.previews) || rs.previews.some((p) => typeof p !== 'string'))) errors.push('deck.referenceSource.previews: [string]（Office 真渲染参考页路径）')
     }
   }
+  // 手术模式 v0.10.0：surgicalMap（可选页映射 {模板页号: deck 页号}，1-based；缺省序号对齐）
+  if (deck.surgicalMap !== undefined) {
+    const sm = deck.surgicalMap
+    if (!sm || typeof sm !== 'object' || Array.isArray(sm)) {
+      errors.push('deck.surgicalMap: object {模板页号(1-based): deck 页号(1-based)}（手术模式页映射；缺省=序号对齐）')
+    } else {
+      for (const [k, v] of Object.entries(sm)) {
+        if (!/^\d+$/.test(k)) errors.push(`deck.surgicalMap.${k}: key 必须是模板页号（正整数）`)
+        if (!Number.isInteger(v) || v < 1) errors.push(`deck.surgicalMap.${k}: 值必须是 deck 页号（正整数，1-based）`)
+      }
+    }
+  }
   const pages = Array.isArray(deck.pages) ? deck.pages : []
   if (pages.length === 0) errors.push('deck.pages: at least one page required')
   return errors.length ? fail(errors) : null

@@ -19,6 +19,7 @@ import { verifyDeck } from './verify.js'
 import { SCHEMA_REF, scaffoldProject } from './scaffold.js'
 import { applyAutoDeclare } from './autodeclare.js'
 import { listTemplates, templateWorkspace, registerTemplate, materializeTemplate } from './templates.js'
+import { surgicalPatch } from './surgical.js'
 import { buildPreview } from './preview-server.js'
 import { findPowerPoint, renderPptxToPng } from './msrender.js'
 import { runPythonExport, findPython } from './pptxPy.js'
@@ -502,6 +503,43 @@ export function registerTools(ctx) {
         return `✓ 已导入：${r.outDir}（${r.pages} 页，${r.media.length} 个媒体；原始 pptx 已保留为 source.pptx —— 参考双轨真相层）${refLine}\n⚠ ${r.warnings.join('；')}`
       } catch (error) {
         return `✗ 导入失败：\n${errText(error)}`
+      }
+    },
+  })
+
+  reg({
+    name: 'ppt_patch',
+    description: '手术模式（v0.10.0，候选 B）：以模板 .pptx 为底版做"结构精确贴模板"——模板页的文本/表格槽被工作区内容替换（只改 <a:t>，rPr/几何/渐变/字体/图片全部原样保留），其余页内容逐字节不变（sha256 验证）。**适用**：按模板做的成品要"看起来就是模板原样"（双轨参考只解决风格，手术解决结构保真）。**限制（v1）**：只替换文本形状+表格；组合内文本/图片不动；deck 页数超过模板页数的多出页不注入（警告）；表格行数超出模板的警告。与 ppt_export 互不影响——常规导出仍走 PPTD 渲染',
+    parameters: {
+      template: { type: 'string', required: true, description: '模板 .pptx 绝对路径（优先用工作区 reference/template.pptx——双轨真相层）' },
+      dir: { type: 'string', required: true, description: '工作区目录（含 deck.yaml；页面内容为内容真相）' },
+      out: { type: 'string', description: '输出 .pptx（缺省 <dir>/out-surgical.pptx）' },
+      map: { type: 'string', description: '页映射 JSON（可选）：{"1":3,"2":1} 模板页号(1-based)→deck 页号(1-based)；缺省=序号对齐' },
+    },
+    output: markdownResult(),
+    async execute({ template, dir, out, map }) {
+      try {
+        let pageMap = {}
+        if (map) {
+          pageMap = JSON.parse(map)
+          if (!pageMap || typeof pageMap !== 'object' || Array.isArray(pageMap)) return '✗ map 必须是 JSON 对象：{"模板页号": "deck 页号"}'
+        }
+        const outPath = out ?? join(dir, 'out-surgical.pptx')
+        const r = await surgicalPatch({ template, deckDir: dir, out: outPath, map: pageMap })
+        const lines = [
+          `✓ 手术完成：${r.out}（模板 ${r.templateSlides} 页 / deck ${r.deckPages} 页）`,
+          '',
+          '页处理：',
+          ...r.pages.map((p) => `  - 模板第 ${p.index} 页 [${p.action}]${p.fields ? ` 替换字段 ${p.fields}${p.cleared ? `（含清空 ${p.cleared}）` : ''}` : ''}${p.tableCells ? ` 表格 cell ${p.tableCells}` : ''}${p.note ? ` ${p.note}` : ''}`),
+          `替换统计：文本字段 ${r.fields} / 表格 cell ${r.tableCells}`,
+          `完整性验证（未手术条目解包内容 sha256 与模板一致性）：${r.verify.identical}/${r.verify.total} ✓${r.verify.mismatched ? ` ✗ 不一致：${r.verify.details.join(', ')}` : ''}`,
+          ...(r.warnings.length ? ['', '⚠ 警告：', ...r.warnings.map((w) => `  - ${w}`)] : []),
+          '',
+          '下一步（可选）：ppt_visual 对成品 Office 真渲染审核（确认视觉 = 模板原样 + 内容已换）。',
+        ]
+        return lines.join('\n')
+      } catch (error) {
+        return `✗ 手术失败：\n${errText(error)}`
       }
     },
   })
