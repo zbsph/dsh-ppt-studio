@@ -475,5 +475,14 @@ ok('v0.5.1：收纳模板工作区可校验（theme/页面保留）', ctxReg.the
 // 清理测试模板
 await (await import('node:fs/promises')).rm(join(tplMod.TEMPLATES_DIR, regId), { recursive: true, force: true })
 
+// ── 19. v0.6.0：对话内预览（ppt_preview）——预览根构建 + 同源相对 URL ────
+const { buildPreview } = await import('../lib/preview-server.js')
+const pv = await buildPreview(bandDeck)
+ok('v0.6：预览构建（token/相对 URL/页数）', pv.token.length === 10 && pv.url.includes('/ppt-preview/') && pv.overviewUrl.endsWith('/pages/deck.html') && pv.pages === 3, pv.url)
+const pvPages = await (await import('node:fs/promises')).readdir(join(pv.previewRoot, 'pages'))
+ok('v0.6：预览根 pages 完整（3 页 + 整览）', pvPages.includes('deck.html') && pvPages.filter((f) => f.endsWith('.html')).length === 4)
+const pvMedia = await buildPreview(mediaDeck)
+ok('v0.6：预览根媒体拷贝（../media 引用可解析）', (await (await import('node:fs/promises')).readdir(join(pvMedia.previewRoot, 'media'))).includes('pic.png'))
+
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)

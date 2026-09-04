@@ -18,6 +18,7 @@ import { verifyDeck } from './verify.js'
 import { SCHEMA_REF, scaffoldProject } from './scaffold.js'
 import { applyAutoDeclare } from './autodeclare.js'
 import { listTemplates, templateWorkspace, registerTemplate } from './templates.js'
+import { buildPreview } from './preview-server.js'
 import { runPythonExport, findPython } from './pptxPy.js'
 import { imageInfo } from './imgmeta.js'
 import { loadProject, loadSession } from './state.js'
@@ -151,6 +152,30 @@ export function registerTools(ctx) {
         return `✓ 已生成样例工程：${r.dir}\n${r.files.map((f) => `  - ${f}`).join('\n')}\n下一步：ppt_check → ppt_render → ppt_verify（应 0 错误）`
       } catch (error) {
         return `✗ 生成失败：${error?.message ?? String(error)}`
+      }
+    },
+  })
+
+  reg({
+    name: 'ppt_preview',
+    description: '生成 PPT 对话内预览（需求 A）：渲染 deck → 静态服务 → 返回同源预览链接（页面 URL + 整览 URL）。用户在浏览器/GUI 内点击即可直接看 PPT（翻页/整览），不用打开本地文件。做完一版/几页后调用，附在交付信息里',
+    parameters: {
+      dir: { type: 'string', required: true, description: 'deck 项目目录（含 deck.yaml）' },
+    },
+    output: markdownResult(),
+    async execute({ dir }) {
+      try {
+        const p = await buildPreview(dir)
+        return [
+          '✓ PPT 预览已生成（点击即可查看，无需打开本地文件）：',
+          '',
+          `- [打开本页预览](${p.url})`,
+          `- [打开整览（全部页面）](${p.overviewUrl})`,
+          '',
+          `共 ${p.pages} 页；预览根：${p.previewRoot}`,
+        ].join('\n')
+      } catch (error) {
+        return `✗ 预览失败：\n${errText(error)}`
       }
     },
   })

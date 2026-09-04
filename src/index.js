@@ -7,6 +7,7 @@ import { registerTools, defineTool } from './tools.js'
 import { registerCommands } from './commands.js'
 import { loadSession, saveSession } from './state.js'
 import { isPptIntent, isPptOff, isQuickIntent, detectTaskType, workflowSection } from './router.js'
+import { registerPreviewRoute } from './preview-server.js'
 
 export const name = '@dsh-external/dsh-ppt-studio'
 export const inject = ['tools', 'commands', 'systemPrompt']
@@ -15,6 +16,7 @@ export function apply(ctx, config = {}) {
   registerTools(ctx)
   registerCommands(ctx)
   statusToolFor(ctx)
+  registerPreviewRoute(ctx) // 需求 A：对话内预览服务（/ppt-preview/ 路由；无 webServer 环境自动跳过）
 
   const armed = new Map() // 快速内存缓存：session id -> state
 
