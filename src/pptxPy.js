@@ -4,7 +4,7 @@
  * 需要 python 环境 + python-pptx（运行前探测，缺失则报错提示）。
  */
 import { readFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { join, isAbsolute } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import YAML from 'yaml'
 import { normalizePage, measureText } from './pptd/layout.js'
@@ -135,7 +135,8 @@ function startPython(cmd, script) {
 }
 
 export async function runPythonExport(ctx, out) {
-  const outPath = join(ctx.dir, out)
+  // out：绝对路径原样使用；相对路径相对 deck 目录（与 pptd 引擎同语义，E1）
+  const outPath = isAbsolute(out) ? out : join(ctx.dir, out)
   const script = genPythonScript(ctx).replace('prs.save(sys.argv[1])', `prs.save(${JSON.stringify(outPath)})`)
   const result = await runPythonScript(ctx, script)
   return { file: outPath, engine: 'python-pptx', note: result.trim() }

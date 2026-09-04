@@ -25,8 +25,8 @@ npm run test:real               # 真实资产回归（19 页 deck + WPS fixture
 
 ## 工具面
 
-`ppt_check` 校验 / `ppt_render` 渲染 / `ppt_shot` 截图 / `ppt_verify` 数字审阅（可 `autoDeclare=true` 一键声明）/
-`ppt_export` 导出（out 支持绝对路径）/ `ppt_import` 导入 / `ppt_status` 工作流状态 / `ppt_media` 图片元数据 / `ppt_state` 会话状态
+`ppt_check` 校验 / `ppt_render` 渲染 / `ppt_shot` 截图 / `ppt_verify` 数字审阅（可 `autoDeclare=true` 一键声明；audit 档禁用）/
+`ppt_export` 导出（out 支持绝对路径；auto=pptd 优先，硬失败自动回退 python-pptx 并醒目标注）/ `ppt_import` 导入 / `ppt_status` 工作流状态 / `ppt_media` 图片元数据 / `ppt_state` 会话状态
 + `ppt_schema` **语法速查** / `ppt_new` **一键样例工程**（v0.3.0）
 + `/ppt` 命令面（on/off/**quick/normal**/free|mid|strict/fidelity/review/engine/quality/pause-after/help）。
 
@@ -118,9 +118,9 @@ ppt_export(dir)  → 导出 .pptx（默认 pptd 引擎；python-pptx 需 python 
   - 命中设计声明 → **✓ 预期重叠（确认）**，不出现在错误/警告中；
   - 未命中声明 → **ERROR `unexpected-overlap`（设计预期外重叠）**：修正布局，或若确为有意 → 补声明后重验；
   - **内容互压**（text/table/chart 相互遮挡，code `content-collision`）→ **永远 ERROR，不支持声明豁免**（"元素区块冲突"真正要防的）；
-  - `role: decoration` 元素 → 完全豁免（纯装饰层）；
+  - `role: decoration` 元素 → 完全豁免（重叠 + 出界；装饰层可合法落在模板页眉页脚带）；
   - 页面级 `overlapMode: lenient` → 未声明重叠仅提示（草稿/旧项目缓冲）；
-  - **批量声明**：`ppt_verify autoDeclare=true` 一键写入全部警告级未声明重叠对（v0.3.0）。
+  - **批量声明**：`ppt_verify autoDeclare=true` 一键写入全部警告级未声明重叠对（v0.3.0；audit 质量档禁用）。
 - 出界（含 safeArea）/ 文本溢出 → ERROR 门禁；美学建议 `[·]` 辅助、非门禁。
 - 元素 ≥15 时提示信息密度；网格密集区（≥5）提示重点审阅。
 - 建议中文长句在语义断点处显式使用 `\n`；导出缩字不低于主题 `minFontSize`，到下限仍溢出会明确报告（v0.3.0）。

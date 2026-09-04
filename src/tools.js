@@ -19,7 +19,37 @@ import { SCHEMA_REF, scaffoldProject } from './scaffold.js'
 import { applyAutoDeclare } from './autodeclare.js'
 import { runPythonExport, findPython } from './pptxPy.js'
 import { imageInfo } from './imgmeta.js'
-import { loadProject } from './state.js'
+import { loadProject, loadSession } from './state.js'
+
+/**
+ * 引擎解析（C1 决定，2026-09-04 用户拍板）：
+ * - auto/缺省 = pptd（主引擎）优先；pptd 硬失败时**允许回退** python-pptx（报告醒目标注降级，绝不静默）。
+ * - 显式 engine=pptd / python-pptx：尊重用户显式选择，不自动回退。
+ */
+export function resolveEngine(engine) {
+  if (engine === 'python-pptx') return { engine: 'python-pptx', allowFallback: false }
+  if (engine === 'pptd') return { engine: 'pptd', allowFallback: false }
+  return { engine: 'pptd', allowFallback: true }
+}
+
+/** audit 质量档（C2 决定）：禁用 autoDeclare，防一键声明掩盖真实问题。 */
+export function blockedByAudit(quality) {
+  return quality === 'audit'
+}
+
+/** 当前质量档：项目级 state.json 优先，其次会话级（任一为 audit 即 audit）。 */
+async function qualityOf(ctx, dir) {
+  try {
+    const agent = ctx.get('agent')
+    const sid = agent?.session?.id
+    const session = sid ? await loadSession(sid) : null
+    const proj = await loadProject(dir)
+    const q = proj?.quality === 'audit' || session?.quality === 'audit' ? 'audit' : (proj?.quality ?? session?.quality ?? 'standard')
+    return { quality: q }
+  } catch {
+    return { quality: 'standard' }
+  }
+}
 
 /** 内联 defineTool 最小实现（零运行时依赖，生态惯例：插件自包含）。 */
 export function defineTool(definition) {
@@ -170,6 +200,10 @@ export function registerTools(ctx) {
       const autoDeclare = !!args.autoDeclare
       try {
         if (autoDeclare) {
+          const { quality } = await qualityOf(ctx, dir)
+          if (blockedByAudit(quality)) {
+            return '✗ audit 质量档禁用 autoDeclare（防一键声明掩盖真实问题，C2 决定）：请切回 standard/quick 档，或逐对手工声明后重验。'
+          }
           const ctx0 = await loadCtx(dir)
           const r0 = await renderDeck(ctx0, {})
           const added = await applyAutoDeclare(ctx0, r0.layout)
@@ -217,21 +251,38 @@ export function registerTools(ctx) {
       try {
         const ctx0 = await loadCtx(dir)
         const outName = out ?? 'out.pptx'
-        const effEngine = engine === 'python-pptx' ? 'python-pptx' : 'pptd' // auto/缺省 = pptd（主引擎）
-        if (effEngine === 'python-pptx') {
+        const eff = resolveEngine(engine) // auto/缺省 = pptd（主引擎），pptd 硬失败时允许回退 python-pptx（C1 决定）
+        if (eff.engine === 'python-pptx' && !eff.allowFallback) {
           const py = findPython()
           if (!py.has) return `⚠ python-pptx 引擎不可用（未检测到 python + python-pptx 环境）：${py.cmd ? '请 pip install python-pptx' : '未找到 python 解释器'}。可改用默认 pptd 引擎。`
           const r = await runPythonExport(ctx0, outName)
           return `✓ 已导出（python-pptx 引擎）：${r.file}\n图表已降级为表格（引擎 A 才支持矢量拼绘图表）。`
         }
-        const r = await exportPptx(ctx0, { out: outName, engine: 'pptd' })
-        const fitLines = r.autoFit.map((a) => `   - ${a.id}: ${a.from}pt → ${a.to}pt${a.floorHit ? '（已到字号下限仍溢出：请扩大容器或精简文案后再交付）' : ''}`)
-        const floorHits = r.autoFit.filter((a) => a.floorHit).length
-        const fit = r.autoFit.length
-          ? `\n\n⚠ auto-fit 缩放 ${r.autoFit.length} 处文本：\n${fitLines.join('\n')}`
-          : ''
-        const floorNote = floorHits ? `\n\n✗ ${floorHits} 处达到字号下限（theme.minFontSize）仍溢出——建议修复后再交付，避免放映时文字溢出容器。` : ''
-        return `✓ 已导出（pptd 引擎，${r.slides} 页）：${r.file}${fit}${floorNote}`
+        try {
+          const r = await exportPptx(ctx0, { out: outName, engine: 'pptd' })
+          const fitLines = r.autoFit.map((a) => `   - ${a.id}: ${a.from}pt → ${a.to}pt${a.floorHit ? '（已到字号下限仍溢出：请扩大容器或精简文案后再交付）' : ''}`)
+          const floorHits = r.autoFit.filter((a) => a.floorHit).length
+          const fit = r.autoFit.length
+            ? `\n\n⚠ auto-fit 缩放 ${r.autoFit.length} 处文本：\n${fitLines.join('\n')}`
+            : ''
+          const floorNote = floorHits ? `\n\n✗ ${floorHits} 处达到字号下限（theme.minFontSize）仍溢出——建议修复后再交付，避免放映时文字溢出容器。` : ''
+          return `✓ 已导出（pptd 引擎，${r.slides} 页）：${r.file}${fit}${floorNote}`
+        } catch (error) {
+          // 自动回退链（C1 决定）：auto 且 pptd 硬失败 → 有 python-pptx 则兜底并醒目标注降级（绝不静默）
+          if (eff.allowFallback) {
+            const py = findPython()
+            if (py.has) {
+              try {
+                const r2 = await runPythonExport(ctx0, outName)
+                return `⚠ pptd 引擎失败，已自动降级 python-pptx（图表降级为表格）：${error?.message ?? error}\n✓ 已导出（python-pptx 兜底）：${r2.file}\n建议排查 pptd 失败原因（见上）或改用质量更高的模式。`
+              } catch (e2) {
+                return `✗ pptd 失败（${error?.message ?? error}）且 python-pptx 兜底也失败：${e2?.message ?? e2}`
+              }
+            }
+            return `✗ pptd 导出失败：${error?.message ?? error}\n（auto 模式：python-pptx 环境不可用，无兜底可选；可 /ppt engine python-pptx 或安装 python-pptx 后重试）`
+          }
+          throw error
+        }
       } catch (error) {
         return `✗ 导出失败：\n${errText(error)}`
       }

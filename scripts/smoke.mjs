@@ -254,6 +254,12 @@ await (await import('node:fs/promises')).writeFile(join(v3Deck, 'pages', '01_lay
   '    kind: rect',
   '    bounds: [500, 5, 100, 40]',
   '    fill: "$primary"',
+  '  - elementId: decoBand',
+  '    elementType: shape',
+  '    kind: rect',
+  '    bounds: [60, 2, 40, 12]',
+  '    fill: "$primary"',
+  '    role: decoration',
   '',
 ].join('\n'))
 await (await import('node:fs/promises')).writeFile(join(v3Deck, 'pages', '02_declare.yaml'), [
@@ -291,6 +297,7 @@ ok('v0.3：line bounds 由 points 自动推导（AABB）', L1 && L1.bounds.w ===
 const vV3 = verifyDeck(rV3.layout)
 ok('v0.3：safeArea 外元素 → out-of-page 错误（D5）', vV3.text.includes('超出页面安全区') && vV3.text.includes('badbox'), vV3.text.split('\n').filter((l) => l.includes('[✗]')).slice(0, 2).join('; '))
 ok('v0.3：安全区内元素不报出界', !vV3.text.includes('okbox'))
+ok('v0.3：decoration 在安全区外不报出界（C3）', !vV3.text.includes('decoBand'))
 ok('v0.3：未声明层叠 → unexpected-overlap', vV3.text.includes('unexpected-overlap') && vV3.text.includes('ptext'))
 ok('v0.3：对比度建议（白字浅底，D6）', vV3.text.includes('aesthetic-contrast'))
 ok('v0.3：孤字/破句建议（D7）', vV3.text.includes('text') && vV3.text.includes('孤字'))
@@ -327,6 +334,12 @@ ok('v0.3：样例工程可渲染且 verify 0 错误', scafCtx.pages.length === 3
 let refused = false
 try { await scaffoldMod.scaffoldProject(scafRoot) } catch { refused = true }
 ok('v0.3：ppt_new 拒绝覆盖已有工程', refused)
+
+// ── 14. v0.3.1：冲突清单拍板（C1 引擎回退语义 / C2 audit 禁 autoDeclare）──
+const toolsMod = await import('../lib/tools.js')
+ok('v0.3.1：resolveEngine auto=pptd 且允许回退（C1）', toolsMod.resolveEngine('auto').engine === 'pptd' && toolsMod.resolveEngine('auto').allowFallback === true)
+ok('v0.3.1：显式 pptd/python-pptx 不回退（C1）', toolsMod.resolveEngine('pptd').allowFallback === false && toolsMod.resolveEngine('python-pptx').engine === 'python-pptx' && toolsMod.resolveEngine('python-pptx').allowFallback === false)
+ok('v0.3.1：blockedByAudit 仅 audit 档生效（C2）', toolsMod.blockedByAudit('audit') === true && toolsMod.blockedByAudit('standard') === false && toolsMod.blockedByAudit('quick') === false)
 
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)

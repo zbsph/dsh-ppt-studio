@@ -208,6 +208,8 @@ export function analyzePage(page, size) {
   const pairKey = (a, b) => [a, b].sort().join(' × ')
 
   for (const el of els) {
+    // decoration 完全豁免（重叠 + 出界，C3 决定：装饰层可合法落在页眉页脚带上）
+    if (roleOf(el) === 'decoration') continue
     const b = el.bounds
     // out-of-page（含 safeArea：模板背景的非内容区）
     if (b.x < minX - TOL || b.y < minY - TOL || b.x + b.w > maxX + TOL || b.y + b.h > maxY + TOL) {

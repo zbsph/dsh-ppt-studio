@@ -28,7 +28,7 @@ elements:
   - elementId: 页内唯一字符串   # 必须
     elementType: text|shape|line|image|table|chart
     bounds: [x, y, w, h]       # 必须（line 可省略：由 points 的 AABB 自动推导）
-    role: content|background|decoration   # 可选：层叠语义；decoration 完全豁免重叠报告
+    role: content|background|decoration   # 可选：层叠语义；decoration 完全豁免重叠与出界（可合法落在模板页眉页脚带）
 \`\`\`
 
 ### text
@@ -95,7 +95,7 @@ overlapMode: declared        # declared（默认）| lenient（草稿缓冲：�
 - text/table/chart = content；shape/image = background（承载）；line = line（引脚线/箭头）。
 - content×content 重叠 → ERROR content-collision（不可声明豁免）。
 - content×background / line×任意 → 警告级，未声明则 ERROR unexpected-overlap（修正布局或补声明）。
-- role: decoration → 完全豁免；页面 overlapMode: lenient → 未声明仅提示。
+- role: decoration → 完全豁免（重叠 + 出界，可合法落在模板页眉页脚带）；页面 overlapMode: lenient → 未声明仅提示。
 
 ## 审阅/导出约定
 - ppt_render → preview/*.html + layout.json；ppt_verify 错误（[✗]）清零是门禁，
