@@ -21,3 +21,5 @@ examples/tpl-preview-work/
 examples/import-realtest/
 examples/import-realtest2/
 examples/import-realtest-regression/
+templates/*/preview/
+templates/*/_cleanup-tmp/
