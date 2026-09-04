@@ -46,6 +46,36 @@ const ELEMENT_KEYS = {
   chart: ['chart'],
 }
 
+/**
+ * shape.kind 白名单（v0.9.1 候选 A：常见 prst 直通）。
+ * 前 4 个为原始支持；其余为 OOXML prst 常见形状——kind 名 = OOXML prst 名（export 直通 / import 保留）。
+ */
+export const SHAPE_KINDS = [
+  'rect', 'roundRect', 'ellipse', 'triangle',       // 原始
+  'rightArrow', 'leftArrow', 'upArrow', 'downArrow', 'leftRightArrow', // 箭头
+  'pentagon', 'hexagon', 'chevron', 'parallelogram', 'diamond', 'octagon', 'star5', // 多边形/星
+  'flowchartProcess', 'flowchartDecision', 'flowchartData', 'flowchartTerminator', // 流程图
+]
+
+/** fill：'#hex' 或 '$themeRef'（实色）| {type: 'gradient', stops: [{pos, color}], angle?}（v0.9.1 渐变闭环）。 */
+function validateFill(fill, path, errors) {
+  if (typeof fill === 'string') {
+    if (!/^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/.test(fill) && !fill.startsWith('$')) errors.push(`${path}: hex color、$themeRef 或 {type: gradient, stops}（v0.9.1 支持线性渐变）`)
+    return
+  }
+  if (!fill || typeof fill !== 'object') { errors.push(`${path}: hex color 或渐变对象`); return }
+  if (fill.type !== 'gradient') errors.push(`${path}.type: gradient`)
+  if (!Array.isArray(fill.stops) || fill.stops.length < 2) {
+    errors.push(`${path}.stops: [{pos, color}] 至少 2 个（pos 0-100）`)
+  } else {
+    fill.stops.forEach((s, i) => {
+      if (!s || typeof s.pos !== 'number' || s.pos < 0 || s.pos > 100) errors.push(`${path}.stops[${i}].pos: number 0-100`)
+      if (typeof s.color !== 'string' || !/^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/.test(s.color)) errors.push(`${path}.stops[${i}].color: hex color`)
+    })
+  }
+  if (fill.angle !== undefined && !(typeof fill.angle === 'number' && Number.isFinite(fill.angle))) errors.push(`${path}.angle: number (degrees, OOXML lin@ang 顺时针)`)
+}
+
 export class PptError extends Error {
   constructor(messages) { super(messages.join('\n')); this.messages = messages }
 }
@@ -90,6 +120,16 @@ export function validateDeck(deck) {
       if (rt.source !== undefined && typeof rt.source !== 'string') errors.push('deck.referenceTemplate.source: string（reference/template.pptx 路径）')
       if (rt.previews !== undefined && (!Array.isArray(rt.previews) || rt.previews.some((p) => typeof p !== 'string'))) errors.push('deck.referenceTemplate.previews: [string]（Office 真渲染参考页路径）')
       if (rt.audit !== undefined && !(typeof rt.audit === 'string' || (rt.audit && typeof rt.audit === 'object'))) errors.push('deck.referenceTemplate.audit: string（audit.yaml 路径）或 styleAudit 内联对象')
+    }
+  }
+  // 参考双轨 v0.9.1：referenceSource（用户文件参考元数据；importPptx 注入——参考任务与模板同通道）
+  if (deck.referenceSource !== undefined) {
+    const rs = deck.referenceSource
+    if (!rs || typeof rs !== 'object' || Array.isArray(rs)) errors.push('deck.referenceSource: object (name/source/previews；用户源文件参考元数据)')
+    else {
+      if (rs.name !== undefined && typeof rs.name !== 'string') errors.push('deck.referenceSource.name: string')
+      if (rs.source !== undefined && typeof rs.source !== 'string') errors.push('deck.referenceSource.source: string（source.pptx 路径）')
+      if (rs.previews !== undefined && (!Array.isArray(rs.previews) || rs.previews.some((p) => typeof p !== 'string'))) errors.push('deck.referenceSource.previews: [string]（Office 真渲染参考页路径）')
     }
   }
   const pages = Array.isArray(deck.pages) ? deck.pages : []
@@ -221,8 +261,8 @@ function validateTextStyle(s, path, errors) {
 }
 
 function validateShape(el, path, errors) {
-  if (!['rect', 'roundRect', 'ellipse', 'triangle'].includes(el.kind)) errors.push(`${path}.kind: rect|roundRect|ellipse|triangle`)
-  if (el.fill !== undefined && typeof el.fill !== 'string') errors.push(`${path}.fill: color string`)
+  if (!SHAPE_KINDS.includes(el.kind)) errors.push(`${path}.kind: ${SHAPE_KINDS.slice(0, 4).join('|')} 或常见 prst（${SHAPE_KINDS.slice(4).join('|')}）`)
+  if (el.fill !== undefined) validateFill(el.fill, `${path}.fill`, errors)
   if (el.rotation !== undefined && !(typeof el.rotation === 'number' && Number.isFinite(el.rotation))) errors.push(`${path}.rotation: number (degrees)`)
   if (el.line) {
     if (typeof el.line.color !== 'string') errors.push(`${path}.line.color: string`)
@@ -302,7 +342,13 @@ export async function resolveDeck(dir) {
     pages.push({ file: join(dir, ref), ref, page, name: (page.title ?? ref.replace(/\.yaml$/, '')).toString(), index: pages.length })
   }
   const resolveColor = (v) => {
-    if (typeof v !== 'string') return v
+    if (typeof v !== 'string') {
+      // v0.9.1：渐变对象（stops 内 $ref 一并解析）
+      if (v && typeof v === 'object' && v.type === 'gradient' && Array.isArray(v.stops)) {
+        return { ...v, stops: v.stops.map((s) => ({ ...s, color: typeof s.color === 'string' && s.color.startsWith('$') ? (colors[s.color.slice(1)] ?? s.color) : s.color })) }
+      }
+      return v
+    }
     if (v.startsWith('$')) return colors[v.slice(1)] ?? v
     return v
   }

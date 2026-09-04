@@ -170,14 +170,34 @@ function alignOf(a) { return a === 'right' ? 'r' : a === 'center' ? 'ctr' : 'l' 
 // ── shapes ────────────────────────────────────────────────────────────────
 function shapeSp(el) {
   const id = nid()
-  const prst = { rect: 'rect', roundRect: 'roundRect', ellipse: 'ellipse', triangle: 'triangle' }[el.kind] ?? 'rect'
-  const avLst = el.kind === 'roundRect' ? '<a:avLst><a:gd name="adj" fmla="val 8000"/></a:avLst>' : '<a:avLst/>'
-  const fill = el.fill ? '<a:solidFill><a:srgbClr val="' + hex(el.fill) + '"/></a:solidFill>' : '<a:noFill/>'
+  // v0.9.1：kind 直通 OOXML prst（白名单 = schema SHAPE_KINDS；示意性形状 export 即 prst 原生）
+  const prst = el.kind && /^[A-Za-z]+$/.test(el.kind) ? el.kind : 'rect'
+  const avLst = el.kind === 'roundRect' ? '<a:avLst><a:gd name="adj" fmla="val 8000"/></a:avLst>'
+    : el.kind === 'chevron' ? '<a:avLst><a:gd name="adj" fmla="val 25000"/></a:avLst>'
+      : el.kind === 'parallelogram' ? '<a:avLst><a:gd name="adj" fmla="val 25000"/></a:avLst>'
+        : '<a:avLst/>'
+  const fill = fillSpPr(el.fill)
   const ln = el.line ? lineSpPr(el.line) : '<a:ln><a:noFill/></a:ln>'
   return '<p:sp><p:nvSpPr><p:cNvPr id="' + id + '" name="' + xm(el.id) + '"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>'
     + '<p:spPr>' + xfrm(el.bounds.x, el.bounds.y, el.bounds.w, el.bounds.h, el.rotation ?? 0)
     + '<a:prstGeom prst="' + prst + '">' + avLst + '</a:prstGeom>' + fill + ln + '</p:spPr>'
     + '<p:txBody><a:bodyPr rtlCol="0" anchor="ctr"/><a:lstStyle/><a:p/></p:txBody></p:sp>'
+}
+
+/** fill：'#hex' | {type: gradient, stops, angle} → OOXML fill（v0.9.1 渐变闭环）。 */
+function fillSpPr(fill) {
+  if (!fill) return '<a:noFill/>'
+  if (typeof fill === 'string') return '<a:solidFill><a:srgbClr val="' + hex(fill) + '"/></a:solidFill>'
+  if (fill.type === 'gradient') {
+    const gs = (fill.stops ?? []).map((s) => {
+      const pos = Math.max(0, Math.min(100, Number(s.pos) || 0))
+      return '<a:gs pos="' + Math.round(pos * 1000) + '"><a:srgbClr val="' + hex(s.color) + '"/></a:gs>'
+    }).join('')
+    if (!gs) return '<a:noFill/>'
+    const ang = fill.angle !== undefined ? Math.round(Math.max(0, ((Number(fill.angle) % 360) + 360) % 360) * 60000) : 5400000
+    return '<a:gradFill rotWithShape="1"><a:gsLst>' + gs + '</a:gsLst><a:lin ang="' + ang + '" scaled="1"/></a:gradFill>'
+  }
+  return '<a:noFill/>'
 }
 
 // ── line / connector ──────────────────────────────────────────────────────

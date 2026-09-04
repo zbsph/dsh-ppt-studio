@@ -9,6 +9,39 @@ import { chartSvg, chartIssue } from './svgCharts.js'
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
+/**
+ * v0.9.1 常见 prst → clip-path polygon（百分比点，近似 OOXML prst 几何）。
+ */
+const SHAPE_POLY = {
+  triangle: '50% 0,0 100%,100% 100%',
+  rightArrow: '0 30%,55% 30%,55% 0,100% 50%,55% 100%,55% 70%,0 70%',
+  leftArrow: '100% 30%,45% 30%,45% 0,0 50%,45% 100%,45% 70%,100% 70%',
+  upArrow: '30% 100%,30% 45%,0 45%,50% 0,100% 45%,70% 45%,70% 100%',
+  downArrow: '30% 0,30% 55%,0 55%,50% 100%,100% 55%,70% 55%,70% 0',
+  leftRightArrow: '0 50%,25% 25%,25% 40%,75% 40%,75% 25%,100% 50%,75% 75%,75% 60%,25% 60%,25% 75%',
+  pentagon: '50% 0,100% 38%,82% 100%,18% 100%,0 38%',
+  hexagon: '25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%',
+  chevron: '0 0,80% 0,100% 50%,80% 100%,0 100%,20% 50%',
+  parallelogram: '20% 0,100% 0,80% 100%,0 100%',
+  diamond: '50% 0,100% 50%,50% 100%,0 50%',
+  octagon: '30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%',
+  star5: '50% 0,61% 36%,98% 35%,68% 57%,79% 92%,50% 70%,21% 92%,32% 57%,2% 35%,39% 36%',
+  flowchartDecision: '50% 0,100% 50%,50% 100%,0 50%',
+  flowchartData: '20% 0,100% 0,80% 100%,0 100%',
+}
+
+/** fill：'#hex' | {type: gradient, stops, angle} → CSS background。 */
+function fillCss(fill) {
+  if (typeof fill === 'string') return fill
+  if (fill && fill.type === 'gradient') {
+    const stops = (fill.stops ?? []).map((s) => `${s.color} ${s.pos}%`).join(', ')
+    if (!stops) return '#CCCCCC'
+    const ang = fill.angle ?? 90 // OOXML 0°=左→右；CSS 0deg=下→上 → +90 归一
+    return `linear-gradient(${(ang + 90) % 360}deg, ${stops})`
+  }
+  return '#CCCCCC'
+}
+
 function slug(name, index) {
   const s = String(name).replace(/[^\w\u4e00-\u9fff-]+/g, '_').slice(0, 40) || 'page'
   return `${String(index + 1).padStart(2, '0')}_${s}`
@@ -42,9 +75,13 @@ function elementHtml(el, ctx, debug) {
     case 'shape': {
       let css = pos
       if (el.kind === 'ellipse') css += ';border-radius:50%'
-      if (el.kind === 'roundRect') css += ';border-radius:8px'
-      if (el.kind === 'triangle') css += ';clip-path:polygon(50% 0,0 100%,100% 100%)'
-      if (el.fill) css += `;background:${el.fill}`
+      else if (el.kind === 'roundRect' || el.kind === 'flowchartTerminator') css += ';border-radius:8px'
+      else if (el.kind === 'flowchartProcess') { /* rect */ }
+      else {
+        const poly = SHAPE_POLY[el.kind]
+        if (poly) css += `;clip-path:polygon(${poly})`
+      }
+      if (el.fill) css += `;background:${fillCss(el.fill)}`
       if (el.line) css += `;border:${el.line.width}px solid ${el.line.color}`
       if (el.rotation) css += `;transform:rotate(${el.rotation}deg)`
       return { html: `<div class="el" id="${esc(el.id)}" data-kind="shape" data-shape="${el.kind}" style="${css}"></div>`, snap: snap({ shape: el.kind, fill: el.fill, rotation: el.rotation }) }

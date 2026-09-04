@@ -496,7 +496,10 @@ export function registerTools(ctx) {
     async execute({ pptx, outDir }) {
       try {
         const r = await importPptx(pptx, outDir)
-        return `✓ 已导入：${r.outDir}（${r.pages} 页，${r.media.length} 个媒体；原始 pptx 已保留为 source.pptx——模板双轨真相层）\n⚠ ${r.warnings.join('；')}`
+        const refLine = r.reference?.previews?.length
+          ? `\n参考层（参考双轨 v0.9.1——创作前先 read_image 看 reference/previews/*.png 真身再动手，与"按模板做"同一通道）：reference/source.pptx + ${r.reference.previews.length} 页真渲染`
+          : `\n⚠ 无整页真渲染参考（无 Office/渲染失败）：可用 ppt_visual 对 source.pptx 补渲；骨架层仍可用`
+        return `✓ 已导入：${r.outDir}（${r.pages} 页，${r.media.length} 个媒体；原始 pptx 已保留为 source.pptx —— 参考双轨真相层）${refLine}\n⚠ ${r.warnings.join('；')}`
       } catch (error) {
         return `✗ 导入失败：\n${errText(error)}`
       }

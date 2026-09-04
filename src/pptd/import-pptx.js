@@ -13,6 +13,14 @@ import { parseXml, children, first, allText } from '../xmljs.js'
 const EMU = 12700
 const px = (emu) => Math.round(emu / EMU)
 
+/** v0.9.1 候选 A：常见 prst → shape.kind 直通（白名单 = schema SHAPE_KINDS；未见名→rect 兜底并记录 _styleRaw.prst）。 */
+const PRST_MAP = new Set([
+  'roundRect', 'ellipse', 'triangle',
+  'rightArrow', 'leftArrow', 'upArrow', 'downArrow', 'leftRightArrow',
+  'pentagon', 'hexagon', 'chevron', 'parallelogram', 'diamond', 'octagon', 'star5',
+  'flowchartProcess', 'flowchartDecision', 'flowchartData', 'flowchartTerminator',
+])
+
 export async function importPptx(pptxPath, outDir) {
   const buf = await readFile(pptxPath)
   const files = zipRead(buf)
@@ -103,9 +111,19 @@ export async function importPptx(pptxPath, outDir) {
     await writeFile(join(outDir, ref), yaml)
   }
   const deckYaml = yamlDeck({ title: basename(pptxPath).replace(/\.pptx$/i, ''), width, height, pageRefs, band, stats })
-  await writeFile(join(outDir, 'deck.yaml'), deckYaml)
-  // 真相层 v0.9.0：保留原始 pptx → source.pptx（模板收纳为 template.pptx 的零失真源；模板双轨参考）
+  // 真相层 v0.9.0/0.9.1：保留原始 pptx → source.pptx（零失真源）+ Office 真渲染整页 → reference/previews/
   await copyFile(pptxPath, join(outDir, 'source.pptx')).catch(() => {})
+  let refPreviews = null
+  try {
+    const { findPowerPoint, renderPptxToPng } = await import('../msrender.js')
+    if (findPowerPoint()) {
+      const r = await renderPptxToPng(pptxPath, join(outDir, 'reference', 'previews'), { timeoutMs: 300000 })
+      if (r.pages) refPreviews = r.files.map((f) => 'reference/previews/' + basename(f))
+    }
+  } catch { /* 无 Office / 渲染失败：参考任务退化为骨架层 + source.pptx（可用 ppt_visual 补渲） */ }
+  // 参考双轨注入：referenceSource 无条件（source 总在；previews 视 Office 可用性）
+  const refBlock = `referenceSource:\n  name: ${JSON.stringify(basename(pptxPath))}\n  source: source.pptx\n${refPreviews?.length ? `  previews:\n${refPreviews.map((p) => `    - ${JSON.stringify(p)}`).join('\n')}\n` : ''}`
+  await writeFile(join(outDir, 'deck.yaml'), deckYaml + refBlock)
   for (const name of mediaNames) {
     const data = files.get('ppt/media/' + name)
     if (data) await writeFile(join(outDir, 'media', name), data)
@@ -123,8 +141,10 @@ export async function importPptx(pptxPath, outDir) {
   const styleCount = Object.keys(stats.colors).length
   return {
     outDir, pages: pages.length, media: [...mediaNames], size: { width, height },
-    warnings: ['chart 降级为文本占位；复杂形状近似映射（渐变归一为主色并保留 stops 于 import-styles.json）',
-      ...(existsSync(join(outDir, 'source.pptx')) ? ['已保留原始 pptx ⊳ source.pptx（模板收纳/视觉参考的零失真真相层；模板双轨 v0.9.0）'] : []),
+    reference: refPreviews?.length ? { previews: refPreviews, source: 'source.pptx' } : null,
+    warnings: ['chart 降级为文本占位；未映射 prst 形状近似为矩形（import-styles.json 有记录）',
+      ...(existsSync(join(outDir, 'source.pptx')) ? ['已保留原始 pptx ⊳ source.pptx（零失真真相层；参考双轨 v0.9.1）'] : []),
+      ...(refPreviews?.length ? [`已生成整页真渲染 ⊳ reference/previews/（${refPreviews.length} 页，Office COM）——参考任务先看真身再动手`] : ['⚠ 未生成整页真渲染（无 Office 或渲染失败）：可用 ppt_visual 对 source.pptx 补渲；骨架层仍可用']),
       ...(styleCount ? [`已保留样式：${styleCount} 个颜色 / 字体与字号已映射（import-styles.json 含渐变/阴影原始值）`] : []),
       ...(bgCount ? [`已提取 ${bgCount} 页背景（含背景图/色/满页图）`] : []),
       ...(band ? [`检测到跨页页眉/页脚带（上 ${band.top}px / 下 ${band.bottom}px）：deck.yaml 已写入建议 safeArea（注释呈现，未启用；确认为模板后取消注释并微调）`] : [])],
@@ -320,21 +340,29 @@ function solidColor(node) {
   return s ? '#' + String(s.attrs.val).toUpperCase() : undefined
 }
 
-/** P0-1：填充样式：solidFill（srgb/scheme）或 gradFill（stops 归一为主色 + 保留 stops）。 */
+/** P0-1：填充样式：solidFill（srgb/scheme）或 gradFill（v0.9.1：双 stop 线性渐变闭环——不再只归主色）。 */
 function fillOf(node, colorOf) {
   const spPr = first(node, 'spPr')
   const solid = spPr ? first(spPr, 'solidFill') : undefined
   if (solid) return { color: colorOf(solid) }
   const grad = spPr ? first(spPr, 'gradFill') : undefined
   if (grad) {
+    // OOXML：gs 位于 gsLst 内（旧代码 children(grad,'gs') 读不到 → 渐变一直空；v0.9.1 修正）
+    const gsLst = first(grad, 'gsLst') ?? grad
     const stops = []
-    for (const gs of children(grad, 'gs')) {
+    for (const gs of children(gsLst, 'gs')) {
       const c = colorOf(gs)
-      if (c) stops.push(c)
+      const pos = gs.attrs?.pos !== undefined ? Number(gs.attrs.pos) / 1000 : undefined // OOXML pos 0-100000（0-100%）
+      if (c) stops.push({ ...(pos !== undefined && Number.isFinite(pos) ? { pos } : {}), color: c })
     }
     if (stops.length) {
-      // 渐变归一：主色取最后一个 stop（实色端，接近视觉底面）
-      return { color: stops[stops.length - 1], gradient: stops }
+      // 渐变双 stop（线性）：stops 带位置 + lin ang（60000/度，顺时针旋转）；radial/path 归一为线性并记录
+      const lin = first(grad, 'lin')
+      const angle = lin?.attrs?.ang !== undefined ? Math.round(Number(lin.attrs.ang) / 60000) % 360 : undefined
+      const kind = grad.children?.some?.((c) => c.tag === 'path') ? 'path' : grad.children?.some?.((c) => c.tag === 'radialGradient') ? 'radial' : undefined
+      const normalized = stops.map((s, i) => ({ pos: s.pos ?? (i / (stops.length - 1)) * 100, color: s.color }))
+      // 兼容：color = 末 stop（实色端）；gradient = 完整对象（闭环渲染/导出用）
+      return { color: stops[stops.length - 1].color, gradient: { type: kind ?? 'linear', stops: normalized, ...(angle !== undefined ? { angle } : {}) } }
     }
   }
   return {}
@@ -411,14 +439,20 @@ function spToEl(node, styleCtx) {
       _styleRaw: raw,
     }
   }
-  const kind = prst === 'ellipse' ? 'ellipse' : prst === 'triangle' ? 'triangle' : prst === 'roundRect' ? 'roundRect' : 'rect'
+  const kind = PRST_MAP.has(prst) ? prst : 'rect'
   const out = {
     elementId: sanitize(id), elementType: 'shape', kind,
     bounds: safeBounds(bounds ?? {x: 0, y: 0, w: 100, h: 100}),
   }
-  if (fill.color) out.fill = fill.color
-  if (fill.gradient) out._styleRaw = { ...raw, ...(fill.gradient ? { gradient: fill.gradient } : {}) }
-  else if (Object.keys(raw).length) out._styleRaw = raw
+  if (fill.gradient) {
+    // v0.9.1：渐变闭环——fill 直通对象（render/export 双端支持）；color 兜底 = 末 stop（旧兼容）
+    out.fill = { type: 'gradient', stops: fill.gradient.stops, ...(fill.gradient.angle !== undefined ? { angle: fill.gradient.angle } : {}) }
+    out._styleRaw = { ...raw, gradient: fill.gradient, prst: prst !== kind ? prst : undefined }
+  } else {
+    if (fill.color) out.fill = fill.color
+    if (prst && prst !== 'rect' && !PRST_MAP.has(prst)) raw.prst = prst // 未映射 prst 记录（兜底 rect）
+    if (Object.keys(raw).length) out._styleRaw = raw
+  }
   if (ln) out.line = ln
   return out
 }
@@ -563,9 +597,20 @@ function pageYaml(page, name) {
     }
     if (el.fit) lines.push(`    fit: ${el.fit}`)
     if (el.src) lines.push(`    src: ${JSON.stringify(el.src)}`)
-    // P0-1：样式保留（渐变归一为主色，stops 追加注释并写入 import-styles.json）
-    if (el.fill) lines.push(`    fill: ${JSON.stringify(el.fill)}`)
-    if (raw.gradient) lines.push(`    # import: 渐变 ${raw.gradient.join('→')} 归一为主色 ${el.fill}`)
+    // P0-1：样式保留；v0.9.1 渐变闭环（fill 对象直通，不再单一归主色）
+    if (el.fill && typeof el.fill === 'object' && el.fill.type === 'gradient') {
+      lines.push('    fill:')
+      lines.push('      type: gradient')
+      lines.push('      stops:')
+      for (const s of el.fill.stops) lines.push(`        - {pos: ${s.pos}, color: "${s.color}"}`)
+      if (el.fill.angle !== undefined) lines.push(`      angle: ${el.fill.angle}   # OOXML lin@ang 顺时针`)
+    } else if (el.fill) {
+      lines.push(`    fill: ${JSON.stringify(el.fill)}`)
+    }
+    if (raw.gradient && typeof raw.gradient === 'object') {
+      const stopsTxt = (raw.gradient.stops ?? []).map((s) => s.color).join('→')
+      lines.push(`    # import: 渐变 ${stopsTxt}（${raw.gradient.type ?? 'linear'}${raw.gradient.angle !== undefined ? `, angle ${raw.gradient.angle}°` : ''}）直通 fill.gradient`)
+    }
     if (el.line) lines.push(`    line: {color: ${JSON.stringify(el.line.color ?? '#000000')}${el.line.width ? `, width: ${el.line.width}` : ''}}`)
     if (el.cols) {
       lines.push(`    cols: [${el.cols.map((c) => JSON.stringify(c)).join(', ')}]`)
@@ -586,7 +631,7 @@ function pageYaml(page, name) {
     }
     return lines.join('\n')
   }).join('\n')
-  return `# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+  return `# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 ${page.background ? `background: ${JSON.stringify(page.background)}\n` : ''}elements:
 ${els}

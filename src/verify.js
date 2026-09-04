@@ -443,19 +443,35 @@ export function themeConformance(page, theme) {
   if (mode === 'off') return out
   const fsSet = new Set(Object.values(theme?.textStyles ?? {}).map((s) => s?.fontSize).filter(Boolean))
   for (const el of page.elements ?? []) {
-    const c = el.kind === 'text' ? el.style?.color : el.kind === 'shape' ? el.fill : el.kind === 'line' ? el.line?.color : undefined
-    if (typeof c === 'string' && /^#[0-9a-fA-F]{6}$/.test(c) && !colors.has(c.toUpperCase()) && !isNeutral(c)) {
-      out.push({
-        severity: mode === 'strict' ? 'error' : 'warning',
-        code: 'theme-conformance', id: el.id,
-        message: `元素 "${el.id}" 颜色 ${c} 不在主题色板（theme.colors）中，请改用主题色或中性色（模板一致性）`,
-      })
+    // v0.9.1：fill 为渐变对象时逐个 stop 颜色校验（不再逃过主题色门禁）
+    const cs = fillColorsOf(el)
+    for (const c of cs) {
+      if (typeof c === 'string' && /^#[0-9a-fA-F]{6}$/.test(c) && !colors.has(c.toUpperCase()) && !isNeutral(c)) {
+        out.push({
+          severity: mode === 'strict' ? 'error' : 'warning',
+          code: 'theme-conformance', id: el.id,
+          message: `元素 "${el.id}" 颜色 ${c} 不在主题色板（theme.colors）中，请改用主题色或中性色（模板一致性）`,
+        })
+      }
     }
     if (el.kind === 'text' && el.style?.fontSize && fsSet.size && !fsSet.has(el.style.fontSize)) {
       out.push({ severity: 'suggestion', code: 'aesthetic-theme', id: el.id, message: `字号 ${el.style.fontSize}pt 不在 theme.textStyles 中，建议纳入主题样式（页面内可能漂移）` })
     }
   }
   return out
+}
+
+/** 颜色集合（v0.9.1）：文本色 / 形状 fill（渐变 → stops 颜色 / line 色）。 */
+function fillColorsOf(el) {
+  if (el.kind === 'text') return [el.style?.color].filter(Boolean)
+  if (el.kind === 'shape') {
+    const f = el.fill
+    if (typeof f === 'string') return [f]
+    if (f && Array.isArray(f.stops)) return f.stops.map((s) => s.color).filter(Boolean)
+    return []
+  }
+  if (el.kind === 'line') return [el.line?.color].filter(Boolean)
+  return []
 }
 
 function fmtRect(b) { return `[${Math.round(b.x)}, ${Math.round(b.y)}, ${Math.round(b.w)}, ${Math.round(b.h)}]` }

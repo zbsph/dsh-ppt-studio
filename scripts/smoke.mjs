@@ -589,5 +589,62 @@ await (await import('node:fs/promises')).rm(join(tplMod.TEMPLATES_DIR, dualId), 
 await rm(dualSrc, { force: true }).catch(() => {})
 await rm(dualWS, { recursive: true, force: true })
 
+// ── 24. v0.9.1：候选 A——prst 形状直通 + 渐变闭环 + 参考双轨 ──────────────
+// 24.1 造含 prst/渐变 shape 的 deck → exportPptx → importPptx 回环（export→import 无损）
+const prstDeck = join(root, 'examples', 'prst-smoke')
+await rm(prstDeck, { recursive: true, force: true })
+await mkdir(join(prstDeck, 'pages'), { recursive: true })
+await (await import('node:fs/promises')).writeFile(join(prstDeck, 'deck.yaml'), [
+  'version: 1', 'title: prst-smoke', 'size: [960, 540]',
+  'theme: {colors: {primary: "#2563EB", accent: "#0485A8"}}',
+  'pages:', '  - pages/01.yaml', '',
+].join('\n'))
+await (await import('node:fs/promises')).writeFile(join(prstDeck, 'pages', '01.yaml'), [
+  'pageType: content',
+  'elements:',
+  '  - elementId: arr', '    elementType: shape', '    kind: rightArrow',
+  '    bounds: [40, 40, 200, 80]', '    fill: "#2563EB"',
+  '  - elementId: pen', '    elementType: shape', '    kind: pentagon',
+  '    bounds: [40, 140, 200, 80]', '    fill: "#0485A8"',
+  '  - elementId: grad', '    elementType: shape', '    kind: chevron',
+  '    bounds: [40, 240, 200, 80]',
+  '    fill: {type: gradient, stops: [{pos: 0, color: "#79C9E2"}, {pos: 100, color: "#0485A8"}], angle: 90}',
+  '',
+].join('\n'))
+const prstCtx = await resolveDeck(prstDeck)
+const prstExp = await exportPptx(prstCtx, { out: 'out-prst.pptx', engine: 'pptd' })
+// 直接读 zip 断言 prstGeom/gradFill 落盘
+const prstZip = zipRead(await (await import('node:fs/promises')).readFile(prstExp.file))
+const prstSlide = prstZip.get('ppt/slides/slide1.xml').toString('utf8')
+ok('v0.9.1：导出 prstGeom 直通（rightArrow/pentagon/chevron）',
+  prstSlide.includes('prst="rightArrow"') && prstSlide.includes('prst="pentagon"') && prstSlide.includes('prst="chevron"'),
+  prstSlide.match(/prst="[^"]+"/g)?.join(' ') ?? 'MISSING')
+ok('v0.9.1：导出 gradFill 双 stop（gs/lin）',
+  prstSlide.includes('gradFill') && prstSlide.includes('<a:gs pos="0"') && prstSlide.includes('<a:lin ang="5400000"') && prstSlide.includes('val="0485A8"'),
+  'gradFill 缺失')
+// 导入回环：kind/fill 保留
+const prstImpDir = join(root, 'examples', 'prst-imported')
+await rm(prstImpDir, { recursive: true, force: true })
+const prstImp = await importPptx(prstExp.file, prstImpDir)
+const prstImpCtx = await resolveDeck(prstImpDir)
+const prstEls = prstImpCtx.pages[0].page.elements
+const arrEl = prstEls.find((e) => e.elementId === 'arr')
+const gradEl = prstEls.find((e) => e.elementId === 'grad')
+ok('v0.9.1：import 回环 kind 保留（rightArrow/pentagon）', arrEl?.kind === 'rightArrow' && prstEls.find((e) => e.elementId === 'pen')?.kind === 'pentagon', `kinds=${prstEls.map((e) => e.kind).join(',')}`)
+ok('v0.9.1：import 回环渐变对象（type/stops/angle）', gradEl?.fill?.type === 'gradient' && gradEl?.fill?.stops?.length === 2 && gradEl?.fill?.angle === 90, JSON.stringify(gradEl?.fill))
+// 渲染 + verify 不崩（渐变对象被消费）
+const prstRender = await renderDeck(prstImpCtx, {})
+ok('v0.9.1：渐变对象渲染/校验通过（render+verify 消费渐变 fill）', prstRender.layout.pages[0].elements.some((e) => e.id === 'grad' && e.fill?.type === 'gradient') && !verifyDeck(prstRender.layout).text.includes('[✗] overflow'), verifyDeck(prstRender.layout).text.split('\n').filter((l) => l.includes('[✗]')).join('|'))
+// 24.2 参考双轨：import 产物 referenceSource 注入 + source.pptx 保留
+const refline = await (await import('node:fs/promises')).readFile(join(prstImpDir, 'deck.yaml'), 'utf8')
+ok('v0.9.1：参考双轨 referenceSource 注入（source 恒在；previews 随 Office）',
+  refline.includes('referenceSource:') && refline.includes('source: source.pptx') && existsSync(join(prstImpDir, 'source.pptx')),
+  refline.split('\n').filter((l) => l.startsWith('referenceSource') || l.includes('source:') || l.includes('previews')).join(' | '))
+const prstRefCtx = await resolveDeck(prstImpDir)
+ok('v0.9.1：referenceSource deck 通过校验', prstRefCtx.deck.referenceSource?.name !== undefined)
+// 清理
+await rm(prstImpDir, { recursive: true, force: true })
+await rm(prstDeck, { recursive: true, force: true })
+
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)
