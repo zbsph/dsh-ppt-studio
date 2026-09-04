@@ -1,0 +1,38 @@
+pageType: content
+# 图表页母版：标题 + 图表区（chart 元素占位）+ 数据注释
+expectedOverlaps:
+  - {pair: [chartBox, chartEl]}
+  - {pair: [headbar, pageTitle]}
+expectedOutOfSafeArea: [headbar, pageTitle]
+elements:
+  - elementId: headbar
+    elementType: shape
+    kind: rect
+    bounds: [0, 0, 960, 46]
+    fill: "$deep"
+  - elementId: pageTitle
+    elementType: text
+    bounds: [60, 10, 700, 30]
+    content: {text: "图表标题：数据支撑论点", style: "$title", color: "#FFFFFF", fontSize: 22}
+  - elementId: chartBox
+    elementType: shape
+    kind: rect
+    bounds: [60, 80, 600, 360]
+    fill: "$bg"
+    line: {color: "#C9D8EA", width: 1}
+  - elementId: chartEl
+    elementType: chart
+    bounds: [80, 100, 560, 320]
+    chart: {type: bar, data: {cols: ["指标"], rows: [["A", 72], ["B", 55], ["C", 40], ["D", 88]]}}
+  - elementId: insight
+    elementType: text
+    bounds: [700, 100, 200, 120]
+    content: {text: "读图结论\n（12pt）", style: "$label", color: "$primary", bold: true}
+  - elementId: note
+    elementType: text
+    bounds: [700, 240, 200, 180]
+    content: {text: "数据口径：\n- 来源说明\n- 单位/时间\n- 脱敏声明", style: "$caption"}
+  - elementId: footerLine
+    elementType: line
+    points: [[60, 505], [900, 505]]
+    line: {color: "#C9D8EA", width: 1}

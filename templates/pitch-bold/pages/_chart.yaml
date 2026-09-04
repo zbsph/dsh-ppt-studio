@@ -1,0 +1,34 @@
+pageType: content
+# 图表页母版（大字版：数字冲击 + 简图）
+expectedOverlaps:
+  - {pair: [bigNumBg, bigNum]}
+elements:
+  - elementId: kick
+    elementType: text
+    bounds: [60, 48, 400, 26]
+    content: {text: "03 · PROOF", style: "$caption", color: "$orange"}
+  - elementId: title
+    elementType: text
+    bounds: [60, 84, 840, 90]
+    content: {text: "数据证明：核心指标", style: "$title", color: "$ink", fontSize: 40}
+  - elementId: bigNumBg
+    elementType: shape
+    kind: rect
+    bounds: [60, 220, 340, 180]
+    fill: "$orange"
+  - elementId: bigNum
+    elementType: text
+    bounds: [80, 240, 300, 140]
+    content: {text: "10 倍\n（44pt 大数字）", style: "$title", color: "#FFFFFF", fontSize: 44}
+  - elementId: chartEl
+    elementType: chart
+    bounds: [460, 200, 440, 220]
+    chart: {type: bar, data: {cols: ["指标"], rows: [["当前", 12], ["改进", 88]]}}
+  - elementId: note
+    elementType: text
+    bounds: [460, 440, 440, 40]
+    content: {text: "数据口径：来源/单位/脱敏声明（13pt）", style: "$caption"}
+  - elementId: footer
+    elementType: text
+    bounds: [60, 500, 300, 20]
+    content: {text: "第 4 页 · 公司名", style: "$caption"}

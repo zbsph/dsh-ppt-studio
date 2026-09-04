@@ -18,6 +18,7 @@ export const DEFAULT_SESSION = () => ({
   quality: 'standard',        // quick | standard | audit
   engine: 'auto',             // auto(=pptd 主引擎) | pptd | python-pptx | pptxgenjs
   quick: false,               // 快速生成模式（低 token 快交付；跳过视觉审阅/素材/定调）
+  template: null,             // 内置模板 id（/ppt template <id> 或 ppt_templates 选择）
   pauseAfter: [],
   workflowActive: false,
   taskType: null,

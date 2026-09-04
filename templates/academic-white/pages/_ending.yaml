@@ -1,0 +1,28 @@
+pageType: cover
+background: {type: solid, color: "$bg"}
+safeArea: {top: 40, bottom: 24}
+elements:
+  - elementId: topLine
+    elementType: line
+    points: [[60, 60], [900, 60]]
+    line: {color: "$navy", width: 3}
+  - elementId: thanks
+    elementType: text
+    bounds: [60, 140, 840, 80]
+    content: {text: "谢谢 / Questions?", style: "$title", color: "$navy", fontSize: 40, bold: true}
+  - elementId: summary
+    elementType: text
+    bounds: [60, 250, 840, 80]
+    content: {text: "核心结论：研究回答了什么问题；下一步计划：……", style: "$body", color: "$ink"}
+  - elementId: contact
+    elementType: text
+    bounds: [60, 360, 840, 30]
+    content: {text: "答疑与讨论：作者 / 单位 / 邮箱", style: "$label", color: "$gray"}
+  - elementId: footLine
+    elementType: line
+    points: [[60, 480], [900, 480]]
+    line: {color: "$light", width: 1}
+  - elementId: venue
+    elementType: text
+    bounds: [60, 492, 840, 20]
+    content: {text: "会议/汇报名称 · 地点", style: "$caption"}

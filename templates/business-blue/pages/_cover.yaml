@@ -1,0 +1,39 @@
+pageType: cover
+background: {type: solid, color: "$deep"}
+safeArea: {top: 24, bottom: 24}
+elements:
+  - elementId: brand
+    elementType: text
+    bounds: [60, 70, 300, 30]
+    content: {text: "BRAND · 品牌标识位", style: "$label", color: "#9DB4D0"}
+  - elementId: rule
+    elementType: line
+    points: [[60, 118], [900, 118]]
+    line: {color: "#9DB4D0", width: 1}
+  - elementId: title
+    elementType: text
+    bounds: [60, 170, 840, 110]
+    content: {text: "主标题：一句话说清楚汇报主题", style: "$title", color: "#FFFFFF", fontSize: 40, bold: true, lineHeight: 1.3}
+  - elementId: subtitle
+    elementType: text
+    bounds: [60, 300, 840, 36]
+    content: {text: "副标题：项目/报告名称、时间区间、核心结论", style: "$body", color: "#C9D8EA", fontSize: 16}
+  - elementId: accentLine
+    elementType: shape
+    kind: rect
+    bounds: [60, 350, 80, 6]
+    fill: "$accent"
+  - elementId: org
+    elementType: text
+    bounds: [60, 452, 700, 28]
+    content: {text: "组织／部门 ｜ 汇报人 ｜ 日期", style: "$label", color: "#9DB4D0"}
+  - elementId: decoDots
+    elementType: shape
+    kind: ellipse
+    bounds: [840, 452, 20, 20]
+    fill: "$accent"
+  - elementId: decoDot2
+    elementType: shape
+    kind: ellipse
+    bounds: [868, 452, 12, 12]
+    fill: "#4A6FA5"

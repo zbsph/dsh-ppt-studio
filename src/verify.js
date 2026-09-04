@@ -405,6 +405,9 @@ export function verifyDeck(layout) {
   for (const page of layout.pages ?? []) {
     const findings = analyzePage(page, size)
     const suggestions = theme ? aestheticSuggestions(page, size, theme) : []
+    // 主题一致性（需求 4：统一模板生成基础样式保持的机器保证）——strict=颜色门禁 + 字号建议
+    const conf = theme ? themeConformance(page, theme) : []
+    findings.push(...conf)
     const confirmed = findings.filter((f) => f.severity === 'confirmed')
     const errors = findings.filter((f) => f.severity === 'error')
     const warns = findings.filter((f) => f.severity === 'warning')
@@ -423,6 +426,36 @@ export function verifyDeck(layout) {
     }
   }
   return { text: out.join('\n'), total, size }
+}
+
+/**
+ * 主题一致性断言（需求 4「统一模板生成基础样式保持」的机器保证；v0.5.0）：
+ * - 元素颜色（text color / shape fill / line color）必须是 theme.colors 成员或中性灰阶；
+ *   strict 模式 => ERROR（门禁）；suggest 模式 => warning；off => 跳过。
+ * - 字号不在 theme.textStyles => [·] 建议（3-4 级字号阶梯的软约束）。
+ * theme.themeConformance: 'strict' | 'suggest' | 'off'（缺省 strict；无 theme.colors 自动跳过）。
+ */
+export function themeConformance(page, theme) {
+  const out = []
+  const colors = new Set(Object.values(theme?.colors ?? {}).filter((c) => typeof c === 'string').map((c) => c.toUpperCase()))
+  if (!colors.size) return out
+  const mode = theme.themeConformance ?? 'strict'
+  if (mode === 'off') return out
+  const fsSet = new Set(Object.values(theme?.textStyles ?? {}).map((s) => s?.fontSize).filter(Boolean))
+  for (const el of page.elements ?? []) {
+    const c = el.kind === 'text' ? el.style?.color : el.kind === 'shape' ? el.fill : el.kind === 'line' ? el.line?.color : undefined
+    if (typeof c === 'string' && /^#[0-9a-fA-F]{6}$/.test(c) && !colors.has(c.toUpperCase()) && !isNeutral(c)) {
+      out.push({
+        severity: mode === 'strict' ? 'error' : 'warning',
+        code: 'theme-conformance', id: el.id,
+        message: `元素 "${el.id}" 颜色 ${c} 不在主题色板（theme.colors）中，请改用主题色或中性色（模板一致性）`,
+      })
+    }
+    if (el.kind === 'text' && el.style?.fontSize && fsSet.size && !fsSet.has(el.style.fontSize)) {
+      out.push({ severity: 'suggestion', code: 'aesthetic-theme', id: el.id, message: `字号 ${el.style.fontSize}pt 不在 theme.textStyles 中，建议纳入主题样式（页面内可能漂移）` })
+    }
+  }
+  return out
 }
 
 function fmtRect(b) { return `[${Math.round(b.x)}, ${Math.round(b.y)}, ${Math.round(b.w)}, ${Math.round(b.h)}]` }

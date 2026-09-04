@@ -1,0 +1,36 @@
+pageType: content
+# 对比页母版（大字版：红黑对撞）
+expectedOverlaps:
+  - {pair: [badBox, badT]}
+  - {pair: [goodBox, goodT]}
+elements:
+  - elementId: kick
+    elementType: text
+    bounds: [60, 48, 400, 26]
+    content: {text: "04 · VS", style: "$caption", color: "$orange"}
+  - elementId: title
+    elementType: text
+    bounds: [60, 84, 840, 90]
+    content: {text: "对比：没有它 vs 有它", style: "$title", color: "$ink", fontSize: 40}
+  - elementId: badBox
+    elementType: shape
+    kind: rect
+    bounds: [60, 210, 390, 220]
+    fill: "$light"
+  - elementId: badT
+    elementType: text
+    bounds: [84, 234, 344, 180]
+    content: {text: "现状/痛点\n\n一句话：没有它时的问题", style: "$body", color: "$ink", fontSize: 18}
+  - elementId: goodBox
+    elementType: shape
+    kind: rect
+    bounds: [510, 210, 390, 220]
+    fill: "$orange"
+  - elementId: goodT
+    elementType: text
+    bounds: [534, 234, 344, 180]
+    content: {text: "有它/方案\n\n一句话：带来的改变", style: "$body", color: "#FFFFFF", fontSize: 18}
+  - elementId: footer
+    elementType: text
+    bounds: [60, 500, 300, 20]
+    content: {text: "第 5 页 · 公司名", style: "$caption"}

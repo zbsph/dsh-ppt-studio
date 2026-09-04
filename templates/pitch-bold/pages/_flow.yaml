@@ -1,0 +1,46 @@
+pageType: content
+# 流程页母版（大字版：三闸门式）
+expectedOverlaps:
+  - {pair: [s1, s1T]}
+  - {pair: [s2, s2T]}
+  - {pair: [s3, s3T]}
+elements:
+  - elementId: kick
+    elementType: text
+    bounds: [60, 48, 400, 26]
+    content: {text: "02 · HOW", style: "$caption", color: "$orange"}
+  - elementId: title
+    elementType: text
+    bounds: [60, 84, 840, 90]
+    content: {text: "怎么做到：三步主线", style: "$title", color: "$ink", fontSize: 40}
+  - elementId: s1
+    elementType: shape
+    kind: rect
+    bounds: [60, 210, 250, 170]
+    fill: "$orange"
+  - elementId: s1T
+    elementType: text
+    bounds: [76, 226, 220, 140]
+    content: {text: "01 抓手\n\n一句话说明", style: "$body", color: "#FFFFFF", fontSize: 16}
+  - elementId: s2
+    elementType: shape
+    kind: rect
+    bounds: [355, 210, 250, 170]
+    fill: "$light"
+  - elementId: s2T
+    elementType: text
+    bounds: [371, 226, 220, 140]
+    content: {text: "02 引擎\n\n一句话说明", style: "$body", color: "$ink", fontSize: 16}
+  - elementId: s3
+    elementType: shape
+    kind: rect
+    bounds: [650, 210, 250, 170]
+    fill: "$light"
+  - elementId: s3T
+    elementType: text
+    bounds: [666, 226, 220, 140]
+    content: {text: "03 放大\n\n一句话说明", style: "$body", color: "$ink", fontSize: 16}
+  - elementId: footer
+    elementType: text
+    bounds: [60, 500, 300, 20]
+    content: {text: "第 3 页 · 公司名", style: "$caption"}

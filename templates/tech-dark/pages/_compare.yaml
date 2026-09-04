@@ -1,0 +1,38 @@
+pageType: content
+# 对比页母版（深色版：亮暗面）
+expectedOverlaps:
+  - {pair: [darkBox, darkT]}
+  - {pair: [lightBox, lightT]}
+expectedOutOfSafeArea: [accentBar, pageTitle]
+elements:
+  - elementId: accentBar
+    elementType: shape
+    kind: rect
+    bounds: [0, 0, 8, 46]
+    fill: "$cyan"
+  - elementId: pageTitle
+    elementType: text
+    bounds: [20, 10, 700, 30]
+    content: {text: "对比：现状 vs 方案", style: "$title", color: "$white", fontSize: 24}
+  - elementId: darkBox
+    elementType: shape
+    kind: roundRect
+    bounds: [60, 100, 390, 340]
+    fill: "$card"
+  - elementId: darkT
+    elementType: text
+    bounds: [84, 124, 340, 290]
+    content: {text: "现状/痛点\n\n- 问题 1：描述\n- 问题 2：描述\n- 问题 3：描述", style: "$body", color: "$sub", fontSize: 14}
+  - elementId: lightBox
+    elementType: shape
+    kind: roundRect
+    bounds: [510, 100, 390, 340]
+    fill: "$cyan"
+  - elementId: lightT
+    elementType: text
+    bounds: [534, 124, 340, 290]
+    content: {text: "方案/亮点\n\n- 亮点 1：描述\n- 亮点 2：描述\n- 亮点 3：描述", style: "$body", color: "#0F1B2D", fontSize: 14}
+  - elementId: vs
+    elementType: text
+    bounds: [452, 258, 56, 30]
+    content: {text: "VS", style: "$h2", color: "$white", align: center}

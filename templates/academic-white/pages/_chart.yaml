@@ -1,0 +1,45 @@
+pageType: content
+# 图表页母版（学术版：大图表 + 数据注释 + 结论区）
+elements:
+  - elementId: pageNo
+    elementType: text
+    bounds: [20, 50, 70, 24]
+    content: {text: "6", style: "$caption"}
+  - elementId: pageTitle
+    elementType: text
+    bounds: [100, 44, 700, 36]
+    content: {text: "结果：数据可视化与解读", style: "$title", color: "$navy", fontSize: 24}
+  - elementId: divider
+    elementType: line
+    points: [[60, 92], [900, 92]]
+    line: {color: "$light", width: 1}
+  - elementId: chartEl
+    elementType: chart
+    bounds: [60, 120, 620, 340]
+    chart: {type: line, data: {cols: ["时间"], rows: [["T1", 20], ["T2", 42], ["T3", 38], ["T4", 61]]}}
+  - elementId: axis
+    elementType: text
+    bounds: [60, 470, 620, 24]
+    content: {text: "横轴：时间 ｜ 纵轴：指标值（示例数据）", style: "$caption"}
+  - elementId: note
+    elementType: text
+    bounds: [720, 120, 180, 200]
+    content: {text: "数据说明：\n- 口径/来源\n- n / 置信\n- 脱敏声明", style: "$caption"}
+  - elementId: conclusion
+    elementType: shape
+    kind: rect
+    bounds: [720, 348, 180, 110]
+    fill: "$light"
+  - elementId: conclusionT
+    elementType: text
+    bounds: [734, 362, 152, 82]
+    content: {text: "结论\n曲线拐点对应……", style: "$label", color: "$navy", bold: true}
+  - elementId: conBar
+    elementType: shape
+    kind: rect
+    bounds: [720, 348, 6, 110]
+    fill: "$navy"
+expectedOverlaps:
+  - {pair: [conBar, conclusion]}
+  - {pair: [conBar, conclusionT]}
+  - {pair: [conclusion, conclusionT]}

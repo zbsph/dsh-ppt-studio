@@ -1,0 +1,31 @@
+pageType: cover
+background: {type: solid, color: "$bg"}
+safeArea: {top: 16, bottom: 16}
+expectedOverlaps:
+  - {pair: [tag, tagT]}
+elements:
+  - elementId: kick
+    elementType: text
+    bounds: [60, 70, 400, 30]
+    content: {text: "PITCH · 路演", style: "$caption", color: "$orange"}
+  - elementId: title
+    elementType: text
+    bounds: [60, 130, 840, 200]
+    content: {text: "一句话\n说清你做什么", style: "$title", color: "$ink", fontSize: 56, lineHeight: 1.2}
+  - elementId: sub
+    elementType: text
+    bounds: [60, 360, 840, 60]
+    content: {text: "副标题：为谁解决什么问题（18pt）", style: "$body", color: "$gray", fontSize: 18}
+  - elementId: tag
+    elementType: shape
+    kind: rect
+    bounds: [60, 452, 120, 36]
+    fill: "$orange"
+  - elementId: tagT
+    elementType: text
+    bounds: [60, 462, 120, 22]
+    content: {text: "公司名", style: "$label", color: "#FFFFFF", align: center}
+  - elementId: date
+    elementType: text
+    bounds: [200, 462, 300, 22]
+    content: {text: "日期 · 场合", style: "$caption"}

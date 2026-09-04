@@ -1,0 +1,87 @@
+pageType: content
+# 流程页母版：步骤横向流程（3-5 步；边框=箭头）
+expectedOverlaps:
+  - {pair: [headbar, pageTitle]}
+  - {pair: [s1, s1T]}
+  - {pair: [s2, s2T]}
+  - {pair: [s3, s3T]}
+  - {pair: [s4, s4T]}
+  - {pair: [s1, a1]}
+  - {pair: [s2, a2]}
+  - {pair: [s3, a3]}
+  - {pair: [noteBar, noteT]}
+expectedOutOfSafeArea: [headbar, pageTitle]
+elements:
+  - elementId: headbar
+    elementType: shape
+    kind: rect
+    bounds: [0, 0, 960, 46]
+    fill: "$deep"
+  - elementId: pageTitle
+    elementType: text
+    bounds: [60, 10, 700, 30]
+    content: {text: "流程标题：从输入到输出", style: "$title", color: "#FFFFFF", fontSize: 22}
+  - elementId: s1
+    elementType: shape
+    kind: roundRect
+    bounds: [60, 100, 190, 150]
+    fill: "$light"
+  - elementId: s2
+    elementType: shape
+    kind: roundRect
+    bounds: [300, 100, 190, 150]
+    fill: "$light"
+  - elementId: s3
+    elementType: shape
+    kind: roundRect
+    bounds: [540, 100, 190, 150]
+    fill: "$light"
+  - elementId: s4
+    elementType: shape
+    kind: roundRect
+    bounds: [780, 100, 130, 150]
+    fill: "$accent"
+  - elementId: s1T
+    elementType: text
+    bounds: [76, 118, 160, 110]
+    content: {text: "步骤一（14pt）\n描述：输入与准备。", style: "$body", bold: true}
+  - elementId: s2T
+    elementType: text
+    bounds: [316, 118, 160, 110]
+    content: {text: "步骤二（14pt）\n描述：处理与转换。", style: "$body", bold: true}
+  - elementId: s3T
+    elementType: text
+    bounds: [556, 118, 160, 110]
+    content: {text: "步骤三（14pt）\n描述：验证与优化。", style: "$body", bold: true}
+  - elementId: s4T
+    elementType: text
+    bounds: [794, 118, 102, 110]
+    content: {text: "输出\n（12pt）", style: "$label", color: "#1F2937", bold: true}
+  - elementId: a1
+    elementType: line
+    points: [[252, 175], [298, 175]]
+    arrow: true
+    line: {color: "$primary", width: 2}
+  - elementId: a2
+    elementType: line
+    points: [[492, 175], [538, 175]]
+    arrow: true
+    line: {color: "$primary", width: 2}
+  - elementId: a3
+    elementType: line
+    points: [[732, 175], [778, 175]]
+    arrow: true
+    line: {color: "$primary", width: 2}
+  - elementId: detail
+    elementType: text
+    bounds: [60, 300, 840, 120]
+    content: {text: "细节说明区：每步的输入/输出/关键指标可在此展开。", style: "$body"}
+  - elementId: noteBar
+    elementType: shape
+    kind: rect
+    bounds: [60, 448, 840, 46]
+    fill: "$deep"
+  - elementId: noteT
+    elementType: text
+    bounds: [84, 458, 800, 26]
+    content: {text: "结论一句：流程串联的成果/价值", style: "$body", color: "#FFFFFF"}

@@ -1,0 +1,30 @@
+pageType: cover
+background: {type: solid, color: "$bg"}
+safeArea: {top: 24, bottom: 24}
+elements:
+  - elementId: kick
+    elementType: text
+    bounds: [60, 90, 500, 30]
+    content: {text: "PRODUCT · 产品/项目代号", style: "$caption", color: "$cyan"}
+  - elementId: title
+    elementType: text
+    bounds: [60, 140, 840, 130]
+    content: {text: "主标题：一句话讲清\n这次发布什么", style: "$title", color: "$white", fontSize: 44, lineHeight: 1.25}
+  - elementId: glow
+    elementType: shape
+    kind: rect
+    bounds: [60, 300, 140, 5]
+    fill: "$cyan"
+  - elementId: subtitle
+    elementType: text
+    bounds: [60, 330, 840, 40]
+    content: {text: "副标题：核心定位 / 一句话价值", style: "$body", color: "$sub", fontSize: 16}
+  - elementId: org
+    elementType: text
+    bounds: [60, 452, 700, 26]
+    content: {text: "团队 ｜ 时间 ｜ 版本", style: "$caption"}
+  - elementId: dot
+    elementType: shape
+    kind: ellipse
+    bounds: [880, 452, 20, 20]
+    fill: "$cyan"

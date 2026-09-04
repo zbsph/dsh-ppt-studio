@@ -1,0 +1,14 @@
+id: business-blue
+name: 商务蓝
+style: 企业汇报 / 严谨商务
+scene: 经营分析、项目汇报、方案推介
+desc: 浅底深蓝主色，8px 网格 + 模块化卡片，页眉标题栏 + 页脚页码带；适合信息层级多的严谨汇报。
+words: 严谨 / 专业 / 稳重 / 信息密度高
+colors: ["#1E4E8C", "#16355C", "#F59E0B", "#1F2937", "#EAF1F8"]
+pages:
+  - pages/_cover.yaml
+  - pages/_content.yaml
+  - pages/_flow.yaml
+  - pages/_chart.yaml
+  - pages/_compare.yaml
+  - pages/_ending.yaml

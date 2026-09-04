@@ -1,0 +1,32 @@
+pageType: cover
+# 结尾页母版：结论句 + 行动号召
+background: {type: solid, color: "$deep"}
+safeArea: {top: 24, bottom: 24}
+expectedOverlaps:
+  - {pair: [action, actionT]}
+elements:
+  - elementId: rule
+    elementType: line
+    points: [[60, 150], [900, 150]]
+    line: {color: "#9DB4D0", width: 1}
+  - elementId: thanks
+    elementType: text
+    bounds: [60, 190, 840, 70]
+    content: {text: "谢谢观看", style: "$title", color: "#FFFFFF", fontSize: 40, bold: true}
+  - elementId: takeaway
+    elementType: text
+    bounds: [60, 280, 840, 60]
+    content: {text: "核心结论一句：可执行建议 / 下一步行动", style: "$body", color: "#C9D8EA", fontSize: 16}
+  - elementId: action
+    elementType: shape
+    kind: rect
+    bounds: [60, 360, 240, 44]
+    fill: "$accent"
+  - elementId: actionT
+    elementType: text
+    bounds: [60, 372, 240, 24]
+    content: {text: "请联系：联系方式 / 讨论", style: "$label", color: "#1F2937", align: center}
+  - elementId: org
+    elementType: text
+    bounds: [60, 452, 840, 28]
+    content: {text: "组织／部门 ｜ 汇报人 ｜ 日期", style: "$label", color: "#9DB4D0"}

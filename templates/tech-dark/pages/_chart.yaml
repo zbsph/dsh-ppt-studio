@@ -1,0 +1,29 @@
+pageType: content
+# 图表页母版（深色版）
+expectedOutOfSafeArea: [accentBar, pageTitle]
+elements:
+  - elementId: accentBar
+    elementType: shape
+    kind: rect
+    bounds: [0, 0, 8, 46]
+    fill: "$cyan"
+  - elementId: pageTitle
+    elementType: text
+    bounds: [20, 10, 700, 30]
+    content: {text: "数据表现：指标趋势", style: "$title", color: "$white", fontSize: 24}
+  - elementId: chartEl
+    elementType: chart
+    bounds: [60, 90, 620, 360]
+    chart: {type: bar, data: {cols: ["指标"], rows: [["A", 45], ["B", 66], ["C", 52], ["D", 88]]}, colors: ["#22D3EE"]}
+  - elementId: ins
+    elementType: text
+    bounds: [720, 110, 180, 120]
+    content: {text: "读图结论\n（阈值点 88%）", style: "$label", color: "$cyan", bold: true}
+  - elementId: note
+    elementType: text
+    bounds: [720, 260, 180, 180]
+    content: {text: "数据口径：\n- 来源/单位\n- 时间范围\n- 脱敏声明", style: "$caption"}
+  - elementId: footer
+    elementType: text
+    bounds: [60, 505, 300, 18]
+    content: {text: "产品名 · 数据页", style: "$caption"}

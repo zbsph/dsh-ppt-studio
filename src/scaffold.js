@@ -134,6 +134,7 @@ export async function scaffoldProject(dir, { name = 'my-deck' } = {}) {
     '    primary: "#2563EB"',
     '    ink: "#1F2937"',
     '    lighter: "#E8EEFB"',
+    '    accent: "#FFD966"',
     '  textStyles:',
     '    title: {fontSize: 32, color: "$ink", bold: true}',
     '    body: {fontSize: 16, color: "$ink"}',

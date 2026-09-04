@@ -68,6 +68,20 @@ ppt_verify(dir, autoDeclare=true)
 - **导出不再静默缩字**：`verify 通过 ⇒ 导出不缩放`；缩字下限 = `theme.minFontSize`（默认 12pt，且不超过原字号）；到达下限仍溢出 → 导出报告 `✗ 达到字号下限仍溢出`（一定要修复，不要接受 <12pt）。
 - verify 新增 `[·]` 启发式建议：**前景/背景对比度**（D6）、**自动换行末行孤字**（D7）——均为建议，非门禁。
 
+## 内置模板库（v0.5.0，需求 2/4）
+
+**用户模板文件 > 内置模板库 > 从零定调** 三级降级。4 套风格版权自研：**business-blue 商务蓝 / academic-white 学术会议 / tech-dark 科技深色 / pitch-bold 路演大字**（每套 = 完整 theme + 6 张版式母版页：封面/内容/流程/图表/对比/结尾 + 自动生成缩略图）。
+
+```text
+ppt_templates              # 清单 + 风格/场景/预览图路径（S0 展示给用户选）
+ppt_new dir=<目录> template=<id>   # 从模板复制工作区（theme 完整 + 母版页 _*.yaml）
+/ppt template <id>         # 记录本会话默认模板
+```
+
+- **模板 = 版式母版包**：新页从 `pages/_*.yaml` 复制并改成正式页名 → 页眉/页脚/标题栏自动继承（需求 4"统一模板保持基础样式"）。
+- **模板一致性门禁**：verify `theme-conformance`（strict 默认）——页面颜色必须 ∈ `theme.colors` 或中性灰，出板=ERROR；字号/字体为 `[·]` 建议；`theme.themeConformance: suggest|off` 可降档。模板文件路径也可用：`ppt_import` 模板 → 启用其 theme 聚合块。
+- 维护：`node scripts/build-templates.mjs` 重建全部 preview.png（render+截图）。
+
 ## 快速生成模式（Quick Mode）
 
 - **触发**：`/ppt quick`（命令）或明确语义指令（"简单做一个 PPT"、"快速弄个"等——仅 PPT 任务上下文生效，误触率低）。

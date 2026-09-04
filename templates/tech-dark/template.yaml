@@ -1,0 +1,14 @@
+id: tech-dark
+name: 科技深色
+style: 科技发布会 / 高对比
+scene: 产品发布、技术方案、数据中台
+desc: 深底（#0F1B2D）+ 青色强调 + 大圆角卡片 + 细发光线条；适合新技术/数字化主题。
+words: 科技 / 前沿 / 高对比 / 数字化
+colors: ["#0F1B2D", "#22D3EE", "#1E3A5F", "#E2E8F0", "#334155"]
+pages:
+  - pages/_cover.yaml
+  - pages/_content.yaml
+  - pages/_flow.yaml
+  - pages/_chart.yaml
+  - pages/_compare.yaml
+  - pages/_ending.yaml

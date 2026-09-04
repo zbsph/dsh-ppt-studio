@@ -1,0 +1,28 @@
+pageType: cover
+background: {type: solid, color: "$bg"}
+safeArea: {top: 40, bottom: 24}
+elements:
+  - elementId: topLine
+    elementType: line
+    points: [[60, 60], [900, 60]]
+    line: {color: "$navy", width: 3}
+  - elementId: title
+    elementType: text
+    bounds: [60, 100, 840, 120]
+    content: {text: "报告题目：所在研究/项目名称", style: "$title", color: "$navy", fontSize: 36, lineHeight: 1.35}
+  - elementId: subtitle
+    elementType: text
+    bounds: [60, 250, 840, 40]
+    content: {text: "副标题：研究定位 / 一句话摘要", style: "$body", color: "$gray"}
+  - elementId: authors
+    elementType: text
+    bounds: [60, 330, 840, 30]
+    content: {text: "作者：xxx ｜ 单位：xxx ｜ 日期", style: "$label", color: "$ink"}
+  - elementId: footLine
+    elementType: line
+    points: [[60, 480], [900, 480]]
+    line: {color: "$light", width: 1}
+  - elementId: venue
+    elementType: text
+    bounds: [60, 492, 840, 20]
+    content: {text: "会议/汇报名称 · 地点", style: "$caption"}

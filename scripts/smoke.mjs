@@ -97,7 +97,7 @@ await (await import('node:fs/promises')).mkdir(join(mediaDeck, 'media'), { recur
 await (await import('node:fs/promises')).copyFile(join(smokeDir, 'media-test.png'), join(mediaDeck, 'media', 'pic.png'))
 await (await import('node:fs/promises')).writeFile(join(mediaDeck, 'deck.yaml'), [
   'version: 1', 'title: media-smoke', 'size: [960, 540]',
-  'theme:', '  colors:', '    primary: "#2563EB"',
+  'theme:', '  colors:', '    primary: "#2563EB"', '    accent: "#F59E0B"',
   'pages:',
   '  - pages/01_media.yaml',
   '  - pages/02_bg.yaml', '',
@@ -162,7 +162,7 @@ await (await import('node:fs/promises')).rm(overlapDeck, { recursive: true, forc
 await (await import('node:fs/promises')).mkdir(join(overlapDeck, 'pages'), { recursive: true })
 await (await import('node:fs/promises')).writeFile(join(overlapDeck, 'deck.yaml'), [
   'version: 1', 'title: overlap-smoke', 'size: [960, 540]',
-  'theme:', '  colors:', '    primary: "#2563EB"',
+  'theme:', '  colors:', '    primary: "#2563EB"', '    accent: "#F59E0B"',
   'pages:',
   '  - pages/01_deck.yaml',
   '  - pages/02_lenient.yaml', '',
@@ -418,6 +418,50 @@ const spPage = { elements: [
 ok('v0.4：相邻贴边清单（2px 间隙 → 建议，P2-4）', aestheticSuggestions(spPage, size960, {}).some((s) => s.code.includes('spacing')))
 const denseSheet = { elements: Array.from({ length: 20 }, (_, i) => ({ id: `s${i}`, kind: 'shape', bounds: { x: i * 40, y: 0, w: 20, h: 20 } })) }
 ok('v0.4：density 按内容元素分层（纯图形页不误报，P2-5）', analyzePage(denseSheet, size960).filter((f) => f.code === 'density').length === 0)
+
+// ── 17. v0.5.0：模板库（4 套）回归 + 模板一致性断言 + ppt_new --template ──
+const tplMod = await import('../lib/templates.js')
+const tplList = await tplMod.listTemplates()
+ok('v0.5：模板库 4 套齐全', tplList.length === 4, tplList.map((t) => t.id).join(','))
+ok('v0.5：模板元信息完整（含预览图）', tplList.every((t) => t.name && t.style && t.scene && t.preview), tplList.map((t) => `${t.id}:${t.preview ? 'png' : 'MISSING'}`).join(' '))
+let tplAllOk = true
+const tplReport = []
+for (const t of tplList) {
+  // 母版页全部渲染 + verify 0 错误（模板一致性 strict 门禁一并验证）
+  const ws = join(root, 'examples', 'tpl-check-' + t.id)
+  await rm(ws, { recursive: true, force: true })
+  await mkdir(join(ws, 'pages'), { recursive: true })
+  const tT = await tplMod.templateWorkspace(t.id)
+  const deckTxt = tT.deck.replace(/  - pages\/[^\n]+(?:\n  - pages\/[^\n]+)*/, (tT.meta.pages ?? []).map((r) => `  - ${r}`).join('\n'))
+  await (await import('node:fs/promises')).writeFile(join(ws, 'deck.yaml'), deckTxt)
+  for (const p of tT.pages) await (await import('node:fs/promises')).writeFile(join(ws, p.ref), p.yaml)
+  try {
+    const ctxT = await resolveDeck(ws)
+    const rT = await renderDeck(ctxT, {})
+    const vT = verifyDeck(rT.layout)
+    const errs = vT.text.split('\n').filter((l) => l.includes('[✗]')).length
+    tplReport.push(`${t.id}:${errs}err`)
+    if (errs > 0) tplAllOk = false
+  } catch (e) {
+    tplAllOk = false
+    tplReport.push(`${t.id}:FAIL ${e?.message}`)
+  }
+}
+ok('v0.5：4 套模板母版页全渲染 + verify 0 错误（含一致性门禁）', tplAllOk, tplReport.join('; '))
+// theme-conformance：出板颜色=ERROR；suggest 档=warning；off=跳过
+const confPage = { elements: [{ id: 'x', kind: 'shape', fill: '#123456', bounds: { x: 0, y: 0, w: 10, h: 10 } }] }
+ok('v0.5：theme-conformance strict 出板颜色 → ERROR', verifyDeck({ size: size960, theme: { colors: { a: '#2563EB' } }, pages: [{ index: 0, name: 'p', safeArea: null, overlapMode: 'declared', expectedOverlaps: [], expectedOutOfSafeArea: [], elements: [{ id: 'x', kind: 'shape', fill: '#123456', bounds: { x: 0, y: 0, w: 10, h: 10 } }] }] }).text.includes('[✗] theme-conformance'))
+ok('v0.5：中性色豁免 + 主题色通过', !verifyDeck({ size: size960, theme: { colors: { a: '#2563EB' } }, pages: [{ index: 0, name: 'p', safeArea: null, overlapMode: 'declared', expectedOverlaps: [], expectedOutOfSafeArea: [], elements: [{ id: 'x', kind: 'shape', fill: '#FFFFFF', bounds: { x: 0, y: 0, w: 10, h: 10 } }, { id: 'y', kind: 'shape', fill: '#2563EB', bounds: { x: 0, y: 0, w: 10, h: 10 } }] }] }).text.includes('theme-conformance'))
+ok('v0.5：themeConformance off 跳过', !verifyDeck({ size: size960, theme: { colors: { a: '#2563EB' }, themeConformance: 'off' }, pages: [{ index: 0, name: 'p', safeArea: null, overlapMode: 'declared', expectedOverlaps: [], expectedOutOfSafeArea: [], elements: [{ id: 'x', kind: 'shape', fill: '#123456', bounds: { x: 0, y: 0, w: 10, h: 10 } }] }] }).text.includes('theme-conformance'))
+// ppt_new --template 复制工作区
+const tplWS = join(root, 'examples', 'tpl-work')
+await rm(tplWS, { recursive: true, force: true })
+const tplT = await tplMod.templateWorkspace('business-blue')
+await mkdir(join(tplWS, 'pages'), { recursive: true })
+await (await import('node:fs/promises')).writeFile(join(tplWS, 'deck.yaml'), tplT.deck.replace(/^title:.*$/m, 'title: "demo"'))
+for (const p of tplT.pages) await (await import('node:fs/promises')).writeFile(join(tplWS, p.ref), p.yaml)
+const ctxTW = await resolveDeck(tplWS)
+ok('v0.5：模板工作区可校验（theme 完整）', ctxTW.theme.colors.primary === '#1E4E8C' && tplT.pages.length >= 6, `${tplT.pages.length} pages`)
 
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)

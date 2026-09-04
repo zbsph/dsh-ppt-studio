@@ -1,0 +1,80 @@
+pageType: content
+# 内容页骨架：页眉标题栏 + 正文区（示例卡片）+ 页脚页码带
+# 新页复制本母版：把 "3" 处示例卡片替换为实际内容；页眉/页脚元素保留（跨页一致性）
+expectedOverlaps:
+  - {pair: [headbar, pageTitle]}
+  - {pair: [headbar, pageNo]}
+  - {pair: [cardA, cardAT]}
+  - {pair: [cardB, cardBT]}
+  - {pair: [cardC, cardCT]}
+  - {pair: [cardD, cardDT]}
+expectedOutOfSafeArea:
+  - headbar        # 页眉带满幅出血：模板标准形态（有意贴顶）
+  - pageTitle      # 在页眉带内
+  - pageNo         # 在页眉带内
+elements:
+  - elementId: headbar
+    elementType: shape
+    kind: rect
+    bounds: [0, 0, 960, 46]
+    fill: "$deep"
+  - elementId: pageTitle
+    elementType: text
+    bounds: [60, 10, 700, 30]
+    content: {text: "本章标题：一句话点题", style: "$title", color: "#FFFFFF", fontSize: 22}
+  - elementId: pageNo
+    elementType: text
+    bounds: [888, 12, 52, 24]
+    content: {text: "2", style: "$label", color: "#9DB4D0", align: right}
+  - elementId: cardA
+    elementType: shape
+    kind: roundRect
+    bounds: [60, 80, 410, 180]
+    fill: "$light"
+  - elementId: cardAT
+    elementType: text
+    bounds: [84, 104, 360, 130]
+    content: {text: "要点标题（14pt）\n要点正文：说明性文字，语义断点显式换行。", style: "$body"}
+  - elementId: cardB
+    elementType: shape
+    kind: roundRect
+    bounds: [500, 80, 400, 180]
+    fill: "$light"
+  - elementId: cardBT
+    elementType: text
+    bounds: [524, 104, 350, 130]
+    content: {text: "要点标题（14pt）\n要点正文：说明性文字，语义断点显式换行。", style: "$body"}
+  - elementId: cardC
+    elementType: shape
+    kind: roundRect
+    bounds: [60, 292, 410, 180]
+    fill: "$bg"
+    line: {color: "#C9D8EA", width: 1}
+  - elementId: cardCT
+    elementType: text
+    bounds: [84, 316, 360, 130]
+    content: {text: "白底卡片要点标题\n正文：用于对比/补充信息。", style: "$body"}
+  - elementId: cardD
+    elementType: shape
+    kind: roundRect
+    bounds: [500, 292, 400, 180]
+    fill: "$bg"
+    line: {color: "#C9D8EA", width: 1}
+  - elementId: cardDT
+    elementType: text
+    bounds: [524, 316, 350, 130]
+    content: {text: "白底卡片要点标题\n正文：用于对比/补充信息。", style: "$body"}
+  - elementId: footerLine
+    elementType: line
+    points: [[60, 505], [900, 505]]
+    line: {color: "#C9D8EA", width: 1}
+  - elementId: footerLogo
+    elementType: shape
+    kind: rect
+    bounds: [60, 512, 8, 8]
+    fill: "$accent"
+  - elementId: footerText
+    elementType: text
+    bounds: [80, 508, 300, 16]
+    content: {text: "公司名称 · 项目名称", style: "$caption"}
+

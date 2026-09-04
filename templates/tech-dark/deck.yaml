@@ -1,0 +1,24 @@
+# 科技深色模板工作区骨架
+version: 1
+title: 未命名发布
+size: [960, 540]
+theme:
+  colors:
+    bg: "#0F1B2D"          # 深底
+    cyan: "#22D3EE"        # 强调青
+    card: "#1E3A5F"        # 卡片
+    white: "#E2E8F0"       # 正文
+    sub: "#8FA3BF"         # 次要
+    chip: "#334155"        # 点缀
+  textStyles:
+    title: {fontSize: 32, color: "$white", bold: true}
+    h2: {fontSize: 20, color: "$cyan", bold: true}
+    body: {fontSize: 14, color: "$white"}
+    label: {fontSize: 12, color: "$white"}
+    caption: {fontSize: 12, color: "$sub"}
+  safeArea: {top: 16, bottom: 16}
+  grid: {base: 8}
+  minFontSize: 12
+pages:
+  - pages/_cover.yaml
+  - pages/_content.yaml

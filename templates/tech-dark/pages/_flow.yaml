@@ -1,0 +1,80 @@
+pageType: content
+# 流程页母版（深色版）：数字节点 + 连线
+expectedOverlaps:
+  - {pair: [n1, n1T]}
+  - {pair: [n2, n2T]}
+  - {pair: [n3, n3T]}
+  - {pair: [noteBar, noteT]}
+  - {pair: [noteBar, noteBg]}
+expectedOutOfSafeArea: [accentBar, pageTitle]
+elements:
+  - elementId: accentBar
+    elementType: shape
+    kind: rect
+    bounds: [0, 0, 8, 46]
+    fill: "$cyan"
+  - elementId: pageTitle
+    elementType: text
+    bounds: [20, 10, 700, 30]
+    content: {text: "技术流程：输入 → 处理 → 输出", style: "$title", color: "$white", fontSize: 24}
+  - elementId: n1
+    elementType: shape
+    kind: ellipse
+    bounds: [60, 120, 48, 48]
+    fill: "$cyan"
+  - elementId: n1T
+    elementType: text
+    bounds: [60, 120, 48, 48]
+    content: {text: "1", style: "$title", color: "#0F1B2D", fontSize: 20, align: center}
+  - elementId: n2
+    elementType: shape
+    kind: ellipse
+    bounds: [410, 120, 48, 48]
+    fill: "$cyan"
+  - elementId: n2T
+    elementType: text
+    bounds: [410, 120, 48, 48]
+    content: {text: "2", style: "$title", color: "#0F1B2D", fontSize: 20, align: center}
+  - elementId: n3
+    elementType: shape
+    kind: ellipse
+    bounds: [760, 120, 48, 48]
+    fill: "$cyan"
+  - elementId: n3T
+    elementType: text
+    bounds: [760, 120, 48, 48]
+    content: {text: "3", style: "$title", color: "#0F1B2D", fontSize: 20, align: center}
+  - elementId: l1
+    elementType: line
+    points: [[110, 144], [408, 144]]
+    line: {color: "$chip", width: 3}
+  - elementId: l2
+    elementType: line
+    points: [[460, 144], [758, 144]]
+    line: {color: "$chip", width: 3}
+  - elementId: s1
+    elementType: text
+    bounds: [50, 200, 260, 140]
+    content: {text: "输入数据/信号\n描述：来源与口径。", style: "$body", color: "$white", fontSize: 14}
+  - elementId: s2
+    elementType: text
+    bounds: [400, 200, 260, 140]
+    content: {text: "算法/模型处理\n描述：方法与参数。", style: "$body", color: "$white", fontSize: 14}
+  - elementId: s3
+    elementType: text
+    bounds: [760, 200, 190, 140]
+    content: {text: "结果/服务输出\n描述：形态与接入。", style: "$body", color: "$white", fontSize: 14}
+  - elementId: noteBar
+    elementType: shape
+    kind: roundRect
+    bounds: [60, 400, 840, 70]
+    fill: "$card"
+  - elementId: noteT
+    elementType: text
+    bounds: [84, 416, 800, 40]
+    content: {text: "一句话结论：该流程的关键价值", style: "$body", color: "$cyan"}
+  - elementId: noteBg
+    elementType: shape
+    kind: rect
+    bounds: [60, 400, 6, 70]
+    fill: "$cyan"

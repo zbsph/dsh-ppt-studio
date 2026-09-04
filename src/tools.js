@@ -17,6 +17,7 @@ import { importPptx } from './pptd/import-pptx.js'
 import { verifyDeck } from './verify.js'
 import { SCHEMA_REF, scaffoldProject } from './scaffold.js'
 import { applyAutoDeclare } from './autodeclare.js'
+import { listTemplates, templateWorkspace } from './templates.js'
 import { runPythonExport, findPython } from './pptxPy.js'
 import { imageInfo } from './imgmeta.js'
 import { loadProject, loadSession } from './state.js'
@@ -120,19 +121,49 @@ export function registerTools(ctx) {
 
   reg({
     name: 'ppt_new',
-    description: '一键生成可跑通全链路的样例 deck 工程（deck.yaml + 3 个页面，含主题 token / 色块衬底 / expectedOverlaps / safeArea 示例）。已存在 deck.yaml 时拒绝覆盖',
+    description: '一键生成可跑通全链路的样例 deck 工程（deck.yaml + 3 个页面，含主题 token / 色块衬底 / expectedOverlaps / safeArea 示例）。已存在 deck.yaml 时拒绝覆盖。可用 template=<id> 从内置模板库复制工作区（theme + 母版页）',
     parameters: {
       dir: { type: 'string', required: true, description: '新工程目录（必须为空或不存在 deck.yaml）' },
       name: { type: 'string', description: '工程标题，缺省 my-deck' },
+      template: { type: 'string', description: '内置模板 id（如 business-blue / academic-white / tech-dark / pitch-bold；缺省=示例工程）' },
     },
     output: markdownResult(),
-    async execute({ dir, name }) {
+    async execute({ dir, name, template }) {
       try {
+        if (template) {
+          const t = await templateWorkspace(template)
+          // 模板工作区：deck.yaml（标题改写）+ 母版页写入 pages/（_ 前缀，供新页复制参照）
+          const { mkdir, writeFile } = await import('node:fs/promises')
+          const { access } = await import('node:fs/promises')
+          try { await access(join(dir, 'deck.yaml')); return `✗ 生成失败：目标目录已存在 deck.yaml（${join(dir, 'deck.yaml')}），拒绝覆盖；请换一个空目录` } catch { /* ok */ }
+          await mkdir(join(dir, 'pages'), { recursive: true })
+          await mkdir(join(dir, 'media'), { recursive: true })
+          const deck = t.deck.replace(/^title:.*$/m, `title: ${JSON.stringify(name ?? t.meta.name ?? '未命名')}`)
+          await writeFile(join(dir, 'deck.yaml'), deck)
+          const refs = []
+          for (const p of t.pages) {
+            await writeFile(join(dir, p.ref), p.yaml)
+            refs.push(p.ref)
+          }
+          return `✓ 已从模板「${t.meta.name ?? template}」生成工作区：${dir}\n  - deck.yaml（模板 theme 已就位，themeConformance 默认 strict=模板一致性门禁）\n  - 母版页 ${refs.join('、')}（_ 前缀，新页复制后可删）\n下一步：把 pages/_*.yaml 复制成正式页 → ppt_render → ppt_verify（0 错误）→ ppt_export`
+        }
         const r = await scaffoldProject(dir, { name })
         return `✓ 已生成样例工程：${r.dir}\n${r.files.map((f) => `  - ${f}`).join('\n')}\n下一步：ppt_check → ppt_render → ppt_verify（应 0 错误）`
       } catch (error) {
         return `✗ 生成失败：${error?.message ?? String(error)}`
       }
+    },
+  })
+
+  reg({
+    name: 'ppt_templates',
+    description: '内置模板库列表（id/名称/风格/适用场景/预览图路径）。从头任务的 S0/S2 展示给用户选择；选定后用 ppt_new dir=... template=<id> 或 /ppt template <id> 生成工作区',
+    parameters: {},
+    output: markdownResult(),
+    async execute() {
+      const list = await listTemplates()
+      if (!list.length) return '（模板库为空：templates/ 目录缺失或未打包）'
+      return `内置模板库（${list.length} 套 · 风格版权自研）：\n\n${list.map((t) => `## ${t.id} — ${t.name}\n风格：${t.style}\n适用：${t.scene}\n关键词：${t.words}\n色板：${t.colors.join('  ')}\n预览图：${t.preview ?? '（未生成）'}\n`).join('\n---\n')}\n使用：ppt_new dir=<新目录> template=<id>（复制模板工作区；模板一致性断言 themeConformance=strict 默认开启）`
     },
   })
 

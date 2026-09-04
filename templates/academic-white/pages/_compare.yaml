@@ -1,0 +1,37 @@
+pageType: content
+# 对比页母版（学术版：两栏细线 + 表格式对比）
+expectedOverlaps:
+  - {pair: [tblCol, tblTitle]}
+  - {pair: [tblCol, tblRows]}
+expectedOutOfSafeArea: [footer]
+elements:
+  - elementId: pageNo
+    elementType: text
+    bounds: [20, 50, 70, 24]
+    content: {text: "7", style: "$caption"}
+  - elementId: pageTitle
+    elementType: text
+    bounds: [100, 44, 700, 36]
+    content: {text: "对比：方法/方案权衡", style: "$title", color: "$navy", fontSize: 24}
+  - elementId: divider
+    elementType: line
+    points: [[60, 92], [900, 92]]
+    line: {color: "$light", width: 1}
+  - elementId: tblCol
+    elementType: shape
+    kind: rect
+    bounds: [60, 130, 840, 300]
+    fill: "$bg"
+    line: {color: "$light", width: 1}
+  - elementId: tblTitle
+    elementType: text
+    bounds: [80, 150, 800, 40]
+    content: {text: "维度        方案 A        方案 B", style: "$h2", color: "$navy", fontSize: 16}
+  - elementId: tblRows
+    elementType: text
+    bounds: [80, 210, 800, 200]
+    content: {text: "适用场景：描述……\n精度/效果：A …… / B ……\n成本/复杂度：A …… / B ……\n结论倾向：……", style: "$body", fontSize: 14, lineHeight: 1.7}
+  - elementId: footer
+    elementType: text
+    bounds: [60, 496, 300, 20]
+    content: {text: "研究/项目名称 · 对比", style: "$caption"}

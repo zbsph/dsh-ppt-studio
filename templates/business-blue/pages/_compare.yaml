@@ -1,0 +1,45 @@
+pageType: content
+# 对比页母版：现状 vs 改进（或方案 A vs B）
+expectedOverlaps:
+  - {pair: [headbar, pageTitle]}
+  - {pair: [leftBox, leftT]}
+  - {pair: [rightBox, rightT]}
+  - {pair: [vsBadge, vsT]}
+expectedOutOfSafeArea: [headbar, pageTitle]
+elements:
+  - elementId: headbar
+    elementType: shape
+    kind: rect
+    bounds: [0, 0, 960, 46]
+    fill: "$deep"
+  - elementId: pageTitle
+    elementType: text
+    bounds: [60, 10, 700, 30]
+    content: {text: "对比标题：改进前后", style: "$title", color: "#FFFFFF", fontSize: 22}
+  - elementId: leftBox
+    elementType: shape
+    kind: roundRect
+    bounds: [60, 100, 390, 340]
+    fill: "$light"
+  - elementId: leftT
+    elementType: text
+    bounds: [84, 124, 350, 290]
+    content: {text: "改进前\n\n- 问题 1：描述\n- 问题 2：描述\n- 问题 3：描述", style: "$body"}
+  - elementId: rightBox
+    elementType: shape
+    kind: roundRect
+    bounds: [510, 100, 390, 340]
+    fill: "$primary"
+  - elementId: rightT
+    elementType: text
+    bounds: [534, 124, 350, 290]
+    content: {text: "改进后\n\n- 亮点 1：描述\n- 亮点 2：描述\n- 亮点 3：描述", style: "$body", color: "#FFFFFF"}
+  - elementId: vsBadge
+    elementType: shape
+    kind: ellipse
+    bounds: [452, 250, 56, 56]
+    fill: "$accent"
+  - elementId: vsT
+    elementType: text
+    bounds: [452, 262, 56, 30]
+    content: {text: "VS", style: "$h2", color: "#1F2937", align: center}

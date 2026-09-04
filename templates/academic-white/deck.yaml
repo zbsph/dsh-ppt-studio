@@ -1,0 +1,24 @@
+# 学术会议模板工作区骨架
+version: 1
+title: 未命名报告
+size: [960, 540]
+theme:
+  colors:
+    navy: "#16355C"        # 藏青（标题/强调）
+    ink: "#1F2937"         # 正文
+    gray: "#6B7280"        # 次要文字
+    light: "#E5E9F0"       # 细分隔/浅衬底
+    bg: "#FFFFFF"
+    accent: "#8C1D40"      # 强调红（极少量亮点）
+  textStyles:
+    title: {fontSize: 30, color: "$navy", bold: true}
+    h2: {fontSize: 20, color: "$navy", bold: true}
+    body: {fontSize: 16, color: "$ink", lineHeight: 1.5}
+    label: {fontSize: 13, color: "$ink"}
+    caption: {fontSize: 12, color: "$gray"}
+  safeArea: {top: 40, bottom: 24}
+  grid: {base: 8}
+  minFontSize: 12
+pages:
+  - pages/_cover.yaml
+  - pages/_content.yaml

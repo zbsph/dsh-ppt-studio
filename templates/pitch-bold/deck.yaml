@@ -1,0 +1,23 @@
+# 路演大字模板工作区骨架
+version: 1
+title: 未命名路演
+size: [960, 540]
+theme:
+  colors:
+    orange: "#E4572E"      # 强调（唯一）
+    ink: "#1F2937"         # 正文
+    bg: "#FFFFFF"
+    light: "#F2F3F5"       # 浅衬底
+    gray: "#9AA1A9"        # 次要
+  textStyles:
+    title: {fontSize: 44, color: "$ink", bold: true, lineHeight: 1.2}
+    h2: {fontSize: 24, color: "$ink", bold: true}
+    body: {fontSize: 18, color: "$ink", lineHeight: 1.5}
+    label: {fontSize: 14, color: "$ink"}
+    caption: {fontSize: 13, color: "$gray"}
+  safeArea: {top: 16, bottom: 16}
+  grid: {base: 8}
+  minFontSize: 12
+pages:
+  - pages/_cover.yaml
+  - pages/_content.yaml

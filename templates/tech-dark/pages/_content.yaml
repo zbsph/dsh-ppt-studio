@@ -1,0 +1,51 @@
+pageType: content
+# 内容页骨架（深色版）：左上角标 + 标题 + 大圆角卡片
+expectedOverlaps:
+  - {pair: [accentBar, pageTitle]}
+  - {pair: [cardA, cardAT]}
+  - {pair: [cardB, cardBT]}
+expectedOutOfSafeArea: [accentBar, pageTitle, pageNo]
+elements:
+  - elementId: accentBar
+    elementType: shape
+    kind: rect
+    bounds: [0, 0, 8, 46]
+    fill: "$cyan"
+  - elementId: pageTitle
+    elementType: text
+    bounds: [20, 10, 700, 30]
+    content: {text: "章节标题", style: "$title", color: "$white", fontSize: 24}
+  - elementId: pageNo
+    elementType: text
+    bounds: [888, 12, 52, 24]
+    content: {text: "12", style: "$caption", align: right}
+  - elementId: cardA
+    elementType: shape
+    kind: roundRect
+    bounds: [60, 80, 410, 200]
+    fill: "$card"
+  - elementId: cardAT
+    elementType: text
+    bounds: [84, 104, 360, 150]
+    content: {text: "要点标题（14pt）\n要点正文：说明性文字，语义断点显式换行。", style: "$body", color: "$white"}
+  - elementId: cardB
+    elementType: shape
+    kind: roundRect
+    bounds: [500, 80, 400, 200]
+    fill: "$card"
+  - elementId: cardBT
+    elementType: text
+    bounds: [524, 104, 350, 150]
+    content: {text: "要点标题（14pt）\n要点正文：说明性文字，语义断点显式换行。", style: "$body", color: "$white"}
+  - elementId: metric
+    elementType: text
+    bounds: [60, 320, 300, 60]
+    content: {text: "关键指标 N1\n（大数字 20pt）", style: "$h2", color: "$cyan", fontSize: 20}
+  - elementId: metric2
+    elementType: text
+    bounds: [420, 320, 300, 60]
+    content: {text: "关键指标 N2\n（大数字 20pt）", style: "$h2", color: "$cyan", fontSize: 20}
+  - elementId: footer
+    elementType: text
+    bounds: [60, 505, 300, 18]
+    content: {text: "产品名 · 页", style: "$caption"}

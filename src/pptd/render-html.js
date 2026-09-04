@@ -102,6 +102,7 @@ export async function renderDeck(ctx, { out = 'preview', debug = false } = {}) {
       grid: ctx.deck.theme?.grid ?? { base: 8 },
       safeArea: ctx.deck.theme?.safeArea ?? null,
       minFontSize: ctx.minFontSize,
+      themeConformance: ctx.deck.theme?.themeConformance ?? 'strict',
     },
     pages: [],
   }

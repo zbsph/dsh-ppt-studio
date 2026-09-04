@@ -94,6 +94,26 @@ async function handle(invocation) {
       if (dir) { const proj = await loadProject(dir); proj.quality = v; await saveProject(dir, proj) }
       return ok(`✓ 质量模式=${v}`)
     }
+    if (cmd === 'template') {
+      const v = (args.split(' ')[0] ?? '').trim()
+      if (!v) {
+        const { listTemplates } = await import('./templates.js')
+        const list = await listTemplates()
+        if (!list.length) return err('模板库为空（templates/ 缺失）')
+        state.template = undefined
+        await save()
+        return ok(`可用模板（${list.length} 套）：${list.map((t) => `${t.id}=${t.name}`).join('、')}\n用法：/ppt template <id>（记录本会话默认模板；用 ppt_templates 看完整清单与预览图）`)
+      }
+      const { templateWorkspace } = await import('./templates.js')
+      try {
+        const t = await templateWorkspace(v)
+        state.template = v
+        await save()
+        return ok(`✓ 本会话默认模板=${t.meta.name ?? v}（${v}）——S0/S2 优先使用；新建工作区：ppt_new dir=<目录> template=${v}`)
+      } catch (e) {
+        return err(String(e?.message ?? e))
+      }
+    }
     if (cmd === 'pause-after') {
       const v = (args.split(' ')[0] ?? '').toLowerCase()
       if (!['outline', 'layout', 'pages', 'overall', 'none'].includes(v)) return err('pause-after 取值 outline|layout|pages|overall|none')
@@ -121,10 +141,10 @@ function textStatus(state, dir, extra) {
   const lines = [
     `PPT 工作流：${state.workflowActive ? '✓ 激活中' : '未激活'}（routing=${state.routing}，语义自动/命令强制）`,
     `快速模式=${state.quick ? 'on（跳过定调/素材/视觉审阅迭代）' : 'off'}｜协作模式=${state.mode}｜忠实度=${state.fidelity}｜审阅=${state.review}｜质量=${state.quality}｜引擎=${state.engine}（auto=pptd）`,
-    `暂停点=${state.pauseAfter.length ? state.pauseAfter.join('、') : '无'}`,
+    `暂停点=${state.pauseAfter.length ? state.pauseAfter.join('、') : '无'}${state.template ? `｜模板=${state.template}` : ''}`,
     ...extra,
     '',
-    '/ppt [on|off|quick|normal|free|mid|strict|fidelity <v>|review <v>|engine <v>|quality <v>|pause-after <v>|help]',
+    '/ppt [on|off|quick|normal|free|mid|strict|fidelity <v>|review <v>|engine <v>|quality <v>|template <id>|pause-after <v>|help]',
   ]
   return ok(lines.join('\n'))
 }

@@ -14,6 +14,10 @@ examples/overlap-smoke/
 examples/v3-smoke/
 examples/scaffold-smoke/
 examples/band-smoke/
+examples/tpl-check-*/
+examples/tpl-dbg-*/
+examples/tpl-work/
+examples/tpl-preview-work/
 examples/import-realtest/
 examples/import-realtest2/
 examples/import-realtest-regression/

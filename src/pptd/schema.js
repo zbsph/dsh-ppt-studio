@@ -76,6 +76,9 @@ export function validateDeck(deck) {
     if (deck.theme.minFontSize !== undefined && !(typeof deck.theme.minFontSize === 'number' && deck.theme.minFontSize > 0)) {
       errors.push('theme.minFontSize: positive number（字号下限，导出 auto-fit 不会缩到它以下）')
     }
+    if (deck.theme.themeConformance !== undefined && !['strict', 'suggest', 'off'].includes(deck.theme.themeConformance)) {
+      errors.push('theme.themeConformance: strict（默认，颜色出板=门禁）| suggest（仅建议）| off')
+    }
   }
   const pages = Array.isArray(deck.pages) ? deck.pages : []
   if (pages.length === 0) errors.push('deck.pages: at least one page required')

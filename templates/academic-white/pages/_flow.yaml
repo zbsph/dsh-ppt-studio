@@ -1,0 +1,63 @@
+pageType: content
+# 流程页母版（学术版：步骤 + 细箭头，无实色大块）
+expectedOverlaps:
+  - {pair: [s1, s1T]}
+  - {pair: [s2, s2T]}
+  - {pair: [s3, s3T]}
+elements:
+  - elementId: pageNo
+    elementType: text
+    bounds: [20, 50, 70, 24]
+    content: {text: "5", style: "$caption"}
+  - elementId: pageTitle
+    elementType: text
+    bounds: [100, 44, 700, 36]
+    content: {text: "研究流程：从数据到结论", style: "$title", color: "$navy", fontSize: 24}
+  - elementId: divider
+    elementType: line
+    points: [[60, 92], [900, 92]]
+    line: {color: "$light", width: 1}
+  - elementId: s1
+    elementType: shape
+    kind: rect
+    bounds: [60, 140, 260, 220]
+    fill: "$bg"
+    line: {color: "$navy", width: 1}
+  - elementId: s2
+    elementType: shape
+    kind: rect
+    bounds: [350, 140, 260, 220]
+    fill: "$bg"
+    line: {color: "$navy", width: 1}
+  - elementId: s3
+    elementType: shape
+    kind: rect
+    bounds: [640, 140, 260, 220]
+    fill: "$bg"
+    line: {color: "$navy", width: 1}
+  - elementId: s1T
+    elementType: text
+    bounds: [76, 160, 230, 180]
+    content: {text: "① 数据准备\n描述：数据来源/清洗/口径。", style: "$body", fontSize: 14}
+  - elementId: s2T
+    elementType: text
+    bounds: [366, 160, 230, 180]
+    content: {text: "② 建模分析\n描述：方法/参数/校验。", style: "$body", fontSize: 14}
+  - elementId: s3T
+    elementType: text
+    bounds: [656, 160, 230, 180]
+    content: {text: "③ 验证结论\n描述：结果/敏感性/局限。", style: "$body", fontSize: 14}
+  - elementId: a1
+    elementType: line
+    points: [[322, 250], [348, 250]]
+    arrow: true
+    line: {color: "$navy", width: 2}
+  - elementId: a2
+    elementType: line
+    points: [[612, 250], [638, 250]]
+    arrow: true
+    line: {color: "$navy", width: 2}
+  - elementId: footnote
+    elementType: text
+    bounds: [60, 410, 840, 60]
+    content: {text: "注：流程涉及的口径/假设在此说明（小字 12pt）。", style: "$caption"}

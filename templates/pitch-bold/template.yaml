@@ -1,0 +1,14 @@
+id: pitch-bold
+name: 路演大字
+style: 路演 / 大字报 / 极简
+scene: 融资路演、产品推介、开营大课
+desc: 白底 + 超大字号（标题 44pt+）+ 单一强调色（橙红）；每页一个核心信息，一屏一线索。
+words: 大字 / 冲击 / 极简 / 一屏一信息
+colors: ["#E4572E", "#1F2937", "#FFFFFF", "#F2F3F5", "#9AA1A9"]
+pages:
+  - pages/_cover.yaml
+  - pages/_content.yaml
+  - pages/_flow.yaml
+  - pages/_chart.yaml
+  - pages/_compare.yaml
+  - pages/_ending.yaml

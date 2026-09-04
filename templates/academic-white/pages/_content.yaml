@@ -1,0 +1,35 @@
+pageType: content
+# 内容页骨架：左上页码 + 左对齐标题 + 正文区（细线分区）
+expectedOverlaps:
+  - {pair: [quoteBar, quoteT]}
+expectedOutOfSafeArea: [footer]
+elements:
+  - elementId: pageNo
+    elementType: text
+    bounds: [20, 50, 70, 24]
+    content: {text: "3", style: "$caption"}
+  - elementId: pageTitle
+    elementType: text
+    bounds: [100, 44, 700, 36]
+    content: {text: "章节标题：研究问题与方法", style: "$title", color: "$navy", fontSize: 24}
+  - elementId: divider
+    elementType: line
+    points: [[60, 92], [900, 92]]
+    line: {color: "$light", width: 1}
+  - elementId: bodyText
+    elementType: text
+    bounds: [60, 120, 840, 260]
+    content: {text: "正文区（16pt，行高 1.5）：\n1. 要点一：说明研究问题与背景\n2. 要点二：方法与数据来源\n3. 要点三：初步结论", style: "$body"}
+  - elementId: quoteBar
+    elementType: shape
+    kind: rect
+    bounds: [60, 420, 6, 56]
+    fill: "$navy"
+  - elementId: quoteT
+    elementType: text
+    bounds: [86, 424, 800, 40]
+    content: {text: "核心观点/定义句（引用样式）：一句话说清本章结论。", style: "$label", color: "$gray"}
+  - elementId: footer
+    elementType: text
+    bounds: [60, 496, 300, 20]
+    content: {text: "研究/项目名称 · 章节", style: "$caption"}

@@ -1,0 +1,58 @@
+pageType: content
+# 内容页骨架（大字版）：大标题 + 三大要点（数字徽标 + 极简）
+expectedOverlaps:
+  - {pair: [n1, n1T]}
+  - {pair: [n2, n2T]}
+  - {pair: [n3, n3T]}
+elements:
+  - elementId: kick
+    elementType: text
+    bounds: [60, 48, 400, 26]
+    content: {text: "01 · WHY", style: "$caption", color: "$orange"}
+  - elementId: title
+    elementType: text
+    bounds: [60, 84, 840, 90]
+    content: {text: "大标题：三句话讲清一大点", style: "$title", color: "$ink", fontSize: 40}
+  - elementId: n1
+    elementType: shape
+    kind: ellipse
+    bounds: [60, 220, 64, 64]
+    fill: "$orange"
+  - elementId: n1T
+    elementType: text
+    bounds: [60, 220, 64, 64]
+    content: {text: "1", style: "$title", color: "#FFFFFF", fontSize: 28, align: center}
+  - elementId: p1
+    elementType: text
+    bounds: [60, 306, 260, 120]
+    content: {text: "要点一\n（18pt）一句话", style: "$body", color: "$ink", fontSize: 18}
+  - elementId: n2
+    elementType: shape
+    kind: ellipse
+    bounds: [350, 220, 64, 64]
+    fill: "$ink"
+  - elementId: n2T
+    elementType: text
+    bounds: [350, 220, 64, 64]
+    content: {text: "2", style: "$title", color: "#FFFFFF", fontSize: 28, align: center}
+  - elementId: p2
+    elementType: text
+    bounds: [350, 306, 260, 120]
+    content: {text: "要点二\n（18pt）一句话", style: "$body", color: "$ink", fontSize: 18}
+  - elementId: n3
+    elementType: shape
+    kind: ellipse
+    bounds: [640, 220, 64, 64]
+    fill: "$gray"
+  - elementId: n3T
+    elementType: text
+    bounds: [640, 220, 64, 64]
+    content: {text: "3", style: "$title", color: "#FFFFFF", fontSize: 28, align: center}
+  - elementId: p3
+    elementType: text
+    bounds: [640, 306, 260, 120]
+    content: {text: "要点三\n（18pt）一句话", style: "$body", color: "$ink", fontSize: 18}
+  - elementId: footer
+    elementType: text
+    bounds: [60, 500, 300, 20]
+    content: {text: "第 2 页 · 公司名", style: "$caption"}

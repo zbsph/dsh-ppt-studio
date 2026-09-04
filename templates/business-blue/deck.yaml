@@ -1,0 +1,28 @@
+# 商务蓝模板工作区骨架（复制后按需增删页；母版页可用于新页版式参照）
+version: 1
+title: 未命名演示
+size: [960, 540]
+theme:
+  colors:
+    primary: "#1E4E8C"     # 主色（标题栏/强调）
+    deep: "#16355C"        # 深蓝（页脚带/封面底）
+    accent: "#F59E0B"      # 强调金（亮点/徽标）
+    ink: "#1F2937"         # 正文
+    bg: "#FFFFFF"
+    light: "#EAF1F8"       # 浅底（卡片衬底）
+    steel: "#9DB4D0"       # 页眉带次要文字/分割
+    edge: "#C9D8EA"        # 白底卡片描边/页脚细线
+    steel2: "#4A6FA5"      # 封面装饰点
+    gray3: "#64748B"       # 页面脚注/说明小字
+  textStyles:
+    title: {fontSize: 28, color: "$primary", bold: true}
+    h2: {fontSize: 20, color: "$primary", bold: true}
+    body: {fontSize: 14, color: "$ink"}
+    label: {fontSize: 12, color: "$ink"}
+    caption: {fontSize: 12, color: "#64748B"}
+  safeArea: {top: 16, bottom: 16}
+  grid: {base: 8}
+  minFontSize: 12
+pages:
+  - pages/_cover.yaml
+  - pages/_content.yaml

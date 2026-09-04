@@ -1,0 +1,25 @@
+pageType: cover
+background: {type: solid, color: "$bg"}
+safeArea: {top: 24, bottom: 24}
+elements:
+  - elementId: kick
+    elementType: text
+    bounds: [60, 90, 500, 30]
+    content: {text: "THANK YOU · 感谢", style: "$caption", color: "$cyan"}
+  - elementId: title
+    elementType: text
+    bounds: [60, 140, 840, 90]
+    content: {text: "让数据说话，让方案落地", style: "$title", color: "$white", fontSize: 40, bold: true}
+  - elementId: glow
+    elementType: shape
+    kind: rect
+    bounds: [60, 260, 140, 5]
+    fill: "$cyan"
+  - elementId: cta
+    elementType: text
+    bounds: [60, 300, 840, 40]
+    content: {text: "下一步：试点 / 联系 / 答疑", style: "$body", color: "$sub", fontSize: 16}
+  - elementId: org
+    elementType: text
+    bounds: [60, 452, 840, 26]
+    content: {text: "团队 ｜ 时间 ｜ 版本", style: "$caption"}

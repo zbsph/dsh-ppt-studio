@@ -1,0 +1,14 @@
+id: academic-white
+name: 学术会议
+style: 学术汇报 / 理性克制
+scene: 学位答辩、学术会议、项目评审
+desc: 白底大留白，藏青副色 + 细线分隔；标题严格左对齐，页码左上角；适合图表密集的严谨内容。
+words: 理性 / 克制 / 数据 / 大留白
+colors: ["#16355C", "#1F2937", "#6B7280", "#E5E9F0", "#FFFFFF"]
+pages:
+  - pages/_cover.yaml
+  - pages/_content.yaml
+  - pages/_flow.yaml
+  - pages/_chart.yaml
+  - pages/_compare.yaml
+  - pages/_ending.yaml
