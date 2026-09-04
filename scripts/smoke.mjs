@@ -749,5 +749,86 @@ await rm(surgOut, { force: true }).catch(() => {})
 await rm(surgTplDir, { recursive: true, force: true })
 await rm(surgWork, { recursive: true, force: true })
 
+// ── 26. v0.11.0：候选 C——custGeom 几何闭环 + alpha 透明度 + 形状内文本提取 ──
+const c11Deck = join(root, 'examples', 'c11-smoke')
+await rm(c11Deck, { recursive: true, force: true })
+await mkdir(join(c11Deck, 'pages'), { recursive: true })
+await (await import('node:fs/promises')).writeFile(join(c11Deck, 'deck.yaml'), [
+  'version: 1', 'title: c11-smoke', 'size: [960, 540]',
+  'theme: {colors: {primary: "#2563EB", accent: "#0485A8"}}',
+  'pages:', '  - pages/01.yaml', '', ''].join('\n'))
+await (await import('node:fs/promises')).writeFile(join(c11Deck, 'pages', '01.yaml'), [
+  'pageType: content',
+  'elements:',
+  '  - elementId: ribbon', '    elementType: shape', '    kind: custGeom',
+  '    bounds: [40, 40, 400, 160]',
+  '    path:',
+  '      w: 100000',
+  '      h: 40000',
+  '      commands:',
+  '        - {cmd: moveTo, pts: [[0, 0]]}',
+  '        - {cmd: cubicBezTo, pts: [[30000, 0], [70000, 40000], [100000, 40000]]}',
+  '        - {cmd: arcTo, wR: 10000, hR: 10000, stAng: 0, swAng: 5400000}',
+  '        - {cmd: close}',
+  '    fill: {color: "#0485A8", alpha: 60}',
+  '', ''].join('\n'))
+const c11Ctx = await resolveDeck(c11Deck)
+const c11Exp = await exportPptx(c11Ctx, { out: 'out-c11.pptx', engine: 'pptd' })
+const c11Zip = zipRead(await (await import('node:fs/promises')).readFile(c11Exp.file))
+const c11Slide = c11Zip.get('ppt/slides/slide1.xml').toString('utf8')
+ok('v0.11：导出 custGeom 落盘（path 命令 + arcTo + alpha）',
+  c11Slide.includes('<a:custGeom>') && c11Slide.includes('<a:cubicBezTo>') && c11Slide.includes('<a:arcTo wR="10000"') && c11Slide.includes('<a:alpha val="60000"/>'),
+  'custGeom/alpha XML 缺失')
+// 二次导入回环：kind/path/alpha 无损
+const c11Rt = join(root, 'examples', 'c11-imported')
+await rm(c11Rt, { recursive: true, force: true })
+await importPptx(c11Exp.file, c11Rt)
+const c11RtCtx = await resolveDeck(c11Rt)
+const c11El = c11RtCtx.pages[0].page.elements.find((e) => e.elementId === 'ribbon')
+ok('v0.11：import 回环 custGeom/alpha 无损',
+  c11El?.kind === 'custGeom' && c11El?.fill?.alpha === 60 && c11El?.fill?.color === '#0485A8' && c11El?.path?.commands?.length === 4,
+  JSON.stringify({ kind: c11El?.kind, fill: c11El?.fill, cmds: c11El?.path?.commands?.length }))
+// render 消费 custGeom（SVG path d 含弧转换）
+const c11Render = await renderDeck(c11Ctx, {})
+const c11HtmlPath = join(c11Render.outDir ?? join(c11Deck, 'preview'), c11Render.htmlFiles[0])
+ok('v0.11：render 消费 custGeom（SVG path + 弧转换 A 命令）',
+  c11Render.htmlFiles.length === 1 && (await (await import('node:fs/promises')).readFile(c11HtmlPath, 'utf8')).includes('A 10000 10000'),
+  'SVG 弧命令缺失')
+// 形状内文本提取形态（shape + text 同 bounds 居中）schema 接受
+const c11TextDeck = join(root, 'examples', 'c11-text')
+await rm(c11TextDeck, { recursive: true, force: true })
+await mkdir(join(c11TextDeck, 'pages'), { recursive: true })
+await (await import('node:fs/promises')).writeFile(join(c11TextDeck, 'deck.yaml'), [
+  'version: 1', 'title: c11-text', 'size: [960, 540]',
+  'theme: {colors: {primary: "#2563EB"}}',
+  'pages:', '  - pages/01.yaml', '', ''].join('\n'))
+await (await import('node:fs/promises')).writeFile(join(c11TextDeck, 'pages', '01.yaml'), [
+  'pageType: content',
+  'elements:',
+  '  - elementId: badge', '    elementType: shape', '    kind: ellipse',
+  '    bounds: [100, 100, 80, 80]', '    fill: "#2563EB"',
+  '  - elementId: badge_txt', '    elementType: text', '    bounds: [100, 100, 80, 80]',
+  '    content: {text: "1", fontSize: 14, align: "center", color: "#FFFFFF"}', '', ''].join('\n'))
+const c11TextCtx = await resolveDeck(c11TextDeck)
+ok('v0.11：schema 接受形状内文本提取形态（shape+text 同 bounds）', c11TextCtx.pages.length === 1)
+// validatePath 坏例：未知命令当场报错
+const badPathDeck = join(root, 'examples', 'c11-bad')
+await rm(badPathDeck, { recursive: true, force: true })
+await mkdir(join(badPathDeck, 'pages'), { recursive: true })
+await (await import('node:fs/promises')).writeFile(join(badPathDeck, 'deck.yaml'), 'version: 1\ntitle: bad\nsize: [960, 540]\npages:\n  - pages/01.yaml\n')
+await (await import('node:fs/promises')).writeFile(join(badPathDeck, 'pages', '01.yaml'), [
+  'pageType: content', 'elements:',
+  '  - elementId: x', '    elementType: shape', '    kind: custGeom',
+  '    bounds: [40, 40, 100, 100]',
+  '    path: {commands: [{cmd: nope, pts: [[0, 0]]}]}', '', ''].join('\n'))
+let badPathErr = null
+try { await resolveDeck(badPathDeck) } catch (e) { badPathErr = e }
+ok('v0.11：custGeom 未知命令当场报错（防呆）', badPathErr !== null && badPathErr.messages?.some((m) => m.includes('path.commands[0].cmd')), badPathErr?.messages?.join('; '))
+// 清理
+await rm(c11Rt, { recursive: true, force: true })
+await rm(c11Deck, { recursive: true, force: true })
+await rm(c11TextDeck, { recursive: true, force: true })
+await rm(badPathDeck, { recursive: true, force: true })
+
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)

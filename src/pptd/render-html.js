@@ -30,16 +30,53 @@ const SHAPE_POLY = {
   flowchartData: '20% 0,100% 0,80% 100%,0 100%',
 }
 
-/** fill：'#hex' | {type: gradient, stops, angle} → CSS background。 */
+/** fill：'#hex' | {color, alpha} | {type: gradient, stops(可含 alpha), angle} → CSS background/fill。 */
 function fillCss(fill) {
   if (typeof fill === 'string') return fill
-  if (fill && fill.type === 'gradient') {
-    const stops = (fill.stops ?? []).map((s) => `${s.color} ${s.pos}%`).join(', ')
-    if (!stops) return '#CCCCCC'
-    const ang = fill.angle ?? 90 // OOXML 0°=左→右；CSS 0deg=下→上 → +90 归一
-    return `linear-gradient(${(ang + 90) % 360}deg, ${stops})`
+  if (fill && typeof fill === 'object') {
+    if (fill.type === 'gradient') {
+      const stops = (fill.stops ?? []).map((s) => `${s.alpha !== undefined ? hexToRgba(s.color, s.alpha) : s.color} ${s.pos}%`).join(', ')
+      if (!stops) return '#CCCCCC'
+      const ang = fill.angle ?? 90 // OOXML 0°=左→右；CSS 0deg=下→上 → +90 归一
+      return `linear-gradient(${(ang + 90) % 360}deg, ${stops})`
+    }
+    if (fill.color && fill.alpha !== undefined) return hexToRgba(fill.color, fill.alpha)
+    if (fill.color) return fill.color
   }
   return '#CCCCCC'
+}
+
+/** hex + alpha(0-100) → rgba()。 */
+function hexToRgba(hex, alpha) {
+  const s = String(hex).replace('#', '').padEnd(6, '0')
+  const r = parseInt(s.slice(0, 2), 16)
+  const g = parseInt(s.slice(2, 4), 16)
+  const b = parseInt(s.slice(4, 6), 16)
+  return `rgba(${r},${g},${b},${Math.max(0, Math.min(1, Number(alpha) / 100)).toFixed(3)})`
+}
+
+/** custGeom path.commands → SVG path d（arcTo 弧转换：OOXML stAng 0=3 点钟，y 向下正角顺时针）。 */
+function svgPathD(path) {
+  const d = []
+  let cur = null
+  for (const c of path.commands ?? []) {
+    if (c.cmd === 'moveTo') { cur = c.pts[0]; d.push(`M ${cur[0]} ${cur[1]}`) }
+    else if (c.cmd === 'lnTo') { cur = c.pts[0]; d.push(`L ${cur[0]} ${cur[1]}`) }
+    else if (c.cmd === 'quadBezTo') { const [p, e] = c.pts; cur = e; d.push(`Q ${p[0]} ${p[1]} ${e[0]} ${e[1]}`) }
+    else if (c.cmd === 'cubicBezTo') { const [p1, p2, e] = c.pts; cur = e; d.push(`C ${p1[0]} ${p1[1]} ${p2[0]} ${p2[1]} ${e[0]} ${e[1]}`) }
+    else if (c.cmd === 'arcTo' && cur) {
+      const st = (Number(c.stAng) / 60000) * Math.PI / 180
+      const sw = (Number(c.swAng) / 60000) * Math.PI / 180
+      const cx = cur[0] - Number(c.wR) * Math.cos(st)
+      const cy = cur[1] - Number(c.hR) * Math.sin(st)
+      const ex = cx + Number(c.wR) * Math.cos(st + sw)
+      const ey = cy + Number(c.hR) * Math.sin(st + sw)
+      d.push(`A ${Number(c.wR)} ${Number(c.hR)} 0 ${Math.abs(sw) > Math.PI ? 1 : 0} ${sw >= 0 ? 1 : 0} ${ex.toFixed(2)} ${ey.toFixed(2)}`)
+      cur = [ex, ey]
+    }
+    else if (c.cmd === 'close') d.push('Z')
+  }
+  return d.join(' ')
 }
 
 function slug(name, index) {
@@ -73,6 +110,18 @@ function elementHtml(el, ctx, debug) {
       return { html: `<div class="el" id="${esc(el.id)}" data-kind="text" style="${style}">${esc(el.content?.text ?? '')}</div>`, snap: snap({ style: s, metrics: el.metrics, text: el.content?.text ?? '' }) }
     }
     case 'shape': {
+      // v0.11 候选 C：custGeom → SVG path（任意几何；fill 支持 solid/rgba，渐变归主色近似——诚实降级）
+      if (el.kind === 'custGeom' && el.path?.commands?.length) {
+        const view = [Number(el.path.w ?? 100000), Number(el.path.h ?? 100000)]
+        const solid = typeof el.fill === 'string' ? el.fill
+          : el.fill?.type === 'gradient' ? (el.fill.stops?.[el.fill.stops.length - 1]?.color ?? '#CCCCCC')
+            : (el.fill?.color ?? '#CCCCCC')
+        const fillVal = el.fill?.alpha !== undefined || (el.fill?.type === 'gradient' && el.fill.stops?.some((s) => s.alpha !== undefined))
+          ? fillCss(el.fill) : solid
+        const stroke = el.line ? `${el.line.width}px solid ${el.line.color}` : 'none'
+        const svg = `<svg class="el" id="${esc(el.id)}" data-kind="shape" data-shape="custGeom" style="${pos};overflow:visible" viewBox="0 0 ${view[0]} ${view[1]}" preserveAspectRatio="none"><path d="${svgPathD(el.path)}" fill="${fillVal}" stroke="${el.line?.color ?? 'none'}" stroke-width="${el.line?.width ?? 0}"/></svg>`
+        return { html: svg, snap: snap({ shape: el.kind, fill: el.fill, path: el.path, rotation: el.rotation }) }
+      }
       let css = pos
       if (el.kind === 'ellipse') css += ';border-radius:50%'
       else if (el.kind === 'roundRect' || el.kind === 'flowchartTerminator') css += ';border-radius:8px'

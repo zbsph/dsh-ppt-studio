@@ -51,29 +51,69 @@ const ELEMENT_KEYS = {
  * 前 4 个为原始支持；其余为 OOXML prst 常见形状——kind 名 = OOXML prst 名（export 直通 / import 保留）。
  */
 export const SHAPE_KINDS = [
-  'rect', 'roundRect', 'ellipse', 'triangle',       // 原始
+  'rect', 'roundRect', 'ellipse', 'triangle', 'custGeom',       // 原始 + 自定义几何（v0.11 候选 C）
   'rightArrow', 'leftArrow', 'upArrow', 'downArrow', 'leftRightArrow', // 箭头
   'pentagon', 'hexagon', 'chevron', 'parallelogram', 'diamond', 'octagon', 'star5', // 多边形/星
   'flowchartProcess', 'flowchartDecision', 'flowchartData', 'flowchartTerminator', // 流程图
 ]
 
-/** fill：'#hex' 或 '$themeRef'（实色）| {type: 'gradient', stops: [{pos, color}], angle?}（v0.9.1 渐变闭环）。 */
+/** custGeom 路径命令白名单（OOXML pathLst 全集子集）。 */
+export const PATH_CMDS = new Set(['moveTo', 'lnTo', 'quadBezTo', 'cubicBezTo', 'arcTo', 'close'])
+
+/** fill：'#hex' 或 '$themeRef'（实色）| {color, alpha?} | {type: 'gradient', stops: [{pos, color, alpha?}], angle?}（v0.11 候选 C）。 */
 function validateFill(fill, path, errors) {
   if (typeof fill === 'string') {
-    if (!/^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/.test(fill) && !fill.startsWith('$')) errors.push(`${path}: hex color、$themeRef 或 {type: gradient, stops}（v0.9.1 支持线性渐变）`)
+    if (!/^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/.test(fill) && !fill.startsWith('$')) errors.push(`${path}: hex color、$themeRef 或渐变/alpha 对象（v0.11 支持线性渐变与透明度）`)
+    return
+  }
+  if (typeof fill === 'number' || fill === null) {
+    errors.push(`${path}: hex color、$themeRef 或 {color, alpha?} 渐变对象`)
     return
   }
   if (!fill || typeof fill !== 'object') { errors.push(`${path}: hex color 或渐变对象`); return }
-  if (fill.type !== 'gradient') errors.push(`${path}.type: gradient`)
-  if (!Array.isArray(fill.stops) || fill.stops.length < 2) {
-    errors.push(`${path}.stops: [{pos, color}] 至少 2 个（pos 0-100）`)
-  } else {
-    fill.stops.forEach((s, i) => {
-      if (!s || typeof s.pos !== 'number' || s.pos < 0 || s.pos > 100) errors.push(`${path}.stops[${i}].pos: number 0-100`)
-      if (typeof s.color !== 'string' || !/^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/.test(s.color)) errors.push(`${path}.stops[${i}].color: hex color`)
-    })
+  if (fill.type !== undefined && fill.type !== 'gradient') errors.push(`${path}.type: gradient（省略 = {color, alpha} 纯色形式）`)
+  if (fill.color !== undefined && typeof fill.color !== 'string') errors.push(`${path}.color: hex color 或 $themeRef`)
+  if (fill.alpha !== undefined && !(typeof fill.alpha === 'number' && fill.alpha >= 0 && fill.alpha <= 100)) errors.push(`${path}.alpha: number 0-100（透明度百分比，OOXML alpha val/1000）`)
+  if (fill.type === 'gradient') {
+    if (!Array.isArray(fill.stops) || fill.stops.length < 2) {
+      errors.push(`${path}.stops: [{pos, color}] 至少 2 个（pos 0-100）`)
+    } else {
+      fill.stops.forEach((s, i) => {
+        if (!s || typeof s.pos !== 'number' || s.pos < 0 || s.pos > 100) errors.push(`${path}.stops[${i}].pos: number 0-100`)
+        if (typeof s.color !== 'string' || !/^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/.test(s.color)) errors.push(`${path}.stops[${i}].color: hex color`)
+        if (s.alpha !== undefined && !(typeof s.alpha === 'number' && s.alpha >= 0 && s.alpha <= 100)) errors.push(`${path}.stops[${i}].alpha: number 0-100`)
+      })
+    }
+    if (fill.angle !== undefined && !(typeof fill.angle === 'number' && Number.isFinite(fill.angle))) errors.push(`${path}.angle: number (degrees, OOXML lin@ang 顺时针)`)
   }
-  if (fill.angle !== undefined && !(typeof fill.angle === 'number' && Number.isFinite(fill.angle))) errors.push(`${path}.angle: number (degrees, OOXML lin@ang 顺时针)`)
+}
+
+/** custGeom 路径校验（kind=custGeom 时）：path.commands 白名单 + 点数 + arcTo 字段。 */
+function validatePath(el, path, errors) {
+  if (el.kind !== 'custGeom') return
+  const p = el.path
+  if (!p || typeof p !== 'object') { errors.push(`${path}.path: required object（kind=custGeom：{w, h, commands}）`); return }
+  if (p.w !== undefined && !(typeof p.w === 'number' && p.w > 0)) errors.push(`${path}.path.w: positive number（路径坐标空间宽）`)
+  if (p.h !== undefined && !(typeof p.h === 'number' && p.h > 0)) errors.push(`${path}.path.h: positive number`)
+  if (!Array.isArray(p.commands) || !p.commands.length) {
+    errors.push(`${path}.path.commands: non-empty array（moveTo/lnTo/quadBezTo/cubicBezTo/arcTo/close）`)
+    return
+  }
+  p.commands.forEach((c, i) => {
+    const cp = `${path}.path.commands[${i}]`
+    if (!c || typeof c.cmd !== 'string' || !PATH_CMDS.has(c.cmd)) { errors.push(`${cp}.cmd: ${[...PATH_CMDS].join('|')}`); return }
+    const ptN = { moveTo: 1, lnTo: 1, quadBezTo: 2, cubicBezTo: 3 }[c.cmd]
+    if (c.cmd === 'close') return
+    if (c.cmd === 'arcTo') {
+      for (const k of ['wR', 'hR', 'stAng', 'swAng']) {
+        if (typeof c[k] !== 'number' || !Number.isFinite(c[k])) errors.push(`${cp}.${k}: number（OOXML 弧参数：角度单位 60000/度）`)
+      }
+      return
+    }
+    if (!Array.isArray(c.pts) || c.pts.length !== ptN || c.pts.some((pt) => !Array.isArray(pt) || pt.length !== 2 || pt.some((n) => typeof n !== 'number' && !Number.isFinite(n)))) {
+      errors.push(`${cp}.pts: [[x,y]×${ptN}]（路径坐标空间整数）`)
+    }
+  })
 }
 
 export class PptError extends Error {
@@ -275,6 +315,7 @@ function validateTextStyle(s, path, errors) {
 function validateShape(el, path, errors) {
   if (!SHAPE_KINDS.includes(el.kind)) errors.push(`${path}.kind: ${SHAPE_KINDS.slice(0, 4).join('|')} 或常见 prst（${SHAPE_KINDS.slice(4).join('|')}）`)
   if (el.fill !== undefined) validateFill(el.fill, `${path}.fill`, errors)
+  if (el.kind === 'custGeom') validatePath(el, path, errors)
   if (el.rotation !== undefined && !(typeof el.rotation === 'number' && Number.isFinite(el.rotation))) errors.push(`${path}.rotation: number (degrees)`)
   if (el.line) {
     if (typeof el.line.color !== 'string') errors.push(`${path}.line.color: string`)
@@ -355,9 +396,12 @@ export async function resolveDeck(dir) {
   }
   const resolveColor = (v) => {
     if (typeof v !== 'string') {
-      // v0.9.1：渐变对象（stops 内 $ref 一并解析）
+      // v0.9.1：渐变对象（stops 内 $ref 一并解析）；v0.11：{color, alpha} 形式 color 的 $ref 解析
       if (v && typeof v === 'object' && v.type === 'gradient' && Array.isArray(v.stops)) {
         return { ...v, stops: v.stops.map((s) => ({ ...s, color: typeof s.color === 'string' && s.color.startsWith('$') ? (colors[s.color.slice(1)] ?? s.color) : s.color })) }
+      }
+      if (v && typeof v === 'object' && typeof v.color === 'string' && v.color.startsWith('$')) {
+        return { ...v, color: colors[v.color.slice(1)] ?? v.color }
       }
       return v
     }

@@ -138,7 +138,8 @@ export function normalizePage(page, ctx) {
           color: resolveColor(el.line.color ?? '#000'),
           width: el.line.width ?? 1,
         } : undefined
-        elements.push({ ...base, type: 'shape', kind: el.kind ?? 'rect', fill, line, rotation: el.rotation ?? 0 })
+        // v0.11 候选 C：custGeom path 随归一化透传（render/export 消费）
+        elements.push({ ...base, type: 'shape', kind: el.kind ?? 'rect', fill, line, ...(el.path ? { path: el.path } : {}), rotation: el.rotation ?? 0 })
         break
       }
       case 'line': {

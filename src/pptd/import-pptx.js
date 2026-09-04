@@ -241,6 +241,14 @@ function walkNode(node, st, toPage) {
   }
   const push = (el) => {
     if (!el) return
+    // v0.11 候选 C：形状内文本（_shapeText = 附加 text 元素，与形状同 bounds，居中）
+    if (el._shapeText) {
+      const extra = el._shapeText
+      delete el._shapeText
+      const b = toPage(Number(extra.bounds.x), Number(extra.bounds.y), Number(extra.bounds.w), Number(extra.bounds.h))
+      extra.bounds = safeBounds(b)
+      st.out.push(extra)
+    }
     if (el.bounds) {
       const b = toPage(Number(el.bounds.x), Number(el.bounds.y), Number(el.bounds.w), Number(el.bounds.h))
       el.bounds = safeBounds(b)
@@ -340,32 +348,95 @@ function solidColor(node) {
   return s ? '#' + String(s.attrs.val).toUpperCase() : undefined
 }
 
-/** P0-1：填充样式：solidFill（srgb/scheme）或 gradFill（v0.9.1：双 stop 线性渐变闭环——不再只归主色）。 */
+/** P0-1：填充样式：solidFill（srgb/scheme + alpha，v0.11 候选 C）或 gradFill（v0.9.1 双 stop + 逐 stop alpha）。 */
 function fillOf(node, colorOf) {
   const spPr = first(node, 'spPr')
   const solid = spPr ? first(spPr, 'solidFill') : undefined
-  if (solid) return { color: colorOf(solid) }
+  if (solid) {
+    const sc = first(solid, 'srgbClr') ?? first(solid, 'schemeClr')
+    const alpha = alphaOf(sc)
+    const color = colorOf(solid)
+    return color ? (alpha !== undefined ? { color, alpha } : { color }) : {}
+  }
   const grad = spPr ? first(spPr, 'gradFill') : undefined
   if (grad) {
-    // OOXML：gs 位于 gsLst 内（旧代码 children(grad,'gs') 读不到 → 渐变一直空；v0.9.1 修正）
     const gsLst = first(grad, 'gsLst') ?? grad
     const stops = []
     for (const gs of children(gsLst, 'gs')) {
       const c = colorOf(gs)
       const pos = gs.attrs?.pos !== undefined ? Number(gs.attrs.pos) / 1000 : undefined // OOXML pos 0-100000（0-100%）
-      if (c) stops.push({ ...(pos !== undefined && Number.isFinite(pos) ? { pos } : {}), color: c })
+      if (c) stops.push({ ...(pos !== undefined && Number.isFinite(pos) ? { pos } : {}), color: c, ...(alphaOf(gs) !== undefined ? { alpha: alphaOf(gs) } : {}) })
     }
     if (stops.length) {
-      // 渐变双 stop（线性）：stops 带位置 + lin ang（60000/度，顺时针旋转）；radial/path 归一为线性并记录
       const lin = first(grad, 'lin')
       const angle = lin?.attrs?.ang !== undefined ? Math.round(Number(lin.attrs.ang) / 60000) % 360 : undefined
       const kind = grad.children?.some?.((c) => c.tag === 'path') ? 'path' : grad.children?.some?.((c) => c.tag === 'radialGradient') ? 'radial' : undefined
-      const normalized = stops.map((s, i) => ({ pos: s.pos ?? (i / (stops.length - 1)) * 100, color: s.color }))
+      const normalized = stops.map((s, i) => ({ pos: s.pos ?? (i / (stops.length - 1)) * 100, color: s.color, ...(s.alpha !== undefined ? { alpha: s.alpha } : {}) }))
       // 兼容：color = 末 stop（实色端）；gradient = 完整对象（闭环渲染/导出用）
       return { color: stops[stops.length - 1].color, gradient: { type: kind ?? 'linear', stops: normalized, ...(angle !== undefined ? { angle } : {}) } }
     }
   }
   return {}
+}
+
+/** 颜色节点（srgbClr/schemeClr）的 alpha（0-100，OOXML val/1000）。 */
+function alphaOf(colorNode) {
+  const a = colorNode ? first(colorNode, 'alpha') : undefined
+  return a?.attrs?.val !== undefined ? Number(a.attrs.val) / 1000 : undefined
+}
+
+/** custGeom pathLst → PPTD path（{w, h, commands}，路径坐标为抽象单位——原样保留，不除以 EMU）。 */
+function custPathOf(custGeom) {
+  const pathLst = first(custGeom, 'pathLst')
+  const path = pathLst ? first(pathLst, 'path') : undefined
+  if (!path) return null
+  const w = path.attrs?.w !== undefined && Number.isFinite(Number(path.attrs.w)) ? Number(path.attrs.w) : undefined
+  const h = path.attrs?.h !== undefined && Number.isFinite(Number(path.attrs.h)) ? Number(path.attrs.h) : undefined
+  const commands = []
+  for (const c of path.children ?? []) {
+    const pts = (c.tag === 'moveTo' || c.tag === 'lnTo' || c.tag === 'quadBezTo' || c.tag === 'cubicBezTo')
+      ? children(c, 'pt').map((pt) => [Number(pt.attrs?.x ?? 0), Number(pt.attrs?.y ?? 0)])
+      : []
+    if (c.tag === 'moveTo' || c.tag === 'lnTo' || c.tag === 'quadBezTo' || c.tag === 'cubicBezTo') {
+      if (pts.length === ({ moveTo: 1, lnTo: 1, quadBezTo: 2, cubicBezTo: 3 })[c.tag]) commands.push({ cmd: c.tag, pts })
+    } else if (c.tag === 'arcTo') {
+      commands.push({ cmd: 'arcTo', wR: Number(c.attrs?.wR ?? 0), hR: Number(c.attrs?.hR ?? 0), stAng: Number(c.attrs?.stAng ?? 0), swAng: Number(c.attrs?.swAng ?? 0) })
+    } else if (c.tag === 'close') {
+      commands.push({ cmd: 'close' })
+    }
+  }
+  if (!commands.length) return null
+  return { ...(w !== undefined ? { w } : {}), ...(h !== undefined ? { h } : {}), commands }
+}
+
+/** 文本内容提取（isText 与形状内文本共用）：rPr 样式 → {content, raw}。 */
+function textContentOf(tx, text, colorOf) {
+  const p0 = tx ? first(tx, 'p') : undefined
+  const pPr = p0 ? first(p0, 'pPr') : undefined
+  const r = p0 ? first(p0, 'r') : undefined
+  const rPr = r ? first(r, 'rPr') : undefined
+  const szAttr = rPr?.attrs?.sz ? Number(rPr.attrs.sz) / 100 : 18
+  const color = rPr ? colorOf(rPr) : undefined
+  const font = rPr?.children?.find((c) => c.tag === 'latin' || c.tag === 'ea')?.attrs?.typeface
+  const align = pPr?.attrs?.algn ? { left: 'left', ctr: 'center', r: 'right' }[pPr.attrs.algn] : undefined
+  const lnSpc = pPr ? first(pPr, 'lnSpc') : undefined
+  const spcPct = lnSpc ? first(lnSpc, 'spcPct') : undefined
+  const lineHeight = spcPct?.attrs?.val ? Math.round(Number(spcPct.attrs.val) / 100000 * 100) / 100 : undefined
+  const bold = rPr?.attrs?.b === '1'
+  const italic = rPr?.attrs?.i === '1'
+  return {
+    content: {
+      text,
+      ...(szAttr !== 18 ? { fontSize: szAttr } : {}),
+      ...(bold ? { bold: true } : {}),
+      ...(italic ? { italic: true } : {}),
+      ...(color ? { color } : {}),
+      ...(font ? { fontFamily: font } : {}),
+      ...(align ? { align } : {}),
+      ...(lineHeight && Math.abs(lineHeight - 1.2) > 0.05 ? { lineHeight } : {}),
+    },
+    raw: { sz: szAttr, font, color, bold, italic, align, lineHeight },
+  }
 }
 
 /** P0-1：描边样式 a:ln → {color, width(px)}。 */
@@ -391,9 +462,11 @@ function spToEl(node, styleCtx) {
   const spPr = first(node, 'spPr')
   const prstGeom = spPr ? first(spPr, 'prstGeom') : undefined
   const prst = prstGeom?.attrs?.prst
+  const custGeom = spPr ? first(spPr, 'custGeom') : undefined
   const text = tx ? allText(tx).replace(/[\t ]+/g, ' ').trim().split(/\n\s*\n|(?<=。)\s*/) : []
   const textNonEmpty = text.join(' ').trim().length > 0
-  const isText = textNonEmpty && (!prst || (prst === 'rect' && !!tx))
+  // v0.11：custGeom 形状即使带文本也是形状（文本走 _shapeText 提取）——避免"弧形内文字"把形状整个变文本
+  const isText = textNonEmpty && !custGeom && (!prst || (prst === 'rect' && !!tx))
   // P0-1：原始样式（import-styles.json 用）
   const raw = {}
   const fill = fillOf(node, colorOf)
@@ -405,55 +478,48 @@ function spToEl(node, styleCtx) {
   if (spPrFx) raw.shadow = true
   if (isText) {
     // 文本元素（P0-1：字体/斜体/对齐/行高一并提取）
-    const p0 = tx ? first(tx, 'p') : undefined
-    const pPr = p0 ? first(p0, 'pPr') : undefined
-    const r = p0 ? first(p0, 'r') : undefined
-    const rPr = r ? first(r, 'rPr') : undefined
-    const szAttr = rPr?.attrs?.sz ? Number(rPr.attrs.sz) / 100 : 18
-    const color = rPr ? colorOf(rPr) : undefined
-    const font = rPr?.children?.find((c) => c.tag === 'latin' || c.tag === 'ea')?.attrs?.typeface
-    const align = pPr?.attrs?.algn ? { left: 'left', ctr: 'center', r: 'right' }[pPr.attrs.algn] : undefined
-    const lnSpc = pPr ? first(pPr, 'lnSpc') : undefined
-    const spcPct = lnSpc ? first(lnSpc, 'spcPct') : undefined
-    const lineHeight = spcPct?.attrs?.val ? Math.round(Number(spcPct.attrs.val) / 100000 * 100) / 100 : undefined
-    raw.sz = szAttr
-    raw.font = font
-    raw.color = color
-    raw.bold = rPr?.attrs?.b === '1'
-    raw.italic = rPr?.attrs?.i === '1'
-    raw.align = align
-    raw.lineHeight = lineHeight
-    return {
-      elementId: sanitize(id), elementType: 'text',
-      bounds: safeBounds(bounds ?? {x: 0, y: 0, w: 200, h: 50}),
-      content: {
-        text: text.join(' '),
-        ...(szAttr !== 18 ? { fontSize: szAttr } : {}),
-        ...(rPr?.attrs?.b === '1' ? { bold: true } : {}),
-        ...(rPr?.attrs?.i === '1' ? { italic: true } : {}),
-        ...(color ? { color } : {}),
-        ...(font ? { fontFamily: font } : {}),
-        ...(align ? { align } : {}),
-        ...(lineHeight && Math.abs(lineHeight - 1.2) > 0.05 ? { lineHeight } : {}),
-      },
-      _styleRaw: raw,
-    }
+    const tc = textContentOf(tx, text.join(' '), colorOf)
+    Object.assign(raw, tc.raw)
+    return { elementId: sanitize(id), elementType: 'text', bounds: safeBounds(bounds ?? {x: 0, y: 0, w: 200, h: 50}), content: tc.content, _styleRaw: raw }
   }
-  const kind = PRST_MAP.has(prst) ? prst : 'rect'
+  // v0.11 候选 C：kind 判定——custGeom 优先，然后 prst 白名单，然后 rect
+  let kind = 'rect'
+  let path = null
+  if (custGeom) {
+    path = custPathOf(custGeom)
+    if (path) kind = 'custGeom'
+  }
+  if (kind === 'rect' && PRST_MAP.has(prst)) kind = prst
   const out = {
     elementId: sanitize(id), elementType: 'shape', kind,
     bounds: safeBounds(bounds ?? {x: 0, y: 0, w: 100, h: 100}),
   }
+  if (path) out.path = path
   if (fill.gradient) {
     // v0.9.1：渐变闭环——fill 直通对象（render/export 双端支持）；color 兜底 = 末 stop（旧兼容）
     out.fill = { type: 'gradient', stops: fill.gradient.stops, ...(fill.gradient.angle !== undefined ? { angle: fill.gradient.angle } : {}) }
     out._styleRaw = { ...raw, gradient: fill.gradient, prst: prst !== kind ? prst : undefined }
-  } else {
-    if (fill.color) out.fill = fill.color
+  } else if (fill.color) {
+    out.fill = fill.alpha !== undefined ? { color: fill.color, alpha: fill.alpha } : fill.color
     if (prst && prst !== 'rect' && !PRST_MAP.has(prst)) raw.prst = prst // 未映射 prst 记录（兜底 rect）
+    if (Object.keys(raw).length) out._styleRaw = raw
+  } else {
+    if (prst && prst !== 'rect' && !PRST_MAP.has(prst)) raw.prst = prst
     if (Object.keys(raw).length) out._styleRaw = raw
   }
   if (ln) out.line = ln
+  // v0.11 候选 C：非文本框形状内文本（椭圆/自定义几何/序号等）→ 提取为独立文本元素（形状居中释放原文本）
+  if (textNonEmpty && kind !== 'rect' && tx) {
+    const tc = textContentOf(tx, text.join(' '), colorOf)
+    const b = safeBounds(bounds ?? {x: 0, y: 0, w: 100, h: 100})
+    const extra = {
+      elementId: sanitize(`${id}_txt`), elementType: 'text',
+      bounds: { x: b.x, y: b.y, w: b.w, h: b.h },
+      content: { ...tc.content, align: tc.content.align ?? 'center' },
+      _styleRaw: { ...tc.raw, shapeText: true },
+    }
+    out._shapeText = extra // 主流程合并（去重）
+  }
   return out
 }
 
@@ -597,15 +663,27 @@ function pageYaml(page, name) {
     }
     if (el.fit) lines.push(`    fit: ${el.fit}`)
     if (el.src) lines.push(`    src: ${JSON.stringify(el.src)}`)
-    // P0-1：样式保留；v0.9.1 渐变闭环（fill 对象直通，不再单一归主色）
+    // P0-1：样式保留；v0.9.1 渐变闭环（fill 对象直通，不再单一归主色）；v0.11 alpha 直通
     if (el.fill && typeof el.fill === 'object' && el.fill.type === 'gradient') {
       lines.push('    fill:')
       lines.push('      type: gradient')
       lines.push('      stops:')
-      for (const s of el.fill.stops) lines.push(`        - {pos: ${s.pos}, color: "${s.color}"}`)
+      for (const s of el.fill.stops) lines.push(`        - {pos: ${s.pos}, color: "${s.color}"${s.alpha !== undefined ? `, alpha: ${s.alpha}` : ''}}`)
       if (el.fill.angle !== undefined) lines.push(`      angle: ${el.fill.angle}   # OOXML lin@ang 顺时针`)
     } else if (el.fill) {
       lines.push(`    fill: ${JSON.stringify(el.fill)}`)
+    }
+    // v0.11 候选 C：custGeom 路径（commands 多行）
+    if (el.path) {
+      lines.push('    path:')
+      if (el.path.w !== undefined) lines.push(`      w: ${el.path.w}`)
+      if (el.path.h !== undefined) lines.push(`      h: ${el.path.h}`)
+      lines.push('      commands:')
+      for (const c of el.path.commands) {
+        if (c.cmd === 'close') lines.push('        - {cmd: close}')
+        else if (c.cmd === 'arcTo') lines.push(`        - {cmd: arcTo, wR: ${c.wR}, hR: ${c.hR}, stAng: ${c.stAng}, swAng: ${c.swAng}}`)
+        else lines.push(`        - {cmd: ${c.cmd}, pts: ${JSON.stringify(c.pts)}}`)
+      }
     }
     if (raw.gradient && typeof raw.gradient === 'object') {
       const stopsTxt = (raw.gradient.stops ?? []).map((s) => s.color).join('→')

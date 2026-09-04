@@ -461,13 +461,14 @@ export function themeConformance(page, theme) {
   return out
 }
 
-/** 颜色集合（v0.9.1）：文本色 / 形状 fill（渐变 → stops 颜色 / line 色）。 */
+/** 颜色集合（v0.9.1/0.11）：文本色 / 形状 fill（渐变 → stops 颜色；{color, alpha} → color / line 色）。 */
 function fillColorsOf(el) {
   if (el.kind === 'text') return [el.style?.color].filter(Boolean)
   if (el.kind === 'shape') {
     const f = el.fill
     if (typeof f === 'string') return [f]
     if (f && Array.isArray(f.stops)) return f.stops.map((s) => s.color).filter(Boolean)
+    if (f && f.color) return [f.color]
     return []
   }
   if (el.kind === 'line') return [el.line?.color].filter(Boolean)

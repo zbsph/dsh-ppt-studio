@@ -170,7 +170,15 @@ function alignOf(a) { return a === 'right' ? 'r' : a === 'center' ? 'ctr' : 'l' 
 // ── shapes ────────────────────────────────────────────────────────────────
 function shapeSp(el) {
   const id = nid()
-  // v0.9.1：kind 直通 OOXML prst（白名单 = schema SHAPE_KINDS；示意性形状 export 即 prst 原生）
+  // v0.9.1：kind 直通 OOXML prst（白名单 = schema SHAPE_KINDS）；v0.11 候选 C：custGeom → custGeom 元素（几何零损失）
+  if (el.kind === 'custGeom') {
+    const fill = fillSpPr(el.fill)
+    const ln = el.line ? lineSpPr(el.line) : '<a:ln><a:noFill/></a:ln>'
+    return '<p:sp><p:nvSpPr><p:cNvPr id="' + id + '" name="' + xm(el.id) + '"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>'
+      + '<p:spPr>' + xfrm(el.bounds.x, el.bounds.y, el.bounds.w, el.bounds.h, el.rotation ?? 0)
+      + custGeomXml(el.path) + fill + ln + '</p:spPr>'
+      + '<p:txBody><a:bodyPr rtlCol="0" anchor="ctr"/><a:lstStyle/><a:p/></p:txBody></p:sp>'
+  }
   const prst = el.kind && /^[A-Za-z]+$/.test(el.kind) ? el.kind : 'rect'
   const avLst = el.kind === 'roundRect' ? '<a:avLst><a:gd name="adj" fmla="val 8000"/></a:avLst>'
     : el.kind === 'chevron' ? '<a:avLst><a:gd name="adj" fmla="val 25000"/></a:avLst>'
@@ -184,20 +192,41 @@ function shapeSp(el) {
     + '<p:txBody><a:bodyPr rtlCol="0" anchor="ctr"/><a:lstStyle/><a:p/></p:txBody></p:sp>'
 }
 
-/** fill：'#hex' | {type: gradient, stops, angle} → OOXML fill（v0.9.1 渐变闭环）。 */
+/** v0.11 候选 C：PPTD path → custGeom XML（命令直通，几何零损失）。 */
+function custGeomXml(path) {
+  const p = path ?? {}
+  const w = p.w ?? 100000
+  const h = p.h ?? 100000
+  const cmds = (p.commands ?? []).map((c) => {
+    if (c.cmd === 'close') return '<a:close/>'
+    if (c.cmd === 'arcTo') return '<a:arcTo wR="' + c.wR + '" hR="' + c.hR + '" stAng="' + c.stAng + '" swAng="' + c.swAng + '"/>'
+    const pts = (c.pts ?? []).map((pt) => '<a:pt x="' + pt[0] + '" y="' + pt[1] + '"/>').join('')
+    return '<a:' + c.cmd + '>' + pts + '</a:' + c.cmd + '>'
+  }).join('')
+  return '<a:custGeom><a:avLst/><a:gdLst/><a:ahLst/><a:cxnLst/><a:rect l="l" t="t" r="r" b="b"/>'
+    + '<a:pathLst><a:path w="' + w + '" h="' + h + '">' + cmds + '</a:path></a:pathLst></a:custGeom>'
+}
+
+/** fill：'#hex' | {color, alpha?} | {type: gradient, stops: [{pos, color, alpha?}], angle} → OOXML fill。 */
 function fillSpPr(fill) {
   if (!fill) return '<a:noFill/>'
-  if (typeof fill === 'string') return '<a:solidFill><a:srgbClr val="' + hex(fill) + '"/></a:solidFill>'
+  if (typeof fill === 'string') return '<a:solidFill>' + srgbClrXml(fill) + '</a:solidFill>'
+  if (fill.color) return '<a:solidFill>' + srgbClrXml(fill.color, fill.alpha) + '</a:solidFill>'
   if (fill.type === 'gradient') {
     const gs = (fill.stops ?? []).map((s) => {
       const pos = Math.max(0, Math.min(100, Number(s.pos) || 0))
-      return '<a:gs pos="' + Math.round(pos * 1000) + '"><a:srgbClr val="' + hex(s.color) + '"/></a:gs>'
+      return '<a:gs pos="' + Math.round(pos * 1000) + '">' + srgbClrXml(s.color, s.alpha) + '</a:gs>'
     }).join('')
     if (!gs) return '<a:noFill/>'
     const ang = fill.angle !== undefined ? Math.round(Math.max(0, ((Number(fill.angle) % 360) + 360) % 360) * 60000) : 5400000
     return '<a:gradFill rotWithShape="1"><a:gsLst>' + gs + '</a:gsLst><a:lin ang="' + ang + '" scaled="1"/></a:gradFill>'
   }
   return '<a:noFill/>'
+}
+
+/** srgbClr（可选 alpha 0-100）→ OOXML（v0.11 透明度闭环）。 */
+function srgbClrXml(color, alpha) {
+  return '<a:srgbClr val="' + hex(color) + '">' + (alpha !== undefined ? '<a:alpha val="' + Math.round(Number(alpha) * 1000) + '"/>' : '') + '</a:srgbClr>'
 }
 
 // ── line / connector ──────────────────────────────────────────────────────

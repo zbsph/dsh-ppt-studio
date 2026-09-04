@@ -42,19 +42,26 @@ elements:
     # 也可内联：fontSize: 14 / color: "$ink" / bold / align: left|center|right / lineHeight / wrap: false
 \`\`\`
 
-### shape（kind = rect|roundRect|ellipse|triangle + 常见 prst：rightArrow/leftArrow/upArrow/downArrow/leftRightArrow/pentagon/hexagon/chevron/parallelogram/diamond/octagon/star5/flowchartProcess|Decision|Data|Terminator）
+### shape（kind = rect|roundRect|ellipse|triangle|custGeom + 常见 prst：rightArrow/leftArrow/upArrow/downArrow/leftRightArrow/pentagon/hexagon/chevron/parallelogram/diamond/octagon/star5/flowchartProcess|Decision|Data|Terminator）
 \`\`\`yaml
 - elementId: card
   elementType: shape
   kind: roundRect
   bounds: [60, 60, 400, 200]
-  fill: "$colors.primary"     # #hex 或渐变对象（v0.9.1）：
+  fill: "$colors.primary"     # #hex | {color, alpha}（v0.11 透明度）或渐变对象：
   # fill:
   #   type: gradient
-  #   stops: [{pos: 0, color: "#79C9E2"}, {pos: 100, color: "#0485A8"}]
+  #   stops: [{pos: 0, color: "#79C9E2"}, {pos: 100, color: "#0485A8", alpha: 40}]
   #   angle: 90               # OOXML lin@ang 顺时针
   line: {color: "#FFFFFF", width: 1}
   rotation: 0                 # 度
+# 自定义几何（v0.11 候选 C，模板曲线装饰保真）：
+# - elementId: ribbon
+#   elementType: shape
+#   kind: custGeom
+#   bounds: [40, 40, 400, 160]
+#   path: {w: 100000, h: 40000, commands: [{cmd: moveTo, pts: [[0,0]]}, {cmd: cubicBezTo, pts: [[30000,0],[70000,40000],[100000,40000]]}, {cmd: arcTo, wR: 10000, hR: 10000, stAng: 0, swAng: 5400000}, {cmd: close}]}
+#   # commands: moveTo|lnTo|quadBezTo|cubicBezTo|arcTo(wR/hR/stAng/swAng)|close；坐标 = 路径空间抽象单位
 \`\`\`
 
 ### line（bounds 可省略；**仅 2 点**，多点折线请拆成多条 line——P2-3）
