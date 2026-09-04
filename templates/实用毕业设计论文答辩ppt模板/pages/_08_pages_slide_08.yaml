@@ -72,6 +72,21 @@ elements:
     kind: rect
     fill: "#FFFFFF"
     line: { color: "#000000" }
+  - elementId: "Freeform_39"
+    elementType: shape
+    bounds: [ 337, 166, 16, 9 ]
+    kind: rect
+    line: { color: "#000000", width: 1 }
+  - elementId: "Freeform_40"
+    elementType: shape
+    bounds: [ 325, 158, 11, 7 ]
+    kind: rect
+    line: { color: "#000000", width: 1 }
+  - elementId: "Freeform_41"
+    elementType: shape
+    bounds: [ 325, 155, 29, 18 ]
+    kind: rect
+    line: { color: "#000000", width: 1 }
 expectedOverlaps:
   - pair:
       - 矩形_1
@@ -97,3 +112,18 @@ expectedOverlaps:
   - pair:
       - 矩形_1
       - Freeform_28
+  - pair:
+      - 对象_2
+      - Freeform_39
+  - pair:
+      - 对象_2
+      - Freeform_40
+  - pair:
+      - 对象_2
+      - Freeform_41
+  - pair:
+      - Freeform_39
+      - Freeform_41
+  - pair:
+      - Freeform_40
+      - Freeform_41

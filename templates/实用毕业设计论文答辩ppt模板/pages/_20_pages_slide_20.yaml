@@ -14,9 +14,32 @@ elements:
       color: "#4B649F"
       bold: true
       lineHeight: 1.5
+  - elementId: "直接连接符_3"
+    elementType: line
+    bounds: [ 0, 65, 880, 1 ]
+    points: [ [ 0, 65 ], [ 880, 66 ] ]
+    line: { color: "#000000", width: 2 }
   - elementId: "矩形_4"
     elementType: shape
     bounds: [ 0, 530, 960, 11 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_6"
+    elementType: shape
+    bounds: [ 744, 176, 127, 127 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "椭圆_7"
+    elementType: shape
+    bounds: [ 752, 184, 110, 110 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "KSO_Shape"
+    elementType: shape
+    bounds: [ 774, 211, 66, 57 ]
     kind: rect
     fill: "#4B649F"
     line: { color: "#000000" }
@@ -28,6 +51,42 @@ elements:
       fontSize: 24
       color: "#595959"
       lineHeight: 1
+  - elementId: "Oval_11"
+    elementType: shape
+    bounds: [ 384, 120, 37, 37 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "Freeform_6"
+    elementType: shape
+    bounds: [ 398, 130, 10, 17 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "Oval_22"
+    elementType: shape
+    bounds: [ 384, 200, 37, 37 ]
+    kind: ellipse
+    fill: "#5E80B0"
+    line: { color: "#000000" }
+  - elementId: "Freeform_11"
+    elementType: shape
+    bounds: [ 395, 211, 15, 15 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "Oval_27"
+    elementType: shape
+    bounds: [ 384, 281, 37, 37 ]
+    kind: ellipse
+    fill: "#7DB1CD"
+    line: { color: "#000000" }
+  - elementId: "Freeform_16"
+    elementType: shape
+    bounds: [ 395, 293, 15, 13 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
   - elementId: "Title_13-2"
     elementType: text
     bounds: [ 577, 229, 303, 56 ]
@@ -70,6 +129,12 @@ elements:
     bounds: [ -20, 134, 548, 318 ]
     content:
       text: "[chart: 对象 27] 图表已降级为文本占位，请重新生成图表样式"
+  - elementId: "直接连接符_25"
+    elementType: line
+    bounds: [ 457, 137, 1, 315 ]
+    points: [ [ 457, 137 ], [ 458, 452 ] ]
+    arrow: true
+    line: { color: "#4B649F" }
   - elementId: "文本框_26"
     elementType: text
     bounds: [ 171, 222, 176, 104 ]
@@ -81,3 +146,67 @@ elements:
       lineHeight: 1
 expectedOutOfSafeArea:
   - 对象_27
+expectedOverlaps:
+  - pair:
+      - 椭圆_6
+      - 椭圆_7
+  - pair:
+      - 椭圆_6
+      - KSO_Shape
+  - pair:
+      - 椭圆_6
+      - Title_13
+  - pair:
+      - 椭圆_6
+      - Title_13-2
+  - pair:
+      - 椭圆_6
+      - 文本框_21
+  - pair:
+      - 椭圆_6
+      - 文本框_22
+  - pair:
+      - 椭圆_7
+      - KSO_Shape
+  - pair:
+      - 椭圆_7
+      - Title_13-2
+  - pair:
+      - 椭圆_7
+      - 文本框_21
+  - pair:
+      - 椭圆_7
+      - 文本框_22
+  - pair:
+      - KSO_Shape
+      - Title_13-2
+  - pair:
+      - KSO_Shape
+      - 文本框_21
+  - pair:
+      - Oval_11
+      - Freeform_6
+  - pair:
+      - Oval_11
+      - 对象_27
+  - pair:
+      - Freeform_6
+      - 对象_27
+  - pair:
+      - Oval_22
+      - Freeform_11
+  - pair:
+      - Oval_22
+      - 对象_27
+  - pair:
+      - Freeform_11
+      - 对象_27
+  - pair:
+      - Oval_27
+      - Freeform_16
+  - pair:
+      - Oval_27
+      - 对象_27
+  - pair:
+      - Freeform_16
+      - 对象_27

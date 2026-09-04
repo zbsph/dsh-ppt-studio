@@ -11,6 +11,11 @@ elements:
       bold: true
       fontFamily: "Arial"
       align: center
+  - elementId: "直接连接符_2"
+    elementType: line
+    bounds: [ 395, 58, 170, 1 ]
+    points: [ [ 395, 58 ], [ 565, 59 ] ]
+    line: { color: "#DF3F4E" }
   - elementId: "Rectangle_2"
     elementType: shape
     bounds: [ 504, 109, 404, 385 ]
@@ -54,6 +59,36 @@ elements:
     kind: rect
     fill: "#FFFFFF"
     line: { color: "#000000" }
+  - elementId: "Freeform_59"
+    elementType: shape
+    bounds: [ 125, 178, 25, 24 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Oval_60"
+    elementType: shape
+    bounds: [ 135, 188, 5, 5 ]
+    kind: ellipse
+    line: { color: "#000000" }
+  - elementId: "Freeform_68"
+    elementType: shape
+    bounds: [ 231, 166, 13, 24 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_69"
+    elementType: shape
+    bounds: [ 246, 175, 13, 24 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_70"
+    elementType: shape
+    bounds: [ 245, 167, 8, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_71"
+    elementType: shape
+    bounds: [ 238, 191, 6, 6 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "Rectangle_3-2"
     elementType: text
     bounds: [ 83, 157, 355, 70 ]
@@ -93,6 +128,24 @@ expectedOutOfSafeArea:
 expectedOverlaps:
   - pair:
       - Rectangle_3
+      - Freeform_59
+  - pair:
+      - Rectangle_3
+      - Oval_60
+  - pair:
+      - Rectangle_3
+      - Freeform_68
+  - pair:
+      - Rectangle_3
+      - Freeform_69
+  - pair:
+      - Rectangle_3
+      - Freeform_70
+  - pair:
+      - Rectangle_3
+      - Freeform_71
+  - pair:
+      - Rectangle_3
       - Rectangle_3-2
   - pair:
       - Rectangle_3
@@ -100,3 +153,24 @@ expectedOverlaps:
   - pair:
       - Oval_13
       - Freeform_34
+  - pair:
+      - Freeform_59
+      - Oval_60
+  - pair:
+      - Freeform_59
+      - Rectangle_3-2
+  - pair:
+      - Oval_60
+      - Rectangle_3-2
+  - pair:
+      - Freeform_68
+      - Rectangle_3-2
+  - pair:
+      - Freeform_69
+      - Rectangle_3-2
+  - pair:
+      - Freeform_70
+      - Rectangle_3-2
+  - pair:
+      - Freeform_71
+      - Rectangle_3-2

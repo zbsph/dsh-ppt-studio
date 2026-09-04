@@ -81,6 +81,16 @@ elements:
       fontSize: 30
       bold: true
       fontFamily: "微软雅黑"
+  - elementId: "直接连接符_22"
+    elementType: line
+    bounds: [ 211, 145, 109, 1 ]
+    points: [ [ 211, 145 ], [ 320, 146 ] ]
+    line: { color: "#FFFFFF", width: 2 }
+  - elementId: "直接连接符_23"
+    elementType: line
+    bounds: [ 211, 251, 64, 1 ]
+    points: [ [ 211, 251 ], [ 275, 252 ] ]
+    line: { color: "#FFFFFF", width: 2 }
   - elementId: "矩形_24"
     elementType: text
     bounds: [ 203, 209, 169, 19 ]

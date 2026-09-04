@@ -41,6 +41,21 @@ elements:
     kind: ellipse
     fill: "#000000"
     line: { color: "#000000", width: 2 }
+  - elementId: "Freeform_5"
+    elementType: shape
+    bounds: [ 122, 104, 40, 33 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_6"
+    elementType: shape
+    bounds: [ 154, 108, 4, 8 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Oval_7-2"
+    elementType: shape
+    bounds: [ 140, 117, 4, 4 ]
+    kind: ellipse
+    line: { color: "#000000" }
   - elementId: "Oval_15"
     elementType: shape
     bounds: [ 234, 375, 62, 63 ]
@@ -53,12 +68,47 @@ elements:
     kind: ellipse
     fill: "#000000"
     line: { color: "#000000", width: 2 }
+  - elementId: "Freeform_66"
+    elementType: shape
+    bounds: [ 405, 249, 36, 22 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_67"
+    elementType: shape
+    bounds: [ 404, 272, 37, 5 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "Oval_26"
     elementType: shape
     bounds: [ 648, 393, 62, 63 ]
     kind: ellipse
     fill: "#000000"
     line: { color: "#000000", width: 2 }
+  - elementId: "Oval_52"
+    elementType: shape
+    bounds: [ 533, 141, 4, 3 ]
+    kind: ellipse
+    line: { color: "#000000" }
+  - elementId: "Oval_53"
+    elementType: shape
+    bounds: [ 531, 145, 2, 2 ]
+    kind: ellipse
+    line: { color: "#000000" }
+  - elementId: "Freeform_54"
+    elementType: shape
+    bounds: [ 530, 117, 32, 23 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_57"
+    elementType: shape
+    bounds: [ 630, 110, 26, 26 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_58"
+    elementType: shape
+    bounds: [ 654, 123, 12, 12 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "Text_Box_10"
     elementType: text
     bounds: [ 314, 222, 44, 22 ]
@@ -99,6 +149,30 @@ elements:
       bold: true
       fontFamily: "Arial"
       align: center
+  - elementId: "Straight_Arrow_Connector_55"
+    elementType: line
+    bounds: [ 274, 180, 45, 36 ]
+    points: [ [ 319, 216 ], [ 274, 180 ] ]
+    arrow: true
+    line: { color: "#FFFFFF" }
+  - elementId: "Straight_Arrow_Connector_58"
+    elementType: line
+    bounds: [ 600, 178, 51, 19 ]
+    points: [ [ 600, 197 ], [ 651, 178 ] ]
+    arrow: true
+    line: { color: "#FFFFFF" }
+  - elementId: "Straight_Arrow_Connector_60"
+    elementType: line
+    bounds: [ 611, 386, 47, 16 ]
+    points: [ [ 611, 386 ], [ 658, 402 ] ]
+    arrow: true
+    line: { color: "#FFFFFF" }
+  - elementId: "Straight_Arrow_Connector_62"
+    elementType: line
+    bounds: [ 296, 406, 131, 44 ]
+    points: [ [ 427, 450 ], [ 296, 406 ] ]
+    arrow: true
+    line: { color: "#FFFFFF" }
   - elementId: "文本框_35"
     elementType: text
     bounds: [ 101, 206, 174, 27 ]
@@ -167,6 +241,21 @@ elements:
       fontSize: 11
       color: "#000000"
       fontFamily: "Arial"
+  - elementId: "文本框_44"
+    elementType: text
+    bounds: [ 326, 25, 309, 36 ]
+    content:
+      text: "业绩回顾"
+      fontSize: 24
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "直接连接符_45"
+    elementType: line
+    bounds: [ 397, 62, 165, 1 ]
+    points: [ [ 397, 62 ], [ 562, 63 ] ]
+    line: { color: "#DF3F4E" }
 expectedOverlaps:
   - pair:
       - Chart_2
@@ -194,8 +283,26 @@ expectedOverlaps:
       - Oval_21
   - pair:
       - Chart_2
+      - Freeform_66
+  - pair:
+      - Chart_2
+      - Freeform_67
+  - pair:
+      - Chart_2
       - Oval_26
   - pair:
+      - Chart_2
+      - Straight_Arrow_Connector_55
+  - pair:
+      - Chart_2
+      - Straight_Arrow_Connector_58
+  - pair:
+      - Chart_2
+      - Straight_Arrow_Connector_60
+  - pair:
+      - Chart_2
+      - Straight_Arrow_Connector_62
+  - pair:
       - Oval_3
       - Oval_4
   - pair:
@@ -209,6 +316,12 @@ expectedOverlaps:
       - Oval_7
   - pair:
       - Oval_3
+      - Freeform_66
+  - pair:
+      - Oval_3
+      - Freeform_67
+  - pair:
+      - Oval_3
       - Text_Box_10
   - pair:
       - Oval_3
@@ -220,8 +333,17 @@ expectedOverlaps:
       - Oval_3
       - Text_Box_10-4
   - pair:
+      - Oval_3
+      - Straight_Arrow_Connector_58
+  - pair:
+      - Oval_3
+      - Straight_Arrow_Connector_62
+  - pair:
       - Oval_4
       - Text_Box_10
+  - pair:
+      - Oval_4
+      - Straight_Arrow_Connector_55
   - pair:
       - Oval_5
       - Text_Box_10-2
@@ -229,5 +351,29 @@ expectedOverlaps:
       - Oval_6
       - Text_Box_10-3
   - pair:
+      - Oval_6
+      - Straight_Arrow_Connector_62
+  - pair:
       - Oval_7
       - Text_Box_10-4
+  - pair:
+      - Oval_7
+      - Straight_Arrow_Connector_60
+  - pair:
+      - Oval_9
+      - Straight_Arrow_Connector_55
+  - pair:
+      - Freeform_5
+      - Freeform_6
+  - pair:
+      - Freeform_5
+      - Oval_7-2
+  - pair:
+      - Oval_26
+      - Straight_Arrow_Connector_60
+  - pair:
+      - Freeform_57
+      - Freeform_58
+  - pair:
+      - Text_Box_10-3
+      - Straight_Arrow_Connector_62

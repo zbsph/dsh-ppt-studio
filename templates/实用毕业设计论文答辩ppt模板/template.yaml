@@ -9,8 +9,8 @@ colors:
   - "#FFFFFF"
   - "#595959"
   - "#808080"
-  - "#404040"
   - "#000000"
+  - "#404040"
   - "#5E80B0"
 pages:
   - pages/_01_pages_slide_01.yaml
@@ -37,5 +37,5 @@ pages:
   - pages/_22_pages_slide_22.yaml
   - pages/_23_pages_slide_23.yaml
   - pages/_24_pages_slide_24.yaml
-cleanup: 已声明 6 个出界元素为模板有意设计；已声明 143 对预期重叠；剩余 46
-  条（out×6、text×2、content×33、theme×5——模板固有内容问题，复制工作区后按 verify 修复）
+cleanup: 已声明 6 个出界元素为模板有意设计；已声明 550 对预期重叠；剩余 54
+  条（out×6、text×2、content×40、theme×6——模板固有内容问题，复制工作区后按 verify 修复）

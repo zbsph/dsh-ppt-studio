@@ -100,6 +100,126 @@ elements:
       fontSize: 36
       color: "#000000"
       fontFamily: "Arial"
+  - elementId: "AutoShape_7"
+    elementType: shape
+    bounds: [ 597, 567, 29, 29 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_8"
+    elementType: shape
+    bounds: [ 609, 580, 4, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_9"
+    elementType: shape
+    bounds: [ 606, 576, 11, 11 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_10"
+    elementType: shape
+    bounds: [ 613, 583, 4, 5 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_11"
+    elementType: shape
+    bounds: [ 615, 585, 6, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_12"
+    elementType: shape
+    bounds: [ 614, 584, 5, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_13"
+    elementType: shape
+    bounds: [ 605, 575, 5, 5 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_14"
+    elementType: shape
+    bounds: [ 601, 572, 6, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_15"
+    elementType: shape
+    bounds: [ 603, 573, 5, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_16"
+    elementType: shape
+    bounds: [ 553, 583, 4, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_17"
+    elementType: shape
+    bounds: [ 539, 568, 29, 28 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_18"
+    elementType: shape
+    bounds: [ 481, 567, 29, 29 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_19"
+    elementType: shape
+    bounds: [ 488, 578, 4, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_20"
+    elementType: shape
+    bounds: [ 488, 582, 4, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_21"
+    elementType: shape
+    bounds: [ 488, 587, 4, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_22"
+    elementType: shape
+    bounds: [ 494, 587, 4, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_23"
+    elementType: shape
+    bounds: [ 494, 582, 4, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_24"
+    elementType: shape
+    bounds: [ 494, 578, 4, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_25"
+    elementType: shape
+    bounds: [ 500, 587, 4, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_26"
+    elementType: shape
+    bounds: [ 500, 582, 4, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_27"
+    elementType: shape
+    bounds: [ 500, 578, 4, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "直线连接符_40"
+    elementType: line
+    bounds: [ 563, 158, 1, 58 ]
+    points: [ [ 563, 158 ], [ 564, 216 ] ]
+    line: { color: "#000000", width: 1 }
+  - elementId: "直线连接符_41"
+    elementType: line
+    bounds: [ 563, 264, 1, 58 ]
+    points: [ [ 563, 264 ], [ 564, 322 ] ]
+    line: { color: "#000000", width: 1 }
+  - elementId: "直线连接符_42"
+    elementType: line
+    bounds: [ 563, 369, 1, 58 ]
+    points: [ [ 563, 369 ], [ 564, 427 ] ]
+    line: { color: "#000000", width: 1 }
   - elementId: "文本框_1"
     elementType: text
     bounds: [ 269, 37, 423, 41 ]
@@ -109,6 +229,28 @@ elements:
       bold: true
       fontFamily: "思源黑体 CN Heavy"
       align: center
+expectedOutOfSafeArea:
+  - AutoShape_7
+  - AutoShape_8
+  - AutoShape_9
+  - AutoShape_10
+  - AutoShape_11
+  - AutoShape_12
+  - AutoShape_13
+  - AutoShape_14
+  - AutoShape_15
+  - AutoShape_16
+  - AutoShape_17
+  - AutoShape_18
+  - AutoShape_19
+  - AutoShape_20
+  - AutoShape_21
+  - AutoShape_22
+  - AutoShape_23
+  - AutoShape_24
+  - AutoShape_25
+  - AutoShape_26
+  - AutoShape_27
 expectedOverlaps:
   - pair:
       - 图形-7
@@ -119,3 +261,93 @@ expectedOverlaps:
   - pair:
       - 图形-7
       - 图形-10
+  - pair:
+      - AutoShape_7
+      - AutoShape_8
+  - pair:
+      - AutoShape_7
+      - AutoShape_9
+  - pair:
+      - AutoShape_7
+      - AutoShape_10
+  - pair:
+      - AutoShape_7
+      - AutoShape_11
+  - pair:
+      - AutoShape_7
+      - AutoShape_12
+  - pair:
+      - AutoShape_7
+      - AutoShape_13
+  - pair:
+      - AutoShape_7
+      - AutoShape_14
+  - pair:
+      - AutoShape_7
+      - AutoShape_15
+  - pair:
+      - AutoShape_8
+      - AutoShape_9
+  - pair:
+      - AutoShape_9
+      - AutoShape_10
+  - pair:
+      - AutoShape_9
+      - AutoShape_11
+  - pair:
+      - AutoShape_9
+      - AutoShape_12
+  - pair:
+      - AutoShape_9
+      - AutoShape_13
+  - pair:
+      - AutoShape_9
+      - AutoShape_15
+  - pair:
+      - AutoShape_10
+      - AutoShape_11
+  - pair:
+      - AutoShape_10
+      - AutoShape_12
+  - pair:
+      - AutoShape_11
+      - AutoShape_12
+  - pair:
+      - AutoShape_13
+      - AutoShape_14
+  - pair:
+      - AutoShape_13
+      - AutoShape_15
+  - pair:
+      - AutoShape_14
+      - AutoShape_15
+  - pair:
+      - AutoShape_16
+      - AutoShape_17
+  - pair:
+      - AutoShape_18
+      - AutoShape_19
+  - pair:
+      - AutoShape_18
+      - AutoShape_20
+  - pair:
+      - AutoShape_18
+      - AutoShape_21
+  - pair:
+      - AutoShape_18
+      - AutoShape_22
+  - pair:
+      - AutoShape_18
+      - AutoShape_23
+  - pair:
+      - AutoShape_18
+      - AutoShape_24
+  - pair:
+      - AutoShape_18
+      - AutoShape_25
+  - pair:
+      - AutoShape_18
+      - AutoShape_26
+  - pair:
+      - AutoShape_18
+      - AutoShape_27

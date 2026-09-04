@@ -182,29 +182,18 @@ function detectBands(pages, size, minPages = 3) {
   return hint
 }
 
+/**
+ * 保真解析（v0.7.1 升级）：递归遍历 spTree——
+ * - grpSp 组合：子元素按 group xfrm（off/ext/chOff/chExt）坐标换算展开（嵌套组递归）；
+ * - cxnSp 连接线：解析为 line 元素（flipH/flipV 决定方向，tailEnd → arrow）；
+ * - sp/pic/graphicFrame：原有解析（经坐标变换链落到页面系）。
+ */
 function parseShapes(spTree, slideRels, mediaNames, pageSize, styleCtx) {
   const out = []
   let bg = null
-  for (const node of spTree?.children ?? []) {
-    if (node.tag === 'sp') out.push(spToEl(node, styleCtx))
-    else if (node.tag === 'pic') {
-      const el = picToEl(node, slideRels, mediaNames)
-      // 满页图 → 提升为页面背景（避免作为遮挡元素）
-      if (el && isFullPagePic(el.bounds, pageSize)) bg = { type: 'image', src: el.src, fit: 'cover' }
-      else out.push(el)
-    }
-    else if (node.tag === 'graphicFrame') {
-      const graphicData = first(node, 'graphic') && first(first(node, 'graphic'), 'graphicData')
-      if (!graphicData) continue
-      const uri = graphicData.attrs.uri ?? ''
-      if (uri.includes('/table')) {
-        const tbl = first(graphicData, 'tbl')
-        if (tbl) out.push(tableToEl(node, tbl))
-      } else {
-        out.push(chartToEl(node))
-      }
-    }
-  }
+  const st = { ...styleCtx, slideRels, mediaNames, pageSize, out, bgRef: (b) => { bg = b } }
+  const identity = (x, y, w, h) => ({ x, y, w, h })
+  for (const node of spTree?.children ?? []) walkNode(node, st, identity)
   // elementId 去重（原稿常见重复名如 "_文本框"；重复名追加 -2/-3...）
   const seen = new Map()
   for (const el of out) {
@@ -214,6 +203,86 @@ function parseShapes(spTree, slideRels, mediaNames, pageSize, styleCtx) {
     if (n > 0) el.elementId = `${base}-${n + 1}`
   }
   return { elements: out, bg }
+}
+
+/** 递归子节点（toPage: 局部坐标 → 页面坐标的换算函数链）。 */
+function walkNode(node, st, toPage) {
+  if (node.tag === 'grpSp') {
+    const g = groupXfrmOf(node)
+    const kx = g.ext.w / Math.max(1e-6, g.chExt.w)
+    const ky = g.ext.h / Math.max(1e-6, g.chExt.h)
+    const childOfPage = (x, y, w, h) => toPage(g.off.x + (x - g.chOff.x) * kx, g.off.y + (y - g.chOff.y) * ky, w * kx, h * ky)
+    for (const child of node.children ?? []) walkNode(child, st, childOfPage)
+    return
+  }
+  const push = (el) => {
+    if (!el) return
+    if (el.bounds) {
+      const b = toPage(Number(el.bounds.x), Number(el.bounds.y), Number(el.bounds.w), Number(el.bounds.h))
+      el.bounds = safeBounds(b)
+    }
+    st.out.push(el)
+  }
+  if (node.tag === 'sp') push(spToEl(node, st))
+  else if (node.tag === 'cxnSp') push(cxnToEl(node, st))
+  else if (node.tag === 'pic') {
+    const el = picToEl(node, st.slideRels, st.mediaNames)
+    if (el && isFullPagePic(el.bounds, st.pageSize)) st.bgRef({ type: 'image', src: el.src, fit: 'cover' })
+    else push(el)
+  } else if (node.tag === 'graphicFrame') {
+    const graphicData = first(node, 'graphic') && first(first(node, 'graphic'), 'graphicData')
+    if (!graphicData) return
+    const uri = graphicData.attrs.uri ?? ''
+    if (uri.includes('/table')) {
+      const tbl = first(graphicData, 'tbl')
+      if (tbl) push(tableToEl(node, tbl))
+    } else {
+      push(chartToEl(node))
+    }
+  }
+}
+
+/** 组合 xfrm：off/ext（父系位置）+ chOff/chExt（子坐标系）。 */
+function groupXfrmOf(node) {
+  const spPr = first(node, 'spPr')
+  const x = spPr ? first(spPr, 'xfrm') : undefined
+  const off = x ? first(x, 'off') : undefined
+  const ext = x ? first(x, 'ext') : undefined
+  const chOff = x ? first(x, 'chOff') : undefined
+  const chExt = x ? first(x, 'chExt') : undefined
+  if (!off || !ext) return { off: { x: 0, y: 0 }, ext: { w: 100, h: 100 }, chOff: { x: 0, y: 0 }, chExt: { w: 100, h: 100 } }
+  return {
+    off: { x: Number(off.attrs.x ?? 0), y: Number(off.attrs.y ?? 0) },
+    ext: { w: Math.max(1, Number(ext.attrs.cx ?? 0)), h: Math.max(1, Number(ext.attrs.cy ?? 0)) },
+    chOff: { x: Number(chOff?.attrs?.x ?? 0), y: Number(chOff?.attrs?.y ?? 0) },
+    chExt: { w: Math.max(1, Number(chExt?.attrs?.cx ?? 0)), h: Math.max(1, Number(chExt?.attrs?.cy ?? 0)) },
+  }
+}
+
+/** 连接线（cxnSp）→ line 元素；flipH/flipV 决定端点；tailEnd → 箭头。 */
+function cxnToEl(node, st) {
+  const nv = first(node, 'nvCxnSpPr') ?? node
+  const cNvPr = first(nv, 'cNvPr')
+  const id = cNvPr?.attrs?.name ?? cNvPr?.attrs?.id ?? 'conn'
+  const b = xfrmOf(node) ?? { x: 0, y: 0, w: 100, h: 10 }
+  const spPr = first(node, 'spPr')
+  const xf = spPr ? first(spPr, 'xfrm') : undefined
+  const flipH = xf?.attrs?.flipH === '1'
+  const flipV = xf?.attrs?.flipV === '1'
+  const x1 = flipH ? b.x + b.w : b.x
+  const x2 = flipH ? b.x : b.x + b.w
+  const y1 = flipV ? b.y + b.h : b.y
+  const y2 = flipV ? b.y : b.y + b.h
+  const ln = lineOf(node, st.colorOf)
+  const lnNode = spPr ? first(spPr, 'ln') : undefined
+  const arrow = !!(lnNode && first(lnNode, 'tailEnd'))
+  return {
+    elementId: sanitize(id), elementType: 'line', bounds: safeBounds(b),
+    points: [[x1, y1], [x2, y2]],
+    ...(ln && Object.keys(ln).length ? { line: ln } : {}),
+    ...(arrow ? { arrow: true } : {}),
+    _styleRaw: { line: ln },
+  }
 }
 
 function xfrmOf(node) {
@@ -482,6 +551,12 @@ function pageYaml(page, name) {
     lines.push(`    elementType: ${el.elementType}`)
     lines.push(`    bounds: [${b.x}, ${b.y}, ${b.w}, ${b.h}]`)
     if (el.kind) lines.push(`    kind: ${el.kind}`)
+    if (el.elementType === 'line') {
+      const pts = el.points ?? [[el.x1, el.y1], [el.x2, el.y2]]
+      lines.push(`    points: ${JSON.stringify(pts)}`)
+      if (el.arrow) lines.push(`    arrow: true`)
+      // line 颜色/宽度由下方通用 el.line 行输出
+    }
     if (el.fit) lines.push(`    fit: ${el.fit}`)
     if (el.src) lines.push(`    src: ${JSON.stringify(el.src)}`)
     // P0-1：样式保留（渐变归一为主色，stops 追加注释并写入 import-styles.json）

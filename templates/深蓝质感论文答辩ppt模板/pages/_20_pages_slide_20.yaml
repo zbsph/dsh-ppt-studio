@@ -3,42 +3,147 @@ pageType: content
 elements:
   - elementId: "灯片编号占位符_1"
     elementType: text
-    bounds: [0, 0, 200, 50]
+    bounds: [ 0, 0, 200, 50 ]
     content:
       text: "20"
   - elementId: "Oval_6"
     elementType: shape
-    bounds: [376, 113, 59, 59]
+    bounds: [ 376, 113, 59, 59 ]
     kind: ellipse
     fill: "#000000"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
   - elementId: "Oval_7"
     elementType: shape
-    bounds: [422, 190, 59, 59]
+    bounds: [ 422, 190, 59, 59 ]
     kind: ellipse
     fill: "#000000"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
+  - elementId: "Freeform_5"
+    elementType: shape
+    bounds: [ 419, 147, 236, 216 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_8"
+    elementType: shape
+    bounds: [ 306, 257, 219, 234 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "Freeform_9"
     elementType: shape
-    bounds: [236, 219, 65, 65]
+    bounds: [ 236, 219, 65, 65 ]
     kind: rect
     fill: "#000000"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
   - elementId: "Freeform_10"
     elementType: shape
-    bounds: [322, 193, 65, 65]
+    bounds: [ 322, 193, 65, 65 ]
     kind: rect
     fill: "#000000"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
   - elementId: "Freeform_11"
     elementType: shape
-    bounds: [303, 289, 65, 65]
+    bounds: [ 303, 289, 65, 65 ]
     kind: rect
     fill: "#000000"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
+  - elementId: "Freeform_70"
+    elementType: shape
+    bounds: [ 286, 151, 26, 26 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_71"
+    elementType: shape
+    bounds: [ 294, 158, 11, 11 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_72"
+    elementType: shape
+    bounds: [ 273, 158, 32, 36 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_93"
+    elementType: shape
+    bounds: [ 56, 151, 24, 36 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_94"
+    elementType: shape
+    bounds: [ 70, 174, 6, 21 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_95"
+    elementType: shape
+    bounds: [ 90, 171, 8, 8 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_96"
+    elementType: shape
+    bounds: [ 79, 173, 17, 17 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_107"
+    elementType: shape
+    bounds: [ 797, 251, 17, 5 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_108"
+    elementType: shape
+    bounds: [ 787, 221, 38, 27 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_109"
+    elementType: shape
+    bounds: [ 787, 221, 12, 18 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_110"
+    elementType: shape
+    bounds: [ 798, 212, 14, 24 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_111"
+    elementType: shape
+    bounds: [ 805, 232, 2, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_242"
+    elementType: shape
+    bounds: [ 353, 273, 33, 33 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_243"
+    elementType: shape
+    bounds: [ 363, 282, 14, 14 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_244"
+    elementType: shape
+    bounds: [ 343, 290, 26, 26 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_245"
+    elementType: shape
+    bounds: [ 351, 298, 11, 10 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_74"
+    elementType: shape
+    bounds: [ 126, 151, 44, 44 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_75"
+    elementType: shape
+    bounds: [ 143, 156, 22, 22 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_76"
+    elementType: shape
+    bounds: [ 150, 162, 9, 9 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "1"
     elementType: text
-    bounds: [463, 113, 89, 15]
+    bounds: [ 463, 113, 89, 15 ]
     content:
       text: "相关对策或措施"
       fontSize: 12
@@ -48,7 +153,7 @@ elements:
       align: center
   - elementId: "1-2"
     elementType: text
-    bounds: [462, 131, 149, 30]
+    bounds: [ 462, 131, 149, 30 ]
     content:
       text: "单击添加项目内容。 小奕，色彩纷呈，潮流时尚。 单击此处可编辑内容，单击此处可编辑内容。"
       fontSize: 8
@@ -56,7 +161,7 @@ elements:
       fontFamily: "微软雅黑"
   - elementId: "1-3"
     elementType: text
-    bounds: [505, 194, 89, 15]
+    bounds: [ 505, 194, 89, 15 ]
     content:
       text: "相关对策或措施"
       fontSize: 12
@@ -66,7 +171,7 @@ elements:
       align: center
   - elementId: "1-4"
     elementType: text
-    bounds: [504, 212, 149, 30]
+    bounds: [ 504, 212, 149, 30 ]
     content:
       text: "单击添加项目内容。 小奕，色彩纷呈，潮流时尚。 单击此处可编辑内容，单击此处可编辑内容。"
       fontSize: 8
@@ -74,7 +179,7 @@ elements:
       fontFamily: "微软雅黑"
   - elementId: "1-5"
     elementType: text
-    bounds: [389, 302, 89, 15]
+    bounds: [ 389, 302, 89, 15 ]
     content:
       text: "相关对策或措施"
       fontSize: 12
@@ -84,7 +189,7 @@ elements:
       align: center
   - elementId: "1-6"
     elementType: text
-    bounds: [388, 320, 149, 30]
+    bounds: [ 388, 320, 149, 30 ]
     content:
       text: "单击添加项目内容。 小奕，色彩纷呈，潮流时尚。 单击此处可编辑内容，单击此处可编辑内容。"
       fontSize: 8
@@ -92,7 +197,7 @@ elements:
       fontFamily: "微软雅黑"
   - elementId: "1-7"
     elementType: text
-    bounds: [204, 148, 89, 15]
+    bounds: [ 204, 148, 89, 15 ]
     content:
       text: "相关对策或措施"
       fontSize: 12
@@ -102,7 +207,7 @@ elements:
       align: center
   - elementId: "1-8"
     elementType: text
-    bounds: [147, 165, 149, 30]
+    bounds: [ 147, 165, 149, 30 ]
     content:
       text: "单击添加项目内容。 小奕，色彩纷呈，潮流时尚。 单击此处可编辑内容，单击此处可编辑内容"
       fontSize: 8
@@ -111,7 +216,7 @@ elements:
       align: right
   - elementId: "1-9"
     elementType: text
-    bounds: [134, 229, 89, 15]
+    bounds: [ 134, 229, 89, 15 ]
     content:
       text: "相关对策或措施"
       fontSize: 12
@@ -121,7 +226,7 @@ elements:
       align: center
   - elementId: "1-10"
     elementType: text
-    bounds: [76, 246, 149, 30]
+    bounds: [ 76, 246, 149, 30 ]
     content:
       text: "单击添加项目内容。 小奕，色彩纷呈，潮流时尚。 单击此处可编辑内容，单击此处可编辑内容"
       fontSize: 8
@@ -130,9 +235,149 @@ elements:
       align: right
   - elementId: "TextBox_13"
     elementType: text
-    bounds: [36, 25, 109, 31]
+    bounds: [ 36, 25, 109, 31 ]
     content:
       text: "应对措施"
       fontSize: 21
       bold: true
       fontFamily: "微软雅黑"
+expectedOutOfSafeArea:
+  - Freeform_8
+  - Freeform_107
+  - Freeform_108
+  - Freeform_109
+  - Freeform_110
+  - Freeform_111
+expectedOverlaps:
+  - pair:
+      - Oval_6
+      - Freeform_5
+  - pair:
+      - Oval_7
+      - Freeform_5
+  - pair:
+      - Freeform_5
+      - Freeform_8
+  - pair:
+      - Freeform_5
+      - 1-2
+  - pair:
+      - Freeform_5
+      - 1-3
+  - pair:
+      - Freeform_5
+      - 1-4
+  - pair:
+      - Freeform_5
+      - 1-5
+  - pair:
+      - Freeform_5
+      - 1-6
+  - pair:
+      - Freeform_8
+      - Freeform_11
+  - pair:
+      - Freeform_8
+      - Freeform_242
+  - pair:
+      - Freeform_8
+      - Freeform_243
+  - pair:
+      - Freeform_8
+      - Freeform_244
+  - pair:
+      - Freeform_8
+      - Freeform_245
+  - pair:
+      - Freeform_8
+      - 1-5
+  - pair:
+      - Freeform_8
+      - 1-6
+  - pair:
+      - Freeform_11
+      - Freeform_242
+  - pair:
+      - Freeform_11
+      - Freeform_243
+  - pair:
+      - Freeform_11
+      - Freeform_244
+  - pair:
+      - Freeform_11
+      - Freeform_245
+  - pair:
+      - Freeform_70
+      - Freeform_71
+  - pair:
+      - Freeform_70
+      - Freeform_72
+  - pair:
+      - Freeform_70
+      - 1-7
+  - pair:
+      - Freeform_70
+      - 1-8
+  - pair:
+      - Freeform_71
+      - Freeform_72
+  - pair:
+      - Freeform_71
+      - 1-8
+  - pair:
+      - Freeform_72
+      - 1-7
+  - pair:
+      - Freeform_72
+      - 1-8
+  - pair:
+      - Freeform_93
+      - Freeform_94
+  - pair:
+      - Freeform_95
+      - Freeform_96
+  - pair:
+      - Freeform_108
+      - Freeform_109
+  - pair:
+      - Freeform_108
+      - Freeform_110
+  - pair:
+      - Freeform_108
+      - Freeform_111
+  - pair:
+      - Freeform_110
+      - Freeform_111
+  - pair:
+      - Freeform_242
+      - Freeform_243
+  - pair:
+      - Freeform_242
+      - Freeform_244
+  - pair:
+      - Freeform_242
+      - Freeform_245
+  - pair:
+      - Freeform_243
+      - Freeform_244
+  - pair:
+      - Freeform_244
+      - Freeform_245
+  - pair:
+      - Freeform_74
+      - Freeform_75
+  - pair:
+      - Freeform_74
+      - Freeform_76
+  - pair:
+      - Freeform_74
+      - 1-8
+  - pair:
+      - Freeform_75
+      - Freeform_76
+  - pair:
+      - Freeform_75
+      - 1-8
+  - pair:
+      - Freeform_76
+      - 1-8

@@ -25,6 +25,31 @@ elements:
     kind: rect
     fill: "#000000"
     line: { color: "#000000" }
+  - elementId: "Freeform_539"
+    elementType: shape
+    bounds: [ 189, 445, 19, 19 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_540"
+    elementType: shape
+    bounds: [ 167, 471, 16, 15 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_541"
+    elementType: shape
+    bounds: [ 167, 471, 16, 15 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_542"
+    elementType: shape
+    bounds: [ 174, 478, 1, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_543"
+    elementType: shape
+    bounds: [ 162, 446, 41, 41 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "Freeform_290"
     elementType: shape
     bounds: [ 359, 218, 56, 43 ]
@@ -125,6 +150,11 @@ elements:
       bold: true
       fontFamily: "Arial"
       align: center
+  - elementId: "直接连接符_25"
+    elementType: line
+    bounds: [ 395, 58, 170, 1 ]
+    points: [ [ 395, 58 ], [ 565, 59 ] ]
+    line: { color: "#DF3F4E" }
 expectedOutOfSafeArea:
   - Text_Box_7
 expectedOverlaps:
@@ -137,3 +167,15 @@ expectedOverlaps:
   - pair:
       - Round_Diagonal_Corner_Rectangle_45
       - AutoShape_19
+  - pair:
+      - Freeform_539
+      - Freeform_543
+  - pair:
+      - Freeform_540
+      - Freeform_541
+  - pair:
+      - Freeform_540
+      - Freeform_543
+  - pair:
+      - Freeform_541
+      - Freeform_543

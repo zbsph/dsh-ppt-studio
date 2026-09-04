@@ -14,12 +14,65 @@ elements:
       color: "#4B649F"
       bold: true
       lineHeight: 1.5
+  - elementId: "直接连接符_3"
+    elementType: line
+    bounds: [ 0, 65, 880, 1 ]
+    points: [ [ 0, 65 ], [ 880, 66 ] ]
+    line: { color: "#000000", width: 2 }
   - elementId: "矩形_4"
     elementType: shape
     bounds: [ 0, 530, 960, 11 ]
     kind: rect
     fill: "#4B649F"
     line: { color: "#000000" }
+  - elementId: "椭圆_6"
+    elementType: shape
+    bounds: [ 416, 176, 127, 127 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "椭圆_7"
+    elementType: shape
+    bounds: [ 425, 184, 109, 109 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "KSO_Shape"
+    elementType: shape
+    bounds: [ 437, 212, 86, 52 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "Straight_Connector_3"
+    elementType: line
+    bounds: [ 150, 197, 47, 47 ]
+    points: [ [ 150, 197 ], [ 197, 244 ] ]
+    line: { color: "#000000", width: 1 }
+  - elementId: "Straight_Connector_5"
+    elementType: line
+    bounds: [ 120, 319, 77, 55 ]
+    points: [ [ 197, 319 ], [ 120, 374 ] ]
+    line: { color: "#000000", width: 1 }
+  - elementId: "Straight_Connector_8"
+    elementType: line
+    bounds: [ 272, 319, 19, 19 ]
+    points: [ [ 272, 319 ], [ 291, 338 ] ]
+    line: { color: "#000000", width: 1 }
+  - elementId: "Straight_Connector_11"
+    elementType: line
+    bounds: [ 272, 223, 85, 21 ]
+    points: [ [ 272, 244 ], [ 357, 223 ] ]
+    line: { color: "#000000", width: 1 }
+  - elementId: "Straight_Connector_20"
+    elementType: line
+    bounds: [ 406, 223, 78, 42 ]
+    points: [ [ 406, 223 ], [ 484, 265 ] ]
+    line: { color: "#000000", width: 1 }
+  - elementId: "Straight_Connector_35"
+    elementType: line
+    bounds: [ 356, 344, 63, 21 ]
+    points: [ [ 356, 365 ], [ 419, 344 ] ]
+    line: { color: "#000000", width: 1 }
   - elementId: "Oval_30"
     elementType: shape
     bounds: [ 419, 325, 38, 38 ]
@@ -98,6 +151,11 @@ elements:
     kind: rect
     fill: "#FFFFFF"
     line: { color: "#000000" }
+  - elementId: "Straight_Connector_69"
+    elementType: line
+    bounds: [ 598, 147, 1, 302 ]
+    points: [ [ 598, 147 ], [ 599, 449 ] ]
+    line: { color: "#FFFFFF" }
   - elementId: "文本框_35"
     elementType: text
     bounds: [ 627, 183, 266, 60 ]
@@ -147,6 +205,63 @@ elements:
       align: center
       lineHeight: 1
 expectedOverlaps:
+  - pair:
+      - 椭圆_6
+      - 椭圆_7
+  - pair:
+      - 椭圆_6
+      - KSO_Shape
+  - pair:
+      - 椭圆_6
+      - Straight_Connector_20
+  - pair:
+      - 椭圆_6
+      - Oval_33
+  - pair:
+      - 椭圆_6
+      - Freeform_6
+  - pair:
+      - 椭圆_7
+      - KSO_Shape
+  - pair:
+      - 椭圆_7
+      - Straight_Connector_20
+  - pair:
+      - 椭圆_7
+      - Oval_33
+  - pair:
+      - 椭圆_7
+      - Freeform_6
+  - pair:
+      - KSO_Shape
+      - Straight_Connector_20
+  - pair:
+      - KSO_Shape
+      - Oval_33
+  - pair:
+      - Straight_Connector_3
+      - Oval_22
+  - pair:
+      - Straight_Connector_3
+      - Oval_23
+  - pair:
+      - Straight_Connector_5
+      - Oval_22
+  - pair:
+      - Straight_Connector_5
+      - Oval_24
+  - pair:
+      - Straight_Connector_8
+      - Oval_22
+  - pair:
+      - Straight_Connector_8
+      - Oval_29
+  - pair:
+      - Straight_Connector_11
+      - Oval_22
+  - pair:
+      - Straight_Connector_20
+      - Oval_33
   - pair:
       - Oval_33
       - Freeform_6

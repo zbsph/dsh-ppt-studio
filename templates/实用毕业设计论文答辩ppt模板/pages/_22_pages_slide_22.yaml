@@ -14,9 +14,32 @@ elements:
       color: "#4B649F"
       bold: true
       lineHeight: 1.5
+  - elementId: "直接连接符_3"
+    elementType: line
+    bounds: [ 0, 65, 880, 1 ]
+    points: [ [ 0, 65 ], [ 880, 66 ] ]
+    line: { color: "#000000", width: 2 }
   - elementId: "矩形_4"
     elementType: shape
     bounds: [ 0, 530, 960, 11 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_6"
+    elementType: shape
+    bounds: [ 744, 176, 127, 127 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "椭圆_7"
+    elementType: shape
+    bounds: [ 752, 184, 110, 110 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "KSO_Shape"
+    elementType: shape
+    bounds: [ 774, 211, 66, 57 ]
     kind: rect
     fill: "#4B649F"
     line: { color: "#000000" }
@@ -50,11 +73,96 @@ elements:
     kind: ellipse
     fill: "#5E80B0"
     line: { color: "#FFFFFF", width: 3 }
+  - elementId: "Freeform_5"
+    elementType: shape
+    bounds: [ 481, 25, 39, 39 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_6"
+    elementType: shape
+    bounds: [ 504, 40, 11, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_7"
+    elementType: shape
+    bounds: [ 504, 36, 11, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_8"
+    elementType: shape
+    bounds: [ 504, 32, 11, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_9"
+    elementType: shape
+    bounds: [ 491, 58, 11, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_10"
+    elementType: shape
+    bounds: [ 491, 54, 11, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_11"
+    elementType: shape
+    bounds: [ 491, 50, 11, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_12"
+    elementType: shape
+    bounds: [ 504, 58, 11, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_13"
+    elementType: shape
+    bounds: [ 504, 54, 11, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_14"
+    elementType: shape
+    bounds: [ 504, 50, 11, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_15"
+    elementType: shape
+    bounds: [ 491, 43, 24, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_16"
+    elementType: shape
+    bounds: [ 491, 47, 24, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_17"
+    elementType: shape
+    bounds: [ 491, 30, 11, 11 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "Freeform_26"
     elementType: shape
     bounds: [ 637, 187, 102, 98 ]
     kind: rect
     fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "Freeform_35"
+    elementType: shape
+    bounds: [ 64, 214, 80, 91 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Oval_36"
+    elementType: shape
+    bounds: [ 127, 285, 6, 6 ]
+    kind: ellipse
+    line: { color: "#000000" }
+  - elementId: "Oval_37"
+    elementType: shape
+    bounds: [ 127, 268, 6, 6 ]
+    kind: ellipse
+    line: { color: "#000000" }
+  - elementId: "Oval_38"
+    elementType: shape
+    bounds: [ 127, 251, 6, 6 ]
+    kind: ellipse
     line: { color: "#000000" }
   - elementId: "Title_13"
     elementType: text
@@ -109,6 +217,33 @@ elements:
       align: center
 expectedOverlaps:
   - pair:
+      - 椭圆_6
+      - 椭圆_7
+  - pair:
+      - 椭圆_6
+      - KSO_Shape
+  - pair:
+      - 椭圆_6
+      - Rectangle_86
+  - pair:
+      - 椭圆_6
+      - Oval_6
+  - pair:
+      - 椭圆_7
+      - KSO_Shape
+  - pair:
+      - 椭圆_7
+      - Rectangle_86
+  - pair:
+      - 椭圆_7
+      - Oval_6
+  - pair:
+      - KSO_Shape
+      - Rectangle_86
+  - pair:
+      - KSO_Shape
+      - Oval_6
+  - pair:
       - Rectangle_86
       - Oval_6
   - pair:
@@ -118,6 +253,15 @@ expectedOverlaps:
       - Rectangle_84
       - Oval_3
   - pair:
+      - Rectangle_84
+      - Freeform_35
+  - pair:
+      - Rectangle_84
+      - Oval_37
+  - pair:
+      - Rectangle_84
+      - Oval_38
+  - pair:
       - Oval_3
       - Oval_4
   - pair:
@@ -126,3 +270,15 @@ expectedOverlaps:
   - pair:
       - Oval_6
       - Freeform_26
+  - pair:
+      - Freeform_5
+      - Freeform_17
+  - pair:
+      - Freeform_35
+      - Oval_36
+  - pair:
+      - Freeform_35
+      - Oval_37
+  - pair:
+      - Freeform_35
+      - Oval_38

@@ -6,7 +6,9 @@ theme:
     c2: "#FFFFFF"
     c3: "#DF3F4E"
     c4: "#C00000"
-    c5: "#0E7FB7"
+    c5: "#BFBFBF"
+    c6: "#0E7FB7"
+    c7: "#0E556E"
   textStyles:
     title: {fontSize: 66, color: "#000000", bold: true}   # 字体 Arial
     body: {fontSize: 24, color: "#000000"}

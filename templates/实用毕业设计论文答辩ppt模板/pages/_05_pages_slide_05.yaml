@@ -13,6 +13,41 @@ elements:
     kind: ellipse
     fill: "#FFFFFF"
     line: { color: "#4B649F", width: 3 }
+  - elementId: "Freeform_84"
+    elementType: shape
+    bounds: [ 422, 239, 56, 48 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_85"
+    elementType: shape
+    bounds: [ 482, 229, 32, 59 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_86"
+    elementType: shape
+    bounds: [ 488, 278, 51, 13 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_87"
+    elementType: shape
+    bounds: [ 420, 297, 120, 12 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_88"
+    elementType: shape
+    bounds: [ 418, 294, 125, 18 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_89"
+    elementType: shape
+    bounds: [ 422, 278, 53, 13 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_90"
+    elementType: shape
+    bounds: [ 486, 241, 52, 45 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "文本框_11"
     elementType: text
     bounds: [ 137, 46, 233, 51 ]
@@ -26,6 +61,96 @@ elements:
     bounds: [ 498, 410, 462, 131 ]
     fit: cover
     src: "media/image6.png"
+  - elementId: "椭圆_28"
+    elementType: shape
+    bounds: [ 744, 176, 127, 127 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "椭圆_33"
+    elementType: shape
+    bounds: [ 752, 185, 109, 109 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "KSO_Shape"
+    elementType: shape
+    bounds: [ 774, 211, 66, 57 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_26"
+    elementType: shape
+    bounds: [ 416, 176, 127, 127 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "椭圆_31"
+    elementType: shape
+    bounds: [ 425, 184, 109, 109 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "KSO_Shape-2"
+    elementType: shape
+    bounds: [ 437, 212, 86, 52 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_27"
+    elementType: shape
+    bounds: [ 580, 176, 127, 127 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "椭圆_32"
+    elementType: shape
+    bounds: [ 589, 185, 109, 109 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "KSO_Shape-3"
+    elementType: shape
+    bounds: [ 612, 208, 63, 63 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_24"
+    elementType: shape
+    bounds: [ 89, 176, 127, 127 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "椭圆_29"
+    elementType: shape
+    bounds: [ 98, 185, 109, 109 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "KSO_Shape-4"
+    elementType: shape
+    bounds: [ 117, 205, 72, 69 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_25"
+    elementType: shape
+    bounds: [ 253, 176, 127, 127 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "椭圆_30"
+    elementType: shape
+    bounds: [ 261, 185, 109, 109 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "KSO_Shape-5"
+    elementType: shape
+    bounds: [ 280, 205, 73, 69 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
   - elementId: "文本框_39"
     elementType: text
     bounds: [ 100, 269, 112, 36 ]
@@ -127,3 +252,183 @@ expectedOverlaps:
   - pair:
       - 任意多边形_10
       - 文本框_11
+  - pair:
+      - 任意多边形_10
+      - 椭圆_24
+  - pair:
+      - 任意多边形_10
+      - 椭圆_29
+  - pair:
+      - 任意多边形_10
+      - KSO_Shape-4
+  - pair:
+      - Freeform_84
+      - Freeform_89
+  - pair:
+      - Freeform_84
+      - 椭圆_26
+  - pair:
+      - Freeform_84
+      - 椭圆_31
+  - pair:
+      - Freeform_84
+      - KSO_Shape-2
+  - pair:
+      - Freeform_84
+      - 文本框_41
+  - pair:
+      - Freeform_85
+      - Freeform_86
+  - pair:
+      - Freeform_85
+      - Freeform_90
+  - pair:
+      - Freeform_85
+      - 椭圆_26
+  - pair:
+      - Freeform_85
+      - 椭圆_31
+  - pair:
+      - Freeform_85
+      - KSO_Shape-2
+  - pair:
+      - Freeform_85
+      - 文本框_41
+  - pair:
+      - Freeform_86
+      - Freeform_90
+  - pair:
+      - Freeform_86
+      - 椭圆_26
+  - pair:
+      - Freeform_86
+      - 椭圆_31
+  - pair:
+      - Freeform_86
+      - 文本框_41
+  - pair:
+      - Freeform_87
+      - Freeform_88
+  - pair:
+      - Freeform_87
+      - 椭圆_26
+  - pair:
+      - Freeform_87
+      - 文本框_41
+  - pair:
+      - Freeform_87
+      - 文本框_46
+  - pair:
+      - Freeform_88
+      - 椭圆_26
+  - pair:
+      - Freeform_88
+      - 文本框_41
+  - pair:
+      - Freeform_88
+      - 文本框_46
+  - pair:
+      - Freeform_89
+      - 椭圆_26
+  - pair:
+      - Freeform_89
+      - 椭圆_31
+  - pair:
+      - Freeform_89
+      - 文本框_41
+  - pair:
+      - Freeform_90
+      - 椭圆_26
+  - pair:
+      - Freeform_90
+      - 椭圆_31
+  - pair:
+      - Freeform_90
+      - KSO_Shape-2
+  - pair:
+      - Freeform_90
+      - 文本框_41
+  - pair:
+      - 椭圆_28
+      - 椭圆_33
+  - pair:
+      - 椭圆_28
+      - KSO_Shape
+  - pair:
+      - 椭圆_28
+      - 文本框_43
+  - pair:
+      - 椭圆_33
+      - KSO_Shape
+  - pair:
+      - 椭圆_33
+      - 文本框_43
+  - pair:
+      - 椭圆_26
+      - 椭圆_31
+  - pair:
+      - 椭圆_26
+      - KSO_Shape-2
+  - pair:
+      - 椭圆_26
+      - 文本框_41
+  - pair:
+      - 椭圆_31
+      - KSO_Shape-2
+  - pair:
+      - 椭圆_31
+      - 文本框_41
+  - pair:
+      - 椭圆_27
+      - 椭圆_32
+  - pair:
+      - 椭圆_27
+      - KSO_Shape-3
+  - pair:
+      - 椭圆_27
+      - 文本框_42
+  - pair:
+      - 椭圆_32
+      - KSO_Shape-3
+  - pair:
+      - 椭圆_32
+      - 文本框_42
+  - pair:
+      - KSO_Shape-3
+      - 文本框_42
+  - pair:
+      - 椭圆_24
+      - 椭圆_29
+  - pair:
+      - 椭圆_24
+      - KSO_Shape-4
+  - pair:
+      - 椭圆_24
+      - 文本框_39
+  - pair:
+      - 椭圆_29
+      - KSO_Shape-4
+  - pair:
+      - 椭圆_29
+      - 文本框_39
+  - pair:
+      - KSO_Shape-4
+      - 文本框_39
+  - pair:
+      - 椭圆_25
+      - 椭圆_30
+  - pair:
+      - 椭圆_25
+      - KSO_Shape-5
+  - pair:
+      - 椭圆_25
+      - 文本框_40
+  - pair:
+      - 椭圆_30
+      - KSO_Shape-5
+  - pair:
+      - 椭圆_30
+      - 文本框_40
+  - pair:
+      - KSO_Shape-5
+      - 文本框_40

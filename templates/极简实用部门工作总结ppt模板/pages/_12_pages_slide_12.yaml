@@ -1,6 +1,12 @@
 # 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
 pageType: content
 elements:
+  - elementId: "Straight_Arrow_Connector_6"
+    elementType: line
+    bounds: [ 482, 110, 1, 430 ]
+    points: [ [ 482, 540 ], [ 483, 110 ] ]
+    arrow: true
+    line: { color: "#DF3F4E", width: 2 }
   - elementId: "Oval_7"
     elementType: shape
     bounds: [ 470, 166, 24, 24 ]
@@ -31,6 +37,31 @@ elements:
     kind: ellipse
     fill: "#FFFFFF"
     line: { color: "#DF3F4E" }
+  - elementId: "Elbow_Connector_2"
+    elementType: line
+    bounds: [ 60, 178, 410, 29 ]
+    points: [ [ 60, 207 ], [ 470, 178 ] ]
+    line: { color: "#FFFFFF" }
+  - elementId: "Elbow_Connector_58"
+    elementType: line
+    bounds: [ 494, 249, 378, 30 ]
+    points: [ [ 494, 249 ], [ 872, 279 ] ]
+    line: { color: "#FFFFFF" }
+  - elementId: "Elbow_Connector_61"
+    elementType: line
+    bounds: [ 171, 320, 299, 25 ]
+    points: [ [ 171, 345 ], [ 470, 320 ] ]
+    line: { color: "#FFFFFF" }
+  - elementId: "Elbow_Connector_65"
+    elementType: line
+    bounds: [ 494, 382, 377, 64 ]
+    points: [ [ 494, 382 ], [ 871, 446 ] ]
+    line: { color: "#FFFFFF" }
+  - elementId: "Elbow_Connector_68"
+    elementType: line
+    bounds: [ 60, 449, 410, 28 ]
+    points: [ [ 60, 477 ], [ 470, 449 ] ]
+    line: { color: "#FFFFFF" }
   - elementId: "椭圆_57"
     elementType: shape
     bounds: [ 267, 114, 41, 41 ]
@@ -156,9 +187,26 @@ elements:
       bold: true
       fontFamily: "Arial"
       align: center
+  - elementId: "直接连接符_78"
+    elementType: line
+    bounds: [ 395, 58, 170, 1 ]
+    points: [ [ 395, 58 ], [ 565, 59 ] ]
+    line: { color: "#DF3F4E" }
 expectedOutOfSafeArea:
   - Text_Box_7
 expectedOverlaps:
+  - pair:
+      - Elbow_Connector_2
+      - 矩形_67
+  - pair:
+      - Elbow_Connector_65
+      - 文本框_75
+  - pair:
+      - Elbow_Connector_65
+      - 矩形_76
+  - pair:
+      - Elbow_Connector_68
+      - 矩形_72
   - pair:
       - 椭圆_57
       - 矩形_67

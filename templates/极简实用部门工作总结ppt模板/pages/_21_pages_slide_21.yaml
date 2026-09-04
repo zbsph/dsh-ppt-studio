@@ -3,16 +3,98 @@ pageType: content
 elements:
   - elementId: "矩形_14"
     elementType: text
-    bounds: [405, 22, 160, 36]
+    bounds: [ 405, 22, 160, 36 ]
     content:
       text: "明年工作计划"
       fontSize: 24
       color: "#000000"
       bold: true
       fontFamily: "Arial"
+  - elementId: "Straight_Connector_18"
+    elementType: line
+    bounds: [ 482, 0, 1, 98 ]
+    points: [ [ 482, 0 ], [ 483, 98 ] ]
+    line: { color: "#000000", width: 1 }
+  - elementId: "Oval_22"
+    elementType: shape
+    bounds: [ 477, 100, 9, 9 ]
+    kind: ellipse
+    line: { color: "#000000", width: 1 }
+  - elementId: "Straight_Connector_23"
+    elementType: line
+    bounds: [ 436, 106, 41, 1 ]
+    points: [ [ 436, 106 ], [ 477, 107 ] ]
+    line: { color: "#000000", width: 1 }
+  - elementId: "Straight_Connector_30"
+    elementType: line
+    bounds: [ 482, 109, 1, 98 ]
+    points: [ [ 482, 109 ], [ 483, 207 ] ]
+    line: { color: "#000000", width: 1 }
+  - elementId: "Oval_31"
+    elementType: shape
+    bounds: [ 477, 209, 9, 9 ]
+    kind: ellipse
+    line: { color: "#000000", width: 1 }
+  - elementId: "Straight_Connector_32"
+    elementType: line
+    bounds: [ 486, 215, 41, 1 ]
+    points: [ [ 486, 215 ], [ 527, 216 ] ]
+    line: { color: "#000000", width: 1 }
+  - elementId: "Straight_Connector_54"
+    elementType: line
+    bounds: [ 482, 219, 1, 98 ]
+    points: [ [ 482, 219 ], [ 483, 317 ] ]
+    line: { color: "#000000", width: 1 }
+  - elementId: "Oval_60"
+    elementType: shape
+    bounds: [ 478, 319, 9, 9 ]
+    kind: ellipse
+    line: { color: "#000000", width: 1 }
+  - elementId: "Straight_Connector_61"
+    elementType: line
+    bounds: [ 436, 325, 41, 1 ]
+    points: [ [ 436, 325 ], [ 477, 326 ] ]
+    line: { color: "#000000", width: 1 }
+  - elementId: "Straight_Connector_68"
+    elementType: line
+    bounds: [ 482, 329, 1, 98 ]
+    points: [ [ 482, 329 ], [ 483, 427 ] ]
+    line: { color: "#000000", width: 1 }
+  - elementId: "Oval_69"
+    elementType: shape
+    bounds: [ 478, 428, 9, 9 ]
+    kind: ellipse
+    line: { color: "#000000", width: 1 }
+  - elementId: "Straight_Connector_70"
+    elementType: line
+    bounds: [ 487, 434, 41, 1 ]
+    points: [ [ 487, 434 ], [ 528, 435 ] ]
+    line: { color: "#000000", width: 1 }
+  - elementId: "Straight_Connector_81"
+    elementType: line
+    bounds: [ 482, 439, 1, 98 ]
+    points: [ [ 482, 439 ], [ 483, 537 ] ]
+    line: { color: "#000000", width: 1 }
+  - elementId: "Oval_50"
+    elementType: shape
+    bounds: [ 185, 387, 66, 67 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000", width: 1 }
+  - elementId: "Oval_51"
+    elementType: shape
+    bounds: [ 180, 382, 75, 76 ]
+    kind: ellipse
+    line: { color: "#000000", width: 1 }
+  - elementId: "AutoShape_82"
+    elementType: shape
+    bounds: [ 371, 88, 33, 31 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
   - elementId: "TextBox_19"
     elementType: text
-    bounds: [117, 197, 136, 36]
+    bounds: [ 117, 197, 136, 36 ]
     content:
       text: "一季度目标"
       fontSize: 24
@@ -22,16 +104,33 @@ elements:
       align: right
   - elementId: "TextBox_20"
     elementType: text
-    bounds: [54, 230, 198, 45]
+    bounds: [ 54, 230, 198, 45 ]
     content:
       text: "点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容"
       fontSize: 10.5
       color: "#000000"
       fontFamily: "Arial"
       align: right
+  - elementId: "Oval_58"
+    elementType: shape
+    bounds: [ 185, 387, 66, 67 ]
+    kind: ellipse
+    fill: "#DF3F4E"
+    line: { color: "#000000", width: 1 }
+  - elementId: "Oval_59"
+    elementType: shape
+    bounds: [ 180, 382, 75, 76 ]
+    kind: ellipse
+    line: { color: "#000000", width: 1 }
+  - elementId: "AutoShape_43"
+    elementType: shape
+    bounds: [ 562, 197, 33, 34 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
   - elementId: "TextBox_19-2"
     elementType: text
-    bounds: [305, 335, 136, 36]
+    bounds: [ 305, 335, 136, 36 ]
     content:
       text: "二季度目标"
       fontSize: 24
@@ -41,7 +140,7 @@ elements:
       align: right
   - elementId: "TextBox_20-2"
     elementType: text
-    bounds: [242, 368, 198, 45]
+    bounds: [ 242, 368, 198, 45 ]
     content:
       text: "点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容"
       fontSize: 10.5
@@ -50,7 +149,7 @@ elements:
       align: right
   - elementId: "TextBox_19-3"
     elementType: text
-    bounds: [494, 197, 136, 36]
+    bounds: [ 494, 197, 136, 36 ]
     content:
       text: "三季度目标"
       fontSize: 24
@@ -60,16 +159,33 @@ elements:
       align: right
   - elementId: "TextBox_20-3"
     elementType: text
-    bounds: [432, 230, 198, 45]
+    bounds: [ 432, 230, 198, 45 ]
     content:
       text: "点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容"
       fontSize: 10.5
       color: "#000000"
       fontFamily: "Arial"
       align: right
+  - elementId: "Oval_48"
+    elementType: shape
+    bounds: [ 185, 387, 66, 67 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000", width: 1 }
+  - elementId: "Oval_52"
+    elementType: shape
+    bounds: [ 180, 382, 75, 76 ]
+    kind: ellipse
+    line: { color: "#000000", width: 1 }
+  - elementId: "AutoShape_20"
+    elementType: shape
+    bounds: [ 371, 308, 33, 31 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
   - elementId: "TextBox_19-4"
     elementType: text
-    bounds: [700, 335, 136, 36]
+    bounds: [ 700, 335, 136, 36 ]
     content:
       text: "四季度目标"
       fontSize: 24
@@ -79,10 +195,147 @@ elements:
       align: right
   - elementId: "TextBox_20-4"
     elementType: text
-    bounds: [637, 368, 198, 45]
+    bounds: [ 637, 368, 198, 45 ]
     content:
       text: "点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容"
       fontSize: 10.5
       color: "#000000"
       fontFamily: "Arial"
       align: right
+  - elementId: "Oval_45"
+    elementType: shape
+    bounds: [ 185, 387, 66, 67 ]
+    kind: ellipse
+    fill: "#DF3F4E"
+    line: { color: "#000000", width: 1 }
+  - elementId: "Oval_46"
+    elementType: shape
+    bounds: [ 180, 382, 75, 76 ]
+    kind: ellipse
+    line: { color: "#000000", width: 1 }
+  - elementId: "AutoShape_19"
+    elementType: shape
+    bounds: [ 563, 416, 33, 31 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "直接连接符_55"
+    elementType: line
+    bounds: [ 395, 58, 170, 1 ]
+    points: [ [ 395, 58 ], [ 565, 59 ] ]
+    line: { color: "#DF3F4E" }
+expectedOverlaps:
+  - pair:
+      - Oval_50
+      - Oval_51
+  - pair:
+      - Oval_50
+      - Oval_58
+  - pair:
+      - Oval_50
+      - Oval_59
+  - pair:
+      - Oval_50
+      - TextBox_20-2
+  - pair:
+      - Oval_50
+      - Oval_48
+  - pair:
+      - Oval_50
+      - Oval_52
+  - pair:
+      - Oval_50
+      - Oval_45
+  - pair:
+      - Oval_50
+      - Oval_46
+  - pair:
+      - Oval_51
+      - Oval_58
+  - pair:
+      - Oval_51
+      - Oval_59
+  - pair:
+      - Oval_51
+      - TextBox_20-2
+  - pair:
+      - Oval_51
+      - Oval_48
+  - pair:
+      - Oval_51
+      - Oval_52
+  - pair:
+      - Oval_51
+      - Oval_45
+  - pair:
+      - Oval_51
+      - Oval_46
+  - pair:
+      - Oval_58
+      - Oval_59
+  - pair:
+      - Oval_58
+      - TextBox_20-2
+  - pair:
+      - Oval_58
+      - Oval_48
+  - pair:
+      - Oval_58
+      - Oval_52
+  - pair:
+      - Oval_58
+      - Oval_45
+  - pair:
+      - Oval_58
+      - Oval_46
+  - pair:
+      - Oval_59
+      - TextBox_20-2
+  - pair:
+      - Oval_59
+      - Oval_48
+  - pair:
+      - Oval_59
+      - Oval_52
+  - pair:
+      - Oval_59
+      - Oval_45
+  - pair:
+      - Oval_59
+      - Oval_46
+  - pair:
+      - AutoShape_43
+      - TextBox_19-3
+  - pair:
+      - TextBox_19-2
+      - AutoShape_20
+  - pair:
+      - TextBox_20-2
+      - Oval_48
+  - pair:
+      - TextBox_20-2
+      - Oval_52
+  - pair:
+      - TextBox_20-2
+      - Oval_45
+  - pair:
+      - TextBox_20-2
+      - Oval_46
+  - pair:
+      - Oval_48
+      - Oval_52
+  - pair:
+      - Oval_48
+      - Oval_45
+  - pair:
+      - Oval_48
+      - Oval_46
+  - pair:
+      - Oval_52
+      - Oval_45
+  - pair:
+      - Oval_52
+      - Oval_46
+  - pair:
+      - Oval_45
+      - Oval_46

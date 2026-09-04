@@ -3,7 +3,7 @@ pageType: content
 elements:
   - elementId: "文本框_8"
     elementType: text
-    bounds: [425, 61, 111, 41]
+    bounds: [ 425, 61, 111, 41 ]
     content:
       text: "摘 要"
       fontSize: 28
@@ -11,3 +11,30 @@ elements:
       bold: true
       fontFamily: "Arial"
       align: center
+  - elementId: "矩形_4"
+    elementType: shape
+    bounds: [ 128, 157, 738, 301 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "TextBox_9"
+    elementType: text
+    bounds: [ 160, 223, 673, 182 ]
+    content:
+      text: "回顾这一年的工作，首先谈本年度取得的业绩(包括营收\\利润\\市场拓展等)。 其次，总结工作内容、工作中遇到的困难及如何解决、取得的成绩。
+        然后，回顾在取得成绩的同时，我们也找到了工作中的不足和问题，需在日后的工作中待进一步提升与完善。
+        最后，提出明年工作目标，展望新的一年，我们将继续努力，力争各项工作更上一个新台阶。 此处根据各公司各部门实际情况进行调整，本模板思路仅作参考。"
+      fontSize: 16
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.5
+  - elementId: "直接连接符_3"
+    elementType: line
+    bounds: [ 404, 102, 152, 1 ]
+    points: [ [ 404, 102 ], [ 556, 103 ] ]
+    line: { color: "#C00000" }
+expectedOverlaps:
+  - pair:
+      - 矩形_4
+      - TextBox_9

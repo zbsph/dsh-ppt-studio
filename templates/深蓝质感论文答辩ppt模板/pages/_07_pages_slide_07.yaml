@@ -40,6 +40,351 @@ elements:
       color: "#000000"
       align: center
       lineHeight: 1.5
+  - elementId: "直接连接符_22"
+    elementType: line
+    bounds: [ 351, 222, 17, 1 ]
+    points: [ [ 351, 222 ], [ 368, 223 ] ]
+    line: { color: "#000000", width: 2 }
+  - elementId: "_"
+    elementType: shape
+    bounds: [ 277, 101, 29, 26 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_i_"
+    elementType: shape
+    bounds: [ 263, 118, 7, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_S1i_"
+    elementType: shape
+    bounds: [ 265, 122, 7, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_e"
+    elementType: shape
+    bounds: [ 267, 126, 7, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_1_"
+    elementType: shape
+    bounds: [ 270, 130, 6, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_de"
+    elementType: shape
+    bounds: [ 273, 131, 5, 5 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_s1_"
+    elementType: shape
+    bounds: [ 274, 132, 6, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_l_"
+    elementType: shape
+    bounds: [ 278, 133, 6, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_Sli_"
+    elementType: shape
+    bounds: [ 283, 135, 4, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_s_d_"
+    elementType: shape
+    bounds: [ 290, 135, 4, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_Sl_"
+    elementType: shape
+    bounds: [ 294, 135, 4, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_1_-2"
+    elementType: shape
+    bounds: [ 298, 134, 3, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_-2"
+    elementType: shape
+    bounds: [ 299, 132, 4, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_1_-3"
+    elementType: shape
+    bounds: [ 303, 131, 5, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_"
+    elementType: shape
+    bounds: [ 305, 129, 7, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_1_d_"
+    elementType: shape
+    bounds: [ 308, 127, 6, 5 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_l_e"
+    elementType: shape
+    bounds: [ 310, 125, 6, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_l_e"
+    elementType: shape
+    bounds: [ 311, 121, 7, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_s_i_"
+    elementType: shape
+    bounds: [ 281, 126, 3, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_l_de"
+    elementType: shape
+    bounds: [ 287, 128, 3, 5 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_lide"
+    elementType: shape
+    bounds: [ 293, 128, 3, 5 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_s1_de"
+    elementType: shape
+    bounds: [ 298, 127, 3, 5 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_e-2"
+    elementType: shape
+    bounds: [ 264, 102, 3, 2 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_-2"
+    elementType: shape
+    bounds: [ 266, 105, 2, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_-3"
+    elementType: shape
+    bounds: [ 267, 98, 8, 13 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_i_-2"
+    elementType: shape
+    bounds: [ 283, 86, 2, 2 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_i_e"
+    elementType: shape
+    bounds: [ 282, 90, 1, 2 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_1_"
+    elementType: shape
+    bounds: [ 286, 88, 3, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_i_"
+    elementType: shape
+    bounds: [ 286, 91, 3, 2 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_1_-4"
+    elementType: shape
+    bounds: [ 279, 92, 4, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "iS_i_"
+    elementType: shape
+    bounds: [ 297, 88, 7, 8 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_-4"
+    elementType: shape
+    bounds: [ 303, 95, 2, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_1_-5"
+    elementType: shape
+    bounds: [ 311, 101, 2, 2 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_li_"
+    elementType: shape
+    bounds: [ 308, 103, 5, 5 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_i_e-2"
+    elementType: shape
+    bounds: [ 310, 100, 10, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_d_"
+    elementType: shape
+    bounds: [ 260, 81, 63, 63 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_l_e-2"
+    elementType: shape
+    bounds: [ 274, 95, 35, 30 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_-5"
+    elementType: shape
+    bounds: [ 313, 124, 7, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_s1_e"
+    elementType: shape
+    bounds: [ 339, 94, 4, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_l_e-3"
+    elementType: shape
+    bounds: [ 337, 101, 5, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_-3"
+    elementType: shape
+    bounds: [ 333, 98, 26, 23 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_d_-2"
+    elementType: shape
+    bounds: [ 375, 94, 4, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_S_i_e"
+    elementType: shape
+    bounds: [ 372, 101, 5, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_-6"
+    elementType: shape
+    bounds: [ 365, 106, 13, 16 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_e"
+    elementType: shape
+    bounds: [ 382, 99, 9, 9 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_i_e"
+    elementType: shape
+    bounds: [ 381, 107, 8, 5 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_l_-2"
+    elementType: shape
+    bounds: [ 401, 93, 20, 22 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "iS1_"
+    elementType: shape
+    bounds: [ 416, 110, 6, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_i_-3"
+    elementType: shape
+    bounds: [ 432, 102, 3, 5 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_1_-2"
+    elementType: shape
+    bounds: [ 430, 90, 22, 29 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_-7"
+    elementType: shape
+    bounds: [ 331, 128, 6, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_-8"
+    elementType: shape
+    bounds: [ 338, 128, 6, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_-9"
+    elementType: shape
+    bounds: [ 346, 128, 5, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_de-2"
+    elementType: shape
+    bounds: [ 352, 128, 5, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_d_-3"
+    elementType: shape
+    bounds: [ 359, 128, 1, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_d_"
+    elementType: shape
+    bounds: [ 362, 128, 7, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_l_"
+    elementType: shape
+    bounds: [ 370, 128, 6, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_1_e"
+    elementType: shape
+    bounds: [ 378, 128, 7, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_d_-2"
+    elementType: shape
+    bounds: [ 389, 128, 6, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_-10"
+    elementType: shape
+    bounds: [ 397, 128, 6, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_li_-2"
+    elementType: shape
+    bounds: [ 404, 128, 1, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_lid_"
+    elementType: shape
+    bounds: [ 407, 128, 7, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_-11"
+    elementType: shape
+    bounds: [ 415, 128, 6, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_-4"
+    elementType: shape
+    bounds: [ 423, 128, 6, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_-12"
+    elementType: shape
+    bounds: [ 430, 128, 6, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "_-13"
+    elementType: shape
+    bounds: [ 438, 128, 1, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_i_-2"
+    elementType: shape
+    bounds: [ 440, 128, 6, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "i_d_-3"
+    elementType: shape
+    bounds: [ 447, 128, 7, 7 ]
+    kind: rect
+    line: { color: "#000000" }
 expectedOverlaps:
   - pair:
       - 矩形_2
@@ -51,6 +396,195 @@ expectedOverlaps:
       - 矩形_2
       - 文本框_6
   - pair:
+      - 矩形_2
+      - _
+  - pair:
+      - 矩形_2
+      - _i_
+  - pair:
+      - 矩形_2
+      - _S1i_
+  - pair:
+      - 矩形_2
+      - i_e
+  - pair:
+      - 矩形_2
+      - _1_
+  - pair:
+      - 矩形_2
+      - i_de
+  - pair:
+      - 矩形_2
+      - _s1_
+  - pair:
+      - 矩形_2
+      - _l_
+  - pair:
+      - 矩形_2
+      - _Sli_
+  - pair:
+      - 矩形_2
+      - _s_d_
+  - pair:
+      - 矩形_2
+      - _Sl_
+  - pair:
+      - 矩形_2
+      - _1_-2
+  - pair:
+      - 矩形_2
+      - _-2
+  - pair:
+      - 矩形_2
+      - _1_-3
+  - pair:
+      - 矩形_2
+      - i_
+  - pair:
+      - 矩形_2
+      - _1_d_
+  - pair:
+      - 矩形_2
+      - i_l_e
+  - pair:
+      - 矩形_2
+      - _l_e
+  - pair:
+      - 矩形_2
+      - _s_i_
+  - pair:
+      - 矩形_2
+      - _l_de
+  - pair:
+      - 矩形_2
+      - i_lide
+  - pair:
+      - 矩形_2
+      - _s1_de
+  - pair:
+      - 矩形_2
+      - i_e-2
+  - pair:
+      - 矩形_2
+      - _-3
+  - pair:
+      - 矩形_2
+      - _i_-2
+  - pair:
+      - 矩形_2
+      - i_1_
+  - pair:
+      - 矩形_2
+      - i_i_
+  - pair:
+      - 矩形_2
+      - _1_-4
+  - pair:
+      - 矩形_2
+      - iS_i_
+  - pair:
+      - 矩形_2
+      - _-4
+  - pair:
+      - 矩形_2
+      - _1_-5
+  - pair:
+      - 矩形_2
+      - _li_
+  - pair:
+      - 矩形_2
+      - i_i_e-2
+  - pair:
+      - 矩形_2
+      - _d_
+  - pair:
+      - 矩形_2
+      - _l_e-2
+  - pair:
+      - 矩形_2
+      - _-5
+  - pair:
+      - 矩形_2
+      - _s1_e
+  - pair:
+      - 矩形_2
+      - _l_e-3
+  - pair:
+      - 矩形_2
+      - i_-3
+  - pair:
+      - 矩形_2
+      - _d_-2
+  - pair:
+      - 矩形_2
+      - _S_i_e
+  - pair:
+      - 矩形_2
+      - _-6
+  - pair:
+      - 矩形_2
+      - _e
+  - pair:
+      - 矩形_2
+      - _i_e
+  - pair:
+      - 矩形_2
+      - _l_-2
+  - pair:
+      - 矩形_2
+      - iS1_
+  - pair:
+      - 矩形_2
+      - _i_-3
+  - pair:
+      - 矩形_2
+      - i_1_-2
+  - pair:
+      - 矩形_2
+      - _-7
+  - pair:
+      - 矩形_2
+      - _-8
+  - pair:
+      - 矩形_2
+      - _-9
+  - pair:
+      - 矩形_2
+      - i_de-2
+  - pair:
+      - 矩形_2
+      - i_d_
+  - pair:
+      - 矩形_2
+      - i_l_
+  - pair:
+      - 矩形_2
+      - _1_e
+  - pair:
+      - 矩形_2
+      - i_d_-2
+  - pair:
+      - 矩形_2
+      - _-10
+  - pair:
+      - 矩形_2
+      - i_lid_
+  - pair:
+      - 矩形_2
+      - _-11
+  - pair:
+      - 矩形_2
+      - i_-4
+  - pair:
+      - 矩形_2
+      - _-12
+  - pair:
+      - 矩形_2
+      - i_i_-2
+  - pair:
+      - 矩形_2
+      - i_d_-3
+  - pair:
       - 矩形_3
       - 文本框_5
   - pair:
@@ -59,3 +593,357 @@ expectedOverlaps:
   - pair:
       - 矩形_3
       - 矩形_21
+  - pair:
+      - 矩形_3
+      - _
+  - pair:
+      - 矩形_3
+      - _i_
+  - pair:
+      - 矩形_3
+      - _S1i_
+  - pair:
+      - 矩形_3
+      - i_e
+  - pair:
+      - 矩形_3
+      - _1_
+  - pair:
+      - 矩形_3
+      - i_de
+  - pair:
+      - 矩形_3
+      - _s1_
+  - pair:
+      - 矩形_3
+      - _l_
+  - pair:
+      - 矩形_3
+      - _Sli_
+  - pair:
+      - 矩形_3
+      - _s_d_
+  - pair:
+      - 矩形_3
+      - _Sl_
+  - pair:
+      - 矩形_3
+      - _1_-2
+  - pair:
+      - 矩形_3
+      - _-2
+  - pair:
+      - 矩形_3
+      - _1_-3
+  - pair:
+      - 矩形_3
+      - i_
+  - pair:
+      - 矩形_3
+      - _1_d_
+  - pair:
+      - 矩形_3
+      - i_l_e
+  - pair:
+      - 矩形_3
+      - _l_e
+  - pair:
+      - 矩形_3
+      - _s_i_
+  - pair:
+      - 矩形_3
+      - _l_de
+  - pair:
+      - 矩形_3
+      - i_lide
+  - pair:
+      - 矩形_3
+      - _s1_de
+  - pair:
+      - 矩形_3
+      - i_e-2
+  - pair:
+      - 矩形_3
+      - _-3
+  - pair:
+      - 矩形_3
+      - _i_-2
+  - pair:
+      - 矩形_3
+      - i_1_
+  - pair:
+      - 矩形_3
+      - i_i_
+  - pair:
+      - 矩形_3
+      - _1_-4
+  - pair:
+      - 矩形_3
+      - iS_i_
+  - pair:
+      - 矩形_3
+      - _-4
+  - pair:
+      - 矩形_3
+      - _1_-5
+  - pair:
+      - 矩形_3
+      - _li_
+  - pair:
+      - 矩形_3
+      - i_i_e-2
+  - pair:
+      - 矩形_3
+      - _d_
+  - pair:
+      - 矩形_3
+      - _l_e-2
+  - pair:
+      - 矩形_3
+      - _-5
+  - pair:
+      - 矩形_3
+      - _s1_e
+  - pair:
+      - 矩形_3
+      - _l_e-3
+  - pair:
+      - 矩形_3
+      - i_-3
+  - pair:
+      - 矩形_3
+      - _d_-2
+  - pair:
+      - 矩形_3
+      - _S_i_e
+  - pair:
+      - 矩形_3
+      - _-6
+  - pair:
+      - 矩形_3
+      - _e
+  - pair:
+      - 矩形_3
+      - _i_e
+  - pair:
+      - 矩形_3
+      - _l_-2
+  - pair:
+      - 矩形_3
+      - iS1_
+  - pair:
+      - 矩形_3
+      - _i_-3
+  - pair:
+      - 矩形_3
+      - i_1_-2
+  - pair:
+      - 矩形_3
+      - _-7
+  - pair:
+      - 矩形_3
+      - _-8
+  - pair:
+      - 矩形_3
+      - _-9
+  - pair:
+      - 矩形_3
+      - i_de-2
+  - pair:
+      - 矩形_3
+      - i_d_
+  - pair:
+      - 矩形_3
+      - i_l_
+  - pair:
+      - 矩形_3
+      - _1_e
+  - pair:
+      - 矩形_3
+      - i_d_-2
+  - pair:
+      - 矩形_3
+      - _-10
+  - pair:
+      - 矩形_3
+      - i_lid_
+  - pair:
+      - 矩形_3
+      - _-11
+  - pair:
+      - 矩形_3
+      - i_-4
+  - pair:
+      - 矩形_3
+      - _-12
+  - pair:
+      - 矩形_3
+      - i_i_-2
+  - pair:
+      - 矩形_3
+      - i_d_-3
+  - pair:
+      - _
+      - _d_
+  - pair:
+      - _
+      - _l_e-2
+  - pair:
+      - _i_
+      - _S1i_
+  - pair:
+      - _i_
+      - _d_
+  - pair:
+      - _S1i_
+      - i_e
+  - pair:
+      - _S1i_
+      - _d_
+  - pair:
+      - i_e
+      - _1_
+  - pair:
+      - i_e
+      - _d_
+  - pair:
+      - _1_
+      - i_de
+  - pair:
+      - _1_
+      - _s1_
+  - pair:
+      - _1_
+      - _d_
+  - pair:
+      - i_de
+      - _s1_
+  - pair:
+      - i_de
+      - _d_
+  - pair:
+      - _s1_
+      - _l_
+  - pair:
+      - _s1_
+      - _d_
+  - pair:
+      - _l_
+      - _d_
+  - pair:
+      - _Sli_
+      - _d_
+  - pair:
+      - _s_d_
+      - _d_
+  - pair:
+      - _Sl_
+      - _d_
+  - pair:
+      - _1_-2
+      - _-2
+  - pair:
+      - _1_-2
+      - _d_
+  - pair:
+      - _-2
+      - _d_
+  - pair:
+      - _1_-3
+      - i_
+  - pair:
+      - _1_-3
+      - _d_
+  - pair:
+      - i_
+      - _1_d_
+  - pair:
+      - i_
+      - _d_
+  - pair:
+      - _1_d_
+      - _d_
+  - pair:
+      - i_l_e
+      - _d_
+  - pair:
+      - i_l_e
+      - _-5
+  - pair:
+      - _l_e
+      - _d_
+  - pair:
+      - _s_i_
+      - _d_
+  - pair:
+      - _l_de
+      - _d_
+  - pair:
+      - i_lide
+      - _d_
+  - pair:
+      - _s1_de
+      - _d_
+  - pair:
+      - i_e-2
+      - _d_
+  - pair:
+      - _-3
+      - _d_
+  - pair:
+      - _i_-2
+      - _d_
+  - pair:
+      - i_1_
+      - _d_
+  - pair:
+      - i_i_
+      - _d_
+  - pair:
+      - _1_-4
+      - _d_
+  - pair:
+      - _1_-4
+      - _l_e-2
+  - pair:
+      - iS_i_
+      - _d_
+  - pair:
+      - _-4
+      - _d_
+  - pair:
+      - _-4
+      - _l_e-2
+  - pair:
+      - _1_-5
+      - i_i_e-2
+  - pair:
+      - _1_-5
+      - _d_
+  - pair:
+      - _li_
+      - i_i_e-2
+  - pair:
+      - _li_
+      - _d_
+  - pair:
+      - i_i_e-2
+      - _d_
+  - pair:
+      - _d_
+      - _l_e-2
+  - pair:
+      - _d_
+      - _-5
+  - pair:
+      - _s1_e
+      - i_-3
+  - pair:
+      - _l_e-3
+      - i_-3
+  - pair:
+      - _l_-2
+      - iS1_
+  - pair:
+      - _i_-3
+      - i_1_-2

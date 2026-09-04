@@ -82,6 +82,31 @@ elements:
       color: "#000000"
       fontFamily: "微软雅黑"
       lineHeight: 1.25
+  - elementId: "Freeform_19"
+    elementType: shape
+    bounds: [ 180, -105, 10, 25 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_20"
+    elementType: shape
+    bounds: [ 167, -96, 10, 17 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_21"
+    elementType: shape
+    bounds: [ 154, -99, 10, 19 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_22"
+    elementType: shape
+    bounds: [ 154, -77, 36, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_23"
+    elementType: shape
+    bounds: [ 154, -112, 36, 18 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "TextBox_34-3"
     elementType: text
     bounds: [ 517, 250, 105, 22 ]
@@ -168,6 +193,16 @@ elements:
     kind: rect
     fill: "#FFFFFF"
     line: { color: "#000000" }
+  - elementId: "Freeform_11"
+    elementType: shape
+    bounds: [ 176, 157, 41, 20 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_12"
+    elementType: shape
+    bounds: [ 176, 147, 35, 27 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "Freeform_134"
     elementType: shape
     bounds: [ 269, 262, 8, 19 ]
@@ -182,6 +217,12 @@ elements:
       fontSize: 21
       bold: true
       fontFamily: "微软雅黑"
+expectedOutOfSafeArea:
+  - Freeform_19
+  - Freeform_20
+  - Freeform_21
+  - Rectangle_22
+  - Freeform_23
 expectedOverlaps:
   - pair:
       - Oval_9-2
@@ -198,3 +239,27 @@ expectedOverlaps:
   - pair:
       - 矩形_3
       - 图片_4
+  - pair:
+      - 矩形_3
+      - Freeform_11
+  - pair:
+      - 矩形_3
+      - Freeform_12
+  - pair:
+      - 图片_4
+      - Freeform_11
+  - pair:
+      - 图片_4
+      - Freeform_12
+  - pair:
+      - Freeform_19
+      - Freeform_23
+  - pair:
+      - Freeform_20
+      - Freeform_23
+  - pair:
+      - Freeform_21
+      - Freeform_23
+  - pair:
+      - Freeform_11
+      - Freeform_12

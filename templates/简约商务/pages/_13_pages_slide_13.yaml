@@ -13,6 +13,12 @@ elements:
     kind: rect
     fill: "#0485A8"
     line: { color: "#000000", width: 1 }
+  - elementId: "2"
+    elementType: line
+    bounds: [ 39, 284, 859, 1 ]
+    points: [ [ 39, 284 ], [ 898, 285 ] ]
+    arrow: true
+    line: { color: "#FFFFFF", width: 9 }
   - elementId: "Oval_57"
     elementType: shape
     bounds: [ 741, 251, 20, 20 ]
@@ -121,6 +127,61 @@ elements:
     kind: roundRect
     fill: "#0485A8"
     line: { color: "#000000" }
+  - elementId: "AutoShape_5"
+    elementType: shape
+    bounds: [ 511, 505, 5, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_6"
+    elementType: shape
+    bounds: [ 490, 497, 29, 23 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_7"
+    elementType: shape
+    bounds: [ 597, 567, 29, 29 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_8"
+    elementType: shape
+    bounds: [ 609, 580, 4, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_9"
+    elementType: shape
+    bounds: [ 606, 576, 11, 11 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_10"
+    elementType: shape
+    bounds: [ 613, 583, 4, 5 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_11"
+    elementType: shape
+    bounds: [ 615, 585, 6, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_12"
+    elementType: shape
+    bounds: [ 614, 584, 5, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_13"
+    elementType: shape
+    bounds: [ 605, 575, 5, 5 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_14"
+    elementType: shape
+    bounds: [ 601, 572, 6, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_15"
+    elementType: shape
+    bounds: [ 603, 573, 5, 6 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "Freeform_15"
     elementType: shape
     bounds: [ 317, 364, 27, 27 ]
@@ -142,6 +203,16 @@ elements:
       bold: true
       fontFamily: "思源黑体 CN Heavy"
       align: center
+expectedOutOfSafeArea:
+  - AutoShape_7
+  - AutoShape_8
+  - AutoShape_9
+  - AutoShape_10
+  - AutoShape_11
+  - AutoShape_12
+  - AutoShape_13
+  - AutoShape_14
+  - AutoShape_15
 expectedOverlaps:
   - pair:
       - Rectangle_52
@@ -173,3 +244,66 @@ expectedOverlaps:
   - pair:
       - 圆角矩形_21
       - Freeform_15-2
+  - pair:
+      - AutoShape_5
+      - AutoShape_6
+  - pair:
+      - AutoShape_7
+      - AutoShape_8
+  - pair:
+      - AutoShape_7
+      - AutoShape_9
+  - pair:
+      - AutoShape_7
+      - AutoShape_10
+  - pair:
+      - AutoShape_7
+      - AutoShape_11
+  - pair:
+      - AutoShape_7
+      - AutoShape_12
+  - pair:
+      - AutoShape_7
+      - AutoShape_13
+  - pair:
+      - AutoShape_7
+      - AutoShape_14
+  - pair:
+      - AutoShape_7
+      - AutoShape_15
+  - pair:
+      - AutoShape_8
+      - AutoShape_9
+  - pair:
+      - AutoShape_9
+      - AutoShape_10
+  - pair:
+      - AutoShape_9
+      - AutoShape_11
+  - pair:
+      - AutoShape_9
+      - AutoShape_12
+  - pair:
+      - AutoShape_9
+      - AutoShape_13
+  - pair:
+      - AutoShape_9
+      - AutoShape_15
+  - pair:
+      - AutoShape_10
+      - AutoShape_11
+  - pair:
+      - AutoShape_10
+      - AutoShape_12
+  - pair:
+      - AutoShape_11
+      - AutoShape_12
+  - pair:
+      - AutoShape_13
+      - AutoShape_14
+  - pair:
+      - AutoShape_13
+      - AutoShape_15
+  - pair:
+      - AutoShape_14
+      - AutoShape_15

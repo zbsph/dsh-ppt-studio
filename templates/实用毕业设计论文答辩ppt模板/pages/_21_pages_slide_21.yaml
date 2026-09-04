@@ -14,9 +14,32 @@ elements:
       color: "#4B649F"
       bold: true
       lineHeight: 1.5
+  - elementId: "直接连接符_3"
+    elementType: line
+    bounds: [ 0, 65, 880, 1 ]
+    points: [ [ 0, 65 ], [ 880, 66 ] ]
+    line: { color: "#000000", width: 2 }
   - elementId: "矩形_4"
     elementType: shape
     bounds: [ 0, 530, 960, 11 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "椭圆_6"
+    elementType: shape
+    bounds: [ 744, 176, 127, 127 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "椭圆_7"
+    elementType: shape
+    bounds: [ 752, 184, 110, 110 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "KSO_Shape"
+    elementType: shape
+    bounds: [ 774, 211, 66, 57 ]
     kind: rect
     fill: "#4B649F"
     line: { color: "#000000" }
@@ -109,6 +132,24 @@ elements:
     fill: "#7DB1CD"
     line: { color: "#000000" }
 expectedOverlaps:
+  - pair:
+      - 椭圆_6
+      - 椭圆_7
+  - pair:
+      - 椭圆_6
+      - KSO_Shape
+  - pair:
+      - 椭圆_6
+      - 对象_22
+  - pair:
+      - 椭圆_7
+      - KSO_Shape
+  - pair:
+      - 椭圆_7
+      - 对象_22
+  - pair:
+      - KSO_Shape
+      - 对象_22
   - pair:
       - Title_13
       - 矩形_15

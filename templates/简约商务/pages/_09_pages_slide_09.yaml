@@ -40,6 +40,66 @@ elements:
       color: "#000000"
       fontFamily: "Arial"
       lineHeight: 1.3
+  - elementId: "AutoShape_69"
+    elementType: shape
+    bounds: [ 654, 394, 29, 27 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_70"
+    elementType: shape
+    bounds: [ 668, 399, 5, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_71"
+    elementType: shape
+    bounds: [ 668, 402, 5, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_72"
+    elementType: shape
+    bounds: [ 668, 405, 12, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_73"
+    elementType: shape
+    bounds: [ 658, 410, 22, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_74"
+    elementType: shape
+    bounds: [ 658, 413, 22, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_75"
+    elementType: shape
+    bounds: [ 658, 416, 22, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_76"
+    elementType: shape
+    bounds: [ 658, 408, 22, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_77"
+    elementType: shape
+    bounds: [ 658, 399, 8, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_13"
+    elementType: shape
+    bounds: [ 452, 469, 53, 53 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_14"
+    elementType: shape
+    bounds: [ 466, 482, 26, 26 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_15"
+    elementType: shape
+    bounds: [ 479, 463, 32, 32 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "文本框_22"
     elementType: text
     bounds: [ 427, 395, 130, 30 ]
@@ -58,6 +118,16 @@ elements:
       color: "#FFFFFF"
       fontFamily: "Arial"
       lineHeight: 1.5
+  - elementId: "直线连接符_24"
+    elementType: line
+    bounds: [ 414, 398, 1, 27 ]
+    points: [ [ 414, 398 ], [ 415, 425 ] ]
+    line: { color: "#FFFFFF", width: 1 }
+  - elementId: "直线连接符_25"
+    elementType: line
+    bounds: [ 679, 398, 1, 27 ]
+    points: [ [ 679, 398 ], [ 680, 425 ] ]
+    line: { color: "#FFFFFF", width: 1 }
   - elementId: "文本框_2"
     elementType: text
     bounds: [ 269, 37, 423, 41 ]
@@ -73,4 +143,22 @@ expectedOverlaps:
       - 文本框_22
   - pair:
       - 图形-3
+      - AutoShape_69
+  - pair:
+      - 图形-3
+      - AutoShape_77
+  - pair:
+      - 图形-3
       - 文本框_23
+  - pair:
+      - AutoShape_69
+      - AutoShape_77
+  - pair:
+      - Freeform_13
+      - Freeform_14
+  - pair:
+      - Freeform_13
+      - Freeform_15
+  - pair:
+      - Freeform_14
+      - Freeform_15

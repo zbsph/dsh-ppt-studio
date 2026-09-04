@@ -22,11 +22,221 @@ elements:
     kind: ellipse
     fill: "#000000"
     line: { color: "#000000" }
+  - elementId: "Freeform_5"
+    elementType: shape
+    bounds: [ 715, 692, 39, 29 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_6"
+    elementType: shape
+    bounds: [ 695, 604, 79, 82 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "椭圆_163"
     elementType: shape
     bounds: [ 309, 101, 49, 49 ]
     kind: ellipse
     fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Oval_44"
+    elementType: shape
+    bounds: [ -220, 32, 40, 46 ]
+    kind: ellipse
+    line: { color: "#000000" }
+  - elementId: "Freeform_45"
+    elementType: shape
+    bounds: [ -245, 81, 75, 45 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_46"
+    elementType: shape
+    bounds: [ -207, 81, 13, 28 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Oval_47"
+    elementType: shape
+    bounds: [ -81, 32, 40, 46 ]
+    kind: ellipse
+    line: { color: "#000000" }
+  - elementId: "Freeform_48"
+    elementType: shape
+    bounds: [ -91, 81, 75, 45 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_49"
+    elementType: shape
+    bounds: [ -68, 81, 13, 28 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Oval_50"
+    elementType: shape
+    bounds: [ -155, 22, 48, 56 ]
+    kind: ellipse
+    line: { color: "#000000" }
+  - elementId: "Freeform_51"
+    elementType: shape
+    bounds: [ -185, 83, 109, 54 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_52"
+    elementType: shape
+    bounds: [ -139, 83, 16, 34 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_53"
+    elementType: shape
+    bounds: [ -152, -50, 41, 59 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_54"
+    elementType: shape
+    bounds: [ -141, 11, 20, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_55"
+    elementType: shape
+    bounds: [ -135, -41, 7, 26 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_56"
+    elementType: shape
+    bounds: [ -134, -10, 7, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_57"
+    elementType: shape
+    bounds: [ -133, -72, 3, 13 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_58"
+    elementType: shape
+    bounds: [ -118, -66, 10, 13 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_59"
+    elementType: shape
+    bounds: [ -108, -49, 13, 8 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_60"
+    elementType: shape
+    bounds: [ -106, -29, 13, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_61"
+    elementType: shape
+    bounds: [ -154, -66, 10, 13 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_62"
+    elementType: shape
+    bounds: [ -168, -49, 13, 8 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_63"
+    elementType: shape
+    bounds: [ -170, -29, 13, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Oval_64"
+    elementType: shape
+    bounds: [ -220, 32, 40, 46 ]
+    kind: ellipse
+    line: { color: "#000000" }
+  - elementId: "Freeform_65"
+    elementType: shape
+    bounds: [ -245, 81, 75, 45 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_66"
+    elementType: shape
+    bounds: [ -207, 81, 13, 28 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Oval_67"
+    elementType: shape
+    bounds: [ -81, 32, 40, 46 ]
+    kind: ellipse
+    line: { color: "#000000" }
+  - elementId: "Freeform_68"
+    elementType: shape
+    bounds: [ -91, 81, 75, 45 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_69"
+    elementType: shape
+    bounds: [ -68, 81, 13, 28 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Oval_70"
+    elementType: shape
+    bounds: [ -155, 22, 48, 56 ]
+    kind: ellipse
+    line: { color: "#000000" }
+  - elementId: "Freeform_71"
+    elementType: shape
+    bounds: [ -185, 83, 109, 54 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_72"
+    elementType: shape
+    bounds: [ -139, 83, 16, 34 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_73"
+    elementType: shape
+    bounds: [ -152, -50, 41, 59 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_74"
+    elementType: shape
+    bounds: [ -141, 11, 20, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_75"
+    elementType: shape
+    bounds: [ -135, -41, 7, 26 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_76"
+    elementType: shape
+    bounds: [ -134, -10, 7, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_77"
+    elementType: shape
+    bounds: [ -133, -72, 3, 13 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_78"
+    elementType: shape
+    bounds: [ -118, -66, 10, 13 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_79"
+    elementType: shape
+    bounds: [ -108, -49, 13, 8 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_80"
+    elementType: shape
+    bounds: [ -106, -29, 13, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_81"
+    elementType: shape
+    bounds: [ -154, -66, 10, 13 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_82"
+    elementType: shape
+    bounds: [ -168, -49, 13, 8 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_83"
+    elementType: shape
+    bounds: [ -170, -29, 13, 6 ]
+    kind: rect
     line: { color: "#000000" }
   - elementId: "椭圆_205"
     elementType: shape
@@ -34,11 +244,31 @@ elements:
     kind: ellipse
     fill: "#000000"
     line: { color: "#000000" }
+  - elementId: "Freeform_10"
+    elementType: shape
+    bounds: [ 505, -4, 51, 32 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_11"
+    elementType: shape
+    bounds: [ 502, 9, 58, 36 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "L_形_209"
     elementType: shape
     bounds: [ 190, 329, 6, 6 ]
     kind: rect
     line: { color: "#000000", width: 2 }
+  - elementId: "Freeform_30"
+    elementType: shape
+    bounds: [ 474, 83, 23, 23 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_31"
+    elementType: shape
+    bounds: [ 491, 101, 18, 18 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "任意多边形_213"
     elementType: shape
     bounds: [ 459, 118, 113, 76 ]
@@ -213,6 +443,50 @@ elements:
       fontSize: 11
       color: "#595959"
       fontFamily: "微软雅黑"
+expectedOutOfSafeArea:
+  - Freeform_5
+  - Freeform_6
+  - Oval_44
+  - Freeform_45
+  - Freeform_46
+  - Oval_47
+  - Freeform_48
+  - Freeform_49
+  - Oval_50
+  - Freeform_51
+  - Freeform_52
+  - Freeform_53
+  - Freeform_54
+  - Freeform_55
+  - Freeform_56
+  - Freeform_57
+  - Freeform_58
+  - Freeform_59
+  - Freeform_60
+  - Freeform_61
+  - Freeform_62
+  - Freeform_63
+  - Oval_64
+  - Freeform_65
+  - Freeform_66
+  - Oval_67
+  - Freeform_68
+  - Freeform_69
+  - Oval_70
+  - Freeform_71
+  - Freeform_72
+  - Freeform_73
+  - Freeform_74
+  - Freeform_75
+  - Freeform_76
+  - Freeform_77
+  - Freeform_78
+  - Freeform_79
+  - Freeform_80
+  - Freeform_81
+  - Freeform_82
+  - Freeform_83
+  - Freeform_10
 expectedOverlaps:
   - pair:
       - 椭圆_158
@@ -224,11 +498,164 @@ expectedOverlaps:
       - 椭圆_163
       - 任意多边形_218
   - pair:
+      - Oval_44
+      - Oval_64
+  - pair:
+      - Freeform_45
+      - Freeform_46
+  - pair:
+      - Freeform_45
+      - Freeform_51
+  - pair:
+      - Freeform_45
+      - Freeform_65
+  - pair:
+      - Freeform_45
+      - Freeform_66
+  - pair:
+      - Freeform_45
+      - Freeform_71
+  - pair:
+      - Freeform_46
+      - Freeform_65
+  - pair:
+      - Freeform_46
+      - Freeform_66
+  - pair:
+      - Oval_47
+      - Oval_67
+  - pair:
+      - Freeform_48
+      - Freeform_49
+  - pair:
+      - Freeform_48
+      - Freeform_51
+  - pair:
+      - Freeform_48
+      - Freeform_68
+  - pair:
+      - Freeform_48
+      - Freeform_69
+  - pair:
+      - Freeform_48
+      - Freeform_71
+  - pair:
+      - Freeform_49
+      - Freeform_68
+  - pair:
+      - Freeform_49
+      - Freeform_69
+  - pair:
+      - Oval_50
+      - Oval_70
+  - pair:
+      - Freeform_51
+      - Freeform_52
+  - pair:
+      - Freeform_51
+      - Freeform_65
+  - pair:
+      - Freeform_51
+      - Freeform_68
+  - pair:
+      - Freeform_51
+      - Freeform_71
+  - pair:
+      - Freeform_51
+      - Freeform_72
+  - pair:
+      - Freeform_52
+      - Freeform_71
+  - pair:
+      - Freeform_52
+      - Freeform_72
+  - pair:
+      - Freeform_53
+      - Freeform_55
+  - pair:
+      - Freeform_53
+      - Freeform_56
+  - pair:
+      - Freeform_53
+      - Freeform_73
+  - pair:
+      - Freeform_53
+      - Freeform_75
+  - pair:
+      - Freeform_53
+      - Freeform_76
+  - pair:
+      - Freeform_54
+      - Freeform_74
+  - pair:
+      - Freeform_55
+      - Freeform_73
+  - pair:
+      - Freeform_55
+      - Freeform_75
+  - pair:
+      - Freeform_56
+      - Freeform_73
+  - pair:
+      - Freeform_56
+      - Freeform_76
+  - pair:
+      - Freeform_57
+      - Freeform_77
+  - pair:
+      - Freeform_58
+      - Freeform_78
+  - pair:
+      - Freeform_59
+      - Freeform_79
+  - pair:
+      - Freeform_60
+      - Freeform_80
+  - pair:
+      - Freeform_61
+      - Freeform_81
+  - pair:
+      - Freeform_62
+      - Freeform_82
+  - pair:
+      - Freeform_63
+      - Freeform_83
+  - pair:
+      - Freeform_65
+      - Freeform_66
+  - pair:
+      - Freeform_65
+      - Freeform_71
+  - pair:
+      - Freeform_68
+      - Freeform_69
+  - pair:
+      - Freeform_68
+      - Freeform_71
+  - pair:
+      - Freeform_71
+      - Freeform_72
+  - pair:
+      - Freeform_73
+      - Freeform_75
+  - pair:
+      - Freeform_73
+      - Freeform_76
+  - pair:
       - 椭圆_205
       - 任意多边形_214
   - pair:
+      - Freeform_10
+      - Freeform_11
+  - pair:
       - L_形_209
       - 0-2
+  - pair:
+      - Freeform_30
+      - Freeform_31
+  - pair:
+      - Freeform_31
+      - 任意多边形_214
   - pair:
       - 任意多边形_213
       - 任意多边形_214

@@ -1,6 +1,11 @@
 # 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
 pageType: content
 elements:
+  - elementId: "直接连接符_1"
+    elementType: line
+    bounds: [ 395, 58, 170, 1 ]
+    points: [ [ 395, 58 ], [ 565, 59 ] ]
+    line: { color: "#DF3F4E" }
   - elementId: "Text_Box_7"
     elementType: text
     bounds: [ -1, 25, 963, 34 ]
@@ -34,6 +39,126 @@ elements:
     bounds: [ 472, 326, 161, 160 ]
     kind: rect
     fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Freeform_64"
+    elementType: shape
+    bounds: [ 348, 243, 35, 33 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Oval_65"
+    elementType: shape
+    bounds: [ 364, 265, 2, 3 ]
+    kind: ellipse
+    line: { color: "#000000" }
+  - elementId: "Freeform_107"
+    elementType: shape
+    bounds: [ 280, 322, 17, 23 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_108"
+    elementType: shape
+    bounds: [ 283, 319, 17, 22 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_109"
+    elementType: shape
+    bounds: [ 278, 325, 17, 23 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_121"
+    elementType: shape
+    bounds: [ 278, 212, 22, 30 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_122"
+    elementType: shape
+    bounds: [ 286, 249, 8, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_123"
+    elementType: shape
+    bounds: [ 287, 251, 6, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_124"
+    elementType: shape
+    bounds: [ 286, 243, 8, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_125"
+    elementType: shape
+    bounds: [ 286, 226, 8, 16 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_18"
+    elementType: shape
+    bounds: [ 414, 116, 4, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_19"
+    elementType: shape
+    bounds: [ 420, 116, 4, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_20"
+    elementType: shape
+    bounds: [ 426, 116, 4, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_21"
+    elementType: shape
+    bounds: [ 414, 122, 4, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_22"
+    elementType: shape
+    bounds: [ 420, 122, 4, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_23"
+    elementType: shape
+    bounds: [ 426, 122, 4, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_24"
+    elementType: shape
+    bounds: [ 414, 127, 4, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_25"
+    elementType: shape
+    bounds: [ 408, 122, 4, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_26"
+    elementType: shape
+    bounds: [ 408, 127, 4, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_27"
+    elementType: shape
+    bounds: [ 420, 127, 4, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_28"
+    elementType: shape
+    bounds: [ 426, 127, 4, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_29"
+    elementType: shape
+    bounds: [ 402, 105, 35, 31 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_30"
+    elementType: shape
+    bounds: [ 408, 103, 3, 5 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_31"
+    elementType: shape
+    bounds: [ 427, 103, 3, 5 ]
+    kind: rect
     line: { color: "#000000" }
   - elementId: "Freeform_6-2"
     elementType: shape
@@ -133,6 +258,108 @@ elements:
 expectedOutOfSafeArea:
   - Text_Box_7
 expectedOverlaps:
+  - pair:
+      - Freeform_6
+      - Freeform_64
+  - pair:
+      - Freeform_6
+      - Oval_65
+  - pair:
+      - Freeform_64
+      - Oval_65
+  - pair:
+      - Freeform_107
+      - Freeform_108
+  - pair:
+      - Freeform_107
+      - Freeform_109
+  - pair:
+      - Freeform_108
+      - Freeform_109
+  - pair:
+      - Freeform_121
+      - Freeform_125
+  - pair:
+      - Rectangle_18
+      - Freeform_29
+  - pair:
+      - Rectangle_18
+      - Text_Box_7-2
+  - pair:
+      - Rectangle_19
+      - Freeform_29
+  - pair:
+      - Rectangle_19
+      - Text_Box_7-2
+  - pair:
+      - Rectangle_20
+      - Freeform_29
+  - pair:
+      - Rectangle_20
+      - Text_Box_7-2
+  - pair:
+      - Rectangle_21
+      - Freeform_29
+  - pair:
+      - Rectangle_21
+      - Text_Box_7-2
+  - pair:
+      - Rectangle_22
+      - Freeform_29
+  - pair:
+      - Rectangle_22
+      - Text_Box_7-2
+  - pair:
+      - Rectangle_23
+      - Freeform_29
+  - pair:
+      - Rectangle_23
+      - Text_Box_7-2
+  - pair:
+      - Rectangle_24
+      - Freeform_29
+  - pair:
+      - Rectangle_24
+      - Text_Box_7-2
+  - pair:
+      - Rectangle_25
+      - Freeform_29
+  - pair:
+      - Rectangle_25
+      - Text_Box_7-2
+  - pair:
+      - Rectangle_26
+      - Freeform_29
+  - pair:
+      - Rectangle_26
+      - Text_Box_7-2
+  - pair:
+      - Rectangle_27
+      - Freeform_29
+  - pair:
+      - Rectangle_27
+      - Text_Box_7-2
+  - pair:
+      - Rectangle_28
+      - Freeform_29
+  - pair:
+      - Rectangle_28
+      - Text_Box_7-2
+  - pair:
+      - Freeform_29
+      - Rectangle_30
+  - pair:
+      - Freeform_29
+      - Rectangle_31
+  - pair:
+      - Freeform_29
+      - Text_Box_7-2
+  - pair:
+      - Rectangle_30
+      - Text_Box_7-2
+  - pair:
+      - Rectangle_31
+      - Text_Box_7-2
   - pair:
       - Freeform_6-2
       - 文本框_50

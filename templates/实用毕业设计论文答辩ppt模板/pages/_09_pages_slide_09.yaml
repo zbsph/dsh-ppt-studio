@@ -136,6 +136,24 @@ elements:
     bounds: [ 678, 0, 282, 79 ]
     fit: cover
     src: "media/image8.png"
+  - elementId: "椭圆_24"
+    elementType: shape
+    bounds: [ 89, 176, 127, 127 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "椭圆_25"
+    elementType: shape
+    bounds: [ 98, 184, 110, 110 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "KSO_Shape-5"
+    elementType: shape
+    bounds: [ 117, 205, 72, 69 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
   - elementId: "文本框_27"
     elementType: text
     bounds: [ 68, 2, 358, 58 ]
@@ -144,6 +162,11 @@ elements:
       color: "#4B649F"
       bold: true
       lineHeight: 1.5
+  - elementId: "直接连接符_28"
+    elementType: line
+    bounds: [ 0, 65, 880, 1 ]
+    points: [ [ 0, 65 ], [ 880, 66 ] ]
+    line: { color: "#000000", width: 2 }
   - elementId: "矩形_29"
     elementType: shape
     bounds: [ 0, 530, 960, 11 ]
@@ -176,14 +199,50 @@ expectedOverlaps:
       - 右箭头_21
       - KSO_Shape-4
   - pair:
+      - 右箭头_21
+      - 椭圆_24
+  - pair:
+      - 右箭头_21
+      - 椭圆_25
+  - pair:
+      - 右箭头_21
+      - KSO_Shape-5
+  - pair:
       - MH_Other_1
       - KSO_Shape-4
   - pair:
       - MH_Other_3
       - KSO_Shape-2
   - pair:
+      - MH_Other_3
+      - 椭圆_24
+  - pair:
+      - MH_Other_3
+      - 椭圆_25
+  - pair:
+      - MH_Other_3
+      - KSO_Shape-5
+  - pair:
       - MH_Other_6
       - KSO_Shape
   - pair:
       - MH_Other_8
       - KSO_Shape-3
+  - pair:
+      - KSO_Shape-2
+      - 椭圆_24
+  - pair:
+      - KSO_Shape-2
+      - 椭圆_25
+  - pair:
+      - KSO_Shape-2
+      - KSO_Shape-5
+  - pair:
+      - 椭圆_24
+      - 椭圆_25
+  - pair:
+      - 椭圆_24
+      - KSO_Shape-5
+  - pair:
+      - 椭圆_25
+      - KSO_Shape-5

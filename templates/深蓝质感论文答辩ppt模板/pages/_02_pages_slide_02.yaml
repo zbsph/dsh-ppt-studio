@@ -11,6 +11,17 @@ elements:
     bounds: [ -2, 0, 217, 217 ]
     kind: rect
     line: { color: "#000000" }
+  - elementId: "图片_21"
+    elementType: image
+    bounds: [ 12, 47, 696, 311 ]
+    fit: cover
+    src: "media/image1.jpeg"
+  - elementId: "矩形_22"
+    elementType: shape
+    bounds: [ 12, 47, 696, 311 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
   - elementId: "文本框_6"
     elementType: text
     bounds: [ 72, 151, 144, 27 ]
@@ -122,13 +133,30 @@ elements:
       color: "#000000"
       fontFamily: "+mj-ea"
       align: center
+  - elementId: "直接连接符_156"
+    elementType: line
+    bounds: [ 349, 118, 23, 1 ]
+    points: [ [ 349, 118 ], [ 372, 119 ] ]
+    line: { color: "#000000", width: 2 }
 expectedOutOfSafeArea:
   - 直角三角形_18
   - 直角三角形_19
 expectedOverlaps:
   - pair:
       - 直角三角形_18
+      - 图片_21
+  - pair:
+      - 直角三角形_18
+      - 矩形_22
+  - pair:
+      - 直角三角形_18
       - 矩形_85
+  - pair:
+      - 直角三角形_19
+      - 图片_21
+  - pair:
+      - 直角三角形_19
+      - 矩形_22
   - pair:
       - 直角三角形_19
       - 文本框_6
@@ -138,3 +166,90 @@ expectedOverlaps:
   - pair:
       - 直角三角形_19
       - 椭圆_82
+  - pair:
+      - 图片_21
+      - 矩形_22
+  - pair:
+      - 图片_21
+      - 文本框_6
+  - pair:
+      - 图片_21
+      - 矩形_81
+  - pair:
+      - 图片_21
+      - 椭圆_82
+  - pair:
+      - 图片_21
+      - 文本框_6-2
+  - pair:
+      - 图片_21
+      - 矩形_85
+  - pair:
+      - 图片_21
+      - 椭圆_86
+  - pair:
+      - 图片_21
+      - 文本框_6-3
+  - pair:
+      - 图片_21
+      - 矩形_89
+  - pair:
+      - 图片_21
+      - 椭圆_90
+  - pair:
+      - 图片_21
+      - 文本框_6-4
+  - pair:
+      - 图片_21
+      - 矩形_93
+  - pair:
+      - 图片_21
+      - 椭圆_94
+  - pair:
+      - 图片_21
+      - 文本框_96
+  - pair:
+      - 图片_21
+      - 文本框_155
+  - pair:
+      - 矩形_22
+      - 文本框_6
+  - pair:
+      - 矩形_22
+      - 矩形_81
+  - pair:
+      - 矩形_22
+      - 椭圆_82
+  - pair:
+      - 矩形_22
+      - 文本框_6-2
+  - pair:
+      - 矩形_22
+      - 矩形_85
+  - pair:
+      - 矩形_22
+      - 椭圆_86
+  - pair:
+      - 矩形_22
+      - 文本框_6-3
+  - pair:
+      - 矩形_22
+      - 矩形_89
+  - pair:
+      - 矩形_22
+      - 椭圆_90
+  - pair:
+      - 矩形_22
+      - 文本框_6-4
+  - pair:
+      - 矩形_22
+      - 矩形_93
+  - pair:
+      - 矩形_22
+      - 椭圆_94
+  - pair:
+      - 矩形_22
+      - 文本框_96
+  - pair:
+      - 矩形_22
+      - 文本框_155

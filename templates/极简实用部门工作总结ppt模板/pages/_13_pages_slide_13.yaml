@@ -94,6 +94,71 @@ elements:
       bold: true
       fontFamily: "Arial"
       align: center
+  - elementId: "Freeform_64"
+    elementType: shape
+    bounds: [ 348, 243, 35, 33 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Oval_65"
+    elementType: shape
+    bounds: [ 364, 265, 2, 3 ]
+    kind: ellipse
+    line: { color: "#000000" }
+  - elementId: "Freeform_92"
+    elementType: shape
+    bounds: [ 214, 310, 10, 8 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_93"
+    elementType: shape
+    bounds: [ 208, 302, 23, 10 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_94"
+    elementType: shape
+    bounds: [ 202, 293, 35, 13 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_107"
+    elementType: shape
+    bounds: [ 280, 322, 17, 23 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_108"
+    elementType: shape
+    bounds: [ 283, 319, 17, 22 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_109"
+    elementType: shape
+    bounds: [ 278, 325, 17, 23 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_121"
+    elementType: shape
+    bounds: [ 278, 212, 22, 30 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_122"
+    elementType: shape
+    bounds: [ 286, 249, 8, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_123"
+    elementType: shape
+    bounds: [ 287, 251, 6, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_124"
+    elementType: shape
+    bounds: [ 286, 243, 8, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_125"
+    elementType: shape
+    bounds: [ 286, 226, 8, 16 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "內容版面配置區_1"
     elementType: text
     bounds: [ 673, 190, 98, 24 ]
@@ -183,6 +248,11 @@ elements:
       bold: true
       fontFamily: "Arial"
       align: center
+  - elementId: "直接连接符_51"
+    elementType: line
+    bounds: [ 395, 58, 170, 1 ]
+    points: [ [ 395, 58 ], [ 565, 59 ] ]
+    line: { color: "#DF3F4E" }
 expectedOutOfSafeArea:
   - Text_Box_7
 expectedOverlaps:
@@ -192,6 +262,9 @@ expectedOverlaps:
   - pair:
       - Freeform_3
       - Text_Box_10-2
+  - pair:
+      - Freeform_3
+      - Freeform_121
   - pair:
       - Freeform_4
       - Text_Box_10-3
@@ -210,3 +283,51 @@ expectedOverlaps:
   - pair:
       - Rounded_Rectangle_21
       - 內容版面配置區_1-4
+  - pair:
+      - Text_Box_10-2
+      - Freeform_121
+  - pair:
+      - Freeform_64
+      - Oval_65
+  - pair:
+      - Freeform_64
+      - Rectangle_3
+  - pair:
+      - Oval_65
+      - Rectangle_3
+  - pair:
+      - Freeform_92
+      - Freeform_93
+  - pair:
+      - Freeform_93
+      - Freeform_94
+  - pair:
+      - Freeform_93
+      - Rectangle_3
+  - pair:
+      - Freeform_94
+      - Rectangle_3
+  - pair:
+      - Freeform_107
+      - Freeform_108
+  - pair:
+      - Freeform_107
+      - Freeform_109
+  - pair:
+      - Freeform_107
+      - Rectangle_3-2
+  - pair:
+      - Freeform_108
+      - Freeform_109
+  - pair:
+      - Freeform_108
+      - Rectangle_3-2
+  - pair:
+      - Freeform_109
+      - Rectangle_3-2
+  - pair:
+      - Freeform_121
+      - Freeform_125
+  - pair:
+      - Freeform_124
+      - Rectangle_3

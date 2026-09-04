@@ -51,6 +51,21 @@ elements:
       fontSize: 14
       color: "#FFFFFF"
       fontFamily: "Arial"
+  - elementId: "文本框_13"
+    elementType: text
+    bounds: [ 326, 25, 309, 36 ]
+    content:
+      text: "业绩回顾"
+      fontSize: 24
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "直接连接符_14"
+    elementType: line
+    bounds: [ 397, 62, 165, 1 ]
+    points: [ [ 397, 62 ], [ 562, 63 ] ]
+    line: { color: "#DF3F4E" }
 expectedOverlaps:
   - pair:
       - 矩形_8

@@ -3,13 +3,13 @@ pageType: content
 elements:
   - elementId: "矩形_圆角_1"
     elementType: shape
-    bounds: [257, 122, 203, 203]
+    bounds: [ 257, 122, 203, 203 ]
     kind: roundRect
     fill: "#FFFFFF"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
   - elementId: "文本框_5"
     elementType: text
-    bounds: [225, 7, 269, 41]
+    bounds: [ 225, 7, 269, 41 ]
     content:
       text: "研究成果展示及应用"
       fontSize: 28
@@ -19,70 +19,202 @@ elements:
       align: center
   - elementId: "文本框_6"
     elementType: text
-    bounds: [272, 42, 176, 22]
+    bounds: [ 272, 42, 176, 22 ]
     content:
       text: "Research methods and processes"
       fontSize: 12
       color: "#000000"
       fontFamily: "方正兰亭黑_GBK"
       align: center
+  - elementId: "直接连接符_74"
+    elementType: line
+    bounds: [ 349, 66, 22, 1 ]
+    points: [ [ 349, 66 ], [ 371, 67 ] ]
+    line: { color: "#000000", width: 2 }
   - elementId: "灯片编号占位符_2"
     elementType: text
-    bounds: [0, 0, 200, 50]
+    bounds: [ 0, 0, 200, 50 ]
     content:
       text: "14"
   - elementId: "TextBox_8"
     elementType: text
-    bounds: [499, 107, 134, 29]
+    bounds: [ 499, 107, 134, 29 ]
     content:
       text: "研究成果应用"
   - elementId: "TextBox_9"
     elementType: text
-    bounds: [502, 130, 214, 63]
+    bounds: [ 502, 130, 214, 63 ]
     content:
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum
+        dolor sit amet, consectetur adipiscing elit."
       fontSize: 10.5
       color: "#000000"
       lineHeight: 1.5
   - elementId: "TextBox_8-2"
     elementType: text
-    bounds: [497, 263, 141, 29]
+    bounds: [ 497, 263, 141, 29 ]
     content:
       text: "研究成果应用"
   - elementId: "TextBox_9-2"
     elementType: text
-    bounds: [502, 284, 214, 63]
+    bounds: [ 502, 284, 214, 63 ]
     content:
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum
+        dolor sit amet, consectetur adipiscing elit."
       fontSize: 10.5
       color: "#000000"
       lineHeight: 1.5
   - elementId: "TextBox_8-3"
     elementType: text
-    bounds: [100, 109, 127, 29]
+    bounds: [ 100, 109, 127, 29 ]
     content:
       text: "研究成果应用"
       align: right
   - elementId: "TextBox_9-3"
     elementType: text
-    bounds: [7, 130, 214, 63]
+    bounds: [ 7, 130, 214, 63 ]
     content:
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum
+        dolor sit amet, consectetur adipiscing elit."
       fontSize: 10.5
       color: "#000000"
       align: right
       lineHeight: 1.5
   - elementId: "TextBox_8-4"
     elementType: text
-    bounds: [94, 264, 127, 29]
+    bounds: [ 94, 264, 127, 29 ]
     content:
       text: "研究成果应用"
   - elementId: "TextBox_9-4"
     elementType: text
-    bounds: [7, 284, 214, 63]
+    bounds: [ 7, 284, 214, 63 ]
     content:
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum
+        dolor sit amet, consectetur adipiscing elit."
       fontSize: 10.5
       color: "#000000"
       align: right
       lineHeight: 1.5
+  - elementId: "椭圆_47"
+    elementType: shape
+    bounds: [ 404, 118, 85, 85 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "AutoShape_112"
+    elementType: shape
+    bounds: [ 426, 139, 41, 41 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "椭圆_48"
+    elementType: shape
+    bounds: [ 229, 117, 85, 85 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "AutoShape_113"
+    elementType: shape
+    bounds: [ 199, 225, 19, 28 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_114"
+    elementType: shape
+    bounds: [ 204, 230, 6, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "椭圆_49"
+    elementType: shape
+    bounds: [ 404, 250, 85, 85 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "AutoShape_123"
+    elementType: shape
+    bounds: [ 251, 169, 28, 28 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_124"
+    elementType: shape
+    bounds: [ 259, 177, 12, 12 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_125"
+    elementType: shape
+    bounds: [ 262, 179, 7, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "椭圆_50"
+    elementType: shape
+    bounds: [ 229, 249, 85, 85 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "AutoShape_126"
+    elementType: shape
+    bounds: [ 195, 169, 28, 28 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_127"
+    elementType: shape
+    bounds: [ 206, 173, 7, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+expectedOverlaps:
+  - pair:
+      - 矩形_圆角_1
+      - 椭圆_47
+  - pair:
+      - 矩形_圆角_1
+      - AutoShape_112
+  - pair:
+      - 矩形_圆角_1
+      - 椭圆_48
+  - pair:
+      - 矩形_圆角_1
+      - 椭圆_49
+  - pair:
+      - 矩形_圆角_1
+      - AutoShape_123
+  - pair:
+      - 矩形_圆角_1
+      - AutoShape_124
+  - pair:
+      - 矩形_圆角_1
+      - AutoShape_125
+  - pair:
+      - 矩形_圆角_1
+      - 椭圆_50
+  - pair:
+      - TextBox_9-3
+      - AutoShape_126
+  - pair:
+      - TextBox_9-3
+      - AutoShape_127
+  - pair:
+      - 椭圆_47
+      - AutoShape_112
+  - pair:
+      - 椭圆_48
+      - AutoShape_123
+  - pair:
+      - 椭圆_48
+      - AutoShape_124
+  - pair:
+      - 椭圆_48
+      - AutoShape_125
+  - pair:
+      - AutoShape_113
+      - AutoShape_114
+  - pair:
+      - AutoShape_123
+      - AutoShape_124
+  - pair:
+      - AutoShape_123
+      - AutoShape_125
+  - pair:
+      - AutoShape_124
+      - AutoShape_125
+  - pair:
+      - AutoShape_126
+      - AutoShape_127

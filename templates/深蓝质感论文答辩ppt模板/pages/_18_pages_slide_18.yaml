@@ -99,6 +99,11 @@ elements:
       color: "#000000"
       fontFamily: "方正兰亭黑_GBK"
       align: center
+  - elementId: "直接连接符_17"
+    elementType: line
+    bounds: [ 349, 66, 22, 1 ]
+    points: [ [ 349, 66 ], [ 371, 67 ] ]
+    line: { color: "#000000", width: 2 }
 expectedOverlaps:
   - pair:
       - 圆角矩形_43

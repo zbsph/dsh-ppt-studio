@@ -153,6 +153,16 @@ elements:
       color: "#000000"
       fontFamily: "Arial"
       lineHeight: 1.3
+  - elementId: "直线连接符_23"
+    elementType: line
+    bounds: [ 577, 263, 226, 1 ]
+    points: [ [ 577, 263 ], [ 803, 264 ] ]
+    line: { color: "#FFFFFF" }
+  - elementId: "直线连接符_24"
+    elementType: line
+    bounds: [ 577, 367, 226, 1 ]
+    points: [ [ 577, 367 ], [ 803, 368 ] ]
+    line: { color: "#FFFFFF" }
   - elementId: "文本框_1"
     elementType: text
     bounds: [ 269, 37, 423, 41 ]

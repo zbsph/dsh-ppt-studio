@@ -25,6 +25,11 @@ elements:
       color: "#000000"
       fontFamily: "方正兰亭黑_GBK"
       align: center
+  - elementId: "直接连接符_74"
+    elementType: line
+    bounds: [ 349, 66, 22, 1 ]
+    points: [ [ 349, 66 ], [ 371, 67 ] ]
+    line: { color: "#000000", width: 2 }
   - elementId: "灯片编号占位符_1"
     elementType: text
     bounds: [ 0, 0, 200, 50 ]
@@ -60,6 +65,26 @@ elements:
       fontSize: 10.5
       color: "#000000"
       lineHeight: 1.5
+  - elementId: "AutoShape_113"
+    elementType: shape
+    bounds: [ 199, 225, 19, 28 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_114"
+    elementType: shape
+    bounds: [ 204, 230, 6, 6 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_126"
+    elementType: shape
+    bounds: [ 195, 169, 28, 28 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_127"
+    elementType: shape
+    bounds: [ 206, 173, 7, 7 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "矩形_10"
     elementType: shape
     bounds: [ 371, 95, 338, 148 ]
@@ -100,7 +125,29 @@ elements:
       fontSize: 10.5
       color: "#000000"
       lineHeight: 1.5
+  - elementId: "AutoShape_110"
+    elementType: shape
+    bounds: [ 427, 283, 27, 18 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_111"
+    elementType: shape
+    bounds: [ 423, 279, 37, 34 ]
+    kind: rect
+    line: { color: "#000000" }
 expectedOverlaps:
+  - pair:
+      - 图片占位符_9
+      - AutoShape_113
+  - pair:
+      - 图片占位符_9
+      - AutoShape_114
+  - pair:
+      - 图片占位符_9
+      - AutoShape_126
+  - pair:
+      - 图片占位符_9
+      - AutoShape_127
   - pair:
       - 图片占位符_9
       - 矩形_10
@@ -114,8 +161,23 @@ expectedOverlaps:
       - 矩形_32
       - 椭圆_33
   - pair:
+      - 矩形_34
+      - AutoShape_110
+  - pair:
+      - 矩形_34
+      - AutoShape_111
+  - pair:
+      - AutoShape_113
+      - AutoShape_114
+  - pair:
+      - AutoShape_126
+      - AutoShape_127
+  - pair:
       - 矩形_10
       - 矩形_29
   - pair:
       - 矩形_10
       - 矩形_30
+  - pair:
+      - AutoShape_110
+      - AutoShape_111

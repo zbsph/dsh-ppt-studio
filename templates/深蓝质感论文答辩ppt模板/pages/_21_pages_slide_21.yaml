@@ -36,6 +36,11 @@ elements:
       color: "#FFFFFF"
       bold: true
       fontFamily: "微软雅黑"
+  - elementId: "直接连接符_21"
+    elementType: line
+    bounds: [ 40, 338, 45, 1 ]
+    points: [ [ 40, 338 ], [ 85, 339 ] ]
+    line: { color: "#FFFFFF", width: 2 }
   - elementId: "1"
     elementType: text
     bounds: [ 42, 237, 243, 70 ]

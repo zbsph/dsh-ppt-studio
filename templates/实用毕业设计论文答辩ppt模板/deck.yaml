@@ -6,8 +6,8 @@ theme:
     c2: "#FFFFFF"
     c3: "#595959"
     c4: "#808080"
-    c5: "#404040"
-    c6: "#000000"
+    c5: "#000000"
+    c6: "#404040"
     c7: "#5E80B0"
   textStyles:
     title: {fontSize: 80, color: "#4B649F", bold: true}   # 字体 +mn-lt

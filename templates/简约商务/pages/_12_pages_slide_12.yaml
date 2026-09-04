@@ -1,9 +1,44 @@
 # 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
 pageType: content
+background: { "type": "image", "src": "media/image1.jpeg", "fit": "cover" }
 elements:
+  - elementId: "图片_4"
+    elementType: image
+    bounds: [ 70, 0, 890, 540 ]
+    fit: cover
+    src: "media/image4.png"
+  - elementId: "空心弧_7"
+    elementType: shape
+    bounds: [ 405, 53, 43, 43 ]
+    kind: rect
+    fill: "#79C9E2"
+    line: { color: "#000000" }
+  - elementId: "空心弧_8"
+    elementType: shape
+    bounds: [ 421, 46, 43, 43 ]
+    kind: rect
+    fill: "#0485A8"
+    line: { color: "#000000" }
+  - elementId: "文本框_9"
+    elementType: text
+    bounds: [ 464, 42, 98, 41 ]
+    content:
+      text: "LOGO"
+      fontSize: 28
+      color: "#2C3139"
+      bold: true
+      fontFamily: "+mj-ea"
+  - elementId: "文本框_10"
+    elementType: text
+    bounds: [ 466, 75, 95, 17 ]
+    content:
+      text: "COMPANY SLOGAN"
+      fontSize: 8
+      color: "#2C3139"
+      fontFamily: "+mj-ea"
   - elementId: "文本框_1"
     elementType: text
-    bounds: [122, 219, 423, 73]
+    bounds: [ 122, 219, 423, 73 ]
     content:
       text: "问题及解决方案"
       fontSize: 54
@@ -11,13 +46,13 @@ elements:
       fontFamily: "思源黑体 CN Heavy"
   - elementId: "矩形_圆角_3"
     elementType: shape
-    bounds: [130, 365, 130, 31]
+    bounds: [ 130, 365, 130, 31 ]
     kind: roundRect
     fill: "#79C9E2"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
   - elementId: "文本框_12"
     elementType: text
-    bounds: [123, 164, 272, 61]
+    bounds: [ 123, 164, 272, 61 ]
     content:
       text: "PART 03"
       fontSize: 44
@@ -26,9 +61,38 @@ elements:
       fontFamily: "+mj-ea"
   - elementId: "文本框_13"
     elementType: text
-    bounds: [123, 288, 421, 45]
+    bounds: [ 123, 288, 421, 45 ]
     content:
-      text: "your content is entered here, or by copying your text, select paste in this box and choose to retain only text."
+      text: "your content is entered here, or by copying your text, select paste in
+        this box and choose to retain only text."
       fontSize: 11
       color: "#000000"
       lineHeight: 1.5
+expectedOverlaps:
+  - pair:
+      - 图片_4
+      - 空心弧_7
+  - pair:
+      - 图片_4
+      - 空心弧_8
+  - pair:
+      - 图片_4
+      - 文本框_9
+  - pair:
+      - 图片_4
+      - 文本框_10
+  - pair:
+      - 图片_4
+      - 文本框_1
+  - pair:
+      - 图片_4
+      - 矩形_圆角_3
+  - pair:
+      - 图片_4
+      - 文本框_12
+  - pair:
+      - 图片_4
+      - 文本框_13
+  - pair:
+      - 空心弧_7
+      - 空心弧_8

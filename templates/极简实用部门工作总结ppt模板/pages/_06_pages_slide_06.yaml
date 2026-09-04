@@ -1,9 +1,167 @@
 # 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
 pageType: content
 elements:
+  - elementId: "文本框_2"
+    elementType: text
+    bounds: [ 326, 25, 309, 36 ]
+    content:
+      text: "业绩回顾"
+      fontSize: 24
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+  - elementId: "直接连接符_4"
+    elementType: line
+    bounds: [ 397, 62, 165, 1 ]
+    points: [ [ 397, 62 ], [ 562, 63 ] ]
+    line: { color: "#DF3F4E" }
+  - elementId: "矩形_7"
+    elementType: shape
+    bounds: [ 109, 282, 47, 62 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "矩形_9"
+    elementType: shape
+    bounds: [ 181, 257, 47, 87 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "矩形_10"
+    elementType: shape
+    bounds: [ 253, 236, 47, 108 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "矩形_11"
+    elementType: shape
+    bounds: [ 325, 159, 47, 185 ]
+    kind: rect
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "矩形_12"
+    elementType: text
+    bounds: [ 312, 350, 69, 19 ]
+    content:
+      text: "四季度"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "矩形_13"
+    elementType: text
+    bounds: [ 102, 350, 53, 19 ]
+    content:
+      text: "一季度"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "矩形_14"
+    elementType: text
+    bounds: [ 176, 349, 53, 19 ]
+    content:
+      text: "二季度"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "矩形_15"
+    elementType: text
+    bounds: [ 248, 350, 53, 19 ]
+    content:
+      text: "三季度"
+      fontSize: 14
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_37"
+    elementType: text
+    bounds: [ 106, 301, 53, 19 ]
+    content:
+      text: "1.94亿"
+      fontSize: 14
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+  - elementId: "文本框_38"
+    elementType: text
+    bounds: [ 174, 301, 53, 19 ]
+    content:
+      text: "3.25亿"
+      fontSize: 14
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_39"
+    elementType: text
+    bounds: [ 250, 300, 53, 19 ]
+    content:
+      text: "4.63亿"
+      fontSize: 14
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+  - elementId: "文本框_40"
+    elementType: text
+    bounds: [ 322, 300, 53, 19 ]
+    content:
+      text: "10.7亿"
+      fontSize: 14
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+  - elementId: "矩形_20"
+    elementType: text
+    bounds: [ 162, 152, 134, 21 ]
+    content:
+      text: "季度业绩完成情况"
+      fontSize: 16
+      color: "#000000"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "图表_22"
+    elementType: text
+    bounds: [ 50, 88, 455, 340 ]
+    content:
+      text: "[chart: 图表 22] 图表已降级为文本占位，请重新生成图表样式"
+  - elementId: "文本框_29"
+    elementType: text
+    bounds: [ 184, 428, 195, 25 ]
+    content:
+      text: "二季度占比13%"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_30"
+    elementType: text
+    bounds: [ 388, 383, 98, 42 ]
+    content:
+      text: "三季度占比18%"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_31"
+    elementType: text
+    bounds: [ 401, 166, 113, 42 ]
+    content:
+      text: "四季度占比51%"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
+  - elementId: "文本框_32"
+    elementType: text
+    bounds: [ 32, 321, 153, 42 ]
+    content:
+      text: "一季度占比18%"
+      fontSize: 11
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
   - elementId: "文本框_1"
     elementType: text
-    bounds: [156, 113, 647, 36]
+    bounds: [ 156, 113, 647, 36 ]
     content:
       text: "全年业绩实现XXX万，超出全年任务目标XXX万。"
       fontSize: 24
@@ -11,3 +169,34 @@ elements:
       bold: true
       fontFamily: "Arial"
       align: center
+expectedOverlaps:
+  - pair:
+      - 矩形_7
+      - 文本框_37
+  - pair:
+      - 矩形_7
+      - 图表_22
+  - pair:
+      - 矩形_7
+      - 文本框_32
+  - pair:
+      - 矩形_9
+      - 文本框_38
+  - pair:
+      - 矩形_9
+      - 图表_22
+  - pair:
+      - 矩形_9
+      - 文本框_32
+  - pair:
+      - 矩形_10
+      - 文本框_39
+  - pair:
+      - 矩形_10
+      - 图表_22
+  - pair:
+      - 矩形_11
+      - 文本框_40
+  - pair:
+      - 矩形_11
+      - 图表_22

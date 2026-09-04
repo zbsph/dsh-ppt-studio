@@ -18,6 +18,31 @@ elements:
     kind: roundRect
     fill: "#000000"
     line: { color: "#000000", width: 2 }
+  - elementId: "Rectangle_239"
+    elementType: shape
+    bounds: [ 744, 219, 2, 2 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_240"
+    elementType: shape
+    bounds: [ 747, 217, 2, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_241"
+    elementType: shape
+    bounds: [ 750, 214, 2, 7 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_242"
+    elementType: shape
+    bounds: [ 753, 210, 2, 11 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_243"
+    elementType: shape
+    bounds: [ 753, 210, 2, 11 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "TextBox_21"
     elementType: text
     bounds: [ 190, 101, 58, 22 ]
@@ -50,6 +75,61 @@ elements:
     kind: roundRect
     fill: "#000000"
     line: { color: "#000000", width: 2 }
+  - elementId: "任意多边形_形状_27"
+    elementType: shape
+    bounds: [ 260, 131, 101, 101 ]
+    kind: rect
+    line: { color: "#595959", width: 2 }
+  - elementId: "椭圆_45"
+    elementType: shape
+    bounds: [ 256, 238, 11, 11 ]
+    kind: ellipse
+    line: { color: "#595959", width: 2 }
+  - elementId: "直接连接符_54"
+    elementType: line
+    bounds: [ 265, 221, 15, 18 ]
+    points: [ [ 280, 221 ], [ 265, 239 ] ]
+    line: { color: "#595959", width: 2 }
+  - elementId: "任意多边形_形状_13"
+    elementType: shape
+    bounds: [ 267, 246, 23, 40 ]
+    kind: rect
+    line: { color: "#595959", width: 2 }
+  - elementId: "任意多边形_形状_34"
+    elementType: shape
+    bounds: [ 324, 235, 117, 117 ]
+    kind: rect
+    line: { color: "#595959", width: 2 }
+  - elementId: "椭圆_35"
+    elementType: shape
+    bounds: [ 285, 291, 13, 13 ]
+    kind: ellipse
+    line: { color: "#595959", width: 2 }
+  - elementId: "直接连接符_36"
+    elementType: line
+    bounds: [ 303, 286, 18, 21 ]
+    points: [ [ 321, 286 ], [ 303, 307 ] ]
+    line: { color: "#595959", width: 2 }
+  - elementId: "任意多边形_形状_33"
+    elementType: shape
+    bounds: [ 272, 305, 23, 40 ]
+    kind: rect
+    line: { color: "#595959", width: 2 }
+  - elementId: "任意多边形_形状_50"
+    elementType: shape
+    bounds: [ 271, 368, 117, 117 ]
+    kind: rect
+    line: { color: "#595959", width: 2 }
+  - elementId: "椭圆_39"
+    elementType: shape
+    bounds: [ 265, 351, 13, 13 ]
+    kind: ellipse
+    line: { color: "#595959", width: 2 }
+  - elementId: "直接连接符_40"
+    elementType: line
+    bounds: [ 275, 362, 18, 21 ]
+    points: [ [ 293, 362 ], [ 275, 383 ] ]
+    line: { color: "#595959", width: 2 }
   - elementId: "椭圆_55"
     elementType: shape
     bounds: [ 78, 169, 99, 99 ]
@@ -70,6 +150,16 @@ elements:
       fontSize: 14
       color: "#FFFFFF"
       fontFamily: "微软雅黑"
+  - elementId: "Freeform_18"
+    elementType: shape
+    bounds: [ 646, 195, 22, 30 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_19"
+    elementType: shape
+    bounds: [ 655, 199, 19, 19 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "TextBox_21-3"
     elementType: text
     bounds: [ 238, 192, 58, 22 ]
@@ -78,6 +168,16 @@ elements:
       fontSize: 9
       color: "#FFFFFF"
       fontFamily: "微软雅黑"
+  - elementId: "Freeform_35"
+    elementType: shape
+    bounds: [ 771, 216, 18, 14 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_36"
+    elementType: shape
+    bounds: [ 776, 209, 18, 14 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "TextBox_21-4"
     elementType: text
     bounds: [ 199, 293, 58, 22 ]
@@ -104,6 +204,21 @@ elements:
     kind: ellipse
     fill: "#000000"
     line: { color: "#000000", width: 2 }
+  - elementId: "直接连接符_69"
+    elementType: line
+    bounds: [ 287, 105, 120, 1 ]
+    points: [ [ 287, 105 ], [ 407, 106 ] ]
+    line: { color: "#595959", width: 2 }
+  - elementId: "直接连接符_70"
+    elementType: line
+    bounds: [ 330, 206, 77, 1 ]
+    points: [ [ 330, 206 ], [ 407, 207 ] ]
+    line: { color: "#595959", width: 2 }
+  - elementId: "直接连接符_71"
+    elementType: line
+    bounds: [ 287, 308, 120, 1 ]
+    points: [ [ 287, 308 ], [ 407, 309 ] ]
+    line: { color: "#595959", width: 2 }
   - elementId: "0"
     elementType: text
     bounds: [ 450, 98, 115, 15 ]
@@ -164,6 +279,15 @@ elements:
       color: "#404040"
       bold: true
       fontFamily: "微软雅黑"
+expectedOutOfSafeArea:
+  - Rectangle_239
+  - Rectangle_240
+  - Rectangle_241
+  - Rectangle_242
+  - Freeform_243
+  - 任意多边形_形状_50
+  - Freeform_35
+  - Freeform_36
 expectedOverlaps:
   - pair:
       - 椭圆_18
@@ -175,11 +299,32 @@ expectedOverlaps:
       - 圆角矩形_3
       - TextBox_21
   - pair:
+      - Rectangle_242
+      - Freeform_243
+  - pair:
       - 椭圆_27
       - 圆角矩形_3-2
   - pair:
       - 椭圆_27
+      - 任意多边形_形状_27
+  - pair:
+      - 椭圆_27
+      - 椭圆_45
+  - pair:
+      - 椭圆_27
+      - 直接连接符_54
+  - pair:
+      - 椭圆_27
       - TextBox_21-3
+  - pair:
+      - 圆角矩形_3-2
+      - 任意多边形_形状_27
+  - pair:
+      - 圆角矩形_3-2
+      - 椭圆_45
+  - pair:
+      - 圆角矩形_3-2
+      - 直接连接符_54
   - pair:
       - 圆角矩形_3-2
       - TextBox_21-3
@@ -193,6 +338,21 @@ expectedOverlaps:
       - 圆角矩形_3-3
       - TextBox_21-4
   - pair:
+      - 任意多边形_形状_27
+      - 直接连接符_54
+  - pair:
+      - 任意多边形_形状_27
+      - TextBox_21-3
+  - pair:
+      - 任意多边形_形状_34
+      - 椭圆_67
+  - pair:
+      - 任意多边形_形状_50
+      - 直接连接符_40
+  - pair:
+      - 椭圆_39
+      - 直接连接符_40
+  - pair:
       - 椭圆_55
       - 圆角矩形_3-4
   - pair:
@@ -201,3 +361,9 @@ expectedOverlaps:
   - pair:
       - 圆角矩形_3-4
       - TextBox_21-2
+  - pair:
+      - Freeform_18
+      - Freeform_19
+  - pair:
+      - Freeform_35
+      - Freeform_36

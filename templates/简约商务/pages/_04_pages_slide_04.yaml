@@ -1,6 +1,31 @@
 # 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
 pageType: content
 elements:
+  - elementId: "直接连接符_3"
+    elementType: line
+    bounds: [ 213, 243, 1, 38 ]
+    points: [ [ 213, 243 ], [ 214, 281 ] ]
+    line: { color: "#224477" }
+  - elementId: "直接连接符_5"
+    elementType: line
+    bounds: [ 483, 242, 1, 38 ]
+    points: [ [ 483, 242 ], [ 484, 280 ] ]
+    line: { color: "#224477" }
+  - elementId: "直接连接符_7"
+    elementType: line
+    bounds: [ 752, 243, 1, 38 ]
+    points: [ [ 752, 243 ], [ 753, 281 ] ]
+    line: { color: "#224477" }
+  - elementId: "直接连接符_9"
+    elementType: line
+    bounds: [ 348, 332, 1, 38 ]
+    points: [ [ 348, 332 ], [ 349, 370 ] ]
+    line: { color: "#224477" }
+  - elementId: "直接连接符_11"
+    elementType: line
+    bounds: [ 615, 331, 1, 38 ]
+    points: [ [ 615, 331 ], [ 616, 369 ] ]
+    line: { color: "#224477" }
   - elementId: "17"
     elementType: shape
     bounds: [ 196, 288, 35, 35 ]

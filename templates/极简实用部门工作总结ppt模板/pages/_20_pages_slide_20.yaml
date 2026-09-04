@@ -1,9 +1,155 @@
 # 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
 pageType: content
 elements:
+  - elementId: "Oval_1"
+    elementType: shape
+    bounds: [ 120, 158, 221, 221 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Oval_5"
+    elementType: shape
+    bounds: [ 379, 158, 221, 221 ]
+    kind: ellipse
+    fill: "#0E556E"
+    line: { color: "#000000" }
+  - elementId: "Oval_7"
+    elementType: shape
+    bounds: [ 640, 158, 221, 221 ]
+    kind: ellipse
+    fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Freeform_90"
+    elementType: shape
+    bounds: [ 513, 47, 20, 8 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_91"
+    elementType: shape
+    bounds: [ 513, 54, 20, 9 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_92"
+    elementType: shape
+    bounds: [ 513, 41, 20, 8 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Oval_93"
+    elementType: shape
+    bounds: [ 514, 37, 20, 7 ]
+    kind: ellipse
+    line: { color: "#000000" }
+  - elementId: "Freeform_31"
+    elementType: shape
+    bounds: [ 193, 282, 13, 13 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_32"
+    elementType: shape
+    bounds: [ 182, 271, 14, 13 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_33"
+    elementType: shape
+    bounds: [ 195, 278, 1, 2 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_34"
+    elementType: shape
+    bounds: [ 196, 281, 2, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_35"
+    elementType: shape
+    bounds: [ 192, 285, 1, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Rectangle_36"
+    elementType: shape
+    bounds: [ 190, 284, 2, 1 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_67"
+    elementType: shape
+    bounds: [ 264, 342, 23, 26 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Oval_68"
+    elementType: shape
+    bounds: [ 266, 362, 3, 3 ]
+    kind: ellipse
+    line: { color: "#000000" }
+  - elementId: "TextBox_178"
+    elementType: text
+    bounds: [ 162, 287, 120, 71 ]
+    content:
+      text: "点击此处添加内容点击此处添加内容点击此处添加内容"
+      fontSize: 12
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.5
+  - elementId: "TextBox_179"
+    elementType: text
+    bounds: [ 133, 249, 185, 32 ]
+    content:
+      text: "实现目标一"
+      fontSize: 20
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.5
+  - elementId: "TextBox_178-2"
+    elementType: text
+    bounds: [ 430, 288, 120, 71 ]
+    content:
+      text: "点击此处添加内容点击此处添加内容点击此处添加内容"
+      fontSize: 12
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.5
+  - elementId: "TextBox_179-2"
+    elementType: text
+    bounds: [ 401, 250, 185, 32 ]
+    content:
+      text: "实现目标二"
+      fontSize: 20
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.5
+  - elementId: "TextBox_178-3"
+    elementType: text
+    bounds: [ 687, 287, 120, 71 ]
+    content:
+      text: "点击此处添加内容点击此处添加内容点击此处添加内容"
+      fontSize: 12
+      color: "#FFFFFF"
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.5
+  - elementId: "TextBox_179-3"
+    elementType: text
+    bounds: [ 658, 249, 185, 32 ]
+    content:
+      text: "实现目标三"
+      fontSize: 20
+      color: "#FFFFFF"
+      bold: true
+      fontFamily: "Arial"
+      align: center
+      lineHeight: 1.5
+  - elementId: "Straight_Connector_12"
+    elementType: line
+    bounds: [ 110, 228, 723, 1 ]
+    points: [ [ 110, 228 ], [ 833, 229 ] ]
+    line: { color: "#DF3F4E" }
   - elementId: "TextBox_152"
     elementType: text
-    bounds: [282, 169, 386, 55]
+    bounds: [ 282, 169, 386, 55 ]
     content:
       text: "点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容点击此处添加内容"
       fontSize: 12
@@ -12,7 +158,7 @@ elements:
       align: center
   - elementId: "TextBox_173"
     elementType: text
-    bounds: [355, 123, 251, 32]
+    bounds: [ 355, 123, 251, 32 ]
     content:
       text: "明年业绩目标XXX万"
       fontSize: 20
@@ -23,10 +169,88 @@ elements:
       lineHeight: 1.5
   - elementId: "矩形_56"
     elementType: text
-    bounds: [402, 22, 160, 36]
+    bounds: [ 402, 22, 160, 36 ]
     content:
       text: "明年工作计划"
       fontSize: 24
       color: "#000000"
       bold: true
       fontFamily: "Arial"
+  - elementId: "直接连接符_57"
+    elementType: line
+    bounds: [ 392, 58, 170, 1 ]
+    points: [ [ 392, 58 ], [ 562, 59 ] ]
+    line: { color: "#DF3F4E" }
+expectedOverlaps:
+  - pair:
+      - Oval_1
+      - Freeform_31
+  - pair:
+      - Oval_1
+      - Freeform_32
+  - pair:
+      - Oval_1
+      - Freeform_67
+  - pair:
+      - Oval_1
+      - Oval_68
+  - pair:
+      - Oval_1
+      - TextBox_178
+  - pair:
+      - Oval_1
+      - TextBox_179
+  - pair:
+      - Oval_1
+      - TextBox_152
+  - pair:
+      - Oval_5
+      - TextBox_178-2
+  - pair:
+      - Oval_5
+      - TextBox_179-2
+  - pair:
+      - Oval_5
+      - TextBox_152
+  - pair:
+      - Oval_7
+      - TextBox_178-3
+  - pair:
+      - Oval_7
+      - TextBox_179-3
+  - pair:
+      - Oval_7
+      - TextBox_152
+  - pair:
+      - Freeform_90
+      - Freeform_92
+  - pair:
+      - Freeform_90
+      - 矩形_56
+  - pair:
+      - Freeform_91
+      - 矩形_56
+  - pair:
+      - Freeform_92
+      - Oval_93
+  - pair:
+      - Freeform_92
+      - 矩形_56
+  - pair:
+      - Oval_93
+      - 矩形_56
+  - pair:
+      - Freeform_31
+      - Freeform_32
+  - pair:
+      - Freeform_31
+      - TextBox_178
+  - pair:
+      - Freeform_32
+      - TextBox_179
+  - pair:
+      - Freeform_67
+      - Oval_68
+  - pair:
+      - Freeform_67
+      - TextBox_178

@@ -1,9 +1,44 @@
 # 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
 pageType: content
+background: { "type": "image", "src": "media/image1.jpeg", "fit": "cover" }
 elements:
+  - elementId: "图片_4"
+    elementType: image
+    bounds: [ 70, 0, 890, 540 ]
+    fit: cover
+    src: "media/image4.png"
+  - elementId: "空心弧_7"
+    elementType: shape
+    bounds: [ 405, 53, 43, 43 ]
+    kind: rect
+    fill: "#79C9E2"
+    line: { color: "#000000" }
+  - elementId: "空心弧_8"
+    elementType: shape
+    bounds: [ 421, 46, 43, 43 ]
+    kind: rect
+    fill: "#0485A8"
+    line: { color: "#000000" }
+  - elementId: "文本框_9"
+    elementType: text
+    bounds: [ 464, 42, 98, 41 ]
+    content:
+      text: "LOGO"
+      fontSize: 28
+      color: "#2C3139"
+      bold: true
+      fontFamily: "+mj-ea"
+  - elementId: "文本框_10"
+    elementType: text
+    bounds: [ 466, 75, 95, 17 ]
+    content:
+      text: "COMPANY SLOGAN"
+      fontSize: 8
+      color: "#2C3139"
+      fontFamily: "+mj-ea"
   - elementId: "文本框_11"
     elementType: text
-    bounds: [57, 144, 511, 163]
+    bounds: [ 57, 144, 511, 163 ]
     content:
       text: "简约风部门年中工作计划总结"
       fontSize: 60
@@ -12,7 +47,7 @@ elements:
       lineHeight: 1.1
   - elementId: "文本框_14"
     elementType: text
-    bounds: [59, 313, 431, 32]
+    bounds: [ 59, 313, 431, 32 ]
     content:
       text: "SUMMARY OF THE MID-YEAR WORK PLAN"
       fontSize: 20
@@ -21,15 +56,49 @@ elements:
       fontFamily: "+mj-ea"
   - elementId: "文本框_15"
     elementType: text
-    bounds: [59, 345, 421, 45]
+    bounds: [ 59, 345, 421, 45 ]
     content:
-      text: "your content is entered here, or by copying your text, select paste in this box and choose to retain only text."
+      text: "your content is entered here, or by copying your text, select paste in
+        this box and choose to retain only text."
       fontSize: 11
       color: "#000000"
       lineHeight: 1.5
   - elementId: "矩形_圆角_16"
     elementType: shape
-    bounds: [67, 420, 130, 31]
+    bounds: [ 67, 420, 130, 31 ]
     kind: roundRect
     fill: "#79C9E2"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
+  - elementId: "直接连接符_20"
+    elementType: line
+    bounds: [ 380, 183, 110, 1 ]
+    points: [ [ 380, 183 ], [ 490, 184 ] ]
+    line: { color: "#79C9E2", width: 3 }
+expectedOverlaps:
+  - pair:
+      - 图片_4
+      - 空心弧_7
+  - pair:
+      - 图片_4
+      - 空心弧_8
+  - pair:
+      - 图片_4
+      - 文本框_9
+  - pair:
+      - 图片_4
+      - 文本框_10
+  - pair:
+      - 图片_4
+      - 文本框_11
+  - pair:
+      - 图片_4
+      - 文本框_14
+  - pair:
+      - 图片_4
+      - 文本框_15
+  - pair:
+      - 图片_4
+      - 矩形_圆角_16
+  - pair:
+      - 空心弧_7
+      - 空心弧_8

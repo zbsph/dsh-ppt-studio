@@ -18,6 +18,41 @@ elements:
     kind: ellipse
     fill: "#FFFFFF"
     line: { color: "#4B649F", width: 3 }
+  - elementId: "Freeform_84"
+    elementType: shape
+    bounds: [ 422, 239, 56, 48 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_85"
+    elementType: shape
+    bounds: [ 482, 229, 32, 59 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_86"
+    elementType: shape
+    bounds: [ 488, 278, 51, 13 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_87"
+    elementType: shape
+    bounds: [ 420, 297, 120, 12 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_88"
+    elementType: shape
+    bounds: [ 418, 294, 125, 18 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_89"
+    elementType: shape
+    bounds: [ 422, 278, 53, 13 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_90"
+    elementType: shape
+    bounds: [ 486, 241, 52, 45 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "文本框_62"
     elementType: text
     bounds: [ 158, 207, 681, 87 ]
@@ -27,6 +62,30 @@ elements:
       color: "#4B649F"
       bold: true
       lineHeight: 1
+  - elementId: "椭圆_1023"
+    elementType: shape
+    bounds: [ 215, 304, 25, 25 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "KSO_Shape"
+    elementType: shape
+    bounds: [ 220, 308, 13, 17 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
+  - elementId: "椭圆_103"
+    elementType: shape
+    bounds: [ 414, 304, 25, 25 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#000000" }
+  - elementId: "KSO_Shape-2"
+    elementType: shape
+    bounds: [ 418, 308, 16, 15 ]
+    kind: rect
+    fill: "#FFFFFF"
+    line: { color: "#000000" }
   - elementId: "文本框_1027"
     elementType: text
     bounds: [ 190, 303, 142, 29 ]
@@ -93,7 +152,103 @@ expectedOverlaps:
       - 任意多边形_47
       - 矩形_118
   - pair:
+      - Freeform_84
+      - Freeform_89
+  - pair:
+      - Freeform_84
       - 文本框_62
+  - pair:
+      - Freeform_84
+      - 矩形_1067
+  - pair:
+      - Freeform_85
+      - Freeform_86
+  - pair:
+      - Freeform_85
+      - Freeform_90
+  - pair:
+      - Freeform_85
+      - 文本框_62
+  - pair:
+      - Freeform_85
+      - 矩形_1067
+  - pair:
+      - Freeform_86
+      - Freeform_90
+  - pair:
+      - Freeform_86
+      - 文本框_62
+  - pair:
+      - Freeform_86
+      - 矩形_1067
+  - pair:
+      - Freeform_87
+      - Freeform_88
+  - pair:
+      - Freeform_87
+      - 椭圆_103
+  - pair:
+      - Freeform_87
+      - 文本框_112
+  - pair:
+      - Freeform_87
+      - 矩形_1067
+  - pair:
+      - Freeform_88
+      - 椭圆_103
+  - pair:
+      - Freeform_88
+      - KSO_Shape-2
+  - pair:
+      - Freeform_88
+      - 文本框_112
+  - pair:
+      - Freeform_88
+      - 矩形_1067
+  - pair:
+      - Freeform_89
+      - 文本框_62
+  - pair:
+      - Freeform_89
+      - 矩形_1067
+  - pair:
+      - Freeform_90
+      - 文本框_62
+  - pair:
+      - Freeform_90
+      - 矩形_1067
+  - pair:
+      - 文本框_62
+      - 矩形_1067
+  - pair:
+      - 椭圆_1023
+      - KSO_Shape
+  - pair:
+      - 椭圆_1023
+      - 文本框_1027
+  - pair:
+      - 椭圆_1023
+      - 矩形_1067
+  - pair:
+      - KSO_Shape
+      - 文本框_1027
+  - pair:
+      - KSO_Shape
+      - 矩形_1067
+  - pair:
+      - 椭圆_103
+      - KSO_Shape-2
+  - pair:
+      - 椭圆_103
+      - 文本框_112
+  - pair:
+      - 椭圆_103
+      - 矩形_1067
+  - pair:
+      - KSO_Shape-2
+      - 文本框_112
+  - pair:
+      - KSO_Shape-2
       - 矩形_1067
   - pair:
       - 文本框_1027

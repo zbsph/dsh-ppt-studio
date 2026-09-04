@@ -1,11 +1,31 @@
 # 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
 pageType: content
 elements:
+  - elementId: "Freeform_78"
+    elementType: shape
+    bounds: [ 0, 425, 159, 19 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_79"
+    elementType: shape
+    bounds: [ 154, 425, 13, 19 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "Freeform_80"
     elementType: shape
     bounds: [ 126, 298, 14, 60 ]
     kind: rect
     fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Freeform_81"
+    elementType: shape
+    bounds: [ 168, 364, 150, 19 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_82"
+    elementType: shape
+    bounds: [ 312, 364, 14, 19 ]
+    kind: rect
     line: { color: "#000000" }
   - elementId: "Freeform_83"
     elementType: shape
@@ -13,17 +33,47 @@ elements:
     kind: rect
     fill: "#000000"
     line: { color: "#000000" }
+  - elementId: "Freeform_84"
+    elementType: shape
+    bounds: [ 326, 302, 150, 19 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_85"
+    elementType: shape
+    bounds: [ 471, 302, 14, 19 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "Freeform_86"
     elementType: shape
     bounds: [ 363, 206, 14, 61 ]
     kind: rect
     fill: "#000000"
     line: { color: "#000000" }
+  - elementId: "Freeform_87"
+    elementType: shape
+    bounds: [ 484, 241, 150, 19 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_88"
+    elementType: shape
+    bounds: [ 629, 241, 14, 19 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "Freeform_89"
     elementType: shape
     bounds: [ 482, 160, 14, 61 ]
     kind: rect
     fill: "#000000"
+    line: { color: "#000000" }
+  - elementId: "Freeform_90"
+    elementType: shape
+    bounds: [ 643, 179, 150, 19 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "Freeform_91"
+    elementType: shape
+    bounds: [ 788, 179, 14, 19 ]
+    kind: rect
     line: { color: "#000000" }
   - elementId: "Freeform_92"
     elementType: shape
@@ -178,7 +228,36 @@ elements:
       fontSize: 21
       bold: true
       fontFamily: "微软雅黑"
+expectedOutOfSafeArea:
+  - Freeform_78
+  - Freeform_79
+  - Freeform_90
+  - Freeform_91
 expectedOverlaps:
+  - pair:
+      - Freeform_78
+      - Freeform_79
+  - pair:
+      - Freeform_81
+      - Freeform_82
+  - pair:
+      - Freeform_81
+      - "1"
+  - pair:
+      - Freeform_84
+      - Freeform_85
+  - pair:
+      - Freeform_84
+      - "2"
+  - pair:
+      - Freeform_87
+      - Freeform_88
+  - pair:
+      - Freeform_90
+      - Freeform_91
+  - pair:
+      - Freeform_90
+      - 2-6
   - pair:
       - Freeform_92
       - Freeform_93

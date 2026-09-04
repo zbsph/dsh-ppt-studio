@@ -1,6 +1,11 @@
 # 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
 pageType: content
 elements:
+  - elementId: "1"
+    elementType: line
+    bounds: [72, 288, 805, 1]
+    points: [[72,288],[877,289]]
+    line: {color: "#FFFFFF", width: 3}
   - elementId: "Oval_4"
     elementType: shape
     bounds: [60, 279, 18, 18]

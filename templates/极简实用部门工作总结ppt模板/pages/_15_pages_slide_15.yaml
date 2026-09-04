@@ -1,6 +1,16 @@
 # 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
 pageType: content
 elements:
+  - elementId: "直接连接符_2"
+    elementType: line
+    bounds: [ 184, 310, 606, 1 ]
+    points: [ [ 790, 310 ], [ 184, 311 ] ]
+    line: { color: "#000000" }
+  - elementId: "直接连接符_4"
+    elementType: line
+    bounds: [ 480, 179, 1, 281 ]
+    points: [ [ 480, 179 ], [ 481, 460 ] ]
+    line: { color: "#000000" }
   - elementId: "椭圆_5"
     elementType: shape
     bounds: [ 790, 303, 14, 14 ]
@@ -99,5 +109,10 @@ elements:
       bold: true
       fontFamily: "Arial"
       align: center
+  - elementId: "直接连接符_20"
+    elementType: line
+    bounds: [ 395, 58, 170, 1 ]
+    points: [ [ 395, 58 ], [ 565, 59 ] ]
+    line: { color: "#DF3F4E" }
 expectedOutOfSafeArea:
   - Text_Box_7

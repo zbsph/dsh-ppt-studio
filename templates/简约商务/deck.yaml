@@ -1,6 +1,6 @@
 # 由 dsh-ppt-studio 从 pptx 导入（内容保真，版式可从新）
 # 检测到跨页页眉/页脚带（模板特征）：建议安全区如下（注释呈现，未启用；确认为模板后取消注释并微调）
-# safeArea: {top: 78, bottom: undefined}
+# safeArea: {top: 78}
 # 建议主题（P0-1 聚合自原稿样式，可调；页面字段已内联，无需引用也可渲染）
 theme:
   colors:
@@ -8,11 +8,12 @@ theme:
     c2: "#FFFFFF"
     c3: "#79C9E2"
     c4: "#0485A8"
-    c5: "#4D4D4D"
-    c6: "#2C3139"
+    c5: "#2C3139"
+    c6: "#224477"
+    c7: "#4D4D4D"
   textStyles:
     title: {fontSize: 60, color: "#000000", bold: true}   # 字体 Arial
-    body: {fontSize: 14, color: "#000000"}
+    body: {fontSize: 28, color: "#000000"}
     label: {fontSize: 1, color: "#000000"}
 version: 1
 title: "简约商务"

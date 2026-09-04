@@ -87,6 +87,66 @@ elements:
       color: "#000000"
       fontFamily: "Arial"
       lineHeight: 1.3
+  - elementId: "AutoShape_16"
+    elementType: shape
+    bounds: [ 553, 583, 4, 4 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_17"
+    elementType: shape
+    bounds: [ 539, 568, 29, 28 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_18"
+    elementType: shape
+    bounds: [ 481, 567, 29, 29 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_19"
+    elementType: shape
+    bounds: [ 488, 578, 4, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_20"
+    elementType: shape
+    bounds: [ 488, 582, 4, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_21"
+    elementType: shape
+    bounds: [ 488, 587, 4, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_22"
+    elementType: shape
+    bounds: [ 494, 587, 4, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_23"
+    elementType: shape
+    bounds: [ 494, 582, 4, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_24"
+    elementType: shape
+    bounds: [ 494, 578, 4, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_25"
+    elementType: shape
+    bounds: [ 500, 587, 4, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_26"
+    elementType: shape
+    bounds: [ 500, 582, 4, 3 ]
+    kind: rect
+    line: { color: "#000000" }
+  - elementId: "AutoShape_27"
+    elementType: shape
+    bounds: [ 500, 578, 4, 3 ]
+    kind: rect
+    line: { color: "#000000" }
   - elementId: "Freeform_15"
     elementType: shape
     bounds: [ 567, 183, 27, 27 ]
@@ -108,6 +168,19 @@ elements:
       bold: true
       fontFamily: "思源黑体 CN Heavy"
       align: center
+expectedOutOfSafeArea:
+  - AutoShape_16
+  - AutoShape_17
+  - AutoShape_18
+  - AutoShape_19
+  - AutoShape_20
+  - AutoShape_21
+  - AutoShape_22
+  - AutoShape_23
+  - AutoShape_24
+  - AutoShape_25
+  - AutoShape_26
+  - AutoShape_27
 expectedOverlaps:
   - pair:
       - Freeform_6
@@ -121,3 +194,33 @@ expectedOverlaps:
   - pair:
       - Freeform_11
       - Freeform_15-2
+  - pair:
+      - AutoShape_16
+      - AutoShape_17
+  - pair:
+      - AutoShape_18
+      - AutoShape_19
+  - pair:
+      - AutoShape_18
+      - AutoShape_20
+  - pair:
+      - AutoShape_18
+      - AutoShape_21
+  - pair:
+      - AutoShape_18
+      - AutoShape_22
+  - pair:
+      - AutoShape_18
+      - AutoShape_23
+  - pair:
+      - AutoShape_18
+      - AutoShape_24
+  - pair:
+      - AutoShape_18
+      - AutoShape_25
+  - pair:
+      - AutoShape_18
+      - AutoShape_26
+  - pair:
+      - AutoShape_18
+      - AutoShape_27

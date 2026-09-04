@@ -1,6 +1,138 @@
 # 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
 pageType: content
+background: { "type": "image", "src": "media/image1.jpeg", "fit": "cover" }
 elements:
+  - elementId: "图片_12"
+    elementType: image
+    bounds: [ 671, 311, 289, 229 ]
+    fit: cover
+    src: "media/image5.png"
+  - elementId: "图片_13"
+    elementType: image
+    bounds: [ 0, 0, 265, 210 ]
+    fit: cover
+    src: "media/image6.png"
+  - elementId: "文本框_21"
+    elementType: text
+    bounds: [ 162, 119, 194, 41 ]
+    content:
+      text: "/CONTENTS"
+      fontSize: 28
+      color: "#2C3139"
+      bold: true
+  - elementId: "文本框_22"
+    elementType: text
+    bounds: [ 37, 99, 137, 73 ]
+    content:
+      text: "目 录"
+      fontSize: 54
+      color: "#79C9E2"
+      fontFamily: "思源黑体 CN Heavy"
+      align: center
+  - elementId: "文本框_24"
+    elementType: text
+    bounds: [ 175, 211, 68, 36 ]
+    content:
+      text: "01 /"
+      fontSize: 24
+      color: "#0485A8"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "文本框_25"
+    elementType: text
+    bounds: [ 226, 209, 309, 41 ]
+    content:
+      text: "上半年工作情况"
+      fontSize: 28
+      bold: true
+      fontFamily: "思源黑体 CN Heavy"
+  - elementId: "文本框_26"
+    elementType: text
+    bounds: [ 226, 247, 301, 36 ]
+    content:
+      text: "Theme color makes PPT more convenient to change. Theme color makes PPT
+        more convenient to change."
+      fontSize: 10
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "文本框_28"
+    elementType: text
+    bounds: [ 559, 211, 68, 36 ]
+    content:
+      text: "02 /"
+      fontSize: 24
+      color: "#79C9E2"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "文本框_29"
+    elementType: text
+    bounds: [ 610, 209, 261, 41 ]
+    content:
+      text: "取得的工作成绩"
+      fontSize: 28
+      bold: true
+      fontFamily: "思源黑体 CN Heavy"
+  - elementId: "文本框_30"
+    elementType: text
+    bounds: [ 610, 247, 301, 36 ]
+    content:
+      text: "Theme color makes PPT more convenient to change. Theme color makes PPT
+        more convenient to change."
+      fontSize: 10
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "文本框_32"
+    elementType: text
+    bounds: [ 175, 338, 68, 36 ]
+    content:
+      text: "03 /"
+      fontSize: 24
+      color: "#79C9E2"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "文本框_33"
+    elementType: text
+    bounds: [ 226, 336, 309, 41 ]
+    content:
+      text: "问题及解决方案"
+      fontSize: 28
+      bold: true
+      fontFamily: "思源黑体 CN Heavy"
+  - elementId: "文本框_34"
+    elementType: text
+    bounds: [ 226, 374, 301, 36 ]
+    content:
+      text: "Theme color makes PPT more convenient to change. Theme color makes PPT
+        more convenient to change."
+      fontSize: 10
+      color: "#000000"
+      fontFamily: "Arial"
+  - elementId: "文本框_36"
+    elementType: text
+    bounds: [ 559, 338, 68, 36 ]
+    content:
+      text: "04 /"
+      fontSize: 24
+      color: "#0485A8"
+      bold: true
+      fontFamily: "Arial"
+  - elementId: "文本框_37"
+    elementType: text
+    bounds: [ 610, 336, 309, 41 ]
+    content:
+      text: "下半年工作计划"
+      fontSize: 28
+      bold: true
+      fontFamily: "思源黑体 CN Heavy"
+  - elementId: "文本框_38"
+    elementType: text
+    bounds: [ 610, 374, 301, 36 ]
+    content:
+      text: "Theme color makes PPT more convenient to change. Theme color makes PPT
+        more convenient to change."
+      fontSize: 10
+      color: "#000000"
+      fontFamily: "Arial"
   - elementId: "TextBox_3"
     elementType: text
     bounds: [ 0, -2, 43, 9 ]
@@ -11,3 +143,19 @@ elements:
       lineHeight: 2
 expectedOutOfSafeArea:
   - TextBox_3
+expectedOverlaps:
+  - pair:
+      - 图片_12
+      - 文本框_37
+  - pair:
+      - 图片_12
+      - 文本框_38
+  - pair:
+      - 图片_13
+      - 文本框_21
+  - pair:
+      - 图片_13
+      - 文本框_22
+  - pair:
+      - 图片_13
+      - TextBox_3

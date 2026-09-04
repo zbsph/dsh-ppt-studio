@@ -3,92 +3,217 @@ pageType: content
 elements:
   - elementId: "图片_1"
     elementType: image
-    bounds: [678, 0, 282, 79]
+    bounds: [ 678, 0, 282, 79 ]
     fit: cover
     src: "media/image8.png"
+  - elementId: "椭圆_3"
+    elementType: shape
+    bounds: [ 89, 176, 127, 127 ]
+    kind: ellipse
+    fill: "#4B649F"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "椭圆_4"
+    elementType: shape
+    bounds: [ 98, 184, 110, 110 ]
+    kind: ellipse
+    fill: "#FFFFFF"
+    line: { color: "#4B649F", width: 2 }
+  - elementId: "KSO_Shape"
+    elementType: shape
+    bounds: [ 117, 205, 72, 69 ]
+    kind: rect
+    fill: "#4B649F"
+    line: { color: "#000000" }
   - elementId: "文本框_6"
     elementType: text
-    bounds: [68, 2, 358, 58]
+    bounds: [ 68, 2, 358, 58 ]
     content:
       text: "添加论文内容第一部分标题"
       color: "#4B649F"
       bold: true
       lineHeight: 1.5
+  - elementId: "直接连接符_7"
+    elementType: line
+    bounds: [ 0, 65, 880, 1 ]
+    points: [ [ 0, 65 ], [ 880, 66 ] ]
+    line: { color: "#000000", width: 2 }
   - elementId: "矩形_8"
     elementType: shape
-    bounds: [0, 530, 960, 11]
+    bounds: [ 0, 530, 960, 11 ]
     kind: rect
     fill: "#4B649F"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
   - elementId: "文本框_9"
     elementType: text
-    bounds: [145, 181, 180, 86]
+    bounds: [ 145, 181, 180, 86 ]
     content:
       text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
       color: "#595959"
   - elementId: "文本框_10"
     elementType: text
-    bounds: [383, 181, 180, 86]
+    bounds: [ 383, 181, 180, 86 ]
     content:
       text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
       color: "#595959"
   - elementId: "文本框_11"
     elementType: text
-    bounds: [622, 181, 180, 86]
+    bounds: [ 622, 181, 180, 86 ]
     content:
       text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
       color: "#595959"
   - elementId: "文本框_12"
     elementType: text
-    bounds: [145, 368, 180, 86]
+    bounds: [ 145, 368, 180, 86 ]
     content:
       text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
       color: "#595959"
   - elementId: "文本框_13"
     elementType: text
-    bounds: [383, 368, 180, 86]
+    bounds: [ 383, 368, 180, 86 ]
     content:
       text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
       color: "#595959"
   - elementId: "文本框_14"
     elementType: text
-    bounds: [622, 368, 180, 86]
+    bounds: [ 622, 368, 180, 86 ]
     content:
       text: "请在这里添加相应的文字内容请在这里添加相应的文字内容"
       color: "#595959"
+  - elementId: "Freeform_5"
+    elementType: shape
+    bounds: [ 73, 104, 24, 24 ]
+    kind: rect
+    line: { color: "#000000", width: 1 }
+  - elementId: "Rectangle_6"
+    elementType: shape
+    bounds: [ 82, 119, 4, 9 ]
+    kind: rect
+    line: { color: "#000000", width: 1 }
+  - elementId: "Rectangle_7"
+    elementType: shape
+    bounds: [ 82, 119, 4, 9 ]
+    kind: rect
+    line: { color: "#000000", width: 1 }
+  - elementId: "Rectangle_8"
+    elementType: shape
+    bounds: [ 82, 119, 4, 9 ]
+    kind: rect
+    line: { color: "#000000", width: 1 }
+  - elementId: "Rectangle_9"
+    elementType: shape
+    bounds: [ 82, 119, 4, 9 ]
+    kind: rect
+    line: { color: "#000000", width: 1 }
   - elementId: "Freeform_15"
     elementType: shape
-    bounds: [443, 131, 44, 44]
+    bounds: [ 443, 131, 44, 44 ]
     kind: rect
     fill: "#4B649F"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
   - elementId: "Freeform_16"
     elementType: shape
-    bounds: [689, 128, 48, 47]
+    bounds: [ 689, 128, 48, 47 ]
     kind: rect
     fill: "#4B649F"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
   - elementId: "Freeform_33"
     elementType: shape
-    bounds: [212, 320, 40, 48]
+    bounds: [ 212, 320, 40, 48 ]
     kind: rect
     fill: "#4B649F"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
+  - elementId: "Freeform_35"
+    elementType: shape
+    bounds: [ 173, 158, 25, 20 ]
+    kind: rect
+    line: { color: "#000000", width: 1 }
+  - elementId: "Freeform_36"
+    elementType: shape
+    bounds: [ 181, 151, 25, 20 ]
+    kind: rect
+    line: { color: "#000000", width: 1 }
   - elementId: "Freeform_37"
     elementType: shape
-    bounds: [682, 323, 61, 42]
+    bounds: [ 682, 323, 61, 42 ]
     kind: rect
     fill: "#4B649F"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
+  - elementId: "直接连接符_28"
+    elementType: line
+    bounds: [ 145, 291, 180, 1 ]
+    points: [ [ 145, 291 ], [ 325, 292 ] ]
+  - elementId: "直接连接符_29"
+    elementType: line
+    bounds: [ 383, 291, 180, 1 ]
+    points: [ [ 383, 291 ], [ 563, 292 ] ]
+  - elementId: "直接连接符_30"
+    elementType: line
+    bounds: [ 628, 291, 180, 1 ]
+    points: [ [ 628, 291 ], [ 808, 292 ] ]
   - elementId: "任意多边形_31"
     elementType: shape
-    bounds: [0, 216, 67, 133]
+    bounds: [ 0, 216, 67, 133 ]
     kind: rect
     fill: "#4B649F"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
   - elementId: "任意多边形_32"
     elementType: shape
-    bounds: [893, 216, 67, 133]
+    bounds: [ 893, 216, 67, 133 ]
     kind: rect
     fill: "#4B649F"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
+expectedOverlaps:
+  - pair:
+      - 椭圆_3
+      - 椭圆_4
+  - pair:
+      - 椭圆_3
+      - KSO_Shape
+  - pair:
+      - 椭圆_3
+      - 文本框_9
+  - pair:
+      - 椭圆_3
+      - Freeform_35
+  - pair:
+      - 椭圆_4
+      - KSO_Shape
+  - pair:
+      - 椭圆_4
+      - 文本框_9
+  - pair:
+      - KSO_Shape
+      - 文本框_9
+  - pair:
+      - Freeform_5
+      - Rectangle_6
+  - pair:
+      - Freeform_5
+      - Rectangle_7
+  - pair:
+      - Freeform_5
+      - Rectangle_8
+  - pair:
+      - Freeform_5
+      - Rectangle_9
+  - pair:
+      - Rectangle_6
+      - Rectangle_7
+  - pair:
+      - Rectangle_6
+      - Rectangle_8
+  - pair:
+      - Rectangle_6
+      - Rectangle_9
+  - pair:
+      - Rectangle_7
+      - Rectangle_8
+  - pair:
+      - Rectangle_7
+      - Rectangle_9
+  - pair:
+      - Rectangle_8
+      - Rectangle_9
+  - pair:
+      - Freeform_35
+      - Freeform_36
