@@ -90,7 +90,7 @@ export function registerPreviewRoute(ctx) {
     path: '/ppt-preview', // prefix 语义：path 不带尾斜杠（实测：带斜杠不命中）
     async handler(req, res) {
       try {
-        const u = new URL(req.url ?? '/', 'http://localhost')
+        const u = new URL(req.url ?? '/', 'http://localhost') // 仅作为解析相对路径的基准，不用于输出
         const m = u.pathname.match(/^\/ppt-preview\/([a-zA-Z0-9]+)\/(.*)$/)
         if (!m) return notFound(res)
         const root = await resolveToken(m[1])

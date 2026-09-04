@@ -528,5 +528,14 @@ ok('v0.6.1：4 套模板图表数据非零', chartDeckOk.every((s) => s.endsWith
 const scafBgPage = scafR.layout.pages.find((p) => p.background?.type === 'solid' && p.background.color !== undefined)
 ok('v0.6.1：$ref 背景解析为实际 hex（P7）', scafBgPage && /^#[0-9A-Fa-f]{6}$/.test(scafBgPage.background.color), scafBgPage?.background?.color)
 
+// ── 21. v0.6.3：预览 URL 动态适配（发布友好：无硬编码 host/port）─────────
+const { previewOrigin } = await import('../lib/tools.js')
+ok('v0.6.3：previewOrigin 动态适配（host/port 契约 + 0.0.0.0 回退）',
+  previewOrigin({ port: 3080, host: '127.0.0.1' }) === 'http://127.0.0.1:3080'
+  && previewOrigin({ port: 8080, host: '0.0.0.0' }) === 'http://127.0.0.1:8080'
+  && previewOrigin(null) === ''
+  && previewOrigin({ port: 9000, host: 'localhost' }) === 'http://localhost:9000',
+  `本地=${previewOrigin({ port: 3080, host: '127.0.0.1' })}`)
+
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)

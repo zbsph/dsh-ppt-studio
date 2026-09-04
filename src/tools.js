@@ -39,6 +39,19 @@ export function blockedByAudit(quality) {
   return quality === 'audit'
 }
 
+/**
+ * 预览 URL origin（发布友好，v0.6.3）：完全来自当前 dsh 实例的监听地址（webServer 契约 host/port），
+ * 无任何硬编码。边界：监听 0.0.0.0/::（局域网部署）时回退 127.0.0.1（同机访问默认）；远程用户
+ * 若经外部地址访问 GUI，以同源相对路径（或未来 client 面板从 location 构造 origin）为准。
+ */
+export function previewOrigin(ws) {
+  if (!ws || typeof ws.port !== 'number') return ''
+  let host = typeof ws.host === 'string' && ws.host ? ws.host : '127.0.0.1'
+  if (/^(0\.0\.0\.0|::|\[?\:\:\]?)$/.test(host)) host = '127.0.0.1'
+  if (/^\[.*\]$/.test(host) && host.includes('::')) return `http://${host}:${ws.port}`
+  return `http://${host}:${ws.port}`
+}
+
 /** 当前质量档：项目级 state.json 优先，其次会话级（任一为 audit 即 audit）。 */
 async function qualityOf(ctx, dir) {
   try {
@@ -167,25 +180,19 @@ export function registerTools(ctx) {
       const dir = args.dir
       try {
         const p = await buildPreview(dir)
-        // 绝对 URL：webServer 暴露 port（host 契约），GUI 与预览同源
+        // 绝对 URL：webServer 暴露 host/port（契约，动态适配任意部署）——不同用户的机器/端口各异，
+        // 但都来自"当前 dsh 实例"的监听地址，无任何硬编码路径/端口。
         const ws = ctx.get('webServer')
-        const origin = ws && typeof ws.port === 'number' ? `http://127.0.0.1:${ws.port}` : ''
+        const origin = previewOrigin(ws)
         const href = (u) => origin + u
-        if (origin) {
-          return [
-            '✓ 在线预览已生成（点击链接直接查看，无需打开本地文件）：',
-            '',
-            `本页预览：${href(p.url)}`,
-            `整览（全部页面）：${href(p.overviewUrl)}`,
-            '',
-            `共 ${p.pages} 页；预览根：${p.previewRoot}`,
-          ].join('\n')
-        }
+        const note = origin
+          ? ''
+          : '（预览服务未获得监听地址，改提供相对路径；在 GUI 同源访问）'
         return [
-          '✓ 在线预览已生成（预览服务未获得端口，改提供相对路径；在 GUI 同源访问）：',
+          `✓ 在线预览已生成（点击链接直接查看，无需打开本地文件）${note}：`,
           '',
-          `本页预览：${p.url}`,
-          `整览（全部页面）：${p.overviewUrl}`,
+          `本页预览：${href(p.url)}`,
+          `整览（全部页面）：${href(p.overviewUrl)}`,
           '',
           `共 ${p.pages} 页；预览根：${p.previewRoot}`,
         ].join('\n')
