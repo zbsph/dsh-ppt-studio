@@ -39,3 +39,28 @@ pages:
   - pages/_24_pages_slide_24.yaml
 cleanup: 已声明 6 个出界元素为模板有意设计；已声明 550 对预期重叠；剩余 54
   条（out×6、text×2、content×40、theme×6——模板固有内容问题，复制工作区后按 verify 修复）
+sourcePptx: template.pptx
+previews: previews
+styleAudit:
+  palette:
+    - "#3A5895"
+    - "#2E4E8C"
+    - "#5B7BB8"
+    - "#A9C0E0"
+    - "#7FC4CB"
+    - "#1F2937"
+    - "#FFFFFF"
+  fonts:
+    title: "微软雅黑加粗（深蓝 #2E4E8C）"
+    body: "微软雅黑（灰黑 #333）"
+  layout: 页眉=左上圆形图标+横幅带（向右箭头出口）放章节标题；封面=中央蓝描边白卡（左右角方块装饰）容纳大标题+答辩人/指导教师；内容页=5
+    列圆形图标卡（第X部分+黑字说明）；右下角斜纹几何装饰
+  decorations:
+    - 页眉横幅带（圆图标+箭头形出口，贯穿全页）
+    - 蓝描边卡片+角块（封面）
+    - 圆形线描图标组（文档/毕业帽/书架/笔/黑板）
+    - 右下斜纹几何装饰（淡蓝/青透明）
+  pagesReviewed:
+    - 1
+    - 5
+  notes: "学术深蓝；横幅页眉是贯穿元素（每页左上）；主色蓝系 #3A5895 系，青色点饰；白底页面"

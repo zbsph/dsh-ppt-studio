@@ -5,6 +5,7 @@
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { rm, mkdir } from 'node:fs/promises'
+import { existsSync } from 'node:fs'
 import zlib from 'node:zlib'
 import { resolveDeck } from '../lib/pptd/schema.js'
 import { renderDeck } from '../lib/pptd/render-html.js'
@@ -564,6 +565,29 @@ if (hasOffice) {
 } else {
   ok('v0.8.0：无 Office 跳过渲染（无需验证的降级路径）', true)
 }
+
+// ── 23. v0.9.0：模板双轨（真相层保留 + referenceTemplate 注入）───────
+const dualSrc = join(bandDeck, 'source.pptx')
+await (await import('node:fs/promises')).copyFile(bandExp.file, dualSrc) // 假真相层（导入工程应自带）
+const dualId = `smoke-dual-${Date.now().toString(36)}`
+const dual = await tplMod.registerTemplate(bandDeck, { id: dualId, name: '双轨测试' }, {})
+ok('v0.9.0：收纳保留真相层（source.pptx → template.pptx）', !!dual.sourcePptx && dual.meta.sourcePptx === 'template.pptx' && existsSync(join(dual.dir, 'template.pptx')), dual.meta.sourcePptx ?? '无')
+const dualWS = join(root, 'examples', 'tpl-dual')
+await rm(dualWS, { recursive: true, force: true })
+const matD = await materializeTemplate(dualWS, dualId, { name: '双轨' })
+const deckD = await (await import('node:fs/promises')).readFile(join(dualWS, 'deck.yaml'), 'utf8')
+ok('v0.9.0：物化工作区注入 referenceTemplate（source/previews）',
+  deckD.includes('referenceTemplate:') && deckD.includes('reference/template.pptx') && deckD.includes('reference/previews/01.png'),
+  'referenceTemplate 块缺失' )
+ok('v0.9.0：reference/ 拷贝（template.pptx + previews 整页）',
+  matD.reference?.files?.includes('template.pptx') && existsSync(join(dualWS, 'reference', 'previews', '01.png')),
+  JSON.stringify(matD.reference?.files ?? []))
+const dualCtx = await resolveDeck(dualWS)
+ok('v0.9.0：带 referenceTemplate 的 deck 通过校验（非渲染字段）', dualCtx.pages.length === 1 && dualCtx.deck.referenceTemplate?.id === dualId)
+// 清理双轨测试模板 + 假 source
+await (await import('node:fs/promises')).rm(join(tplMod.TEMPLATES_DIR, dualId), { recursive: true, force: true }).catch(() => {})
+await rm(dualSrc, { force: true }).catch(() => {})
+await rm(dualWS, { recursive: true, force: true })
 
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)

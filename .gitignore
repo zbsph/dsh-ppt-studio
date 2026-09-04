@@ -23,4 +23,5 @@ examples/import-realtest/
 examples/import-realtest2/
 examples/import-realtest-regression/
 templates/*/preview/
+templates/*/previews/
 templates/*/_cleanup-tmp/

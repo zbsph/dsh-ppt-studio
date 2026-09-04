@@ -37,3 +37,25 @@ pages:
   - pages/_22_pages_slide_22.yaml
 cleanup: 已声明 7 个出界元素为模板有意设计；已声明 264 对预期重叠；剩余 60
   条（text×6、out×7、content×47——模板固有内容问题，复制工作区后按 verify 修复）
+sourcePptx: template.pptx
+previews: previews
+styleAudit:
+  palette:
+    - "#3E4E63"
+    - "#7A8AA0"
+    - "#D64253"
+    - "#F5F6F7"
+    - "#AAB2BC"
+    - "#FFFFFF"
+  fonts:
+    title: "微软雅黑加粗（深蓝灰 #3E4E63）"
+    body: 微软雅黑（灰）
+  layout: 封面=左侧灰蓝粗竖条+中部两行标题（年份小+主题大）+红色横线贯穿+描边胶囊信息（公司名称/部门）；分隔页=居中红色数字块（白字）浮于深蓝灰横向条带+白色副题；正文极简单栏留白大
+  decorations:
+    - 红色强调横线（封面）/红色数字块（分隔页）
+    - 横向色带
+    - 描边胶囊标签
+  pagesReviewed:
+    - 1
+    - 5
+  notes: 极简高留白；仅深蓝灰+红两色体系；装饰即色带与红块；封面标题左对齐，页面信息少而大

@@ -5,11 +5,12 @@
  * 统一约定：deck 项目 = 目录（deck.yaml + pages/ + media/）；路径由模型显式传。
  */
 import { existsSync } from 'node:fs'
-import { readFile, mkdir, readdir } from 'node:fs/promises'
+import { readFile, writeFile, mkdir, readdir } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { pathToFileURL } from 'node:url'
 import { spawn } from 'node:child_process'
+import YAML from 'yaml'
 import { resolveDeck, PptError } from './pptd/schema.js'
 import { renderDeck } from './pptd/render-html.js'
 import { exportPptx } from './pptd/export-pptx.js'
@@ -151,12 +152,15 @@ export function registerTools(ctx) {
           await mkdir(dir, { recursive: true })
           const w = await materializeTemplate(dir, template, { name })
           const cleanup = w.cleanup ? `\n⚠ 模板自带清理说明：${w.cleanup}` : ''
+          const refLine = w.reference?.files?.length
+            ? `\n  - 参考层（双轨真相，创作前先看：read_image 看 reference/previews/*.png + 读 reference/audit.yaml——与参考用户给的 ppt 制作完全等价）：${w.reference.files.join('、')}\n`
+            : ''
           return `✓ 已从模板「${w.meta.name ?? template}」生成工作区：${dir}\n`
-            + `  - deck.yaml（模板 theme 已就位；themeConformance=strict 模板一致性门禁）\n`
+            + `  - deck.yaml（模板 theme 已就位；themeConformance=strict 模板一致性门禁；顶部 referenceTemplate 记录参考层）\n`
             + `  - 正式页：${w.formal}（注册进门禁；先跑 ppt_verify autoDeclare=true 声明模板固有有意叠层，剩余错误为模板原文案残留 → 替换内容后自然干净）\n`
             + `  - 参考母版页（_ 前缀，不注册不进门禁）：${w.refs.length ? w.refs.join('、') : '（无）'}\n`
-            + `  - 媒体：${w.mediaCount} 个（已复制）${cleanup}\n`
-            + `下一步：ppt_render → ppt_verify（autoDeclare=true）→ 替换正式页文案 → 逐页制作 → ppt_export`
+            + `  - 媒体：${w.mediaCount} 个（已复制）${refLine}${cleanup}\n`
+            + `下一步：读参考层 → ppt_render → ppt_verify（autoDeclare=true）→ 替换正式页文案 → 逐页制作 → ppt_export`
         }
         const r = await scaffoldProject(dir, { name })
         return `✓ 已生成样例工程：${r.dir}\n${r.files.map((f) => `  - ${f}`).join('\n')}\n下一步：ppt_check → ppt_render → ppt_verify（应 0 错误）`
@@ -241,20 +245,64 @@ export function registerTools(ctx) {
   })
 
   reg({
+    name: 'ppt_template_styleaudit',
+    description: '模板风格审计（双轨真相层 v0.9.0，设计时声明）：对已收纳模板写入/查看 styleAudit——视觉审计产物（配色/字体/版式规则/装饰清单/审阅页）。写法：先用 read_image 逐页/抽样看该模板整页参考（previews/*.png，Office 真渲染），把视觉理解写成 YAML 传 auditYaml；此后每次"按模板做"直接读审计缓存，不必重看。不传 auditYaml = 仅查看素材/审计现状',
+    parameters: {
+      id: { type: 'string', required: true, description: '模板 id（ppt_templates 可查）' },
+      auditYaml: { type: 'string', description: '视觉审计 YAML（可选）：{palette:[hex],fonts:{title,body},layout:"…",decorations:[…],pagesReviewed:[…],notes:"…"}' },
+    },
+    output: markdownResult(),
+    async execute({ id, auditYaml }) {
+      try {
+        const t = await templateWorkspace(id)
+        if (!auditYaml) {
+          const pvDir = join(t.dir, 'previews')
+          const pvs = existsSync(pvDir) ? (await readdir(pvDir)).filter((f) => /\.png$/i.test(f)).sort() : []
+          return [
+            `模板「${t.meta.name ?? id}」参考素材：`,
+            ...(existsSync(join(t.dir, 'template.pptx')) ? [`  - 真相层：${join(t.dir, 'template.pptx')}`] : ['  - 真相层：无（内置模板无原始 pptx——YAML 即真相）']),
+            ...(pvs.length ? ['  - 整页参考（Office 真渲染）：', ...pvs.map((f) => `    ${join(pvDir, f)}`)] : ['  - 整页参考：无（无 Office 收纳/渲染失败——可用 ppt_visual 对源 pptx 补渲染）']),
+            '',
+            '当前 styleAudit：',
+            t.meta.styleAudit ? YAML.stringify(t.meta.styleAudit) : '（无——尚未审计）',
+            '',
+            '写法：read_image 看整页参考 → 视觉理解写入 auditYaml（palette/fonts/layout/decorations/pagesReviewed/notes）。',
+          ].join('\n')
+        }
+        const a = YAML.parse(auditYaml)
+        if (!a || typeof a !== 'object' || Array.isArray(a)) return '✗ styleAudit 必须是 YAML 对象（palette/fonts/layout/decorations/…）'
+        const metaFile = join(t.dir, 'template.yaml')
+        const doc = YAML.parseDocument(await readFile(metaFile, 'utf8'))
+        doc.set('styleAudit', doc.createNode(a))
+        await writeFile(metaFile, String(doc))
+        return `✓ styleAudit 已写入模板「${t.meta.name ?? id}」→ ${metaFile}\n  字段：${Object.keys(a).join(', ')}\n下次 materialize 会复制为工作区 reference/audit.yaml——"按模板做"时先读它 + 看 reference/previews（与参考用户 ppt 制作完全等价）`
+      } catch (error) {
+        return `✗ 风格审计失败：${error?.message ?? String(error)}`
+      }
+    },
+  })
+
+  reg({
     name: 'ppt_template_add',
-    description: '外部模板收纳（模板随使用增长通道）：把任意 deck 工程（通常是 ppt_import 产物，用户自己/签购买的模板文件转出来的）注册为内置模板 → templates/<id>/（theme/全部页面/媒体原样转入 + 自动缩略图）。用户模板文件 > 导入模板 > 内置精磨，三级增长',
+    description: '外部模板收纳（模板随使用增长通道）：把任意 deck 工程（通常是 ppt_import 产物，用户自己/签购买的模板文件转出来的）注册为内置模板 → templates/<id>/（theme/全部页面/媒体原样转入 + 自动缩略图 + 双轨真相层：原始 pptx + Office 整页真渲染）。用户模板文件 > 导入模板 > 内置精磨，三级增长',
     parameters: {
       dir: { type: 'string', required: true, description: '源工程目录（含 deck.yaml；先 ppt_import 得到）' },
       id: { type: 'string', description: '模板 id（缺省按标题 slug 化；冲突自动加后缀）' },
       name: { type: 'string', description: '模板名称（缺省取工程标题）' },
       style: { type: 'string', description: '风格标签（如 企业蓝/学术白）' },
       scene: { type: 'string', description: '适用场景' },
+      sourcePptx: { type: 'string', description: '原始 .pptx 绝对路径（可选；缺省自动取工程内 source.pptx，ppt_import 已保留）' },
     },
     output: markdownResult(),
     async execute(args) {
       try {
-        const r = await registerTemplate(args.dir, { id: args.id, name: args.name, style: args.style, scene: args.scene })
-        return `✓ 已收纳为模板「${r.meta.name}」（id=${r.id}，${r.pages} 张母版页）\n  - ${r.dir}\n  - 预览图：${r.preview ?? '（未生成：无浏览器或渲染失败，模板仍可用）'}\n用途：ppt_templates 可列出；下一次 ppt_new dir=<新目录> template=${r.id} 即可复用`
+        const r = await registerTemplate(args.dir, { id: args.id, name: args.name, style: args.style, scene: args.scene, sourcePptx: args.sourcePptx })
+        const track = [
+          r.sourcePptx ? `真相层：${r.sourcePptx}（原始 pptx，零失真）` : null,
+          r.previews ? `整页参考：${r.previews}（Office 真渲染 ${await countPng(r.previews)} 页）` : null,
+          r.meta.cleanup ? `清理：${r.meta.cleanup}` : null,
+        ].filter(Boolean)
+        return `✓ 已收纳为模板「${r.meta.name}」（id=${r.id}，${r.pages} 张母版页）\n  - ${r.dir}\n  - 预览图：${r.preview ?? '（未生成：无浏览器或渲染失败，模板仍可用）'}\n${track.map((t) => `  - ${t}`).join('\n')}\n下一步（可选）：ppt_template_styleaudit id=${r.id}（先用 read_image 看整页参考 → 写风格审计，模板参考通道的"设计时声明"）`
       } catch (error) {
         return `✗ 收纳失败：${error?.message ?? String(error)}`
       }
@@ -448,7 +496,7 @@ export function registerTools(ctx) {
     async execute({ pptx, outDir }) {
       try {
         const r = await importPptx(pptx, outDir)
-        return `✓ 已导入：${r.outDir}（${r.pages} 页，${r.media.length} 个媒体）\n⚠ ${r.warnings.join('；')}`
+        return `✓ 已导入：${r.outDir}（${r.pages} 页，${r.media.length} 个媒体；原始 pptx 已保留为 source.pptx——模板双轨真相层）\n⚠ ${r.warnings.join('；')}`
       } catch (error) {
         return `✗ 导入失败：\n${errText(error)}`
       }
@@ -589,4 +637,13 @@ async function auditExportCheck(ctx, file, minFontSize) {
 function errText(error) {
   if (error instanceof PptError) return error.messages.map((m) => `  - ${m}`).join('\n')
   return `  - ${error?.message ?? String(error)}`
+}
+
+/** 统计目录内 PNG 数（模板整页参考计数）。 */
+async function countPng(dir) {
+  try {
+    return (await readdir(dir)).filter((f) => /\.png$/i.test(f)).length
+  } catch {
+    return 0
+  }
 }

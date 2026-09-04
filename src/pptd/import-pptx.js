@@ -4,7 +4,8 @@
  * 图片（拷入 media/）、表格；chart 降级为文本占位（保留标题/说明）。
  * 输出 deck 项目目录（deck.yaml + pages/*.yaml + media/），几何保留供参考。
  */
-import { readFile, writeFile, mkdir } from 'node:fs/promises'
+import { readFile, writeFile, mkdir, copyFile } from 'node:fs/promises'
+import { existsSync } from 'node:fs'
 import { join, basename } from 'node:path'
 import { zipRead, decodeXml } from '../zips.js'
 import { parseXml, children, first, allText } from '../xmljs.js'
@@ -103,6 +104,8 @@ export async function importPptx(pptxPath, outDir) {
   }
   const deckYaml = yamlDeck({ title: basename(pptxPath).replace(/\.pptx$/i, ''), width, height, pageRefs, band, stats })
   await writeFile(join(outDir, 'deck.yaml'), deckYaml)
+  // 真相层 v0.9.0：保留原始 pptx → source.pptx（模板收纳为 template.pptx 的零失真源；模板双轨参考）
+  await copyFile(pptxPath, join(outDir, 'source.pptx')).catch(() => {})
   for (const name of mediaNames) {
     const data = files.get('ppt/media/' + name)
     if (data) await writeFile(join(outDir, 'media', name), data)
@@ -121,6 +124,7 @@ export async function importPptx(pptxPath, outDir) {
   return {
     outDir, pages: pages.length, media: [...mediaNames], size: { width, height },
     warnings: ['chart 降级为文本占位；复杂形状近似映射（渐变归一为主色并保留 stops 于 import-styles.json）',
+      ...(existsSync(join(outDir, 'source.pptx')) ? ['已保留原始 pptx ⊳ source.pptx（模板收纳/视觉参考的零失真真相层；模板双轨 v0.9.0）'] : []),
       ...(styleCount ? [`已保留样式：${styleCount} 个颜色 / 字体与字号已映射（import-styles.json 含渐变/阴影原始值）`] : []),
       ...(bgCount ? [`已提取 ${bgCount} 页背景（含背景图/色/满页图）`] : []),
       ...(band ? [`检测到跨页页眉/页脚带（上 ${band.top}px / 下 ${band.bottom}px）：deck.yaml 已写入建议 safeArea（注释呈现，未启用；确认为模板后取消注释并微调）`] : [])],

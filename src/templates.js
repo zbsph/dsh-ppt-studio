@@ -144,6 +144,30 @@ export async function registerTemplate(dir, opts = {}, { targetDir = TEMPLATES_D
     cleanup.declared ? `已声明 ${cleanup.declared} 对预期重叠` : '',
     cleanup.remainingErrors ? `剩余 ${cleanup.remainingErrors} 条（${Object.entries(cleanup.detail).map(([k, v]) => `${k}×${v}`).join('、')}——模板固有内容问题，复制工作区后按 verify 修复）` : '',
   ].filter(Boolean).join('；') || '模板已洁净'
+  // 双轨真相层 v0.9.0：保留原始 pptx → template.pptx，Office 真渲染整页 → previews/NN.png
+  //（骨架层 deck.yaml 机器可验证；真相层零失真供视觉参考——"按模板做" = "参考用户给的 ppt 制作"）
+  let srcPptx = null
+  for (const p of [opts.sourcePptx, join(dir, 'source.pptx')]) {
+    if (p && existsSync(p)) {
+      srcPptx = join(tplDir, 'template.pptx')
+      await copyFile(p, srcPptx)
+      break
+    }
+  }
+  let previewsDir = null
+  if (srcPptx) {
+    try {
+      const { findPowerPoint, renderPptxToPng } = await import('./msrender.js')
+      if (findPowerPoint()) {
+        previewsDir = join(tplDir, 'previews')
+        const r = await renderPptxToPng(srcPptx, previewsDir, { timeoutMs: 300000 })
+        if (!r.pages) throw new Error('渲染结果为空')
+      }
+    } catch { /* 无 Office / 渲染失败：真相层缺参考页不阻塞收纳（骨架层仍可用） */
+      if (previewsDir) await rm(previewsDir, { recursive: true, force: true }).catch(() => {})
+      previewsDir = null
+    }
+  }
   // template.yaml 元数据
   const meta = {
     id,
@@ -155,6 +179,8 @@ export async function registerTemplate(dir, opts = {}, { targetDir = TEMPLATES_D
     colors: Object.values(ctx.colors ?? {}).filter((c) => typeof c === 'string'),
     pages: refs,
     cleanup: cleanupNote,
+    ...(srcPptx ? { sourcePptx: 'template.pptx' } : {}),
+    ...(previewsDir ? { previews: 'previews' } : {}),
   }
   await writeFile(join(tplDir, 'template.yaml'), YAML.stringify(meta))
   // 缩略图：从**模板目录**自身渲染（ctx.dir=tplDir，out 相对名）+ Edge 截图 → preview.png
@@ -179,7 +205,15 @@ export async function registerTemplate(dir, opts = {}, { targetDir = TEMPLATES_D
     }
   } catch (e) { /* 无浏览器/渲染失败：template.yaml 仍生成，preview 留空 */ }
   await rm(join(tplDir, '_preview-tmp'), { recursive: true, force: true }).catch(() => {})
-  return { id, dir: tplDir, preview, pages: refs.length, meta }
+  return {
+    id,
+    dir: tplDir,
+    preview,
+    pages: refs.length,
+    meta,
+    sourcePptx: srcPptx ? join(tplDir, 'template.pptx') : null,
+    previews: previewsDir ? join(tplDir, 'previews') : null,
+  }
 }
 
 /** 模板渲染预览根（无 webServer 依赖）：用于展示与测试。 */
@@ -208,10 +242,25 @@ export async function materializeTemplate(dir, id, { name } = {}) {
   const formal = 'pages/01_opening.yaml'
   const firstYaml = first ? first.yaml.replace(/^pageType:.*$/m, 'pageType: content') : 'pageType: content\nelements: []\n'
   await writeFile(join(dir, formal), firstYaml)
+  // 双轨真相层 v0.9.0：referenceTemplate 注入（创作前"看模板真身"；与参考用户 ppt 制作等价）
+  const tplMeta = t.meta ?? {}
+  let refBlock = ''
+  const refDirSrc = t.dir
+  const hasTruth = existsSync(join(refDirSrc, 'template.pptx')) || existsSync(join(refDirSrc, 'previews')) || tplMeta.styleAudit
+  if (hasTruth) {
+    const lines = ['referenceTemplate:', `  id: ${JSON.stringify(id)}`, `  name: ${JSON.stringify(name ?? tplMeta.name ?? id)}`]
+    if (existsSync(join(refDirSrc, 'template.pptx'))) lines.push('  source: reference/template.pptx')
+    if (existsSync(join(refDirSrc, 'previews'))) {
+      const pvs = (await readdir(join(refDirSrc, 'previews'))).filter((f) => /\.png$/i.test(f)).sort()
+      if (pvs.length) lines.push('  previews:', ...pvs.map((f) => `    - reference/previews/${f}`))
+    }
+    if (tplMeta.styleAudit) lines.push('  audit: reference/audit.yaml')
+    if (lines.length > 3) refBlock = '\n' + lines.join('\n') + '\n'
+  }
   const deck = t.deck
-    .replace(/^title:.*$/m, `title: ${JSON.stringify(name ?? t.meta.name ?? '未命名')}`)
+    .replace(/^title:.*$/m, `title: ${JSON.stringify(name ?? tplMeta.name ?? '未命名')}`)
     .replace(/pages:\n[\s\S]*$/, `pages:\n  - ${formal}\n`)
-  await writeFile(join(dir, 'deck.yaml'), deck)
+  await writeFile(join(dir, 'deck.yaml'), deck + refBlock)
   const refs = []
   for (const p of t.pages) {
     if (p.ref === first.ref) continue // 首母版已正式化
@@ -223,7 +272,27 @@ export async function materializeTemplate(dir, id, { name } = {}) {
     await copyFile(join(t.dir, 'media', m), join(dir, 'media', m))
     mediaCount++
   }
-  return { dir, formal, refs, mediaCount, cleanup: t.meta.cleanup ?? null, meta: t.meta, firstRef: first?.ref }
+  // 真相层参考拷贝：reference/{template.pptx,previews/,audit.yaml}（工作区自包含，模板更新不影响已物化工作区）
+  let reference = null
+  if (hasTruth) {
+    const refDir = join(dir, 'reference')
+    await mkdir(refDir, { recursive: true })
+    const copied = []
+    if (existsSync(join(t.dir, 'template.pptx'))) {
+      await copyFile(join(t.dir, 'template.pptx'), join(refDir, 'template.pptx'))
+      copied.push('template.pptx')
+    }
+    if (existsSync(join(t.dir, 'previews'))) {
+      await cp(join(t.dir, 'previews'), join(refDir, 'previews'))
+      copied.push('previews/')
+    }
+    if (tplMeta.styleAudit) {
+      await writeFile(join(refDir, 'audit.yaml'), YAML.stringify({ ...tplMeta.styleAudit, templateId: id, templateName: tplMeta.name ?? id }))
+      copied.push('audit.yaml')
+    }
+    reference = { dir: refDir, files: copied }
+  }
+  return { dir, formal, refs, mediaCount, cleanup: tplMeta.cleanup ?? null, meta: tplMeta, firstRef: first?.ref, reference }
 }
 
 async function cp(src, dest) {

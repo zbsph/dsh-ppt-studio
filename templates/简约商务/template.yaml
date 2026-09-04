@@ -35,3 +35,31 @@ pages:
   - pages/_20_pages_slide_20.yaml
 cleanup: 已声明 43 个出界元素为模板有意设计；已声明 223 对预期重叠；剩余 79
   条（content×36、out×43——模板固有内容问题，复制工作区后按 verify 修复）
+sourcePptx: template.pptx
+previews: previews
+styleAudit:
+  palette:
+    - "#00A0C4"
+    - "#1B6F8C"
+    - "#9AD7EC"
+    - "#C5E5F0"
+    - "#2B3A46"
+    - "#666666"
+    - "#FFFFFF"
+  fonts:
+    title: 微软雅黑（黑体加粗，深灰蓝）
+    body: 宋体/等线（衬线正文，灰色）
+  layout: 封面=左上
+    LOGO（环形图标+公司名）+左侧对齐大标题（黑体深灰蓝+英文副题青色）+右侧满高青蓝渐变绸带弧线；内容页=顶部居中黑标题+左上/右下角弧形绸带装饰，白底留白大
+  decorations:
+    - 渐变绸带弧线（封面右侧满高/内容页两角部）
+    - 圆角图片/圆角图标块
+    - 胶囊标签（汇报人）
+    - 时间轴方点年标（2014-2020）
+    - 大箭头卡片（百分比大字）
+  pagesReviewed:
+    - 1
+    - 5
+    - 10
+  notes: 青蓝商务风；弧线绸带是标志性装饰——YAML 中用色块渐变近似，或直接按 reference/template.pptx
+    真身参考；封面左对齐，内容页标题居中；白底为主，避免整页彩色

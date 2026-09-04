@@ -80,6 +80,18 @@ export function validateDeck(deck) {
       errors.push('theme.themeConformance: strict（默认，颜色出板=门禁）| suggest（仅建议）| off')
     }
   }
+  // 双轨真相层 v0.9.0：referenceTemplate（模板参考元数据，非渲染字段；materializeTemplate 注入）
+  if (deck.referenceTemplate !== undefined) {
+    const rt = deck.referenceTemplate
+    if (!rt || typeof rt !== 'object' || Array.isArray(rt)) errors.push('deck.referenceTemplate: object (id/name/source/previews/audit；模板双轨参考元数据)')
+    else {
+      if (rt.id !== undefined && typeof rt.id !== 'string') errors.push('deck.referenceTemplate.id: string')
+      if (rt.name !== undefined && typeof rt.name !== 'string') errors.push('deck.referenceTemplate.name: string')
+      if (rt.source !== undefined && typeof rt.source !== 'string') errors.push('deck.referenceTemplate.source: string（reference/template.pptx 路径）')
+      if (rt.previews !== undefined && (!Array.isArray(rt.previews) || rt.previews.some((p) => typeof p !== 'string'))) errors.push('deck.referenceTemplate.previews: [string]（Office 真渲染参考页路径）')
+      if (rt.audit !== undefined && !(typeof rt.audit === 'string' || (rt.audit && typeof rt.audit === 'object'))) errors.push('deck.referenceTemplate.audit: string（audit.yaml 路径）或 styleAudit 内联对象')
+    }
+  }
   const pages = Array.isArray(deck.pages) ? deck.pages : []
   if (pages.length === 0) errors.push('deck.pages: at least one page required')
   return errors.length ? fail(errors) : null
