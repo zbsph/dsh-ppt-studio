@@ -1,0 +1,35 @@
+pageType: content
+background: "$bg"
+elements:
+  - elementId: page-title
+    elementType: text
+    bounds: [60, 40, 840, 50]
+    content:
+      style: "$title"
+      fontSize: 28
+      text: 渠道 GMV 走势
+  - elementId: chart-c
+    elementType: chart
+    bounds: [60, 130, 840, 330]
+    chart:
+      type: bar
+      data:
+        cols: [month, web, app]
+        rows:
+          - [7月, 320, 210]
+          - [8月, 360, 240]
+          - [9月, 420, 300]
+      series:
+        - name: Web
+          x: month
+          y: web
+        - name: App
+          x: month
+          y: app
+      colors: ["$primary", "$accent"]
+  - elementId: caption
+    elementType: text
+    bounds: [60, 480, 840, 30]
+    content:
+      style: "$caption"
+      text: 数据来源：内部经营报表（2026-09 月报）

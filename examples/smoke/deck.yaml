@@ -1,0 +1,26 @@
+# 冒烟评测样例：从头制作，3 页（cover/content/chart），含主题引用
+version: 1
+title: 季度复盘演示（冒烟）
+size: [960, 540]
+theme:
+  colors:
+    primary: "#2563EB"
+    accent: "#F59E0B"
+    text: "#1F2937"
+    bg: "#F8FAFC"
+  textStyles:
+    title:
+      fontSize: 40
+      color: "$text"
+      bold: true
+    body:
+      fontSize: 18
+      color: "$text"
+      lineHeight: 1.5
+    caption:
+      fontSize: 12
+      color: "#64748B"
+pages:
+  - pages/01_cover.yaml
+  - pages/02_content.yaml
+  - pages/03_chart.yaml

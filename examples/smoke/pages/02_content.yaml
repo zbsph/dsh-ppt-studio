@@ -1,0 +1,42 @@
+pageType: content
+background: "$bg"
+expectedOverlaps:
+  # 色块徽标：设计阶段声明的有意重叠（数值指标衬在色块上）
+  - { pair: [metric-rect, metric] }
+elements:
+  - elementId: page-title
+    elementType: text
+    bounds: [60, 40, 840, 50]
+    content:
+      style: "$title"
+      fontSize: 28
+      text: 关键进展
+  - elementId: body-a
+    elementType: text
+    bounds: [60, 130, 420, 200]
+    content:
+      style: "$body"
+      text: 线上增长 34%，主要来自新渠道投放；NPS 提升 12 分；复购率升至 41%。供应链成本环比下降 8%。
+  - elementId: metric-rect
+    elementType: shape
+    kind: rect
+    bounds: [540, 130, 360, 80]
+    fill: "$primary"
+  - elementId: metric
+    elementType: text
+    bounds: [540, 150, 360, 40]
+    content:
+      style: "$title"
+      fontSize: 22
+      color: "#FFFFFF"
+      align: center
+      text: +34% 增长
+  - elementId: table-b
+    elementType: table
+    bounds: [60, 380, 840, 120]
+    cols: [渠道, 投入, 产出, ROI]
+    header: true
+    rows:
+      - [搜索, 120万, 480万, 4.0]
+      - [社群, 60万, 210万, 3.5]
+      - [直播, 90万, 360万, 4.0]

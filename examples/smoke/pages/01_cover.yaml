@@ -1,0 +1,27 @@
+pageType: cover
+background: "$bg"
+notes: 开场页
+elements:
+  - elementId: hero-rect
+    elementType: shape
+    kind: rect
+    bounds: [0, 0, 960, 120]
+    fill: "$primary"
+  - elementId: title
+    elementType: text
+    bounds: [80, 180, 700, 90]
+    content:
+      style: "$title"
+      text: 季度复盘：增长引擎与风险
+  - elementId: subtitle
+    elementType: text
+    bounds: [80, 290, 600, 60]
+    content:
+      style: "$body"
+      color: "$accent"
+      text: 2026 Q3 · 内部汇报
+  - elementId: deco
+    elementType: shape
+    kind: ellipse
+    bounds: [780, 360, 120, 120]
+    fill: "$accent"

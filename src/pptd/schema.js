@@ -1,0 +1,307 @@
+/**
+ * PPTD v1 中间层：结构校验 + 归一化（resolveDeck）。
+ *
+ * deck.yaml:
+ *   version: 1
+ *   title: str
+ *   size: {width, height} | [w, h]   # 默认 960x540（16:9，1px = 1pt）
+ *   theme:
+ *     colors: {primary: '#2563EB', ...}
+ *     textStyles: {title: {fontSize, color, fontFamily, bold, align, lineHeight}, ...}
+ *     safeArea: {top, bottom, left, right}   # 背景模板的非内容区安全边距（verify 视其外为出界）
+ *     minFontSize: 12                         # 导出 auto-fit 缩字下限（默认 12）
+ *   pages: [pages/01_cover.yaml, ...]
+ *
+ * pages/<n>_<name>.yaml:
+ *   pageType: cover|content|...
+ *   background: '#hex' | '$themeRef' | {type: solid, color} | {type: image, src, fit?}  # fit: cover|contain|fill
+ *   safeArea: {top, bottom, left, right}      # 可选，覆盖主题安全区
+ *   expectedOverlaps: [{pair: [idA, idB]}, ...]   # 设计阶段声明的有意重叠（审阅与声明对照）
+ *   overlapMode: declared | lenient
+ *   notes: str
+ *   elements:
+ *     - elementId: str              # 页内唯一
+ *       elementType: text|shape|line|image|table|chart
+ *       bounds: [x, y, w, h]        # px, 原点左上（line 可省略：由 points 的 AABB 自动推导）
+ *       # text    → content: {text, style|fontSize|fontFamily|color|bold|align|lineHeight|wrap}
+ *       # shape   → kind: rect|ellipse|triangle, fill, line:{color,width}, rotation
+ *       # line    → points: [[x,y],...] | {x1,y1,x2,y2}, arrow: bool, line:{color,width}
+ *       # image   → src(相对 deck 目录), fit: cover|contain|fill
+ *       # table   → cols: [...], rows: [[...]], header: bool
+ *       # chart   → chart: {type: bar|line|pie, data:{cols,rows}, series:[{name,x,y}] , colors:[...]}
+ */
+import { readFile } from 'node:fs/promises'
+import { existsSync } from 'node:fs'
+import { join } from 'node:path'
+import YAML from 'yaml'
+
+const TEXT_STYLE_KEYS = ['fontSize', 'fontFamily', 'color', 'bold', 'italic', 'align', 'lineHeight', 'wrap', 'letterSpacing']
+const ELEMENT_KEYS = {
+  text: ['content'],
+  shape: ['kind', 'fill', 'line'],
+  line: ['points', 'arrow', 'line'],
+  image: ['src', 'fit'],
+  table: ['cols', 'rows', 'header'],
+  chart: ['chart'],
+}
+
+export class PptError extends Error {
+  constructor(messages) { super(messages.join('\n')); this.messages = messages }
+}
+
+/** 结构校验：返回 PptError（含全部错误）或 null。 */
+export function validateDeck(deck) {
+  const errors = []
+  if (!deck || typeof deck !== 'object') return fail('deck must be a YAML object')
+  if (deck.version !== 1) errors.push(`deck.version must be 1 (got ${deck.version})`)
+  if (deck.title !== undefined && typeof deck.title !== 'string') errors.push('deck.title must be a string')
+  const size = normalizeSize(deck.size)
+  if (!size) errors.push('deck.size must be {width,height} or [w,h] > 0')
+  if (deck.theme) {
+    if (deck.theme.colors) {
+      for (const [k, v] of Object.entries(deck.theme.colors)) {
+        if (typeof v !== 'string' || !/^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/.test(v)) errors.push(`theme.colors.${k}: expected hex color, got ${JSON.stringify(v)}`)
+      }
+    }
+    if (deck.theme.textStyles) {
+      for (const [k, v] of Object.entries(deck.theme.textStyles)) {
+        if (!v || typeof v !== 'object') errors.push(`theme.textStyles.${k}: expected object`)
+        else validateTextStyle(v, `theme.textStyles.${k}.`, errors)
+      }
+    }
+    if (deck.theme.safeArea !== undefined && !validSafeArea(deck.theme.safeArea)) {
+      errors.push('theme.safeArea: {top,bottom,left,right} numbers ≥ 0（背景模板非内容区安全边距；verify 视其外为出界）')
+    }
+    if (deck.theme.minFontSize !== undefined && !(typeof deck.theme.minFontSize === 'number' && deck.theme.minFontSize > 0)) {
+      errors.push('theme.minFontSize: positive number（字号下限，导出 auto-fit 不会缩到它以下）')
+    }
+  }
+  const pages = Array.isArray(deck.pages) ? deck.pages : []
+  if (pages.length === 0) errors.push('deck.pages: at least one page required')
+  return errors.length ? fail(errors) : null
+}
+
+/** 校验一个页面对象（YAML 已解析）。 */
+export function validatePage(page, file) {
+  const errors = []
+  if (!page || typeof page !== 'object') return fail(`[${file}] page must be a YAML object`)
+  if (page.version !== undefined && page.version !== 1) errors.push(`[${file}] page.version must be 1`)
+  const elements = Array.isArray(page.elements) ? page.elements : []
+  const ids = new Set()
+  elements.forEach((el, i) => {
+    const path = `[${file}] elements[${i}]`
+    if (!el || typeof el !== 'object') { errors.push(`${path}: expected object`); return }
+    if (typeof el.elementId !== 'string') errors.push(`${path}.elementId: required string`)
+    else if (ids.has(el.elementId)) errors.push(`${path}.elementId: duplicate "${el.elementId}"`)
+    else ids.add(el.elementId)
+    const type = el.elementType
+    if (!(type in ELEMENT_KEYS)) errors.push(`${path}.elementType: unknown "${type}" (${Object.keys(ELEMENT_KEYS).join('/')})`)
+    // bounds：line 可省略（由 points 的 AABB 自动推导）；其余元素必须提供
+    if (type === 'line') {
+      if (el.bounds !== undefined && !validBounds(el.bounds)) errors.push(`${path}.bounds: [x,y,w,h] numbers, w/h > 0（line 可省略，由 points 自动推导）`)
+    } else if (!validBounds(el.bounds)) {
+      errors.push(`${path}.bounds: [x,y,w,h] numbers, w/h > 0（line 除外——line 省略 bounds 时由 points 推导）`)
+    }
+    if (el.role !== undefined && !['background', 'content', 'decoration'].includes(el.role)) {
+      errors.push(`${path}.role: background|content|decoration（层叠语义：背景/内容/装饰；decoration 完全豁免重叠报告）`)
+    }
+    if (type === 'text') validateText(el, path, errors)
+    if (type === 'shape') validateShape(el, path, errors)
+    if (type === 'line') validateLine(el, path, errors)
+    if (type === 'image') {
+      if (typeof el.src !== 'string') errors.push(`${path}.src: required string`)
+      if (el.fit !== undefined && !['cover', 'contain', 'fill'].includes(el.fit)) errors.push(`${path}.fit: cover|contain|fill`)
+    }
+    if (type === 'table') validateTable(el, path, errors)
+    if (type === 'chart') validateChart(el, path, errors)
+  })
+  if (page.rowBounds !== undefined) errors.push(`[${file}] rowBounds: unsupported in v1`)
+  if (page.expectedOverlaps !== undefined) {
+    if (!Array.isArray(page.expectedOverlaps)) {
+      errors.push(`[${file}] expectedOverlaps: array of {pair: [idA, idB]}（设计阶段声明的有意重叠，审阅与声明对照）`)
+    } else {
+      page.expectedOverlaps.forEach((po, i) => {
+        if (!po || !Array.isArray(po.pair) || po.pair.length !== 2 || po.pair.some((x) => typeof x !== 'string')) {
+          errors.push(`[${file}] expectedOverlaps[${i}]: {pair: [idA, idB]} with two element ids`)
+        }
+      })
+    }
+  }
+  if (page.overlapMode !== undefined && !['declared', 'lenient'].includes(page.overlapMode)) {
+    errors.push(`[${file}] overlapMode: declared（默认，未声明重叠即报错）| lenient（未声明仅提示）`)
+  }
+  if (page.safeArea !== undefined && !validSafeArea(page.safeArea)) {
+    errors.push(`[${file}] safeArea: {top,bottom,left,right} numbers ≥ 0（页面级覆盖主题安全区）`)
+  }
+  validateBackground(page.background, file, errors)
+  return errors.length ? fail(errors) : null
+}
+
+/** 页面背景校验：'#hex' | '$themeRef' | {type: solid, color} | {type: image, src, fit?} */
+function validateBackground(bg, file, errors) {
+  if (bg === undefined || bg === null) return
+  if (typeof bg === 'string') {
+    if (!/^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/.test(bg) && !/^\$[A-Za-z0-9_]+$/.test(bg)) {
+      errors.push(`[${file}] background: hex color string、$themeRef 或 {type: solid|image, ...}`)
+    }
+    return
+  }
+  if (typeof bg !== 'object') {
+    errors.push(`[${file}] background: hex string 或 {type: solid, color} / {type: image, src}`)
+    return
+  }
+  if (bg.type === 'solid') {
+    if (typeof bg.color !== 'string' || !/^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/.test(bg.color) && !/^\$[A-Za-z0-9_]+$/.test(bg.color)) errors.push(`[${file}] background.color: hex color`)
+  } else if (bg.type === 'image') {
+    if (typeof bg.src !== 'string') errors.push(`[${file}] background.src: string (相对 deck 根或 URL)`)
+    if (bg.fit !== undefined && !['cover', 'contain', 'fill'].includes(bg.fit)) errors.push(`[${file}] background.fit: cover|contain|fill`)
+  } else {
+    errors.push(`[${file}] background.type: solid|image`)
+  }
+}
+
+function validateText(el, path, errors) {
+  const c = el.content ?? {}
+  if (typeof c.text !== 'string') errors.push(`${path}.content.text: required string`)
+  validateTextStyle(c, `${path}.content.`, errors)
+}
+
+function validateTextStyle(s, path, errors) {
+  for (const k of TEXT_STYLE_KEYS) {
+    const v = s[k]
+    if (v === undefined) continue
+    if (k === 'fontSize' && !(typeof v === 'number' && v > 0)) errors.push(`${path}${k}: positive number`)
+    if (k === 'fontFamily' && typeof v !== 'string') errors.push(`${path}${k}: string`)
+    if (k === 'color' && typeof v !== 'string') errors.push(`${path}${k}: color string ($ref or hex)`)
+    if (k === 'bold' && typeof v !== 'boolean') errors.push(`${path}${k}: boolean`)
+    if (k === 'italic' && typeof v !== 'boolean') errors.push(`${path}${k}: boolean`)
+    if (k === 'align' && !['left', 'center', 'right'].includes(v)) errors.push(`${path}${k}: left|center|right`)
+    if (k === 'lineHeight' && !(typeof v === 'number' && v > 0)) errors.push(`${path}${k}: positive number`)
+    if (k === 'wrap' && typeof v !== 'boolean') errors.push(`${path}${k}: boolean`)
+  }
+}
+
+function validateShape(el, path, errors) {
+  if (!['rect', 'roundRect', 'ellipse', 'triangle'].includes(el.kind)) errors.push(`${path}.kind: rect|roundRect|ellipse|triangle`)
+  if (el.fill !== undefined && typeof el.fill !== 'string') errors.push(`${path}.fill: color string`)
+  if (el.rotation !== undefined && !(typeof el.rotation === 'number' && Number.isFinite(el.rotation))) errors.push(`${path}.rotation: number (degrees)`)
+  if (el.line) {
+    if (typeof el.line.color !== 'string') errors.push(`${path}.line.color: string`)
+    if (el.line.width !== undefined && !(typeof el.line.width === 'number' && el.line.width > 0)) errors.push(`${path}.line.width: positive number`)
+  }
+}
+
+function validateLine(el, path, errors) {
+  const pts = Array.isArray(el.points) ? el.points : [el.x1, el.y1, el.x2, el.y2].every((v) => typeof v === 'number') ? [] : null
+  const has = el.points ? Array.isArray(el.points) && el.points.length >= 2 && el.points.every((p) => Array.isArray(p) && p.length === 2 && p.every((n) => typeof n === 'number')) : (typeof el.x1 === 'number' && typeof el.y1 === 'number' && typeof el.x2 === 'number' && typeof el.y2 === 'number')
+  if (!has) errors.push(`${path}.points: [[x,y],...] with >=2 points, or x1,y1,x2,y2 numbers`)
+  void pts
+  if (el.arrow !== undefined && typeof el.arrow !== 'boolean') errors.push(`${path}.arrow: boolean`)
+}
+
+function validateTable(el, path, errors) {
+  if (!Array.isArray(el.cols) || el.cols.length === 0) errors.push(`${path}.cols: non-empty array`)
+  if (!Array.isArray(el.rows)) errors.push(`${path}.rows: array`)
+  else el.rows.forEach((r, i) => { if (!Array.isArray(r)) errors.push(`${path}.rows[${i}]: array`) })
+}
+
+function validateChart(el, path, errors) {
+  const c = el.chart
+  if (!c || typeof c !== 'object') { errors.push(`${path}.chart: required object`); return }
+  if (!['bar', 'line', 'pie'].includes(c.type)) errors.push(`${path}.chart.type: bar|line|pie`)
+  const d = c.data
+  if (!d || !Array.isArray(d.cols) || d.cols.length === 0) errors.push(`${path}.chart.data.cols: non-empty array`)
+  if (!d || !Array.isArray(d.rows)) errors.push(`${path}.chart.data.rows: array`)
+  if (c.series && !Array.isArray(c.series)) errors.push(`${path}.chart.series: array`)
+}
+
+function validBounds(b) {
+  return Array.isArray(b) && b.length === 4 && b.every((n) => typeof n === 'number' && Number.isFinite(n)) && b[2] > 0 && b[3] > 0
+}
+
+function validSafeArea(sa) {
+  if (!sa || typeof sa !== 'object') return false
+  return ['top', 'bottom', 'left', 'right'].every(
+    (k) => sa[k] === undefined || (typeof sa[k] === 'number' && Number.isFinite(sa[k]) && sa[k] >= 0),
+  )
+}
+
+function normalizeSize(size) {
+  if (Array.isArray(size)) return size.length === 2 && size.every((n) => typeof n === 'number' && n > 0) ? { width: size[0], height: size[1] } : null
+  if (size && typeof size === 'object' && size.width > 0 && size.height > 0) return { width: size.width, height: size.height }
+  return null
+}
+
+function fail(messages) { return new PptError(Array.isArray(messages) ? messages : [messages]) }
+
+/**
+ * 读取并归一化一个 deck 项目：
+ * 返回 { dir, deck, size, theme, colorOf, resolveColor, pages: [{ file, page, name, index }] }
+ * 抛 PptError。
+ */
+export async function resolveDeck(dir) {
+  const deckFile = join(dir, 'deck.yaml')
+  if (!existsSync(deckFile)) throw fail(`deck.yaml not found under ${dir}`)
+  const deck = YAML.parse(await readFile(deckFile, 'utf8')) ?? {}
+  const err = validateDeck(deck)
+  if (err) throw err
+  const size = normalizeSize(deck.size) ?? { width: 960, height: 540 }
+  const theme = deck.theme ?? {}
+  const colors = theme.colors ?? {}
+  const textStyles = theme.textStyles ?? {}
+  const pages = []
+  for (const ref of deck.pages) {
+    const file = join(dir, ref)
+    if (!existsSync(file)) throw fail(`page file missing: ${ref}`)
+    const page = YAML.parse(await readFile(file, 'utf8')) ?? {}
+    const perr = validatePage(page, ref)
+    if (perr) throw perr
+    pages.push({ file: join(dir, ref), ref, page, name: (page.title ?? ref.replace(/\.yaml$/, '')).toString(), index: pages.length })
+  }
+  const resolveColor = (v) => {
+    if (typeof v !== 'string') return v
+    if (v.startsWith('$')) return colors[v.slice(1)] ?? v
+    return v
+  }
+  const minFontSize = typeof theme.minFontSize === 'number' && theme.minFontSize > 0 ? theme.minFontSize : 12
+  const safeAreaOf = (page) => {
+    const t = theme.safeArea ?? {}
+    const p = page.safeArea ?? {}
+    const num = (v) => (typeof v === 'number' && v >= 0 ? v : 0)
+    return {
+      top: num(p.top ?? t.top),
+      bottom: num(p.bottom ?? t.bottom),
+      left: num(p.left ?? t.left),
+      right: num(p.right ?? t.right),
+    }
+  }
+  const resolveTextStyle = (obj) => {
+    const merged = {}
+    for (const k of TEXT_STYLE_KEYS) if (obj[k] !== undefined) merged[k] = obj[k]
+    if (merged.fontSize === undefined) merged.fontSize = 18
+    if (merged.lineHeight === undefined) merged.lineHeight = 1.2
+    if (merged.wrap === undefined) merged.wrap = true
+    if (merged.color !== undefined) merged.color = resolveColor(merged.color)
+    return merged
+  }
+  const styleOf = (content) => {
+    const ref = typeof content.style === 'string' && content.style.startsWith('$') ? textStyles[content.style.slice(1)] : {}
+    const own = {}
+    for (const k of TEXT_STYLE_KEYS) if (content[k] !== undefined) own[k] = content[k]
+    return resolveTextStyle({ ...ref, ...own })
+  }
+  return {
+    dir,
+    deck,
+    size,
+    theme,
+    colors,
+    textStyles,
+    minFontSize,
+    safeAreaOf,
+    resolveColor,
+    resolveTextStyle,
+    styleOf,
+    pages,
+  }
+}

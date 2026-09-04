@@ -1,0 +1,18 @@
+node_modules/
+lib/
+*.tsbuildinfo
+*.tgz
+
+# 生成物/回归临时工程（脚本每次重建；保留手写 examples/smoke 源 yaml）
+examples/smoke/preview/
+examples/smoke/imported/
+examples/smoke/preview-rt/
+examples/smoke/out-*.pptx
+examples/smoke/media-test.png
+examples/media-smoke/
+examples/overlap-smoke/
+examples/v3-smoke/
+examples/scaffold-smoke/
+examples/import-realtest/
+examples/import-realtest2/
+examples/import-realtest-regression/
