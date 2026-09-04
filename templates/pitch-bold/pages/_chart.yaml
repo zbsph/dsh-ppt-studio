@@ -23,7 +23,7 @@ elements:
   - elementId: chartEl
     elementType: chart
     bounds: [460, 200, 440, 220]
-    chart: {type: bar, data: {cols: ["指标"], rows: [["当前", 12], ["改进", 88]]}}
+    chart: {type: bar, data: {cols: ["指标", "值"], rows: [["当前", 12], ["改进", 88]]}}
   - elementId: note
     elementType: text
     bounds: [460, 440, 440, 40]

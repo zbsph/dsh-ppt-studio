@@ -16,7 +16,7 @@ elements:
   - elementId: chartEl
     elementType: chart
     bounds: [60, 120, 620, 340]
-    chart: {type: line, data: {cols: ["时间"], rows: [["T1", 20], ["T2", 42], ["T3", 38], ["T4", 61]]}}
+    chart: {type: line, data: {cols: ["时间", "值"], rows: [["T1", 20], ["T2", 42], ["T3", 38], ["T4", 61]]}}
   - elementId: axis
     elementType: text
     bounds: [60, 470, 620, 24]

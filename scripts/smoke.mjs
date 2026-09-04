@@ -484,5 +484,31 @@ ok('v0.6：预览根 pages 完整（3 页 + 整览）', pvPages.includes('deck.h
 const pvMedia = await buildPreview(mediaDeck)
 ok('v0.6：预览根媒体拷贝（../media 引用可解析）', (await (await import('node:fs/promises')).readdir(join(pvMedia.previewRoot, 'media'))).includes('pic.png'))
 
+// ── 20. v0.6.1：图表单列兼容（P1）+ 全零告警 + 深色背景对比度（P7）───────
+const { chartData, chartIssue } = await import('../lib/pptd/svgCharts.js')
+const singlePair = chartData({ type: 'bar', data: { cols: ['指标'], rows: [['A', 72], ['B', 55]] } })
+ok('v0.6.1：图表单列 pairs 自动兼容（值不再全零）', singlePair.series[0].values.join() === '72,55' && singlePair.categories.join() === 'A,B', JSON.stringify(singlePair.series))
+ok('v0.6.1：全零数据显式告警（不再静默）', chartIssue({ type: 'bar', data: { cols: ['指标', '值'], rows: [['A', 0], ['B', 0]] } }) !== null && chartIssue({ type: 'bar', data: { cols: ['指标', '值'], rows: [['A', 10], ['B', 20]] } }) === null)
+// 模板图表值非零（4 套模板回归）
+const chartDeckOk = []
+for (const t of tplList) {
+  const tT = await tplMod.templateWorkspace(t.id)
+  const ctxT = await resolveDeck(tT.dir)
+  let okChart = true
+  for (const pg of ctxT.pages) {
+    for (const el of pg.page.elements ?? []) {
+      if (el.elementType === 'chart') {
+        const d = chartData(el.chart)
+        if (!d.series.some((s) => s.values.some((v) => v > 0))) okChart = false
+      }
+    }
+  }
+  chartDeckOk.push(`${t.id}:${okChart ? 'ok' : 'ZERO'}`)
+}
+ok('v0.6.1：4 套模板图表数据非零', chartDeckOk.every((s) => s.endsWith('ok')), chartDeckOk.join('; '))
+// P7：$ref 页面背景解析为实际色（深色背景不再按白底算对比度）
+const scafBgPage = scafR.layout.pages.find((p) => p.background?.type === 'solid' && p.background.color !== undefined)
+ok('v0.6.1：$ref 背景解析为实际 hex（P7）', scafBgPage && /^#[0-9A-Fa-f]{6}$/.test(scafBgPage.background.color), scafBgPage?.background?.color)
+
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)

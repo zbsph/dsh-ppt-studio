@@ -73,12 +73,13 @@ ppt_verify(dir, autoDeclare=true)
 做完一版/几页后调用 `ppt_preview(dir)` → 渲染 + 静态服务 → 返回**同源预览链接**（本页 + 整览），用户在 GUI 内点击即可直接看 PPT（翻页/整览），**不用打开本地文件**；预览随每轮制作刷新（链接 token 稳定，重新生成即替换内容）。
 
 ```text
-ppt_preview(dir)   # 链接附在交付信息里；用户点击看 → 提出意见 → 继续改
+ppt_preview(dir)   # 链接附在交付信息里（绝对地址，点击即可查看）；用户看 → 提意见 → 继续改
 ```
 
 - 预览根隔离（`~/.dsh/ppt-studio/preview/<token>/`，含 `.meta.json` 源映射，跨进程/重启后链接仍有效）；
+- 图表数据全零会以显式警告出现在 render/export 报告（v0.6.1，不再静默）；**单列 pairs 图表格式自动兼容**（建议宽表 `cols: [分类, 值]`）；
 - 与审阅暂停点配合：`/ppt pause-after pages|overall` → 出预览 → 等用户意见 → 根据批注文字进入修改（**批注面板 = B 阶段，路线图**）；
-- 技术：webServer prefix 路由 `/ppt-preview`（实测：path 不带尾斜杠才命中）+ 同源相对 URL（不依赖端口探测）。
+- 技术：webServer prefix 路由 `/ppt-preview`（实测：path 不带尾斜杠才命中）+ 绝对 URL（webServer.port 契约）。（v0.6.0 版曾输出成纯文字链接——已修复为绝对地址。）
 
 ## 内置模板库（v0.5.0，需求 2/4）
 

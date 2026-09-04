@@ -5,7 +5,7 @@
 import { writeFile, mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import { normalizePage } from './layout.js'
-import { chartSvg } from './svgCharts.js'
+import { chartSvg, chartIssue } from './svgCharts.js'
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
@@ -75,9 +75,13 @@ function elementHtml(el, ctx, debug) {
 }
 
 /** 渲染整个 deck。debug=true 时给文本元素加描边。返回 { outDir, htmlFiles, layout }。 */
-/** 页面背景解析：'#hex' | {type: solid, color} | {type: image, src, fit} → { css, record } */
+/** 页面背景解析：'#hex' | {type: solid, color} | {type: image, src, fit} → { css, record }
+ * v0.6.1（P7）：string 分支同样 resolveColor（$themeRef → 实际 hex），渲染与 layout 记录一致。 */
 function resolveBackground(bg, ctx) {
-  if (typeof bg === 'string') return { css: bg, record: { type: 'solid', color: bg } }
+  if (typeof bg === 'string') {
+    const c = ctx.resolveColor(bg)
+    return { css: c, record: { type: 'solid', color: c } }
+  }
   if (bg?.type === 'solid') {
     const c = ctx.resolveColor(bg.color ?? '#FFFFFF')
     return { css: c, record: { type: 'solid', color: c } }
@@ -108,6 +112,7 @@ export async function renderDeck(ctx, { out = 'preview', debug = false } = {}) {
   }
   const pageFiles = []
   const bodyHtml = []
+  const chartWarnings = [] // P1 修复：图表静默失败显式化
   let sharedStyle = null
   for (const page of ctx.pages) {
     const els = normalizePage(page, ctx)
@@ -120,6 +125,10 @@ export async function renderDeck(ctx, { out = 'preview', debug = false } = {}) {
       const r = elementHtml(el, ctx, debug)
       parts.push(r.html)
       snaps.push(r.snap)
+      if (el.type === 'chart') {
+        const issue = chartIssue(el.chart)
+        if (issue) chartWarnings.push(`第 ${page.index + 1} 页（${page.name}）${el.id}: ${issue}`)
+      }
     }
     // debug 模式：绘制安全区参考框（模板背景非内容区边界）
     if (debug && hasSa) {
@@ -149,5 +158,5 @@ export async function renderDeck(ctx, { out = 'preview', debug = false } = {}) {
   const deckHtml = `<!doctype html><html><head><meta charset="utf-8"><title>${esc(ctx.deck.title ?? 'deck')}</title>${sharedStyle}<style>body{background:#334155;padding:16px}</style></head><body style="background:#334155">${bodyHtml.join('')}</body></html>`
   await writeFile(join(outDir, 'deck.html'), deckHtml)
   await writeFile(join(outDir, 'layout.json'), JSON.stringify(layout, null, 2))
-  return { outDir, htmlFiles: pageFiles, layout }
+  return { outDir, htmlFiles: pageFiles, layout, chartWarnings }
 }

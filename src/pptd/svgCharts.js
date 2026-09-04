@@ -6,8 +6,13 @@
 /** 解析 chart 数据为 { categories: [...], values: [number], series: [{name, values}] } */
 export function chartData(chart) {
   const d = chart.data ?? {}
-  const cols = d.cols ?? []
+  let cols = d.cols ?? []
   const rows = d.rows ?? []
+  // 单列 pairs 兼容（P1 修复，v0.6.1）：cols 只声明类别列、每行 [类别, 值] 时，自动补默认数值列
+  // （文档/模板历史格式）；宽表多列格式不受影响。
+  if (cols.length === 1 && rows.length && rows.every((r) => Array.isArray(r) && r.length >= 2)) {
+    cols = [cols[0], '值']
+  }
   if (chart.type === 'pie') {
     const cat = cols[0]
     const val = cols[1]
@@ -26,6 +31,25 @@ export function chartData(chart) {
     out.series.push({ name: s.name ?? cols[yIdx], values: rows.map((r) => Number(r[yIdx] ?? 0)) })
   }
   return out
+}
+
+/**
+ * 图表数据检查（P1 修复，v0.6.1）：把"静默失败"变显式。
+ * 返回问题描述字符串或 null（正常）。
+ */
+export function chartIssue(chart) {
+  try {
+    const data = chartData(chart)
+    const vals = data.series.flatMap((s) => s.values)
+    if (!vals.length) return '图表没有数据行（rows 为空）'
+    const allZero = vals.every((v) => !isFinite(v) || v === 0)
+    if (allZero) {
+      return '图表数据解析为全零或无效（请检查 cols/rows 映射；单列 pairs 格式已兼容，建议使用宽表 cols: [分类, 值] + rows: [[类, 值], ...]）'
+    }
+    return null
+  } catch (e) {
+    return `图表数据解析失败：${e?.message ?? e}`
+  }
 }
 
 const PALETTE = ['#2563EB', '#F59E0B', '#10B981', '#EF4444', '#8B5CF6', '#06B6D4', '#F97316', '#64748B']

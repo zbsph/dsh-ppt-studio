@@ -11,7 +11,7 @@ import { writeFile, readFile } from 'node:fs/promises'
 import { join, isAbsolute } from 'node:path'
 import { zipWrite } from '../zips.js'
 import { normalizePage } from './layout.js'
-import { chartData, chartColors } from './svgCharts.js'
+import { chartData, chartColors, chartIssue } from './svgCharts.js'
 
 const EMU = 12700
 const xm = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -22,7 +22,7 @@ let UID = 1
 const nid = () => UID++
 
 export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}) {
-  const report = { autoFit: [], warnings: [] }
+  const report = { autoFit: [], warnings: [], chartInfos: [] }
   const slides = []
   UID = 1000
 
@@ -50,7 +50,12 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
           break
         }
         case 'table': shapes.push(tableFrame(el)); break
-        case 'chart': shapes.push(...chartSp(el)); break
+        case 'chart': {
+          const issue = chartIssue(el.chart)
+          if (issue) report.chartInfos.push(`第 ${page.index + 1} 页（${page.name}）${el.id}: ${issue}`)
+          shapes.push(...chartSp(el))
+          break
+        }
       }
     }
 

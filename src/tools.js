@@ -158,19 +158,34 @@ export function registerTools(ctx) {
 
   reg({
     name: 'ppt_preview',
-    description: '生成 PPT 对话内预览（需求 A）：渲染 deck → 静态服务 → 返回同源预览链接（页面 URL + 整览 URL）。用户在浏览器/GUI 内点击即可直接看 PPT（翻页/整览），不用打开本地文件。做完一版/几页后调用，附在交付信息里',
+    description: '生成 PPT 对话内预览（需求 A）：渲染 deck → 静态服务 → 返回在线预览链接（绝对地址，点击即查看本页 + 整览），不用打开本地文件。做完一版/几页后调用，附在交付信息里',
     parameters: {
       dir: { type: 'string', required: true, description: 'deck 项目目录（含 deck.yaml）' },
     },
     output: markdownResult(),
-    async execute({ dir }) {
+    async execute(args) {
+      const dir = args.dir
       try {
         const p = await buildPreview(dir)
+        // 绝对 URL：webServer 暴露 port（host 契约），GUI 与预览同源
+        const ws = ctx.get('webServer')
+        const origin = ws && typeof ws.port === 'number' ? `http://127.0.0.1:${ws.port}` : ''
+        const href = (u) => origin + u
+        if (origin) {
+          return [
+            '✓ 在线预览已生成（点击链接直接查看，无需打开本地文件）：',
+            '',
+            `本页预览：${href(p.url)}`,
+            `整览（全部页面）：${href(p.overviewUrl)}`,
+            '',
+            `共 ${p.pages} 页；预览根：${p.previewRoot}`,
+          ].join('\n')
+        }
         return [
-          '✓ PPT 预览已生成（点击即可查看，无需打开本地文件）：',
+          '✓ 在线预览已生成（预览服务未获得端口，改提供相对路径；在 GUI 同源访问）：',
           '',
-          `- [打开本页预览](${p.url})`,
-          `- [打开整览（全部页面）](${p.overviewUrl})`,
+          `本页预览：${p.url}`,
+          `整览（全部页面）：${p.overviewUrl}`,
           '',
           `共 ${p.pages} 页；预览根：${p.previewRoot}`,
         ].join('\n')
@@ -222,7 +237,10 @@ export function registerTools(ctx) {
       try {
         const ctx0 = await loadCtx(dir)
         const r = await renderDeck(ctx0, { debug: !!debug })
-        return `✓ 渲染完成：${r.htmlFiles.length} 页 HTML + layout.json → ${r.outDir}\n${r.htmlFiles.map((f) => `  - ${f}`).join('\n')}`
+        const chartNote = r.chartWarnings?.length
+          ? `\n\n⚠ 图表数据检查（${r.chartWarnings.length} 处）：\n${r.chartWarnings.map((w) => `   - ${w}`).join('\n')}`
+          : ''
+        return `✓ 渲染完成：${r.htmlFiles.length} 页 HTML + layout.json → ${r.outDir}\n${r.htmlFiles.map((f) => `  - ${f}`).join('\n')}${chartNote}`
       } catch (error) {
         return `✗ 渲染失败：\n${errText(error)}`
       }
@@ -349,7 +367,10 @@ export function registerTools(ctx) {
             ? `\n\n⚠ auto-fit 缩放 ${r.autoFit.length} 处文本：\n${fitLines.join('\n')}`
             : ''
           const floorNote = floorHits ? `\n\n✗ ${floorHits} 处达到字号下限（theme.minFontSize）仍溢出——建议修复后再交付，避免放映时文字溢出容器。` : ''
-          return `✓ 已导出（pptd 引擎，${r.slides} 页）：${r.file}${fit}${floorNote}${await withAudit(r.file)}`
+          const chartNote = r.chartInfos?.length
+            ? `\n\n⚠ 图表数据检查（${r.chartInfos.length} 处）：\n${r.chartInfos.map((w) => `   - ${w}`).join('\n')}`
+            : ''
+          return `✓ 已导出（pptd 引擎，${r.slides} 页）：${r.file}${fit}${floorNote}${chartNote}${await withAudit(r.file)}`
         } catch (error) {
           // 自动回退链（C1 决定）：auto 且 pptd 硬失败 → 有 python-pptx 则兜底并醒目标注降级（绝不静默）
           if (eff.allowFallback) {

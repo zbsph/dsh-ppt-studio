@@ -23,7 +23,7 @@ elements:
   - elementId: chartEl
     elementType: chart
     bounds: [80, 100, 560, 320]
-    chart: {type: bar, data: {cols: ["指标"], rows: [["A", 72], ["B", 55], ["C", 40], ["D", 88]]}}
+    chart: {type: bar, data: {cols: ["指标", "值"], rows: [["A", 72], ["B", 55], ["C", 40], ["D", 88]]}}
   - elementId: insight
     elementType: text
     bounds: [700, 100, 200, 120]

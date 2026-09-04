@@ -78,8 +78,10 @@ elements:
 - elementId: bar
   elementType: chart
   bounds: [60, 80, 400, 240]
-  chart: {type: bar, data: {cols: ["x"], rows: [["甲", 10], ["乙", 20]]}}
-\`\`\`  # chart.type: bar|line|pie
+  chart: {type: bar, data: {cols: ["指标", "值"], rows: [["甲", 10], ["乙", 20]]}}
+\`\`\`  # chart.type: bar|line|pie；数据格式 = 宽表（cols: [分类, 值1, ...]；多系列用 series 映射）。
+# 单列 pairs 格式（cols 只写类别列、每行 [类别, 值]）自动兼容（v0.6.1），但**建议用宽表**；
+# 图表数据解析为全零时 render/export 会给出显式警告（不再静默）。
 
 ## 页面级字段
 \`\`\`yaml

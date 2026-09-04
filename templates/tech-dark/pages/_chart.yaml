@@ -14,7 +14,7 @@ elements:
   - elementId: chartEl
     elementType: chart
     bounds: [60, 90, 620, 360]
-    chart: {type: bar, data: {cols: ["指标"], rows: [["A", 45], ["B", 66], ["C", 52], ["D", 88]]}, colors: ["#22D3EE"]}
+    chart: {type: bar, data: {cols: ["指标", "值"], rows: [["A", 45], ["B", 66], ["C", 52], ["D", 88]]}, colors: ["#22D3EE"]}
   - elementId: ins
     elementType: text
     bounds: [720, 110, 180, 120]
