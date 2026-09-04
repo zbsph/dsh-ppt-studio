@@ -369,7 +369,7 @@ await rm(bandDeck, { recursive: true, force: true })
 await mkdir(join(bandDeck, 'pages'), { recursive: true })
 await (await import('node:fs/promises')).writeFile(join(bandDeck, 'deck.yaml'), [
   'version: 1', 'title: band-smoke', 'size: [960, 540]',
-  'theme: {colors: {primary: "#2563EB"}}',
+  'theme: {colors: {primary: "#2563EB"}, textStyles: {b: {fontSize: 14}}}',
   'pages:',
   '  - pages/01.yaml', '  - pages/02.yaml', '  - pages/03.yaml', '',
 ].join('\n'))
@@ -829,6 +829,114 @@ await rm(c11Rt, { recursive: true, force: true })
 await rm(c11Deck, { recursive: true, force: true })
 await rm(c11TextDeck, { recursive: true, force: true })
 await rm(badPathDeck, { recursive: true, force: true })
+
+// ── 27. v0.12.0 (M2)：文本实测档——注入/提取单测 + 实测交叉三态 + 真实测量 ──
+const { injectMeasureScript, extractMeasured, measureLayout } = await import('../lib/measurement.js')
+const { measuredCrossCheck: mcc } = await import('../lib/verify.js')
+// 27.1 注入/提取单测（script raw text + JSON 回环路）
+const inj = injectMeasureScript('<html><head></head><body><div class="el" id="a" data-kind="text" style="width:100px">x</div></body></html>')
+ok('v0.12：测量脚本注入（raw text 不转义 <）——script 原样嵌入且可提取',
+  inj.includes('__ppt_measured') && inj.includes('for(var i=0;i<els.length') && JSON.stringify(extractMeasured(`<html><head><script id="__ppt_measured" type="application/json">${JSON.stringify([{ id: 'a', lines: 2 }])}</script></head></html>`)) === JSON.stringify([{ id: 'a', lines: 2 }]))
+// 27.2 实测交叉三态（估算漏报 → error；复现 → warning；估算过报 → relief warning）
+const xLayout = { pages: [{ index: 1, elements: [
+  { id: 't1', kind: 'text', bounds: { x: 0, y: 0, w: 100, h: 50 }, metrics: { overflowY: 0, lines: 2 } },
+  { id: 't2', kind: 'text', bounds: { x: 0, y: 0, w: 100, h: 50 }, metrics: { overflowY: 5, lines: 2 } },
+  { id: 't3', kind: 'text', bounds: { x: 0, y: 0, w: 100, h: 50 }, metrics: { overflowY: 8, lines: 2 } },
+] }] }
+const xMeasured = { pages: [{ index: 1, elements: [
+  { id: 't1', kind: 'text', overflowY: 6, lines: 3 },     // 估算 0 / 实测 6 → 漏报 error
+  { id: 't2', kind: 'text', overflowY: 4, lines: 2 },     // 估算 5 / 实测 4 → 复现 warning
+  { id: 't3', kind: 'text', overflowY: 0.5, lines: 2 },   // 估算 8 / 实测 0.5 → relief warning
+] }] }
+const xR = mcc(xLayout, xMeasured)
+ok('v0.12：实测交叉——估算漏报 → error（M2 核心捕获）', xR.some((f) => f.code === 'measured-overflow' && f.severity === 'error' && f.id === 't1'), JSON.stringify(xR))
+ok('v0.12：实测交叉——估算过报 → relief warning（三态判据：漏报 1/复现 1/relief 1）',
+  xR.filter((f) => f.code === 'measured-relief' && f.severity === 'warning').length === 1
+  && xR.filter((f) => f.code === 'measured-overflow' && f.severity === 'warning').length === 1,
+  `relief=${xR.filter((f) => f.code === 'measured-relief').length} 复现=${xR.filter((f) => f.code === 'measured-overflow').length}`)
+// 27.3 真实测量（2 页小工程；有浏览器时验证 measured.json 落盘与无溢出）
+const m2Deck = join(root, 'examples', 'm2-smoke')
+await rm(m2Deck, { recursive: true, force: true })
+await mkdir(join(m2Deck, 'pages'), { recursive: true })
+await (await import('node:fs/promises')).writeFile(join(m2Deck, 'deck.yaml'), 'version: 1\ntitle: m2\nsize: [960, 540]\ntheme: {colors: {primary: "#2563EB"}}\npages:\n  - pages/01.yaml\n  - pages/02.yaml\n')
+await (await import('node:fs/promises')).writeFile(join(m2Deck, 'pages', '01.yaml'), [
+  'pageType: content', 'elements:',
+  '  - elementId: t', '    elementType: text', '    bounds: [60, 60, 400, 50]',
+  '    content: {text: "短文本", fontSize: 18, color: "#2563EB"}', '', ''].join('\n'))
+await (await import('node:fs/promises')).writeFile(join(m2Deck, 'pages', '02.yaml'), [
+  'pageType: content', 'elements:',
+  '  - elementId: t2', '    elementType: text', '    bounds: [60, 60, 300, 40]',
+  '    content: {text: "这是一段测试文本用于实测档验证", fontSize: 18, color: "#2563EB"}', '', ''].join('\n'))
+const m2r = await measureLayout(m2Deck)
+const { findEdge } = await import('../lib/measurement.js')
+if (findEdge()) {
+  ok('v0.12：真实测量（2 页落盘 measured.json + 无估算/实测分歧）',
+    m2r.pages === 2 && m2r.measured.pages.length === 2 && existsSync(join(m2Deck, 'preview', 'measured.json')),
+    `pages=${m2r.pages} notes=${(m2r.notes ?? []).join(';')}`)
+  const m2Layout = JSON.parse(await (await import('node:fs/promises')).readFile(join(m2Deck, 'preview', 'layout.json'), 'utf8'))
+  const m2x = mcc(m2Layout, m2r.measured)
+  ok('v0.12：真实测量交叉无分歧（短文本不溢出）', !m2x.some((f) => f.severity === 'error'), `出现实测 error：${JSON.stringify(m2x)}`)
+} else {
+  ok('v0.12：无浏览器跳过真实测量（降级路径）', true)
+}
+await rm(m2Deck, { recursive: true, force: true })
+
+// ── 28. v0.13.0 (M3)：数据连贯——跨页数字对账 + source 证据核查表 + themeRef 断言 ──
+const { crosscheckDeck } = await import('../lib/crosscheck.js')
+const ccDeck = join(root, 'examples', 'cc-smoke')
+await rm(ccDeck, { recursive: true, force: true })
+await mkdir(join(ccDeck, 'pages'), { recursive: true })
+await (await import('node:fs/promises')).writeFile(join(ccDeck, 'deck.yaml'), [
+  'version: 1', 'title: cc', 'size: [960, 540]',
+  'theme: {colors: {primary: "#2563EB"}, textStyles: {body: {fontSize: 14}}}',
+  'pages:', '  - pages/01.yaml', '  - pages/02.yaml', '', ''].join('\n'))
+await (await import('node:fs/promises')).writeFile(join(ccDeck, 'pages', '01.yaml'), [
+  'pageType: content', 'source: "公司财报 2026 年报"',
+  'elements:',
+  '  - elementId: n1', '    elementType: text', '    bounds: [60, 60, 400, 40]',
+  '    content: {text: "本季度营收 45.6% 增长", fontSize: 14}',
+  '', ''].join('\n'))
+await (await import('node:fs/promises')).writeFile(join(ccDeck, 'pages', '02.yaml'), [
+  'pageType: content',
+  'elements:',
+  '  - elementId: n2', '    elementType: text', '    bounds: [60, 60, 400, 40]',
+  '    content: {text: "上半年营收增长 45.6%，全年 2026 展望", fontSize: 14}',
+  '  - elementId: n3', '    elementType: text', '    bounds: [60, 120, 400, 40]',
+  '    content: {text: "另一指标 52%", fontSize: 14}',
+  '', ''].join('\n'))
+const ccCtx = await resolveDeck(ccDeck)
+const cc = crosscheckDeck(ccCtx)
+ok('v0.13：跨页数字对账——同数字跨页入组（45.6% 页 1/2；52% 单页不入组）',
+  cc.groups.some((g) => g.num === '45.6%' && g.pages.join(',') === '1,2') && !cc.groups.some((g) => g.num === '52%'),
+  JSON.stringify(cc.groups.map((g) => g.num)))
+ok('v0.13：证据核查表——source 标注 grounded / 未标注 unmapped',
+  cc.pages.find((p) => p.index === 1)?.status === 'grounded' && cc.pages.find((p) => p.index === 2)?.status === 'unmapped',
+  JSON.stringify(cc.pages))
+// themeRef 断言：缺失 $ref → resolveDeck 报错（M3 防静默回退）
+const refDeck = join(root, 'examples', 'ref-smoke')
+await rm(refDeck, { recursive: true, force: true })
+await mkdir(join(refDeck, 'pages'), { recursive: true })
+await (await import('node:fs/promises')).writeFile(join(refDeck, 'deck.yaml'), [
+  'version: 1', 'title: ref', 'size: [960, 540]',
+  'theme: {colors: {primary: "#2563EB"}}',
+  'pages:', '  - pages/01.yaml', '', ''].join('\n'))
+await (await import('node:fs/promises')).writeFile(join(refDeck, 'pages', '01.yaml'), [
+  'pageType: content', 'elements:',
+  '  - elementId: x', '    elementType: text', '    bounds: [60, 60, 200, 30]',
+  '    content: {text: "bad ref", color: "$ghost"}', '', ''].join('\n'))
+let refErr = null
+try { await resolveDeck(refDeck) } catch (e) { refErr = e }
+ok('v0.13：themeRef 断言——缺失 $ref 报错（防字面 $xxx 上屏）', refErr !== null && refErr.messages?.some((m) => m.includes('$ghost')), refErr?.messages?.join('; '))
+// 正确引用不报
+await (await import('node:fs/promises')).writeFile(join(refDeck, 'pages', '01.yaml'), [
+  'pageType: content', 'elements:',
+  '  - elementId: x', '    elementType: text', '    bounds: [60, 60, 200, 30]',
+  '    content: {text: "ok ref", color: "$primary"}', '', ''].join('\n'))
+await resolveDeck(refDeck)
+ok('v0.13：themeRef 断言——正确引用通过', true)
+// 清理
+await rm(ccDeck, { recursive: true, force: true })
+await rm(refDeck, { recursive: true, force: true })
 
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)

@@ -120,6 +120,36 @@ export class PptError extends Error {
   constructor(messages) { super(messages.join('\n')); this.messages = messages }
 }
 
+/** M3：theme token 引用完整性（静默回退是真缺陷——缺失 $ref 渲染将出字面 $xxx/默认样式）。 */
+function themeRefCheck(page, theme, file) {
+  const errors = []
+  const colors = Object.keys(theme.colors ?? {})
+  const textStyles = Object.keys(theme.textStyles ?? {})
+  const checkRef = (v, where) => {
+    if (typeof v !== 'string' || !v.startsWith('$')) return
+    const name = v.slice(1)
+    if (!colors.includes(name)) errors.push(`[${file}] ${where}：颜色引用 $${name} 不在 theme.colors（渲染/导出将出现字面 $${name}）——加入 theme 或改用实色`)
+  }
+  for (const [k, s] of Object.entries(theme.textStyles ?? {})) {
+    if (typeof s?.color === 'string') checkRef(s.color, `theme.textStyles.${k}.color`)
+  }
+  for (const el of page.elements ?? []) {
+    const w = `elements.${el.elementId}`
+    if (el.content?.color !== undefined) checkRef(el.content.color, `${w}.content.color`)
+    if (typeof el.content?.style === 'string' && el.content.style.startsWith('$')) {
+      const name = el.content.style.slice(1)
+      if (!textStyles.includes(name)) errors.push(`[${file}] ${w}.content.style：样式引用 $${name} 不在 theme.textStyles（静默回退默认样式）`)
+    }
+    if (typeof el.fill === 'string') checkRef(el.fill, `${w}.fill`)
+    else if (el.fill && typeof el.fill === 'object') {
+      if (typeof el.fill.color === 'string') checkRef(el.fill.color, `${w}.fill.color`)
+      for (const s of el.fill.stops ?? []) if (typeof s.color === 'string') checkRef(s.color, `${w}.fill.stops`)
+    }
+    if (el.line?.color !== undefined) checkRef(el.line.color, `${w}.line.color`)
+  }
+  return errors
+}
+
 /** 结构校验：返回 PptError（含全部错误）或 null。 */
 export function validateDeck(deck) {
   const errors = []
@@ -234,6 +264,9 @@ export function validatePage(page, file) {
         }
       })
     }
+  }
+  if (page.source !== undefined && typeof page.source !== 'string') {
+    errors.push(`[${file}] source: string（数据来源标注；ppt_crosscheck 核查表用）`)
   }
   if (page.overlapMode !== undefined && !['declared', 'lenient'].includes(page.overlapMode)) {
     errors.push(`[${file}] overlapMode: declared（默认，未声明重叠即报错）| lenient（未声明仅提示）`)
@@ -392,6 +425,8 @@ export async function resolveDeck(dir) {
     const page = YAML.parse(await readFile(file, 'utf8')) ?? {}
     const perr = validatePage(page, ref)
     if (perr) throw perr
+    const terr = themeRefCheck(page, theme, ref)
+    if (terr.length) throw fail(terr)
     pages.push({ file: join(dir, ref), ref, page, name: (page.title ?? ref.replace(/\.yaml$/, '')).toString(), index: pages.length })
   }
   const resolveColor = (v) => {

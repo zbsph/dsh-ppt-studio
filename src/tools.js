@@ -15,11 +15,13 @@ import { resolveDeck, PptError } from './pptd/schema.js'
 import { renderDeck } from './pptd/render-html.js'
 import { exportPptx } from './pptd/export-pptx.js'
 import { importPptx } from './pptd/import-pptx.js'
-import { verifyDeck } from './verify.js'
+import { verifyDeck, measuredCrossCheck } from './verify.js'
 import { SCHEMA_REF, scaffoldProject } from './scaffold.js'
 import { applyAutoDeclare } from './autodeclare.js'
 import { listTemplates, templateWorkspace, registerTemplate, materializeTemplate } from './templates.js'
 import { surgicalPatch } from './surgical.js'
+import { measureLayout } from './measurement.js'
+import { crosscheckReport } from './crosscheck.js'
 import { buildPreview } from './preview-server.js'
 import { findPowerPoint, renderPptxToPng } from './msrender.js'
 import { runPythonExport, findPython } from './pptxPy.js'
@@ -331,10 +333,10 @@ export function registerTools(ctx) {
 
   reg({
     name: 'ppt_shot',
-    description: '用本机 Edge headless 截图 preview/*.html → PNG（视觉审阅输入；无浏览器时返回降级提示）',
-    parameters: { dir: dirSchema, index: { type: 'number', description: '仅截第 N 页（1 起）；缺省全部' }, outDir: { type: 'string', description: '输出目录，缺省 preview/shots' } },
+    description: '用本机 Edge headless 截图 preview/*.html → PNG（视觉审阅输入；无浏览器时返回降级提示）。overview=true：截整览 deck.html（跨页节奏视觉审阅，M3）',
+    parameters: { dir: dirSchema, index: { type: 'number', description: '仅截第 N 页（1 起）；缺省全部' }, overview: { type: 'boolean', description: 'true = 截整览 deck.html → shots/overview.png（N 页纵排；＞30 页自动截前 30，避免超高）' }, outDir: { type: 'string', description: '输出目录，缺省 preview/shots' } },
     output: markdownResult(),
-    async execute({ dir, index, outDir }) {
+    async execute({ dir, index, overview, outDir }) {
       const edge = findEdge()
       if (!edge) {
         return '⚠ 未检测到 Edge/Chrome：截图不可用。请在浏览器中打开 preview/*.html 人工查看，视觉评审降级为结构断言（ppt_verify）。'
@@ -343,6 +345,15 @@ export function registerTools(ctx) {
         const ctx0 = await loadCtx(dir)
         const files = await listPreviewFiles(dir)
         const shotsDir = join(dir, outDir ?? 'preview/shots')
+        if (overview) {
+          const deckHtml = join(dir, 'preview', 'deck.html')
+          if (!existsSync(deckHtml)) return '✗ 未找到 preview/deck.html——请先 ppt_render'
+          const n = Math.min(files.html.length, 30) // 超高截图受限；>30 页取前 30（跨页节奏抽样）
+          const height = n * (ctx0.size.height + 46) + 40
+          const out = join(shotsDir, 'overview.png')
+          await shotOne(edge, deckHtml, out, { width: ctx0.size.width, height }, 1)
+          return `✓ 整览截图：${out}（${n} 页${files.html.length > 30 ? ` / 共 ${files.html.length} 页（截前 ${n}）` : ''}——跨页节奏视觉审阅）`
+        }
         if (index !== undefined && index >= 1 && index <= files.html.length) {
           const target = files.html[index - 1]
           const out = join(shotsDir, `${String(index).padStart(2, '0')}.png`)
@@ -365,16 +376,59 @@ export function registerTools(ctx) {
   })
 
   reg({
+    name: 'ppt_crosscheck',
+    description: 'M3 数据连贯核查：跨页数字对账（同一数字/百分比在多页出现 → 上下文清单，识别"同一指标多页值不一致"）+ 证据核查表（页面 source 标注 → grounded/unmapped 状态）。建议级输出（一致性判断需人工语义）；交付说明前的数据来源核查表',
+    parameters: { dir: dirSchema },
+    output: markdownResult(),
+    async execute({ dir }) {
+      try {
+        const ctx = await loadCtx(dir)
+        return crosscheckReport(ctx)
+      } catch (error) {
+        return `✗ 核查失败：\n${errText(error)}`
+      }
+    },
+  })
+
+  reg({
+    name: 'ppt_measure',
+    description: 'M2 文本实测档：Edge/Chrome headless 加载预览页，采集每个元素真实排版几何（行盒/内容高/溢出/几何）→ preview/measured.json（"浏览器实测=终审"）。无浏览器自动降级（标注"未实测"，估算门禁不变）。用法：ppt_measure → ppt_verify measured=true（实测溢出且估算未报 → 新增错误；估算报但实测通过 → warning 供人工确认）',
+    parameters: { dir: dirSchema },
+    output: markdownResult(),
+    async execute({ dir }) {
+      try {
+        const r = await measureLayout(dir)
+        if (!r.measured) return r.notes.join('\n') || '⚠ 实测不可用'
+        const textEls = (r.measured.pages ?? []).flatMap((p) => (p.elements ?? []).filter((e) => e.kind === 'text'))
+        const overflows = textEls.filter((e) => (e.overflowY ?? 0) > 1)
+        const unmatched = (r.measured.pages ?? []).filter((p) => !p.elements?.length).length
+        return [
+          `✓ 实测完成：${r.pages} 页 / ${textEls.length} 个文本元素 / ${(r.measured.pages ?? []).reduce((n, p) => n + (p.elements?.length ?? 0), 0)} 个总元素（${r.elapsedMs ?? 0}ms）`,
+          `  - measured.json：${join(r.outDir, 'measured.json')}`,
+          overflows.length ? `⚠ 实测溢出 ${overflows.length} 个：${overflows.slice(0, 5).map((e) => e.id).join(', ')}${overflows.length > 5 ? '…' : ''}` : '✓ 实测无文本溢出',
+          ...(r.notes ?? []),
+          '',
+          '下一步：ppt_verify measured=true（D3：实测=终审、估算=预检；实测溢出且估算未报会被捕获为错误）',
+        ].join('\n')
+      } catch (error) {
+        return `✗ 实测失败：\n${errText(error)}`
+      }
+    },
+  })
+
+  reg({
     name: 'ppt_verify',
-    description: '数字审阅：基于 preview/layout.json（缺失时先渲染）断言 重叠/出界/文本溢出/对齐/密集区；[✗] 错误清零是页级门禁，[·] 为审美建议（非门禁）。出界分级：超页面边界=永远错误；超安全区=声明制（页面 expectedOutOfSafeArea 声明命中→✓预期出界）。含对比度/孤字等启发式建议',
+    description: '数字审阅：基于 preview/layout.json（缺失时先渲染）断言 重叠/出界/文本溢出/对齐/密集区；[✗] 错误清零是页级门禁，[·] 为审美建议（非门禁）。出界分级：超页面边界=永远错误；超安全区=声明制（页面 expectedOutOfSafeArea 声明命中→✓预期出界）。含对比度/孤字等启发式建议。measured=true：交叉 M2 实测档（先跑 ppt_measure）——实测溢出（估算漏报）→ 新增 [✗] error（实测=终审）',
     parameters: {
       dir: dirSchema,
       autoDeclare: { type: 'boolean', description: 'true = 把未声明的警告级重叠（色块衬底/图片标注/箭头跨越等，不含内容互压）一键写入页面 expectedOverlaps 后重验（对应"设计意图声明制"的批量声明，仍会报告剩余不可声明错误）' },
+      measured: { type: 'boolean', description: 'true = 交叉实测档（preview/measured.json，需先运行 ppt_measure）：实测溢出且估算未报 → 新增 error；估算报但实测通过 → warning（字体差异人工确认）' },
     },
     output: markdownResult(),
     async execute(args) {
       const dir = args.dir
       const autoDeclare = !!args.autoDeclare
+      const withMeasured = !!args.measured
       try {
         if (autoDeclare) {
           const { quality } = await qualityOf(ctx, dir)
@@ -407,8 +461,26 @@ export function registerTools(ctx) {
         }
         const v = verifyDeck(layout)
         const errors = v.text.split('\n').filter((l) => l.includes('[✗]')).length
+        // M2：实测交叉（D3：实测=终审、估算=预检）
+        let measuredText = ''
+        let measuredErrors = 0
+        if (withMeasured) {
+          const mFile = join(dir, 'preview', 'measured.json')
+          if (existsSync(mFile)) {
+            const measured = JSON.parse(await readFile(mFile, 'utf8'))
+            const x = measuredCrossCheck(layout, measured)
+            const ev = x.filter((f) => ['error', 'warning'].includes(f.severity))
+            measuredErrors = x.filter((f) => f.severity === 'error').length
+            measuredText = ev.length
+              ? `\n\n---\n**M2 实测交叉（D3：实测=终审/估算=预检）**\n${ev.map((f) => `[${f.severity === 'error' ? '✗' : '⚠'}] ${f.code}｜${f.message}`).join('\n')}\n${x.filter((f) => f.severity === 'suggestion').map((f) => `[·] ${f.code}｜${f.message}`).join('\n')}`
+              : '\n\n---\n**M2 实测交叉**：无实测/估算分歧（✓ 全部一致或实测通过）'
+          } else {
+            measuredText = '\n\n---\n**M2 实测交叉**：未发现 preview/measured.json——请先运行 ppt_measure（或忽略，保持估算门禁）'
+          }
+        }
+        const gate = errors + measuredErrors
         const head = v.text
-        return `# 数字审阅\n${head}\n\n---\n门禁：${errors === 0 ? '✓ 通过' : `✗ ${errors} 个错误（必须清零）`}\n${pptxSnapshotText}`
+        return `# 数字审阅\n${head}${measuredText}\n\n---\n门禁：${gate === 0 ? '✓ 通过' : `✗ ${gate} 个错误（必须清零${measuredErrors ? `，含 M2 实测 ${measuredErrors} 个` : ''}`}\n${pptxSnapshotText}`
       } catch (error) {
         return `✗ 验证失败：\n${errText(error)}`
       }

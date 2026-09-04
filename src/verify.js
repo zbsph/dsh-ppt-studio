@@ -435,6 +435,58 @@ export function verifyDeck(layout) {
  * - 字号不在 theme.textStyles => [·] 建议（3-4 级字号阶梯的软约束）。
  * theme.themeConformance: 'strict' | 'suggest' | 'off'（缺省 strict；无 theme.colors 自动跳过）。
  */
+/**
+ * M2 文本实测档交叉（D3：实测=终审、估算=预检）。
+ * @param layout 估算档（layout.json：pages[].elements[].metrics）
+ * @param measured 实测档（preview/measured.json：pages[].elements[]）
+ * 语义：实测报错（估算没报）= M2 核心捕获（error，估算漏报）；实测复现（估算也报）= warning 佐证；
+ *       估算报错但实测通过 = warning（字体差异，人工确认）；行数差异 = suggestion（断行差异目检）。
+ */
+export function measuredCrossCheck(layout, measured) {
+  const out = []
+  if (!measured?.pages) return out
+  for (const mp of measured.pages ?? []) {
+    const lp = (layout.pages ?? []).find((p) => p.index === mp.index)
+    if (!lp) continue
+    const est = new Map((lp.elements ?? []).map((e) => [e.id, e]))
+    for (const el of mp.elements ?? []) {
+      const snap = est.get(el.id)
+      if (!snap) continue
+      if (snap.kind === 'text') {
+        const estOv = Number(snap.metrics?.overflowY ?? 0)
+        const meaOv = Number(el.overflowY ?? 0)
+        if (meaOv > 1 && estOv <= 1) {
+          out.push({ severity: 'error', code: 'measured-overflow', id: el.id,
+            message: `文本 "${el.id}" 实测溢出（实测 ${meaOv.toFixed(1)}px / 估算 ${estOv.toFixed(1)}px——估算漏报，M2 捕获）：扩大容器或精简文案` })
+        } else if (meaOv > 1 && estOv > 1) {
+          out.push({ severity: 'warning', code: 'measured-overflow', id: el.id,
+            message: `文本 "${el.id}" 实测复现溢出（实测 ${meaOv.toFixed(1)}px / 估算 ${estOv.toFixed(1)}px）：按上方 error 修正` })
+        } else if (estOv > 1 && meaOv <= 1) {
+          out.push({ severity: 'warning', code: 'measured-relief', id: el.id,
+            message: `文本 "${el.id}" 估算报溢出但实测通过（${estOv.toFixed(1)}px / ${meaOv.toFixed(1)}px）——字体渲染差异，人工确认后可忽略估算提示` })
+        }
+        const estLines = Number(snap.metrics?.lines ?? 0)
+        const meaLines = Number(el.lines ?? 0)
+        if (estLines > 0 && meaLines > estLines + 1) {
+          out.push({ severity: 'suggestion', code: 'measured-lines', id: el.id,
+            message: `文本 "${el.id}" 实测 ${meaLines} 行 vs 估算 ${estLines} 行（差 ${meaLines - estLines} 行）——断行差异，重点目检` })
+        }
+      } else {
+        // 非文本几何对照（建议级）；rotation 元素跳过（旋转后 AABB 位移是真实物理，非漂移）
+        if (snap.rotation) continue
+        const sx = Number(snap.bounds?.x ?? 0)
+        const sy = Number(snap.bounds?.y ?? 0)
+        const d = Math.hypot(sx - Number(el.x), sy - Number(el.y))
+        if (d > 2) {
+          out.push({ severity: 'suggestion', code: 'measured-geometry', id: el.id,
+            message: `元素 "${el.id}" 实测位置 (${Math.round(el.x)},${Math.round(el.y)}) vs 声明 (${Math.round(sx)},${Math.round(sy)})——漂移 ${Math.round(d)}px` })
+        }
+      }
+    }
+  }
+  return out
+}
+
 export function themeConformance(page, theme) {
   const out = []
   const colors = new Set(Object.values(theme?.colors ?? {}).filter((c) => typeof c === 'string').map((c) => c.toUpperCase()))
