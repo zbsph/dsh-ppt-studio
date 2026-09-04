@@ -1,30 +1,65 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 elements:
   - elementId: "Freeform_10"
     elementType: shape
     bounds: [ 115, 147, 66, 110 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 1191
+      h: 2372
+      commands:
+        - { cmd: moveTo, pts: [ [ 1191, 2372 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 2372 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 0 ] ] }
     line: { color: "#FFFFFF", width: 1 }
   - elementId: "Freeform_11"
     elementType: shape
     bounds: [ 406, 147, 39, 110 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 697
+      h: 2372
+      commands:
+        - { cmd: moveTo, pts: [ [ 697, 2372 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 2372 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 0 ] ] }
     line: { color: "#FFFFFF", width: 1 }
   - elementId: "Freeform_12"
     elementType: shape
     bounds: [ 668, 147, 41, 110 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 741
+      h: 2372
+      commands:
+        - { cmd: moveTo, pts: [ [ 741, 2372 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 2372 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 0 ] ] }
     line: { color: "#FFFFFF", width: 1 }
   - elementId: "Freeform_13"
     elementType: shape
     bounds: [ 271, 334, 47, 130 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 847
+      h: 2329
+      commands:
+        - { cmd: moveTo, pts: [ [ 847, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 2329 ] ] }
     line: { color: "#FFFFFF", width: 1 }
   - elementId: "Freeform_14"
     elementType: shape
     bounds: [ 543, 334, 36, 130 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 644
+      h: 2329
+      commands:
+        - { cmd: moveTo, pts: [ [ 644, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 2329 ] ] }
     line: { color: "#FFFFFF", width: 1 }
   - elementId: "矩形_8"
     elementType: text
@@ -46,8 +81,23 @@ elements:
   - elementId: "Freeform_5"
     elementType: shape
     bounds: [ 111, 242, 150, 109 ]
-    kind: rect
+    kind: custGeom
     fill: "#79C9E2"
+    path:
+      w: 2454
+      h: 2140
+      commands:
+        - { cmd: moveTo, pts: [ [ 1408, 175 ] ] }
+        - { cmd: lnTo, pts: [ [ 1887, 1005 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2046, 1280 ], [ 2205, 1556 ], [ 2364, 1832 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2454, 2028 ], [ 2396, 2132 ], [ 2189, 2140 ] ] }
+        - { cmd: lnTo, pts: [ [ 1231, 2140 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 913, 2140 ], [ 594, 2140 ], [ 276, 2140 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 61, 2119 ], [ 0, 2018 ], [ 97, 1834 ] ] }
+        - { cmd: lnTo, pts: [ [ 575, 1005 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 734, 729 ], [ 894, 453 ], [ 1053, 178 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1178, 2 ], [ 1297, 0 ], [ 1408, 175 ] ] }
+        - { cmd: close }
     line: { color: "#000000", width: 3 }
   - elementId: "文本框_11"
     elementType: text
@@ -61,8 +111,23 @@ elements:
   - elementId: "Freeform_8"
     elementType: shape
     bounds: [ 243, 237, 150, 109 ]
-    kind: rect
+    kind: custGeom
     fill: "#0485A8"
+    path:
+      w: 2454
+      h: 2141
+      commands:
+        - { cmd: moveTo, pts: [ [ 1408, 1966 ] ] }
+        - { cmd: lnTo, pts: [ [ 1887, 1136 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2046, 861 ], [ 2205, 585 ], [ 2365, 309 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2454, 113 ], [ 2396, 9 ], [ 2189, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 1231, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 913, 0 ], [ 595, 0 ], [ 276, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 61, 21 ], [ 0, 123 ], [ 97, 307 ] ] }
+        - { cmd: lnTo, pts: [ [ 576, 1136 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 735, 1412 ], [ 894, 1688 ], [ 1053, 1963 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1179, 2139 ], [ 1297, 2141 ], [ 1408, 1966 ] ] }
+        - { cmd: close }
     line: { color: "#000000", width: 3 }
   - elementId: "文本框_13"
     elementType: text
@@ -76,8 +141,23 @@ elements:
   - elementId: "Freeform_6"
     elementType: shape
     bounds: [ 374, 242, 150, 109 ]
-    kind: rect
+    kind: custGeom
     fill: "#79C9E2"
+    path:
+      w: 2453
+      h: 2140
+      commands:
+        - { cmd: moveTo, pts: [ [ 1407, 175 ] ] }
+        - { cmd: lnTo, pts: [ [ 1886, 1005 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2045, 1280 ], [ 2205, 1556 ], [ 2364, 1832 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2453, 2028 ], [ 2396, 2132 ], [ 2188, 2140 ] ] }
+        - { cmd: lnTo, pts: [ [ 1231, 2140 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 912, 2140 ], [ 594, 2140 ], [ 276, 2140 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 61, 2119 ], [ 0, 2018 ], [ 96, 1834 ] ] }
+        - { cmd: lnTo, pts: [ [ 575, 1005 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 734, 729 ], [ 893, 453 ], [ 1052, 178 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1178, 2 ], [ 1296, 0 ], [ 1407, 175 ] ] }
+        - { cmd: close }
     line: { color: "#000000", width: 3 }
   - elementId: "文本框_15"
     elementType: text
@@ -91,8 +171,23 @@ elements:
   - elementId: "Freeform_9"
     elementType: shape
     bounds: [ 505, 237, 150, 109 ]
-    kind: rect
+    kind: custGeom
     fill: "#0485A8"
+    path:
+      w: 2453
+      h: 2141
+      commands:
+        - { cmd: moveTo, pts: [ [ 1408, 1966 ] ] }
+        - { cmd: lnTo, pts: [ [ 1886, 1136 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2046, 861 ], [ 2205, 585 ], [ 2364, 309 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2453, 113 ], [ 2396, 9 ], [ 2188, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 1231, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 912, 0 ], [ 594, 0 ], [ 276, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 61, 21 ], [ 0, 123 ], [ 96, 307 ] ] }
+        - { cmd: lnTo, pts: [ [ 575, 1136 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 734, 1412 ], [ 893, 1688 ], [ 1052, 1963 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1178, 2139 ], [ 1297, 2141 ], [ 1408, 1966 ] ] }
+        - { cmd: close }
     line: { color: "#000000", width: 3 }
   - elementId: "文本框_17"
     elementType: text
@@ -106,8 +201,23 @@ elements:
   - elementId: "Freeform_7"
     elementType: shape
     bounds: [ 637, 242, 150, 109 ]
-    kind: rect
+    kind: custGeom
     fill: "#79C9E2"
+    path:
+      w: 2454
+      h: 2140
+      commands:
+        - { cmd: moveTo, pts: [ [ 1408, 175 ] ] }
+        - { cmd: lnTo, pts: [ [ 1887, 1005 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2046, 1280 ], [ 2205, 1556 ], [ 2364, 1832 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2454, 2028 ], [ 2396, 2132 ], [ 2189, 2140 ] ] }
+        - { cmd: lnTo, pts: [ [ 1231, 2140 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 913, 2140 ], [ 594, 2140 ], [ 276, 2140 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 61, 2119 ], [ 0, 2018 ], [ 96, 1834 ] ] }
+        - { cmd: lnTo, pts: [ [ 575, 1005 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 734, 729 ], [ 894, 453 ], [ 1053, 178 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1178, 2 ], [ 1297, 0 ], [ 1408, 175 ] ] }
+        - { cmd: close }
     line: { color: "#000000", width: 3 }
   - elementId: "文本框_19"
     elementType: text

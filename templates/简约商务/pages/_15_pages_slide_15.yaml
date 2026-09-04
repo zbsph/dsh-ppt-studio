@@ -1,4 +1,4 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 elements:
   - elementId: "椭圆_3"
@@ -6,7 +6,7 @@ elements:
     bounds: [ 358, 169, 235, 235 ]
     kind: ellipse
     line: { color: "#FFFFFF" }
-  - elementId: "Freeform_Shape_8"
+  - elementId: "Freeform_Shape_8_txt"
     elementType: text
     bounds: [ 561, 253, 61, 61 ]
     content:
@@ -15,7 +15,27 @@ elements:
       color: "#FFFFFF"
       fontFamily: "Arial"
       align: center
-  - elementId: "Freeform_Shape_11"
+  - elementId: "Freeform_Shape_8"
+    elementType: shape
+    bounds: [ 561, 253, 61, 61 ]
+    kind: custGeom
+    fill: "#79C9E2"
+    path:
+      w: 19806
+      h: 19806
+      commands:
+        - { cmd: moveTo, pts: [ [ 11898, 19600 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 6542, 20703 ], [ 1307, 17254 ], [ 205, 11898 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ -897, 6542 ], [ 2551, 1307 ], [ 7908, 205 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 13261, -897 ], [ 18494, 2548 ], [ 19599, 7899 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 19600, 7902 ], [ 19600, 7905 ], [ 19600, 7907 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 20703, 13263 ], [ 17254, 18499 ], [ 11898, 19600 ] ]
+          }
+        - { cmd: close }
+    line: { color: "#000000", width: 1 }
+  - elementId: "Freeform_Shape_11_txt"
     elementType: text
     bounds: [ 509, 359, 61, 61 ]
     content:
@@ -24,7 +44,27 @@ elements:
       color: "#FFFFFF"
       fontFamily: "Arial"
       align: center
-  - elementId: "Freeform_Shape_20"
+  - elementId: "Freeform_Shape_11"
+    elementType: shape
+    bounds: [ 509, 359, 61, 61 ]
+    kind: custGeom
+    fill: "#0485A8"
+    path:
+      w: 19807
+      h: 19806
+      commands:
+        - { cmd: moveTo, pts: [ [ 7908, 205 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 13264, -897 ], [ 18500, 2551 ], [ 19602, 7907 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 20703, 13264 ], [ 17254, 18499 ], [ 11899, 19601 ] ]
+          }
+        - { cmd: cubicBezTo, pts: [ [ 6545, 20703 ], [ 1312, 17258 ], [ 207, 11907 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 206, 11904 ], [ 206, 11901 ], [ 205, 11898 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ -897, 6542 ], [ 2552, 1307 ], [ 7908, 205 ] ] }
+        - { cmd: close }
+    line: { color: "#000000", width: 1 }
+  - elementId: "Freeform_Shape_20_txt"
     elementType: text
     bounds: [ 331, 249, 61, 61 ]
     content:
@@ -33,7 +73,27 @@ elements:
       color: "#FFFFFF"
       fontFamily: "Arial"
       align: center
-  - elementId: "Freeform_Shape_5"
+  - elementId: "Freeform_Shape_20"
+    elementType: shape
+    bounds: [ 331, 249, 61, 61 ]
+    kind: custGeom
+    fill: "#0485A8"
+    path:
+      w: 19807
+      h: 19807
+      commands:
+        - { cmd: moveTo, pts: [ [ 11898, 19602 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 6542, 20704 ], [ 1306, 17256 ], [ 204, 11899 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ -897, 6542 ], [ 2552, 1307 ], [ 7907, 205 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 13261, -896 ], [ 18494, 2549 ], [ 19599, 7900 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 19600, 7903 ], [ 19600, 7905 ], [ 19601, 7908 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 20703, 13264 ], [ 17254, 18500 ], [ 11898, 19602 ] ]
+          }
+        - { cmd: close }
+    line: { color: "#000000", width: 1 }
+  - elementId: "Freeform_Shape_5_txt"
     elementType: text
     bounds: [ 513, 153, 61, 61 ]
     content:
@@ -42,7 +102,27 @@ elements:
       color: "#FFFFFF"
       fontFamily: "Arial"
       align: center
-  - elementId: "Freeform_Shape_14"
+  - elementId: "Freeform_Shape_5"
+    elementType: shape
+    bounds: [ 513, 153, 61, 61 ]
+    kind: custGeom
+    fill: "#0485A8"
+    path:
+      w: 19807
+      h: 19807
+      commands:
+        - { cmd: moveTo, pts: [ [ 7907, 205 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 13264, -897 ], [ 18498, 2551 ], [ 19601, 7908 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 20703, 13264 ], [ 17254, 18500 ], [ 11898, 19602 ] ]
+          }
+        - { cmd: cubicBezTo, pts: [ [ 6545, 20703 ], [ 1312, 17258 ], [ 206, 11907 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 206, 11904 ], [ 205, 11901 ], [ 204, 11899 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ -897, 6542 ], [ 2551, 1307 ], [ 7907, 205 ] ] }
+        - { cmd: close }
+    line: { color: "#000000", width: 1 }
+  - elementId: "Freeform_Shape_14_txt"
     elementType: text
     bounds: [ 391, 359, 61, 61 ]
     content:
@@ -51,7 +131,27 @@ elements:
       color: "#FFFFFF"
       fontFamily: "Arial"
       align: center
-  - elementId: "Freeform_Shape_17"
+  - elementId: "Freeform_Shape_14"
+    elementType: shape
+    bounds: [ 391, 359, 61, 61 ]
+    kind: custGeom
+    fill: "#79C9E2"
+    path:
+      w: 19806
+      h: 19807
+      commands:
+        - { cmd: moveTo, pts: [ [ 7908, 205 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 13264, -897 ], [ 18499, 2552 ], [ 19601, 7908 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 20703, 13265 ], [ 17255, 18500 ], [ 11899, 19602 ] ]
+          }
+        - { cmd: cubicBezTo, pts: [ [ 6545, 20703 ], [ 1313, 17258 ], [ 207, 11907 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 207, 11904 ], [ 206, 11901 ], [ 206, 11899 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ -897, 6543 ], [ 2552, 1307 ], [ 7908, 205 ] ] }
+        - { cmd: close }
+    line: { color: "#000000", width: 1 }
+  - elementId: "Freeform_Shape_17_txt"
     elementType: text
     bounds: [ 390, 152, 61, 61 ]
     content:
@@ -60,6 +160,26 @@ elements:
       color: "#FFFFFF"
       fontFamily: "Arial"
       align: center
+  - elementId: "Freeform_Shape_17"
+    elementType: shape
+    bounds: [ 390, 152, 61, 61 ]
+    kind: custGeom
+    fill: "#79C9E2"
+    path:
+      w: 19806
+      h: 19807
+      commands:
+        - { cmd: moveTo, pts: [ [ 11898, 19602 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 6542, 20703 ], [ 1307, 17255 ], [ 205, 11898 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ -897, 6542 ], [ 2552, 1307 ], [ 7908, 205 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 13261, -897 ], [ 18494, 2548 ], [ 19599, 7899 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 19600, 7902 ], [ 19600, 7904 ], [ 19601, 7908 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 20703, 13264 ], [ 17254, 18500 ], [ 11898, 19602 ] ]
+          }
+        - { cmd: close }
+    line: { color: "#000000", width: 1 }
   - elementId: "矩形_10"
     elementType: text
     bounds: [ 629, 132, 197, 26 ]
@@ -183,19 +303,55 @@ elements:
 expectedOverlaps:
   - pair:
       - 椭圆_3
+      - Freeform_Shape_8_txt
+  - pair:
+      - 椭圆_3
       - Freeform_Shape_8
+  - pair:
+      - 椭圆_3
+      - Freeform_Shape_11_txt
   - pair:
       - 椭圆_3
       - Freeform_Shape_11
   - pair:
       - 椭圆_3
+      - Freeform_Shape_20_txt
+  - pair:
+      - 椭圆_3
       - Freeform_Shape_20
+  - pair:
+      - 椭圆_3
+      - Freeform_Shape_5_txt
   - pair:
       - 椭圆_3
       - Freeform_Shape_5
   - pair:
       - 椭圆_3
+      - Freeform_Shape_14_txt
+  - pair:
+      - 椭圆_3
       - Freeform_Shape_14
   - pair:
       - 椭圆_3
+      - Freeform_Shape_17_txt
+  - pair:
+      - 椭圆_3
+      - Freeform_Shape_17
+  - pair:
+      - Freeform_Shape_8_txt
+      - Freeform_Shape_8
+  - pair:
+      - Freeform_Shape_11_txt
+      - Freeform_Shape_11
+  - pair:
+      - Freeform_Shape_20_txt
+      - Freeform_Shape_20
+  - pair:
+      - Freeform_Shape_5_txt
+      - Freeform_Shape_5
+  - pair:
+      - Freeform_Shape_14_txt
+      - Freeform_Shape_14
+  - pair:
+      - Freeform_Shape_17_txt
       - Freeform_Shape_17

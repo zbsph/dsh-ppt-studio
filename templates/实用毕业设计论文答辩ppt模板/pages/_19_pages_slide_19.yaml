@@ -1,4 +1,4 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 elements:
   - elementId: "矩形_1"
@@ -48,8 +48,49 @@ elements:
   - elementId: "KSO_Shape"
     elementType: shape
     bounds: [ 612, 208, 63, 63 ]
-    kind: rect
+    kind: custGeom
     fill: "#4B649F"
+    path:
+      w: 3927
+      h: 3928
+      commands:
+        - { cmd: moveTo, pts: [ [ 3857, 672 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3675, 852 ], [ 3675, 852 ], [ 3675, 852 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3070, 251 ], [ 3070, 251 ], [ 3070, 251 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3252, 70 ], [ 3252, 70 ], [ 3252, 70 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3319, 4 ], [ 3424, 0 ], [ 3486, 63 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3864, 438 ], [ 3864, 438 ], [ 3864, 438 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3927, 501 ], [ 3924, 605 ], [ 3857, 672 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2252, 2267 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1647, 1665 ], [ 1647, 1665 ], [ 1647, 1665 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2978, 342 ], [ 2978, 342 ], [ 2978, 342 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3583, 944 ], [ 3583, 944 ], [ 3583, 944 ] ] }
+        - { cmd: lnTo, pts: [ [ 2252, 2267 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2168, 2350 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1321, 2591 ], [ 1321, 2591 ], [ 1321, 2591 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1563, 1749 ], [ 1563, 1749 ], [ 1563, 1749 ] ] }
+        - { cmd: lnTo, pts: [ [ 2168, 2350 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 770, 495 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 561, 495 ], [ 392, 665 ], [ 392, 874 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 392, 3158 ], [ 392, 3158 ], [ 392, 3158 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 392, 3367 ], [ 561, 3536 ], [ 770, 3536 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3055, 3536 ], [ 3055, 3536 ], [ 3055, 3536 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3264, 3536 ], [ 3433, 3367 ], [ 3433, 3158 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3433, 1657 ], [ 3433, 1657 ], [ 3433, 1657 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3824, 1278 ], [ 3824, 1278 ], [ 3824, 1278 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3824, 3297 ], [ 3824, 3297 ], [ 3824, 3297 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3824, 3645 ], [ 3529, 3928 ], [ 3181, 3928 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 631, 3928 ], [ 631, 3928 ], [ 631, 3928 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 283, 3928 ], [ 0, 3645 ], [ 0, 3297 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 773 ], [ 0, 773 ], [ 0, 773 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 425 ], [ 283, 103 ], [ 631, 103 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2650, 103 ], [ 2650, 103 ], [ 2650, 103 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2271, 495 ], [ 2271, 495 ], [ 2271, 495 ] ] }
+        - { cmd: lnTo, pts: [ [ 770, 495 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
 expectedOverlaps:
   - pair:

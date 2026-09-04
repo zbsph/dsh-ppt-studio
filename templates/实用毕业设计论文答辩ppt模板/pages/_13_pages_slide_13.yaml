@@ -1,4 +1,4 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 elements:
   - elementId: "图片_1"
@@ -40,8 +40,264 @@ elements:
   - elementId: "KSO_Shape"
     elementType: shape
     bounds: [ 280, 205, 73, 69 ]
-    kind: rect
+    kind: custGeom
     fill: "#4B649F"
+    path:
+      w: 5871
+      h: 5585
+      commands:
+        - { cmd: moveTo, pts: [ [ 774, 374 ] ] }
+        - { cmd: lnTo, pts: [ [ 774, 1910 ] ] }
+        - { cmd: lnTo, pts: [ [ 5107, 1910 ] ] }
+        - { cmd: lnTo, pts: [ [ 5107, 374 ] ] }
+        - { cmd: lnTo, pts: [ [ 774, 374 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 1597, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1597, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1591, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1587, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1586, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1581, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1576, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1571, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1570, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1566, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1560, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1555, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1550, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1545, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1540, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1539, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1535, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1529, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1525, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1524, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1519, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1514, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1509, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1508, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1504, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1498, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1494, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1493, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1488, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1483, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1478, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1477, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1473, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1467, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1463, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1462, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1457, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1452, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1446, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1442, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1266, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1345, 3830 ] ] }
+        - { cmd: lnTo, pts: [ [ 1294, 3911 ] ] }
+        - { cmd: lnTo, pts: [ [ 1345, 3977 ] ] }
+        - { cmd: lnTo, pts: [ [ 1117, 4116 ] ] }
+        - { cmd: lnTo, pts: [ [ 1112, 4144 ] ] }
+        - { cmd: lnTo, pts: [ [ 1106, 4173 ] ] }
+        - { cmd: lnTo, pts: [ [ 1103, 4201 ] ] }
+        - { cmd: lnTo, pts: [ [ 1099, 4228 ] ] }
+        - { cmd: lnTo, pts: [ [ 1097, 4255 ] ] }
+        - { cmd: lnTo, pts: [ [ 1096, 4281 ] ] }
+        - { cmd: lnTo, pts: [ [ 1096, 4308 ] ] }
+        - { cmd: lnTo, pts: [ [ 1096, 4333 ] ] }
+        - { cmd: lnTo, pts: [ [ 1097, 4359 ] ] }
+        - { cmd: lnTo, pts: [ [ 1098, 4383 ] ] }
+        - { cmd: lnTo, pts: [ [ 1100, 4407 ] ] }
+        - { cmd: lnTo, pts: [ [ 1104, 4432 ] ] }
+        - { cmd: lnTo, pts: [ [ 1112, 4478 ] ] }
+        - { cmd: lnTo, pts: [ [ 1121, 4523 ] ] }
+        - { cmd: lnTo, pts: [ [ 1133, 4568 ] ] }
+        - { cmd: lnTo, pts: [ [ 1147, 4611 ] ] }
+        - { cmd: lnTo, pts: [ [ 1162, 4653 ] ] }
+        - { cmd: lnTo, pts: [ [ 1179, 4694 ] ] }
+        - { cmd: lnTo, pts: [ [ 1198, 4733 ] ] }
+        - { cmd: lnTo, pts: [ [ 1218, 4772 ] ] }
+        - { cmd: lnTo, pts: [ [ 1238, 4812 ] ] }
+        - { cmd: lnTo, pts: [ [ 1259, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 774, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 774, 2135 ] ] }
+        - { cmd: lnTo, pts: [ [ 2185, 2135 ] ] }
+        - { cmd: lnTo, pts: [ [ 2185, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 1780, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 1801, 4812 ] ] }
+        - { cmd: lnTo, pts: [ [ 1821, 4772 ] ] }
+        - { cmd: lnTo, pts: [ [ 1841, 4733 ] ] }
+        - { cmd: lnTo, pts: [ [ 1859, 4694 ] ] }
+        - { cmd: lnTo, pts: [ [ 1876, 4653 ] ] }
+        - { cmd: lnTo, pts: [ [ 1892, 4611 ] ] }
+        - { cmd: lnTo, pts: [ [ 1905, 4568 ] ] }
+        - { cmd: lnTo, pts: [ [ 1917, 4523 ] ] }
+        - { cmd: lnTo, pts: [ [ 1927, 4478 ] ] }
+        - { cmd: lnTo, pts: [ [ 1935, 4432 ] ] }
+        - { cmd: lnTo, pts: [ [ 1938, 4407 ] ] }
+        - { cmd: lnTo, pts: [ [ 1941, 4383 ] ] }
+        - { cmd: lnTo, pts: [ [ 1942, 4359 ] ] }
+        - { cmd: lnTo, pts: [ [ 1943, 4333 ] ] }
+        - { cmd: lnTo, pts: [ [ 1943, 4308 ] ] }
+        - { cmd: lnTo, pts: [ [ 1942, 4281 ] ] }
+        - { cmd: lnTo, pts: [ [ 1941, 4255 ] ] }
+        - { cmd: lnTo, pts: [ [ 1938, 4228 ] ] }
+        - { cmd: lnTo, pts: [ [ 1936, 4201 ] ] }
+        - { cmd: lnTo, pts: [ [ 1932, 4173 ] ] }
+        - { cmd: lnTo, pts: [ [ 1927, 4144 ] ] }
+        - { cmd: lnTo, pts: [ [ 1922, 4116 ] ] }
+        - { cmd: lnTo, pts: [ [ 1694, 3977 ] ] }
+        - { cmd: lnTo, pts: [ [ 1745, 3911 ] ] }
+        - { cmd: lnTo, pts: [ [ 1694, 3830 ] ] }
+        - { cmd: lnTo, pts: [ [ 1771, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1597, 3265 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 4819, 863 ] ] }
+        - { cmd: lnTo, pts: [ [ 4819, 1057 ] ] }
+        - { cmd: lnTo, pts: [ [ 3585, 1057 ] ] }
+        - { cmd: lnTo, pts: [ [ 3585, 863 ] ] }
+        - { cmd: lnTo, pts: [ [ 4819, 863 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 5002, 1108 ] ] }
+        - { cmd: lnTo, pts: [ [ 5002, 1379 ] ] }
+        - { cmd: lnTo, pts: [ [ 3769, 1379 ] ] }
+        - { cmd: lnTo, pts: [ [ 3769, 1108 ] ] }
+        - { cmd: lnTo, pts: [ [ 5002, 1108 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 4891, 1429 ] ] }
+        - { cmd: lnTo, pts: [ [ 4891, 1623 ] ] }
+        - { cmd: lnTo, pts: [ [ 3657, 1623 ] ] }
+        - { cmd: lnTo, pts: [ [ 3657, 1429 ] ] }
+        - { cmd: lnTo, pts: [ [ 4891, 1429 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 4977, 1659 ] ] }
+        - { cmd: lnTo, pts: [ [ 4977, 1853 ] ] }
+        - { cmd: lnTo, pts: [ [ 3743, 1853 ] ] }
+        - { cmd: lnTo, pts: [ [ 3743, 1659 ] ] }
+        - { cmd: lnTo, pts: [ [ 4977, 1659 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 1643, 596 ] ] }
+        - { cmd: lnTo, pts: [ [ 1833, 561 ] ] }
+        - { cmd: lnTo, pts: [ [ 2061, 1773 ] ] }
+        - { cmd: lnTo, pts: [ [ 1871, 1809 ] ] }
+        - { cmd: lnTo, pts: [ [ 1643, 596 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 1388, 596 ] ] }
+        - { cmd: lnTo, pts: [ [ 1579, 561 ] ] }
+        - { cmd: lnTo, pts: [ [ 1807, 1773 ] ] }
+        - { cmd: lnTo, pts: [ [ 1616, 1809 ] ] }
+        - { cmd: lnTo, pts: [ [ 1388, 596 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 1134, 596 ] ] }
+        - { cmd: lnTo, pts: [ [ 1324, 561 ] ] }
+        - { cmd: lnTo, pts: [ [ 1551, 1773 ] ] }
+        - { cmd: lnTo, pts: [ [ 1361, 1809 ] ] }
+        - { cmd: lnTo, pts: [ [ 1134, 596 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 884, 568 ] ] }
+        - { cmd: lnTo, pts: [ [ 1077, 568 ] ] }
+        - { cmd: lnTo, pts: [ [ 1077, 1802 ] ] }
+        - { cmd: lnTo, pts: [ [ 884, 1802 ] ] }
+        - { cmd: lnTo, pts: [ [ 884, 568 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 3540, 2418 ] ] }
+        - { cmd: lnTo, pts: [ [ 3807, 2354 ] ] }
+        - { cmd: lnTo, pts: [ [ 4033, 3306 ] ] }
+        - { cmd: lnTo, pts: [ [ 3765, 3369 ] ] }
+        - { cmd: lnTo, pts: [ [ 3540, 2418 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 3622, 2531 ] ] }
+        - { cmd: lnTo, pts: [ [ 3639, 2606 ] ] }
+        - { cmd: lnTo, pts: [ [ 3791, 2570 ] ] }
+        - { cmd: lnTo, pts: [ [ 3773, 2496 ] ] }
+        - { cmd: lnTo, pts: [ [ 3622, 2531 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 3739, 3028 ] ] }
+        - { cmd: lnTo, pts: [ [ 3776, 3184 ] ] }
+        - { cmd: lnTo, pts: [ [ 3928, 3148 ] ] }
+        - { cmd: lnTo, pts: [ [ 3890, 2991 ] ] }
+        - { cmd: lnTo, pts: [ [ 3739, 3028 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 3193, 2418 ] ] }
+        - { cmd: lnTo, pts: [ [ 3418, 3369 ] ] }
+        - { cmd: lnTo, pts: [ [ 3687, 3306 ] ] }
+        - { cmd: lnTo, pts: [ [ 3461, 2354 ] ] }
+        - { cmd: lnTo, pts: [ [ 3193, 2418 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 3276, 2531 ] ] }
+        - { cmd: lnTo, pts: [ [ 3426, 2496 ] ] }
+        - { cmd: lnTo, pts: [ [ 3444, 2570 ] ] }
+        - { cmd: lnTo, pts: [ [ 3292, 2606 ] ] }
+        - { cmd: lnTo, pts: [ [ 3276, 2531 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 3393, 3028 ] ] }
+        - { cmd: lnTo, pts: [ [ 3429, 3184 ] ] }
+        - { cmd: lnTo, pts: [ [ 3581, 3148 ] ] }
+        - { cmd: lnTo, pts: [ [ 3544, 2991 ] ] }
+        - { cmd: lnTo, pts: [ [ 3393, 3028 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2841, 2418 ] ] }
+        - { cmd: lnTo, pts: [ [ 3109, 2354 ] ] }
+        - { cmd: lnTo, pts: [ [ 3335, 3306 ] ] }
+        - { cmd: lnTo, pts: [ [ 3067, 3369 ] ] }
+        - { cmd: lnTo, pts: [ [ 2841, 2418 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2923, 2531 ] ] }
+        - { cmd: lnTo, pts: [ [ 2941, 2606 ] ] }
+        - { cmd: lnTo, pts: [ [ 3092, 2570 ] ] }
+        - { cmd: lnTo, pts: [ [ 3075, 2496 ] ] }
+        - { cmd: lnTo, pts: [ [ 2923, 2531 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 3041, 3028 ] ] }
+        - { cmd: lnTo, pts: [ [ 3192, 2991 ] ] }
+        - { cmd: lnTo, pts: [ [ 3229, 3148 ] ] }
+        - { cmd: lnTo, pts: [ [ 3078, 3184 ] ] }
+        - { cmd: lnTo, pts: [ [ 3041, 3028 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2553, 2372 ] ] }
+        - { cmd: lnTo, pts: [ [ 2828, 2372 ] ] }
+        - { cmd: lnTo, pts: [ [ 2828, 3352 ] ] }
+        - { cmd: lnTo, pts: [ [ 2553, 3352 ] ] }
+        - { cmd: lnTo, pts: [ [ 2553, 2372 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2606, 2503 ] ] }
+        - { cmd: lnTo, pts: [ [ 2606, 2579 ] ] }
+        - { cmd: lnTo, pts: [ [ 2762, 2579 ] ] }
+        - { cmd: lnTo, pts: [ [ 2762, 2503 ] ] }
+        - { cmd: lnTo, pts: [ [ 2606, 2503 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2606, 3012 ] ] }
+        - { cmd: lnTo, pts: [ [ 2606, 3173 ] ] }
+        - { cmd: lnTo, pts: [ [ 2762, 3173 ] ] }
+        - { cmd: lnTo, pts: [ [ 2762, 3012 ] ] }
+        - { cmd: lnTo, pts: [ [ 2606, 3012 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 5555, 151 ] ] }
+        - { cmd: lnTo, pts: [ [ 5555, 374 ] ] }
+        - { cmd: lnTo, pts: [ [ 5555, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 5871, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 5871, 5585 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 5585 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 326, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 326, 374 ] ] }
+        - { cmd: lnTo, pts: [ [ 326, 151 ] ] }
+        - { cmd: lnTo, pts: [ [ 326, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 5555, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 5555, 151 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2409, 2135 ] ] }
+        - { cmd: lnTo, pts: [ [ 2409, 3385 ] ] }
+        - { cmd: lnTo, pts: [ [ 5107, 3385 ] ] }
+        - { cmd: lnTo, pts: [ [ 5107, 2135 ] ] }
+        - { cmd: lnTo, pts: [ [ 2409, 2135 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2409, 3609 ] ] }
+        - { cmd: lnTo, pts: [ [ 2409, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 5107, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 5107, 3609 ] ] }
+        - { cmd: lnTo, pts: [ [ 2409, 3609 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "矩形_9"
     elementType: shape
@@ -52,26 +308,766 @@ elements:
   - elementId: "KSO_Shape-2"
     elementType: shape
     bounds: [ 90, 192, 99, 74 ]
-    kind: rect
+    kind: custGeom
     fill: "#FFFFFF"
+    path:
+      w: 5185
+      h: 3880
+      commands:
+        - { cmd: moveTo, pts: [ [ 4775, 2900 ] ] }
+        - { cmd: lnTo, pts: [ [ 411, 2900 ] ] }
+        - { cmd: lnTo, pts: [ [ 87, 3532 ] ] }
+        - { cmd: lnTo, pts: [ [ 5099, 3532 ] ] }
+        - { cmd: lnTo, pts: [ [ 4775, 2900 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2046, 3380 ] ] }
+        - { cmd: lnTo, pts: [ [ 2181, 3125 ] ] }
+        - { cmd: lnTo, pts: [ [ 3017, 3125 ] ] }
+        - { cmd: lnTo, pts: [ [ 3139, 3380 ] ] }
+        - { cmd: lnTo, pts: [ [ 2046, 3380 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 4700, 2755 ] ] }
+        - { cmd: lnTo, pts: [ [ 4700, 2755 ] ] }
+        - { cmd: lnTo, pts: [ [ 4698, 2743 ] ] }
+        - { cmd: lnTo, pts: [ [ 4700, 2731 ] ] }
+        - { cmd: lnTo, pts: [ [ 4700, 120 ] ] }
+        - { cmd: lnTo, pts: [ [ 4699, 108 ] ] }
+        - { cmd: lnTo, pts: [ [ 4697, 95 ] ] }
+        - { cmd: lnTo, pts: [ [ 4694, 84 ] ] }
+        - { cmd: lnTo, pts: [ [ 4690, 73 ] ] }
+        - { cmd: lnTo, pts: [ [ 4685, 63 ] ] }
+        - { cmd: lnTo, pts: [ [ 4680, 53 ] ] }
+        - { cmd: lnTo, pts: [ [ 4673, 43 ] ] }
+        - { cmd: lnTo, pts: [ [ 4665, 34 ] ] }
+        - { cmd: lnTo, pts: [ [ 4657, 27 ] ] }
+        - { cmd: lnTo, pts: [ [ 4647, 20 ] ] }
+        - { cmd: lnTo, pts: [ [ 4637, 14 ] ] }
+        - { cmd: lnTo, pts: [ [ 4627, 9 ] ] }
+        - { cmd: lnTo, pts: [ [ 4616, 5 ] ] }
+        - { cmd: lnTo, pts: [ [ 4605, 2 ] ] }
+        - { cmd: lnTo, pts: [ [ 4592, 1 ] ] }
+        - { cmd: lnTo, pts: [ [ 4580, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 605, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 593, 1 ] ] }
+        - { cmd: lnTo, pts: [ [ 581, 2 ] ] }
+        - { cmd: lnTo, pts: [ [ 569, 5 ] ] }
+        - { cmd: lnTo, pts: [ [ 558, 9 ] ] }
+        - { cmd: lnTo, pts: [ [ 548, 14 ] ] }
+        - { cmd: lnTo, pts: [ [ 538, 20 ] ] }
+        - { cmd: lnTo, pts: [ [ 529, 27 ] ] }
+        - { cmd: lnTo, pts: [ [ 521, 34 ] ] }
+        - { cmd: lnTo, pts: [ [ 512, 43 ] ] }
+        - { cmd: lnTo, pts: [ [ 505, 53 ] ] }
+        - { cmd: lnTo, pts: [ [ 499, 63 ] ] }
+        - { cmd: lnTo, pts: [ [ 494, 73 ] ] }
+        - { cmd: lnTo, pts: [ [ 490, 84 ] ] }
+        - { cmd: lnTo, pts: [ [ 488, 95 ] ] }
+        - { cmd: lnTo, pts: [ [ 486, 108 ] ] }
+        - { cmd: lnTo, pts: [ [ 485, 120 ] ] }
+        - { cmd: lnTo, pts: [ [ 485, 2731 ] ] }
+        - { cmd: lnTo, pts: [ [ 486, 2743 ] ] }
+        - { cmd: lnTo, pts: [ [ 485, 2755 ] ] }
+        - { cmd: lnTo, pts: [ [ 484, 2756 ] ] }
+        - { cmd: lnTo, pts: [ [ 4701, 2756 ] ] }
+        - { cmd: lnTo, pts: [ [ 4700, 2755 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 4401, 2552 ] ] }
+        - { cmd: lnTo, pts: [ [ 784, 2552 ] ] }
+        - { cmd: lnTo, pts: [ [ 784, 299 ] ] }
+        - { cmd: lnTo, pts: [ [ 4401, 299 ] ] }
+        - { cmd: lnTo, pts: [ [ 4401, 2552 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 5172, 3676 ] ] }
+        - { cmd: lnTo, pts: [ [ 12, 3676 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 3700 ] ] }
+        - { cmd: lnTo, pts: [ [ 1, 3713 ] ] }
+        - { cmd: lnTo, pts: [ [ 2, 3727 ] ] }
+        - { cmd: lnTo, pts: [ [ 5, 3741 ] ] }
+        - { cmd: lnTo, pts: [ [ 9, 3756 ] ] }
+        - { cmd: lnTo, pts: [ [ 14, 3771 ] ] }
+        - { cmd: lnTo, pts: [ [ 20, 3786 ] ] }
+        - { cmd: lnTo, pts: [ [ 28, 3801 ] ] }
+        - { cmd: lnTo, pts: [ [ 36, 3815 ] ] }
+        - { cmd: lnTo, pts: [ [ 44, 3828 ] ] }
+        - { cmd: lnTo, pts: [ [ 53, 3841 ] ] }
+        - { cmd: lnTo, pts: [ [ 63, 3852 ] ] }
+        - { cmd: lnTo, pts: [ [ 73, 3861 ] ] }
+        - { cmd: lnTo, pts: [ [ 85, 3869 ] ] }
+        - { cmd: lnTo, pts: [ [ 96, 3875 ] ] }
+        - { cmd: lnTo, pts: [ [ 108, 3878 ] ] }
+        - { cmd: lnTo, pts: [ [ 114, 3879 ] ] }
+        - { cmd: lnTo, pts: [ [ 120, 3880 ] ] }
+        - { cmd: lnTo, pts: [ [ 5065, 3880 ] ] }
+        - { cmd: lnTo, pts: [ [ 5071, 3879 ] ] }
+        - { cmd: lnTo, pts: [ [ 5077, 3878 ] ] }
+        - { cmd: lnTo, pts: [ [ 5089, 3875 ] ] }
+        - { cmd: lnTo, pts: [ [ 5101, 3869 ] ] }
+        - { cmd: lnTo, pts: [ [ 5112, 3861 ] ] }
+        - { cmd: lnTo, pts: [ [ 5122, 3852 ] ] }
+        - { cmd: lnTo, pts: [ [ 5132, 3841 ] ] }
+        - { cmd: lnTo, pts: [ [ 5141, 3828 ] ] }
+        - { cmd: lnTo, pts: [ [ 5150, 3815 ] ] }
+        - { cmd: lnTo, pts: [ [ 5158, 3801 ] ] }
+        - { cmd: lnTo, pts: [ [ 5165, 3786 ] ] }
+        - { cmd: lnTo, pts: [ [ 5171, 3771 ] ] }
+        - { cmd: lnTo, pts: [ [ 5176, 3756 ] ] }
+        - { cmd: lnTo, pts: [ [ 5180, 3741 ] ] }
+        - { cmd: lnTo, pts: [ [ 5182, 3727 ] ] }
+        - { cmd: lnTo, pts: [ [ 5184, 3713 ] ] }
+        - { cmd: lnTo, pts: [ [ 5185, 3700 ] ] }
+        - { cmd: lnTo, pts: [ [ 5172, 3676 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "KSO_Shape-3"
     elementType: shape
     bounds: [ 355, 192, 37, 74 ]
-    kind: rect
+    kind: custGeom
     fill: "#FFFFFF"
+    path:
+      w: 725488
+      h: 1450976
+      commands:
+        - { cmd: moveTo, pts: [ [ 180975, 543686 ] ] }
+        - { cmd: lnTo, pts: [ [ 544513, 543686 ] ] }
+        - { cmd: lnTo, pts: [ [ 544513, 785648 ] ] }
+        - { cmd: lnTo, pts: [ [ 544248, 794903 ] ] }
+        - { cmd: lnTo, pts: [ [ 543187, 804158 ] ] }
+        - { cmd: lnTo, pts: [ [ 542392, 813149 ] ] }
+        - { cmd: lnTo, pts: [ [ 540536, 822140 ] ] }
+        - { cmd: lnTo, pts: [ [ 538679, 830867 ] ] }
+        - { cmd: lnTo, pts: [ [ 536293, 839329 ] ] }
+        - { cmd: lnTo, pts: [ [ 533111, 847791 ] ] }
+        - { cmd: lnTo, pts: [ [ 530194, 856253 ] ] }
+        - { cmd: lnTo, pts: [ [ 526482, 864186 ] ] }
+        - { cmd: lnTo, pts: [ [ 522504, 871855 ] ] }
+        - { cmd: lnTo, pts: [ [ 517997, 879523 ] ] }
+        - { cmd: lnTo, pts: [ [ 513224, 886928 ] ] }
+        - { cmd: lnTo, pts: [ [ 508186, 893803 ] ] }
+        - { cmd: lnTo, pts: [ [ 502882, 900943 ] ] }
+        - { cmd: lnTo, pts: [ [ 497049, 907290 ] ] }
+        - { cmd: lnTo, pts: [ [ 490950, 913636 ] ] }
+        - { cmd: lnTo, pts: [ [ 484851, 919718 ] ] }
+        - { cmd: lnTo, pts: [ [ 478222, 925271 ] ] }
+        - { cmd: lnTo, pts: [ [ 471328, 930825 ] ] }
+        - { cmd: lnTo, pts: [ [ 464169, 935849 ] ] }
+        - { cmd: lnTo, pts: [ [ 456744, 940609 ] ] }
+        - { cmd: lnTo, pts: [ [ 449054, 944840 ] ] }
+        - { cmd: lnTo, pts: [ [ 441630, 949071 ] ] }
+        - { cmd: lnTo, pts: [ [ 433145, 952773 ] ] }
+        - { cmd: lnTo, pts: [ [ 424925, 955682 ] ] }
+        - { cmd: lnTo, pts: [ [ 416705, 958855 ] ] }
+        - { cmd: lnTo, pts: [ [ 407954, 961235 ] ] }
+        - { cmd: lnTo, pts: [ [ 399204, 963086 ] ] }
+        - { cmd: lnTo, pts: [ [ 390188, 964673 ] ] }
+        - { cmd: lnTo, pts: [ [ 380908, 965730 ] ] }
+        - { cmd: lnTo, pts: [ [ 371892, 966788 ] ] }
+        - { cmd: lnTo, pts: [ [ 362612, 966788 ] ] }
+        - { cmd: lnTo, pts: [ [ 353331, 966788 ] ] }
+        - { cmd: lnTo, pts: [ [ 344050, 965730 ] ] }
+        - { cmd: lnTo, pts: [ [ 334770, 964673 ] ] }
+        - { cmd: lnTo, pts: [ [ 326019, 963086 ] ] }
+        - { cmd: lnTo, pts: [ [ 317269, 961235 ] ] }
+        - { cmd: lnTo, pts: [ [ 308518, 958855 ] ] }
+        - { cmd: lnTo, pts: [ [ 300033, 955682 ] ] }
+        - { cmd: lnTo, pts: [ [ 291813, 952773 ] ] }
+        - { cmd: lnTo, pts: [ [ 283858, 949071 ] ] }
+        - { cmd: lnTo, pts: [ [ 275903, 944840 ] ] }
+        - { cmd: lnTo, pts: [ [ 268214, 940609 ] ] }
+        - { cmd: lnTo, pts: [ [ 261054, 935849 ] ] }
+        - { cmd: lnTo, pts: [ [ 253895, 930825 ] ] }
+        - { cmd: lnTo, pts: [ [ 247001, 925271 ] ] }
+        - { cmd: lnTo, pts: [ [ 240372, 919718 ] ] }
+        - { cmd: lnTo, pts: [ [ 234008, 913636 ] ] }
+        - { cmd: lnTo, pts: [ [ 228174, 907290 ] ] }
+        - { cmd: lnTo, pts: [ [ 222341, 900943 ] ] }
+        - { cmd: lnTo, pts: [ [ 217037, 893803 ] ] }
+        - { cmd: lnTo, pts: [ [ 211999, 886928 ] ] }
+        - { cmd: lnTo, pts: [ [ 207226, 879523 ] ] }
+        - { cmd: lnTo, pts: [ [ 202984, 871855 ] ] }
+        - { cmd: lnTo, pts: [ [ 199006, 864186 ] ] }
+        - { cmd: lnTo, pts: [ [ 195294, 856253 ] ] }
+        - { cmd: lnTo, pts: [ [ 191847, 847791 ] ] }
+        - { cmd: lnTo, pts: [ [ 189195, 839329 ] ] }
+        - { cmd: lnTo, pts: [ [ 186809, 830867 ] ] }
+        - { cmd: lnTo, pts: [ [ 184422, 822140 ] ] }
+        - { cmd: lnTo, pts: [ [ 183097, 813149 ] ] }
+        - { cmd: lnTo, pts: [ [ 181771, 804158 ] ] }
+        - { cmd: lnTo, pts: [ [ 181240, 794903 ] ] }
+        - { cmd: lnTo, pts: [ [ 180975, 785648 ] ] }
+        - { cmd: lnTo, pts: [ [ 180975, 543686 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 60589, 484188 ] ] }
+        - { cmd: lnTo, pts: [ [ 66675, 484453 ] ] }
+        - { cmd: lnTo, pts: [ [ 72760, 485510 ] ] }
+        - { cmd: lnTo, pts: [ [ 78581, 487096 ] ] }
+        - { cmd: lnTo, pts: [ [ 84137, 488947 ] ] }
+        - { cmd: lnTo, pts: [ [ 89429, 491591 ] ] }
+        - { cmd: lnTo, pts: [ [ 94191, 494499 ] ] }
+        - { cmd: lnTo, pts: [ [ 99219, 497935 ] ] }
+        - { cmd: lnTo, pts: [ [ 103452, 501901 ] ] }
+        - { cmd: lnTo, pts: [ [ 107421, 506131 ] ] }
+        - { cmd: lnTo, pts: [ [ 110596, 510889 ] ] }
+        - { cmd: lnTo, pts: [ [ 113771, 515912 ] ] }
+        - { cmd: lnTo, pts: [ [ 116152, 521200 ] ] }
+        - { cmd: lnTo, pts: [ [ 118269, 526487 ] ] }
+        - { cmd: lnTo, pts: [ [ 119856, 532303 ] ] }
+        - { cmd: lnTo, pts: [ [ 120650, 538383 ] ] }
+        - { cmd: lnTo, pts: [ [ 121179, 544464 ] ] }
+        - { cmd: lnTo, pts: [ [ 121179, 786095 ] ] }
+        - { cmd: lnTo, pts: [ [ 121179, 793233 ] ] }
+        - { cmd: lnTo, pts: [ [ 121973, 803807 ] ] }
+        - { cmd: lnTo, pts: [ [ 123560, 817554 ] ] }
+        - { cmd: lnTo, pts: [ [ 124619, 825750 ] ] }
+        - { cmd: lnTo, pts: [ [ 126206, 834209 ] ] }
+        - { cmd: lnTo, pts: [ [ 128058, 843462 ] ] }
+        - { cmd: lnTo, pts: [ [ 130175, 853244 ] ] }
+        - { cmd: lnTo, pts: [ [ 132821, 863290 ] ] }
+        - { cmd: lnTo, pts: [ [ 136260, 873600 ] ] }
+        - { cmd: lnTo, pts: [ [ 139964, 883910 ] ] }
+        - { cmd: lnTo, pts: [ [ 144198, 894485 ] ] }
+        - { cmd: lnTo, pts: [ [ 149225, 905588 ] ] }
+        - { cmd: lnTo, pts: [ [ 154517, 916163 ] ] }
+        - { cmd: lnTo, pts: [ [ 160867, 927002 ] ] }
+        - { cmd: lnTo, pts: [ [ 164306, 932289 ] ] }
+        - { cmd: lnTo, pts: [ [ 167746, 937577 ] ] }
+        - { cmd: lnTo, pts: [ [ 171714, 942864 ] ] }
+        - { cmd: lnTo, pts: [ [ 175683, 947887 ] ] }
+        - { cmd: lnTo, pts: [ [ 179652, 953174 ] ] }
+        - { cmd: lnTo, pts: [ [ 184150, 957933 ] ] }
+        - { cmd: lnTo, pts: [ [ 188384, 962956 ] ] }
+        - { cmd: lnTo, pts: [ [ 193411, 967714 ] ] }
+        - { cmd: lnTo, pts: [ [ 198438, 972209 ] ] }
+        - { cmd: lnTo, pts: [ [ 203730, 976967 ] ] }
+        - { cmd: lnTo, pts: [ [ 209286, 981197 ] ] }
+        - { cmd: lnTo, pts: [ [ 214577, 985427 ] ] }
+        - { cmd: lnTo, pts: [ [ 220663, 989657 ] ] }
+        - { cmd: lnTo, pts: [ [ 226748, 993622 ] ] }
+        - { cmd: lnTo, pts: [ [ 233363, 997323 ] ] }
+        - { cmd: lnTo, pts: [ [ 239977, 1001025 ] ] }
+        - { cmd: lnTo, pts: [ [ 246857, 1004461 ] ] }
+        - { cmd: lnTo, pts: [ [ 254000, 1007634 ] ] }
+        - { cmd: lnTo, pts: [ [ 261673, 1010542 ] ] }
+        - { cmd: lnTo, pts: [ [ 269346, 1013714 ] ] }
+        - { cmd: lnTo, pts: [ [ 277019, 1016093 ] ] }
+        - { cmd: lnTo, pts: [ [ 285750, 1018473 ] ] }
+        - { cmd: lnTo, pts: [ [ 294217, 1020852 ] ] }
+        - { cmd: lnTo, pts: [ [ 302948, 1022438 ] ] }
+        - { cmd: lnTo, pts: [ [ 312209, 1024024 ] ] }
+        - { cmd: lnTo, pts: [ [ 321734, 1025611 ] ] }
+        - { cmd: lnTo, pts: [ [ 331523, 1026404 ] ] }
+        - { cmd: lnTo, pts: [ [ 341842, 1027461 ] ] }
+        - { cmd: lnTo, pts: [ [ 352161, 1027726 ] ] }
+        - { cmd: lnTo, pts: [ [ 362744, 1027990 ] ] }
+        - { cmd: lnTo, pts: [ [ 373857, 1027726 ] ] }
+        - { cmd: lnTo, pts: [ [ 384440, 1027197 ] ] }
+        - { cmd: lnTo, pts: [ [ 394759, 1026404 ] ] }
+        - { cmd: lnTo, pts: [ [ 404813, 1025346 ] ] }
+        - { cmd: lnTo, pts: [ [ 414602, 1023760 ] ] }
+        - { cmd: lnTo, pts: [ [ 424127, 1022174 ] ] }
+        - { cmd: lnTo, pts: [ [ 432859, 1020059 ] ] }
+        - { cmd: lnTo, pts: [ [ 441854, 1017944 ] ] }
+        - { cmd: lnTo, pts: [ [ 450321, 1015565 ] ] }
+        - { cmd: lnTo, pts: [ [ 458523, 1012921 ] ] }
+        - { cmd: lnTo, pts: [ [ 466196, 1009749 ] ] }
+        - { cmd: lnTo, pts: [ [ 473869, 1006312 ] ] }
+        - { cmd: lnTo, pts: [ [ 481013, 1003140 ] ] }
+        - { cmd: lnTo, pts: [ [ 488157, 999438 ] ] }
+        - { cmd: lnTo, pts: [ [ 494771, 995473 ] ] }
+        - { cmd: lnTo, pts: [ [ 501386, 991507 ] ] }
+        - { cmd: lnTo, pts: [ [ 507736, 987278 ] ] }
+        - { cmd: lnTo, pts: [ [ 513821, 983048 ] ] }
+        - { cmd: lnTo, pts: [ [ 519113, 978289 ] ] }
+        - { cmd: lnTo, pts: [ [ 524669, 973795 ] ] }
+        - { cmd: lnTo, pts: [ [ 530225, 969036 ] ] }
+        - { cmd: lnTo, pts: [ [ 534988, 964013 ] ] }
+        - { cmd: lnTo, pts: [ [ 540015, 959255 ] ] }
+        - { cmd: lnTo, pts: [ [ 544248, 953967 ] ] }
+        - { cmd: lnTo, pts: [ [ 548746, 948944 ] ] }
+        - { cmd: lnTo, pts: [ [ 552715, 943657 ] ] }
+        - { cmd: lnTo, pts: [ [ 556684, 938105 ] ] }
+        - { cmd: lnTo, pts: [ [ 560388, 932554 ] ] }
+        - { cmd: lnTo, pts: [ [ 564092, 927266 ] ] }
+        - { cmd: lnTo, pts: [ [ 567267, 921715 ] ] }
+        - { cmd: lnTo, pts: [ [ 573352, 910876 ] ] }
+        - { cmd: lnTo, pts: [ [ 578644, 899772 ] ] }
+        - { cmd: lnTo, pts: [ [ 583407, 888404 ] ] }
+        - { cmd: lnTo, pts: [ [ 587375, 877830 ] ] }
+        - { cmd: lnTo, pts: [ [ 591080, 867255 ] ] }
+        - { cmd: lnTo, pts: [ [ 594255, 856416 ] ] }
+        - { cmd: lnTo, pts: [ [ 596636, 846899 ] ] }
+        - { cmd: lnTo, pts: [ [ 598752, 837117 ] ] }
+        - { cmd: lnTo, pts: [ [ 600605, 828129 ] ] }
+        - { cmd: lnTo, pts: [ [ 601928, 819934 ] ] }
+        - { cmd: lnTo, pts: [ [ 602721, 812267 ] ] }
+        - { cmd: lnTo, pts: [ [ 604044, 799577 ] ] }
+        - { cmd: lnTo, pts: [ [ 604573, 790853 ] ] }
+        - { cmd: lnTo, pts: [ [ 604573, 786095 ] ] }
+        - { cmd: lnTo, pts: [ [ 604573, 544464 ] ] }
+        - { cmd: lnTo, pts: [ [ 604838, 538383 ] ] }
+        - { cmd: lnTo, pts: [ [ 605896, 532303 ] ] }
+        - { cmd: lnTo, pts: [ [ 607219, 526487 ] ] }
+        - { cmd: lnTo, pts: [ [ 609336, 521200 ] ] }
+        - { cmd: lnTo, pts: [ [ 611982, 515912 ] ] }
+        - { cmd: lnTo, pts: [ [ 614892, 510889 ] ] }
+        - { cmd: lnTo, pts: [ [ 618332, 506131 ] ] }
+        - { cmd: lnTo, pts: [ [ 622300, 501901 ] ] }
+        - { cmd: lnTo, pts: [ [ 626534, 497935 ] ] }
+        - { cmd: lnTo, pts: [ [ 631296, 494499 ] ] }
+        - { cmd: lnTo, pts: [ [ 636323, 491591 ] ] }
+        - { cmd: lnTo, pts: [ [ 641350, 488947 ] ] }
+        - { cmd: lnTo, pts: [ [ 646907, 487096 ] ] }
+        - { cmd: lnTo, pts: [ [ 652992, 485510 ] ] }
+        - { cmd: lnTo, pts: [ [ 658813, 484453 ] ] }
+        - { cmd: lnTo, pts: [ [ 664898, 484188 ] ] }
+        - { cmd: lnTo, pts: [ [ 671248, 484453 ] ] }
+        - { cmd: lnTo, pts: [ [ 677069, 485510 ] ] }
+        - { cmd: lnTo, pts: [ [ 682890, 487096 ] ] }
+        - { cmd: lnTo, pts: [ [ 688711, 488947 ] ] }
+        - { cmd: lnTo, pts: [ [ 694003, 491591 ] ] }
+        - { cmd: lnTo, pts: [ [ 698765, 494499 ] ] }
+        - { cmd: lnTo, pts: [ [ 703528, 497935 ] ] }
+        - { cmd: lnTo, pts: [ [ 708026, 501901 ] ] }
+        - { cmd: lnTo, pts: [ [ 711994, 506131 ] ] }
+        - { cmd: lnTo, pts: [ [ 715169, 510889 ] ] }
+        - { cmd: lnTo, pts: [ [ 718344, 515912 ] ] }
+        - { cmd: lnTo, pts: [ [ 720726, 521200 ] ] }
+        - { cmd: lnTo, pts: [ [ 722842, 526487 ] ] }
+        - { cmd: lnTo, pts: [ [ 724430, 532303 ] ] }
+        - { cmd: lnTo, pts: [ [ 725223, 538383 ] ] }
+        - { cmd: lnTo, pts: [ [ 725488, 544464 ] ] }
+        - { cmd: lnTo, pts: [ [ 725488, 786095 ] ] }
+        - { cmd: lnTo, pts: [ [ 725223, 797462 ] ] }
+        - { cmd: lnTo, pts: [ [ 724694, 809095 ] ] }
+        - { cmd: lnTo, pts: [ [ 723636, 821255 ] ] }
+        - { cmd: lnTo, pts: [ [ 722313, 833681 ] ] }
+        - { cmd: lnTo, pts: [ [ 720461, 846370 ] ] }
+        - { cmd: lnTo, pts: [ [ 718080, 859853 ] ] }
+        - { cmd: lnTo, pts: [ [ 714905, 873336 ] ] }
+        - { cmd: lnTo, pts: [ [ 711465, 886554 ] ] }
+        - { cmd: lnTo, pts: [ [ 707496, 900830 ] ] }
+        - { cmd: lnTo, pts: [ [ 702998, 914312 ] ] }
+        - { cmd: lnTo, pts: [ [ 698236, 928324 ] ] }
+        - { cmd: lnTo, pts: [ [ 692415, 942335 ] ] }
+        - { cmd: lnTo, pts: [ [ 686065, 956347 ] ] }
+        - { cmd: lnTo, pts: [ [ 679186, 970094 ] ] }
+        - { cmd: lnTo, pts: [ [ 671513, 983841 ] ] }
+        - { cmd: lnTo, pts: [ [ 663311, 997323 ] ] }
+        - { cmd: lnTo, pts: [ [ 658813, 1003933 ] ] }
+        - { cmd: lnTo, pts: [ [ 654315, 1010542 ] ] }
+        - { cmd: lnTo, pts: [ [ 649552, 1017151 ] ] }
+        - { cmd: lnTo, pts: [ [ 644525, 1023496 ] ] }
+        - { cmd: lnTo, pts: [ [ 639498, 1029841 ] ] }
+        - { cmd: lnTo, pts: [ [ 634207, 1035921 ] ] }
+        - { cmd: lnTo, pts: [ [ 628650, 1042001 ] ] }
+        - { cmd: lnTo, pts: [ [ 623094, 1048082 ] ] }
+        - { cmd: lnTo, pts: [ [ 617009, 1054162 ] ] }
+        - { cmd: lnTo, pts: [ [ 610923, 1059978 ] ] }
+        - { cmd: lnTo, pts: [ [ 604838, 1065530 ] ] }
+        - { cmd: lnTo, pts: [ [ 598488, 1071082 ] ] }
+        - { cmd: lnTo, pts: [ [ 591873, 1076369 ] ] }
+        - { cmd: lnTo, pts: [ [ 584730, 1081656 ] ] }
+        - { cmd: lnTo, pts: [ [ 577850, 1086944 ] ] }
+        - { cmd: lnTo, pts: [ [ 570442, 1091702 ] ] }
+        - { cmd: lnTo, pts: [ [ 563034, 1096461 ] ] }
+        - { cmd: lnTo, pts: [ [ 555096, 1101219 ] ] }
+        - { cmd: lnTo, pts: [ [ 547159, 1105714 ] ] }
+        - { cmd: lnTo, pts: [ [ 538957, 1109944 ] ] }
+        - { cmd: lnTo, pts: [ [ 530755, 1113909 ] ] }
+        - { cmd: lnTo, pts: [ [ 522288, 1117875 ] ] }
+        - { cmd: lnTo, pts: [ [ 513292, 1121576 ] ] }
+        - { cmd: lnTo, pts: [ [ 504296, 1125277 ] ] }
+        - { cmd: lnTo, pts: [ [ 495036, 1128185 ] ] }
+        - { cmd: lnTo, pts: [ [ 485246, 1131357 ] ] }
+        - { cmd: lnTo, pts: [ [ 475721, 1134001 ] ] }
+        - { cmd: lnTo, pts: [ [ 465932, 1136909 ] ] }
+        - { cmd: lnTo, pts: [ [ 455613, 1139288 ] ] }
+        - { cmd: lnTo, pts: [ [ 445029, 1141139 ] ] }
+        - { cmd: lnTo, pts: [ [ 434182, 1142989 ] ] }
+        - { cmd: lnTo, pts: [ [ 423069, 1144840 ] ] }
+        - { cmd: lnTo, pts: [ [ 423069, 1329896 ] ] }
+        - { cmd: lnTo, pts: [ [ 664898, 1329896 ] ] }
+        - { cmd: lnTo, pts: [ [ 671248, 1330161 ] ] }
+        - { cmd: lnTo, pts: [ [ 677069, 1331218 ] ] }
+        - { cmd: lnTo, pts: [ [ 682890, 1332540 ] ] }
+        - { cmd: lnTo, pts: [ [ 688711, 1334919 ] ] }
+        - { cmd: lnTo, pts: [ [ 694003, 1337299 ] ] }
+        - { cmd: lnTo, pts: [ [ 698765, 1340207 ] ] }
+        - { cmd: lnTo, pts: [ [ 703528, 1343643 ] ] }
+        - { cmd: lnTo, pts: [ [ 708026, 1347609 ] ] }
+        - { cmd: lnTo, pts: [ [ 711994, 1351839 ] ] }
+        - { cmd: lnTo, pts: [ [ 715169, 1356862 ] ] }
+        - { cmd: lnTo, pts: [ [ 718344, 1361620 ] ] }
+        - { cmd: lnTo, pts: [ [ 720726, 1366908 ] ] }
+        - { cmd: lnTo, pts: [ [ 722842, 1372195 ] ] }
+        - { cmd: lnTo, pts: [ [ 724430, 1378011 ] ] }
+        - { cmd: lnTo, pts: [ [ 725223, 1384092 ] ] }
+        - { cmd: lnTo, pts: [ [ 725488, 1390172 ] ] }
+        - { cmd: lnTo, pts: [ [ 725223, 1396517 ] ] }
+        - { cmd: lnTo, pts: [ [ 724430, 1402333 ] ] }
+        - { cmd: lnTo, pts: [ [ 722842, 1408149 ] ] }
+        - { cmd: lnTo, pts: [ [ 720726, 1413965 ] ] }
+        - { cmd: lnTo, pts: [ [ 718344, 1419252 ] ] }
+        - { cmd: lnTo, pts: [ [ 715169, 1424011 ] ] }
+        - { cmd: lnTo, pts: [ [ 711994, 1429034 ] ] }
+        - { cmd: lnTo, pts: [ [ 708026, 1433264 ] ] }
+        - { cmd: lnTo, pts: [ [ 703528, 1436965 ] ] }
+        - { cmd: lnTo, pts: [ [ 698765, 1440402 ] ] }
+        - { cmd: lnTo, pts: [ [ 694003, 1443574 ] ] }
+        - { cmd: lnTo, pts: [ [ 688711, 1445953 ] ] }
+        - { cmd: lnTo, pts: [ [ 682890, 1448068 ] ] }
+        - { cmd: lnTo, pts: [ [ 677069, 1449654 ] ] }
+        - { cmd: lnTo, pts: [ [ 671248, 1450447 ] ] }
+        - { cmd: lnTo, pts: [ [ 664898, 1450976 ] ] }
+        - { cmd: lnTo, pts: [ [ 60589, 1450976 ] ] }
+        - { cmd: lnTo, pts: [ [ 54239, 1450447 ] ] }
+        - { cmd: lnTo, pts: [ [ 48419, 1449654 ] ] }
+        - { cmd: lnTo, pts: [ [ 42598, 1448068 ] ] }
+        - { cmd: lnTo, pts: [ [ 37041, 1445953 ] ] }
+        - { cmd: lnTo, pts: [ [ 31750, 1443574 ] ] }
+        - { cmd: lnTo, pts: [ [ 26723, 1440402 ] ] }
+        - { cmd: lnTo, pts: [ [ 21960, 1436965 ] ] }
+        - { cmd: lnTo, pts: [ [ 17727, 1433264 ] ] }
+        - { cmd: lnTo, pts: [ [ 13758, 1429034 ] ] }
+        - { cmd: lnTo, pts: [ [ 10319, 1424011 ] ] }
+        - { cmd: lnTo, pts: [ [ 7408, 1419252 ] ] }
+        - { cmd: lnTo, pts: [ [ 5027, 1413965 ] ] }
+        - { cmd: lnTo, pts: [ [ 2646, 1408149 ] ] }
+        - { cmd: lnTo, pts: [ [ 1323, 1402333 ] ] }
+        - { cmd: lnTo, pts: [ [ 264, 1396517 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 1390172 ] ] }
+        - { cmd: lnTo, pts: [ [ 264, 1384092 ] ] }
+        - { cmd: lnTo, pts: [ [ 1323, 1378011 ] ] }
+        - { cmd: lnTo, pts: [ [ 2646, 1372195 ] ] }
+        - { cmd: lnTo, pts: [ [ 5027, 1366908 ] ] }
+        - { cmd: lnTo, pts: [ [ 7408, 1361620 ] ] }
+        - { cmd: lnTo, pts: [ [ 10319, 1356862 ] ] }
+        - { cmd: lnTo, pts: [ [ 13758, 1351839 ] ] }
+        - { cmd: lnTo, pts: [ [ 17727, 1347609 ] ] }
+        - { cmd: lnTo, pts: [ [ 21960, 1343643 ] ] }
+        - { cmd: lnTo, pts: [ [ 26723, 1340207 ] ] }
+        - { cmd: lnTo, pts: [ [ 31750, 1337299 ] ] }
+        - { cmd: lnTo, pts: [ [ 37041, 1334919 ] ] }
+        - { cmd: lnTo, pts: [ [ 42598, 1332540 ] ] }
+        - { cmd: lnTo, pts: [ [ 48419, 1331218 ] ] }
+        - { cmd: lnTo, pts: [ [ 54239, 1330161 ] ] }
+        - { cmd: lnTo, pts: [ [ 60589, 1329896 ] ] }
+        - { cmd: lnTo, pts: [ [ 302419, 1329896 ] ] }
+        - { cmd: lnTo, pts: [ [ 302419, 1144840 ] ] }
+        - { cmd: lnTo, pts: [ [ 291571, 1142989 ] ] }
+        - { cmd: lnTo, pts: [ [ 280459, 1141139 ] ] }
+        - { cmd: lnTo, pts: [ [ 270140, 1139288 ] ] }
+        - { cmd: lnTo, pts: [ [ 259821, 1136909 ] ] }
+        - { cmd: lnTo, pts: [ [ 250032, 1134001 ] ] }
+        - { cmd: lnTo, pts: [ [ 240242, 1131357 ] ] }
+        - { cmd: lnTo, pts: [ [ 230452, 1128185 ] ] }
+        - { cmd: lnTo, pts: [ [ 221457, 1125277 ] ] }
+        - { cmd: lnTo, pts: [ [ 212196, 1121576 ] ] }
+        - { cmd: lnTo, pts: [ [ 203465, 1117875 ] ] }
+        - { cmd: lnTo, pts: [ [ 194734, 1113909 ] ] }
+        - { cmd: lnTo, pts: [ [ 186532, 1109944 ] ] }
+        - { cmd: lnTo, pts: [ [ 178329, 1105714 ] ] }
+        - { cmd: lnTo, pts: [ [ 170392, 1101219 ] ] }
+        - { cmd: lnTo, pts: [ [ 162454, 1096461 ] ] }
+        - { cmd: lnTo, pts: [ [ 155310, 1091702 ] ] }
+        - { cmd: lnTo, pts: [ [ 147902, 1086944 ] ] }
+        - { cmd: lnTo, pts: [ [ 140758, 1081656 ] ] }
+        - { cmd: lnTo, pts: [ [ 133879, 1076369 ] ] }
+        - { cmd: lnTo, pts: [ [ 127264, 1071082 ] ] }
+        - { cmd: lnTo, pts: [ [ 120650, 1065530 ] ] }
+        - { cmd: lnTo, pts: [ [ 114564, 1059978 ] ] }
+        - { cmd: lnTo, pts: [ [ 108479, 1054162 ] ] }
+        - { cmd: lnTo, pts: [ [ 102394, 1048082 ] ] }
+        - { cmd: lnTo, pts: [ [ 97102, 1042001 ] ] }
+        - { cmd: lnTo, pts: [ [ 91546, 1035921 ] ] }
+        - { cmd: lnTo, pts: [ [ 85989, 1029841 ] ] }
+        - { cmd: lnTo, pts: [ [ 81227, 1023496 ] ] }
+        - { cmd: lnTo, pts: [ [ 75935, 1017151 ] ] }
+        - { cmd: lnTo, pts: [ [ 71437, 1010542 ] ] }
+        - { cmd: lnTo, pts: [ [ 66675, 1003933 ] ] }
+        - { cmd: lnTo, pts: [ [ 62177, 997323 ] ] }
+        - { cmd: lnTo, pts: [ [ 53975, 983841 ] ] }
+        - { cmd: lnTo, pts: [ [ 46302, 970094 ] ] }
+        - { cmd: lnTo, pts: [ [ 39687, 956347 ] ] }
+        - { cmd: lnTo, pts: [ [ 33337, 942335 ] ] }
+        - { cmd: lnTo, pts: [ [ 27516, 928324 ] ] }
+        - { cmd: lnTo, pts: [ [ 22489, 914312 ] ] }
+        - { cmd: lnTo, pts: [ [ 17991, 900830 ] ] }
+        - { cmd: lnTo, pts: [ [ 14023, 886554 ] ] }
+        - { cmd: lnTo, pts: [ [ 10583, 873336 ] ] }
+        - { cmd: lnTo, pts: [ [ 7673, 859853 ] ] }
+        - { cmd: lnTo, pts: [ [ 5291, 846370 ] ] }
+        - { cmd: lnTo, pts: [ [ 3439, 833681 ] ] }
+        - { cmd: lnTo, pts: [ [ 1852, 821255 ] ] }
+        - { cmd: lnTo, pts: [ [ 1058, 809095 ] ] }
+        - { cmd: lnTo, pts: [ [ 264, 797462 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 786095 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 544464 ] ] }
+        - { cmd: lnTo, pts: [ [ 264, 538383 ] ] }
+        - { cmd: lnTo, pts: [ [ 1323, 532303 ] ] }
+        - { cmd: lnTo, pts: [ [ 2646, 526487 ] ] }
+        - { cmd: lnTo, pts: [ [ 5027, 521200 ] ] }
+        - { cmd: lnTo, pts: [ [ 7408, 515912 ] ] }
+        - { cmd: lnTo, pts: [ [ 10319, 510889 ] ] }
+        - { cmd: lnTo, pts: [ [ 13758, 506131 ] ] }
+        - { cmd: lnTo, pts: [ [ 17727, 501901 ] ] }
+        - { cmd: lnTo, pts: [ [ 21960, 497935 ] ] }
+        - { cmd: lnTo, pts: [ [ 26723, 494499 ] ] }
+        - { cmd: lnTo, pts: [ [ 31750, 491591 ] ] }
+        - { cmd: lnTo, pts: [ [ 37041, 488947 ] ] }
+        - { cmd: lnTo, pts: [ [ 42598, 487096 ] ] }
+        - { cmd: lnTo, pts: [ [ 48419, 485510 ] ] }
+        - { cmd: lnTo, pts: [ [ 54239, 484453 ] ] }
+        - { cmd: lnTo, pts: [ [ 60589, 484188 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 362612, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 372158, 265 ] ] }
+        - { cmd: lnTo, pts: [ [ 381438, 1058 ] ] }
+        - { cmd: lnTo, pts: [ [ 390454, 2116 ] ] }
+        - { cmd: lnTo, pts: [ [ 399204, 3967 ] ] }
+        - { cmd: lnTo, pts: [ [ 408219, 5553 ] ] }
+        - { cmd: lnTo, pts: [ [ 416705, 8198 ] ] }
+        - { cmd: lnTo, pts: [ [ 424925, 11107 ] ] }
+        - { cmd: lnTo, pts: [ [ 433145, 14280 ] ] }
+        - { cmd: lnTo, pts: [ [ 441630, 17982 ] ] }
+        - { cmd: lnTo, pts: [ [ 449054, 21949 ] ] }
+        - { cmd: lnTo, pts: [ [ 456744, 26444 ] ] }
+        - { cmd: lnTo, pts: [ [ 464169, 30939 ] ] }
+        - { cmd: lnTo, pts: [ [ 471328, 36228 ] ] }
+        - { cmd: lnTo, pts: [ [ 478222, 41253 ] ] }
+        - { cmd: lnTo, pts: [ [ 484851, 47070 ] ] }
+        - { cmd: lnTo, pts: [ [ 490950, 53152 ] ] }
+        - { cmd: lnTo, pts: [ [ 497049, 59234 ] ] }
+        - { cmd: lnTo, pts: [ [ 502882, 66110 ] ] }
+        - { cmd: lnTo, pts: [ [ 508186, 72721 ] ] }
+        - { cmd: lnTo, pts: [ [ 513224, 80125 ] ] }
+        - { cmd: lnTo, pts: [ [ 517997, 87265 ] ] }
+        - { cmd: lnTo, pts: [ [ 522504, 94934 ] ] }
+        - { cmd: lnTo, pts: [ [ 526482, 102602 ] ] }
+        - { cmd: lnTo, pts: [ [ 530194, 110800 ] ] }
+        - { cmd: lnTo, pts: [ [ 533111, 118998 ] ] }
+        - { cmd: lnTo, pts: [ [ 536293, 127195 ] ] }
+        - { cmd: lnTo, pts: [ [ 538679, 136186 ] ] }
+        - { cmd: lnTo, pts: [ [ 540536, 144648 ] ] }
+        - { cmd: lnTo, pts: [ [ 542392, 153903 ] ] }
+        - { cmd: lnTo, pts: [ [ 543187, 162630 ] ] }
+        - { cmd: lnTo, pts: [ [ 544248, 172150 ] ] }
+        - { cmd: lnTo, pts: [ [ 544513, 181141 ] ] }
+        - { cmd: lnTo, pts: [ [ 544513, 483394 ] ] }
+        - { cmd: lnTo, pts: [ [ 180975, 483394 ] ] }
+        - { cmd: lnTo, pts: [ [ 180975, 181141 ] ] }
+        - { cmd: lnTo, pts: [ [ 181240, 172150 ] ] }
+        - { cmd: lnTo, pts: [ [ 181771, 162630 ] ] }
+        - { cmd: lnTo, pts: [ [ 183097, 153903 ] ] }
+        - { cmd: lnTo, pts: [ [ 184422, 144648 ] ] }
+        - { cmd: lnTo, pts: [ [ 186809, 136186 ] ] }
+        - { cmd: lnTo, pts: [ [ 189195, 127195 ] ] }
+        - { cmd: lnTo, pts: [ [ 191847, 118998 ] ] }
+        - { cmd: lnTo, pts: [ [ 195294, 110800 ] ] }
+        - { cmd: lnTo, pts: [ [ 199006, 102602 ] ] }
+        - { cmd: lnTo, pts: [ [ 202984, 94934 ] ] }
+        - { cmd: lnTo, pts: [ [ 207226, 87265 ] ] }
+        - { cmd: lnTo, pts: [ [ 211999, 80125 ] ] }
+        - { cmd: lnTo, pts: [ [ 217037, 72721 ] ] }
+        - { cmd: lnTo, pts: [ [ 222341, 66110 ] ] }
+        - { cmd: lnTo, pts: [ [ 228174, 59234 ] ] }
+        - { cmd: lnTo, pts: [ [ 234008, 53152 ] ] }
+        - { cmd: lnTo, pts: [ [ 240372, 47070 ] ] }
+        - { cmd: lnTo, pts: [ [ 247266, 41253 ] ] }
+        - { cmd: lnTo, pts: [ [ 253895, 36228 ] ] }
+        - { cmd: lnTo, pts: [ [ 261054, 30939 ] ] }
+        - { cmd: lnTo, pts: [ [ 268479, 26444 ] ] }
+        - { cmd: lnTo, pts: [ [ 275903, 21949 ] ] }
+        - { cmd: lnTo, pts: [ [ 283858, 17982 ] ] }
+        - { cmd: lnTo, pts: [ [ 291813, 14280 ] ] }
+        - { cmd: lnTo, pts: [ [ 300033, 11107 ] ] }
+        - { cmd: lnTo, pts: [ [ 308518, 8198 ] ] }
+        - { cmd: lnTo, pts: [ [ 317269, 5553 ] ] }
+        - { cmd: lnTo, pts: [ [ 326019, 3967 ] ] }
+        - { cmd: lnTo, pts: [ [ 334770, 2116 ] ] }
+        - { cmd: lnTo, pts: [ [ 344050, 1058 ] ] }
+        - { cmd: lnTo, pts: [ [ 353331, 265 ] ] }
+        - { cmd: lnTo, pts: [ [ 362612, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "KSO_Shape-4"
     elementType: shape
     bounds: [ 557, 192, 71, 74 ]
-    kind: rect
+    kind: custGeom
     fill: "#FFFFFF"
+    path:
+      w: 5831
+      h: 6140
+      commands:
+        - { cmd: moveTo, pts: [ [ 171, 2025 ] ] }
+        - { cmd: lnTo, pts: [ [ 709, 2025 ] ] }
+        - { cmd: lnTo, pts: [ [ 709, 2845 ] ] }
+        - { cmd: lnTo, pts: [ [ 881, 2845 ] ] }
+        - { cmd: lnTo, pts: [ [ 881, 138 ] ] }
+        - { cmd: lnTo, pts: [ [ 881, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 1021, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 3822, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 3855, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 3886, 16 ] ] }
+        - { cmd: lnTo, pts: [ [ 4896, 535 ] ] }
+        - { cmd: lnTo, pts: [ [ 4971, 573 ] ] }
+        - { cmd: lnTo, pts: [ [ 4971, 658 ] ] }
+        - { cmd: lnTo, pts: [ [ 4971, 2845 ] ] }
+        - { cmd: lnTo, pts: [ [ 5140, 2845 ] ] }
+        - { cmd: lnTo, pts: [ [ 5140, 2025 ] ] }
+        - { cmd: lnTo, pts: [ [ 5697, 2025 ] ] }
+        - { cmd: lnTo, pts: [ [ 5712, 2117 ] ] }
+        - { cmd: lnTo, pts: [ [ 5726, 2209 ] ] }
+        - { cmd: lnTo, pts: [ [ 5739, 2301 ] ] }
+        - { cmd: lnTo, pts: [ [ 5752, 2392 ] ] }
+        - { cmd: lnTo, pts: [ [ 5764, 2483 ] ] }
+        - { cmd: lnTo, pts: [ [ 5774, 2576 ] ] }
+        - { cmd: lnTo, pts: [ [ 5784, 2667 ] ] }
+        - { cmd: lnTo, pts: [ [ 5793, 2759 ] ] }
+        - { cmd: lnTo, pts: [ [ 5802, 2850 ] ] }
+        - { cmd: lnTo, pts: [ [ 5809, 2942 ] ] }
+        - { cmd: lnTo, pts: [ [ 5815, 3034 ] ] }
+        - { cmd: lnTo, pts: [ [ 5820, 3125 ] ] }
+        - { cmd: lnTo, pts: [ [ 5824, 3217 ] ] }
+        - { cmd: lnTo, pts: [ [ 5827, 3308 ] ] }
+        - { cmd: lnTo, pts: [ [ 5830, 3400 ] ] }
+        - { cmd: lnTo, pts: [ [ 5831, 3492 ] ] }
+        - { cmd: lnTo, pts: [ [ 5831, 3584 ] ] }
+        - { cmd: lnTo, pts: [ [ 5831, 3675 ] ] }
+        - { cmd: lnTo, pts: [ [ 5829, 3766 ] ] }
+        - { cmd: lnTo, pts: [ [ 5825, 3858 ] ] }
+        - { cmd: lnTo, pts: [ [ 5821, 3950 ] ] }
+        - { cmd: lnTo, pts: [ [ 5816, 4042 ] ] }
+        - { cmd: lnTo, pts: [ [ 5810, 4133 ] ] }
+        - { cmd: lnTo, pts: [ [ 5802, 4224 ] ] }
+        - { cmd: lnTo, pts: [ [ 5793, 4316 ] ] }
+        - { cmd: lnTo, pts: [ [ 5783, 4408 ] ] }
+        - { cmd: lnTo, pts: [ [ 5772, 4500 ] ] }
+        - { cmd: lnTo, pts: [ [ 5759, 4591 ] ] }
+        - { cmd: lnTo, pts: [ [ 5745, 4682 ] ] }
+        - { cmd: lnTo, pts: [ [ 5730, 4774 ] ] }
+        - { cmd: lnTo, pts: [ [ 5714, 4866 ] ] }
+        - { cmd: lnTo, pts: [ [ 5697, 4958 ] ] }
+        - { cmd: lnTo, pts: [ [ 4971, 4958 ] ] }
+        - { cmd: lnTo, pts: [ [ 4971, 6140 ] ] }
+        - { cmd: lnTo, pts: [ [ 881, 6140 ] ] }
+        - { cmd: lnTo, pts: [ [ 881, 4958 ] ] }
+        - { cmd: lnTo, pts: [ [ 171, 4958 ] ] }
+        - { cmd: lnTo, pts: [ [ 150, 4867 ] ] }
+        - { cmd: lnTo, pts: [ [ 131, 4777 ] ] }
+        - { cmd: lnTo, pts: [ [ 113, 4687 ] ] }
+        - { cmd: lnTo, pts: [ [ 97, 4597 ] ] }
+        - { cmd: lnTo, pts: [ [ 81, 4506 ] ] }
+        - { cmd: lnTo, pts: [ [ 68, 4415 ] ] }
+        - { cmd: lnTo, pts: [ [ 54, 4325 ] ] }
+        - { cmd: lnTo, pts: [ [ 43, 4233 ] ] }
+        - { cmd: lnTo, pts: [ [ 33, 4143 ] ] }
+        - { cmd: lnTo, pts: [ [ 24, 4052 ] ] }
+        - { cmd: lnTo, pts: [ [ 17, 3960 ] ] }
+        - { cmd: lnTo, pts: [ [ 11, 3870 ] ] }
+        - { cmd: lnTo, pts: [ [ 6, 3779 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 3687 ] ] }
+        - { cmd: lnTo, pts: [ [ 1, 3596 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 3504 ] ] }
+        - { cmd: lnTo, pts: [ [ 1, 3412 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 3320 ] ] }
+        - { cmd: lnTo, pts: [ [ 6, 3229 ] ] }
+        - { cmd: lnTo, pts: [ [ 11, 3137 ] ] }
+        - { cmd: lnTo, pts: [ [ 16, 3044 ] ] }
+        - { cmd: lnTo, pts: [ [ 24, 2953 ] ] }
+        - { cmd: lnTo, pts: [ [ 32, 2860 ] ] }
+        - { cmd: lnTo, pts: [ [ 42, 2768 ] ] }
+        - { cmd: lnTo, pts: [ [ 54, 2675 ] ] }
+        - { cmd: lnTo, pts: [ [ 66, 2583 ] ] }
+        - { cmd: lnTo, pts: [ [ 81, 2490 ] ] }
+        - { cmd: lnTo, pts: [ [ 95, 2398 ] ] }
+        - { cmd: lnTo, pts: [ [ 112, 2305 ] ] }
+        - { cmd: lnTo, pts: [ [ 131, 2212 ] ] }
+        - { cmd: lnTo, pts: [ [ 150, 2119 ] ] }
+        - { cmd: lnTo, pts: [ [ 171, 2025 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 4570, 4372 ] ] }
+        - { cmd: lnTo, pts: [ [ 1283, 4372 ] ] }
+        - { cmd: lnTo, pts: [ [ 1283, 5740 ] ] }
+        - { cmd: lnTo, pts: [ [ 4570, 5740 ] ] }
+        - { cmd: lnTo, pts: [ [ 4570, 4372 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 1283, 2845 ] ] }
+        - { cmd: lnTo, pts: [ [ 4590, 2845 ] ] }
+        - { cmd: lnTo, pts: [ [ 4590, 845 ] ] }
+        - { cmd: lnTo, pts: [ [ 3790, 400 ] ] }
+        - { cmd: lnTo, pts: [ [ 1283, 400 ] ] }
+        - { cmd: lnTo, pts: [ [ 1283, 2845 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 4496, 3320 ] ] }
+        - { cmd: lnTo, pts: [ [ 4496, 3589 ] ] }
+        - { cmd: lnTo, pts: [ [ 4694, 3589 ] ] }
+        - { cmd: lnTo, pts: [ [ 4971, 3589 ] ] }
+        - { cmd: lnTo, pts: [ [ 5140, 3589 ] ] }
+        - { cmd: lnTo, pts: [ [ 5140, 3320 ] ] }
+        - { cmd: lnTo, pts: [ [ 4971, 3320 ] ] }
+        - { cmd: lnTo, pts: [ [ 4694, 3320 ] ] }
+        - { cmd: lnTo, pts: [ [ 4496, 3320 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "KSO_Shape-5"
     elementType: shape
     bounds: [ 792, 189, 87, 79 ]
-    kind: rect
+    kind: custGeom
     fill: "#FFFFFF"
+    path:
+      w: 1301527
+      h: 1186978
+      commands:
+        - { cmd: moveTo, pts: [ [ 744913, 309576 ] ] }
+        - { cmd: lnTo, pts: [ [ 744913, 877403 ] ] }
+        - { cmd: lnTo, pts: [ [ 1001726, 719489 ] ] }
+        - { cmd: lnTo, pts: [ [ 1259526, 719489 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 1282723, 719489 ], [ 1301527, 700685 ], [ 1301527, 677488 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 1301527, 509490 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 1301527, 486293 ], [ 1282723, 467489 ], [ 1259526, 467489 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 1001724, 467489 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 486516, 175870 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 371649, 278215 ], [ 300385, 427530 ], [ 300385, 593488 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 300385, 759449 ], [ 371649, 908762 ], [ 486516, 1011109 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 609421, 924274 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 509665, 848549 ], [ 446248, 728424 ], [ 446248, 593488 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 446248, 458553 ], [ 509665, 338428 ], [ 609421, 262704 ] ]
+          }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 237591, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 89700, 153897 ], [ 0, 363218 ], [ 0, 593490 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 0, 823760 ], [ 89700, 1033081 ], [ 237589, 1186978 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 362934, 1098420 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 233669, 969220 ], [ 153719, 790692 ], [ 153719, 593490 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 153719, 396288 ], [ 233671, 217758 ], [ 362936, 88558 ] ]
+          }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "文本框_14"
     elementType: text

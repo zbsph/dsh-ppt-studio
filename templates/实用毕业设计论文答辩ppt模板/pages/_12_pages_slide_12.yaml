@@ -1,4 +1,4 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 elements:
   - elementId: "图片_1"
@@ -40,8 +40,264 @@ elements:
   - elementId: "KSO_Shape"
     elementType: shape
     bounds: [ 280, 205, 73, 69 ]
-    kind: rect
+    kind: custGeom
     fill: "#4B649F"
+    path:
+      w: 5871
+      h: 5585
+      commands:
+        - { cmd: moveTo, pts: [ [ 774, 374 ] ] }
+        - { cmd: lnTo, pts: [ [ 774, 1910 ] ] }
+        - { cmd: lnTo, pts: [ [ 5107, 1910 ] ] }
+        - { cmd: lnTo, pts: [ [ 5107, 374 ] ] }
+        - { cmd: lnTo, pts: [ [ 774, 374 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 1597, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1597, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1591, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1587, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1586, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1581, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1576, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1571, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1570, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1566, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1560, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1555, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1550, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1545, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1540, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1539, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1535, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1529, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1525, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1524, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1519, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1514, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1509, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1508, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1504, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1498, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1494, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1493, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1488, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1483, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1478, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1477, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1473, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1467, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1463, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1462, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1457, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1452, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1446, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1442, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1266, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1345, 3830 ] ] }
+        - { cmd: lnTo, pts: [ [ 1294, 3911 ] ] }
+        - { cmd: lnTo, pts: [ [ 1345, 3977 ] ] }
+        - { cmd: lnTo, pts: [ [ 1117, 4116 ] ] }
+        - { cmd: lnTo, pts: [ [ 1112, 4144 ] ] }
+        - { cmd: lnTo, pts: [ [ 1106, 4173 ] ] }
+        - { cmd: lnTo, pts: [ [ 1103, 4201 ] ] }
+        - { cmd: lnTo, pts: [ [ 1099, 4228 ] ] }
+        - { cmd: lnTo, pts: [ [ 1097, 4255 ] ] }
+        - { cmd: lnTo, pts: [ [ 1096, 4281 ] ] }
+        - { cmd: lnTo, pts: [ [ 1096, 4308 ] ] }
+        - { cmd: lnTo, pts: [ [ 1096, 4333 ] ] }
+        - { cmd: lnTo, pts: [ [ 1097, 4359 ] ] }
+        - { cmd: lnTo, pts: [ [ 1098, 4383 ] ] }
+        - { cmd: lnTo, pts: [ [ 1100, 4407 ] ] }
+        - { cmd: lnTo, pts: [ [ 1104, 4432 ] ] }
+        - { cmd: lnTo, pts: [ [ 1112, 4478 ] ] }
+        - { cmd: lnTo, pts: [ [ 1121, 4523 ] ] }
+        - { cmd: lnTo, pts: [ [ 1133, 4568 ] ] }
+        - { cmd: lnTo, pts: [ [ 1147, 4611 ] ] }
+        - { cmd: lnTo, pts: [ [ 1162, 4653 ] ] }
+        - { cmd: lnTo, pts: [ [ 1179, 4694 ] ] }
+        - { cmd: lnTo, pts: [ [ 1198, 4733 ] ] }
+        - { cmd: lnTo, pts: [ [ 1218, 4772 ] ] }
+        - { cmd: lnTo, pts: [ [ 1238, 4812 ] ] }
+        - { cmd: lnTo, pts: [ [ 1259, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 774, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 774, 2135 ] ] }
+        - { cmd: lnTo, pts: [ [ 2185, 2135 ] ] }
+        - { cmd: lnTo, pts: [ [ 2185, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 1780, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 1801, 4812 ] ] }
+        - { cmd: lnTo, pts: [ [ 1821, 4772 ] ] }
+        - { cmd: lnTo, pts: [ [ 1841, 4733 ] ] }
+        - { cmd: lnTo, pts: [ [ 1859, 4694 ] ] }
+        - { cmd: lnTo, pts: [ [ 1876, 4653 ] ] }
+        - { cmd: lnTo, pts: [ [ 1892, 4611 ] ] }
+        - { cmd: lnTo, pts: [ [ 1905, 4568 ] ] }
+        - { cmd: lnTo, pts: [ [ 1917, 4523 ] ] }
+        - { cmd: lnTo, pts: [ [ 1927, 4478 ] ] }
+        - { cmd: lnTo, pts: [ [ 1935, 4432 ] ] }
+        - { cmd: lnTo, pts: [ [ 1938, 4407 ] ] }
+        - { cmd: lnTo, pts: [ [ 1941, 4383 ] ] }
+        - { cmd: lnTo, pts: [ [ 1942, 4359 ] ] }
+        - { cmd: lnTo, pts: [ [ 1943, 4333 ] ] }
+        - { cmd: lnTo, pts: [ [ 1943, 4308 ] ] }
+        - { cmd: lnTo, pts: [ [ 1942, 4281 ] ] }
+        - { cmd: lnTo, pts: [ [ 1941, 4255 ] ] }
+        - { cmd: lnTo, pts: [ [ 1938, 4228 ] ] }
+        - { cmd: lnTo, pts: [ [ 1936, 4201 ] ] }
+        - { cmd: lnTo, pts: [ [ 1932, 4173 ] ] }
+        - { cmd: lnTo, pts: [ [ 1927, 4144 ] ] }
+        - { cmd: lnTo, pts: [ [ 1922, 4116 ] ] }
+        - { cmd: lnTo, pts: [ [ 1694, 3977 ] ] }
+        - { cmd: lnTo, pts: [ [ 1745, 3911 ] ] }
+        - { cmd: lnTo, pts: [ [ 1694, 3830 ] ] }
+        - { cmd: lnTo, pts: [ [ 1771, 3265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1597, 3265 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 4819, 863 ] ] }
+        - { cmd: lnTo, pts: [ [ 4819, 1057 ] ] }
+        - { cmd: lnTo, pts: [ [ 3585, 1057 ] ] }
+        - { cmd: lnTo, pts: [ [ 3585, 863 ] ] }
+        - { cmd: lnTo, pts: [ [ 4819, 863 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 5002, 1108 ] ] }
+        - { cmd: lnTo, pts: [ [ 5002, 1379 ] ] }
+        - { cmd: lnTo, pts: [ [ 3769, 1379 ] ] }
+        - { cmd: lnTo, pts: [ [ 3769, 1108 ] ] }
+        - { cmd: lnTo, pts: [ [ 5002, 1108 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 4891, 1429 ] ] }
+        - { cmd: lnTo, pts: [ [ 4891, 1623 ] ] }
+        - { cmd: lnTo, pts: [ [ 3657, 1623 ] ] }
+        - { cmd: lnTo, pts: [ [ 3657, 1429 ] ] }
+        - { cmd: lnTo, pts: [ [ 4891, 1429 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 4977, 1659 ] ] }
+        - { cmd: lnTo, pts: [ [ 4977, 1853 ] ] }
+        - { cmd: lnTo, pts: [ [ 3743, 1853 ] ] }
+        - { cmd: lnTo, pts: [ [ 3743, 1659 ] ] }
+        - { cmd: lnTo, pts: [ [ 4977, 1659 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 1643, 596 ] ] }
+        - { cmd: lnTo, pts: [ [ 1833, 561 ] ] }
+        - { cmd: lnTo, pts: [ [ 2061, 1773 ] ] }
+        - { cmd: lnTo, pts: [ [ 1871, 1809 ] ] }
+        - { cmd: lnTo, pts: [ [ 1643, 596 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 1388, 596 ] ] }
+        - { cmd: lnTo, pts: [ [ 1579, 561 ] ] }
+        - { cmd: lnTo, pts: [ [ 1807, 1773 ] ] }
+        - { cmd: lnTo, pts: [ [ 1616, 1809 ] ] }
+        - { cmd: lnTo, pts: [ [ 1388, 596 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 1134, 596 ] ] }
+        - { cmd: lnTo, pts: [ [ 1324, 561 ] ] }
+        - { cmd: lnTo, pts: [ [ 1551, 1773 ] ] }
+        - { cmd: lnTo, pts: [ [ 1361, 1809 ] ] }
+        - { cmd: lnTo, pts: [ [ 1134, 596 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 884, 568 ] ] }
+        - { cmd: lnTo, pts: [ [ 1077, 568 ] ] }
+        - { cmd: lnTo, pts: [ [ 1077, 1802 ] ] }
+        - { cmd: lnTo, pts: [ [ 884, 1802 ] ] }
+        - { cmd: lnTo, pts: [ [ 884, 568 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 3540, 2418 ] ] }
+        - { cmd: lnTo, pts: [ [ 3807, 2354 ] ] }
+        - { cmd: lnTo, pts: [ [ 4033, 3306 ] ] }
+        - { cmd: lnTo, pts: [ [ 3765, 3369 ] ] }
+        - { cmd: lnTo, pts: [ [ 3540, 2418 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 3622, 2531 ] ] }
+        - { cmd: lnTo, pts: [ [ 3639, 2606 ] ] }
+        - { cmd: lnTo, pts: [ [ 3791, 2570 ] ] }
+        - { cmd: lnTo, pts: [ [ 3773, 2496 ] ] }
+        - { cmd: lnTo, pts: [ [ 3622, 2531 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 3739, 3028 ] ] }
+        - { cmd: lnTo, pts: [ [ 3776, 3184 ] ] }
+        - { cmd: lnTo, pts: [ [ 3928, 3148 ] ] }
+        - { cmd: lnTo, pts: [ [ 3890, 2991 ] ] }
+        - { cmd: lnTo, pts: [ [ 3739, 3028 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 3193, 2418 ] ] }
+        - { cmd: lnTo, pts: [ [ 3418, 3369 ] ] }
+        - { cmd: lnTo, pts: [ [ 3687, 3306 ] ] }
+        - { cmd: lnTo, pts: [ [ 3461, 2354 ] ] }
+        - { cmd: lnTo, pts: [ [ 3193, 2418 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 3276, 2531 ] ] }
+        - { cmd: lnTo, pts: [ [ 3426, 2496 ] ] }
+        - { cmd: lnTo, pts: [ [ 3444, 2570 ] ] }
+        - { cmd: lnTo, pts: [ [ 3292, 2606 ] ] }
+        - { cmd: lnTo, pts: [ [ 3276, 2531 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 3393, 3028 ] ] }
+        - { cmd: lnTo, pts: [ [ 3429, 3184 ] ] }
+        - { cmd: lnTo, pts: [ [ 3581, 3148 ] ] }
+        - { cmd: lnTo, pts: [ [ 3544, 2991 ] ] }
+        - { cmd: lnTo, pts: [ [ 3393, 3028 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2841, 2418 ] ] }
+        - { cmd: lnTo, pts: [ [ 3109, 2354 ] ] }
+        - { cmd: lnTo, pts: [ [ 3335, 3306 ] ] }
+        - { cmd: lnTo, pts: [ [ 3067, 3369 ] ] }
+        - { cmd: lnTo, pts: [ [ 2841, 2418 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2923, 2531 ] ] }
+        - { cmd: lnTo, pts: [ [ 2941, 2606 ] ] }
+        - { cmd: lnTo, pts: [ [ 3092, 2570 ] ] }
+        - { cmd: lnTo, pts: [ [ 3075, 2496 ] ] }
+        - { cmd: lnTo, pts: [ [ 2923, 2531 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 3041, 3028 ] ] }
+        - { cmd: lnTo, pts: [ [ 3192, 2991 ] ] }
+        - { cmd: lnTo, pts: [ [ 3229, 3148 ] ] }
+        - { cmd: lnTo, pts: [ [ 3078, 3184 ] ] }
+        - { cmd: lnTo, pts: [ [ 3041, 3028 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2553, 2372 ] ] }
+        - { cmd: lnTo, pts: [ [ 2828, 2372 ] ] }
+        - { cmd: lnTo, pts: [ [ 2828, 3352 ] ] }
+        - { cmd: lnTo, pts: [ [ 2553, 3352 ] ] }
+        - { cmd: lnTo, pts: [ [ 2553, 2372 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2606, 2503 ] ] }
+        - { cmd: lnTo, pts: [ [ 2606, 2579 ] ] }
+        - { cmd: lnTo, pts: [ [ 2762, 2579 ] ] }
+        - { cmd: lnTo, pts: [ [ 2762, 2503 ] ] }
+        - { cmd: lnTo, pts: [ [ 2606, 2503 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2606, 3012 ] ] }
+        - { cmd: lnTo, pts: [ [ 2606, 3173 ] ] }
+        - { cmd: lnTo, pts: [ [ 2762, 3173 ] ] }
+        - { cmd: lnTo, pts: [ [ 2762, 3012 ] ] }
+        - { cmd: lnTo, pts: [ [ 2606, 3012 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 5555, 151 ] ] }
+        - { cmd: lnTo, pts: [ [ 5555, 374 ] ] }
+        - { cmd: lnTo, pts: [ [ 5555, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 5871, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 5871, 5585 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 5585 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 326, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 326, 374 ] ] }
+        - { cmd: lnTo, pts: [ [ 326, 151 ] ] }
+        - { cmd: lnTo, pts: [ [ 326, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 5555, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 5555, 151 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2409, 2135 ] ] }
+        - { cmd: lnTo, pts: [ [ 2409, 3385 ] ] }
+        - { cmd: lnTo, pts: [ [ 5107, 3385 ] ] }
+        - { cmd: lnTo, pts: [ [ 5107, 2135 ] ] }
+        - { cmd: lnTo, pts: [ [ 2409, 2135 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2409, 3609 ] ] }
+        - { cmd: lnTo, pts: [ [ 2409, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 5107, 4849 ] ] }
+        - { cmd: lnTo, pts: [ [ 5107, 3609 ] ] }
+        - { cmd: lnTo, pts: [ [ 2409, 3609 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "MH_SubTitle_1"
     elementType: shape
@@ -73,7 +329,7 @@ elements:
     bounds: [ 609, 320, 213, 136 ]
     kind: rect
     line: { color: "#4B649F", width: 2 }
-  - elementId: "MH_Other_1"
+  - elementId: "MH_Other_1_txt"
     elementType: text
     bounds: [ 281, 134, 47, 43 ]
     content:
@@ -81,7 +337,36 @@ elements:
       fontSize: 20
       color: "#FFFFFF"
       align: center
-  - elementId: "MH_Other_2"
+  - elementId: "MH_Other_1"
+    elementType: shape
+    bounds: [ 281, 134, 47, 43 ]
+    kind: custGeom
+    fill: "#4B649F"
+    path:
+      w: 509451
+      h: 459661
+      commands:
+        - { cmd: moveTo, pts: [ [ 28344, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 481107, 0 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 496761, 0 ], [ 509451, 12690 ], [ 509451, 28344 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 509451, 332765 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 509451, 348419 ], [ 496761, 361109 ], [ 481107, 361109 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 313285, 361109 ] ] }
+        - { cmd: lnTo, pts: [ [ 256124, 459661 ] ] }
+        - { cmd: lnTo, pts: [ [ 198964, 361109 ] ] }
+        - { cmd: lnTo, pts: [ [ 28344, 361109 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 12690, 361109 ], [ 0, 348419 ], [ 0, 332765 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 28344 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 12690 ], [ 12690, 0 ], [ 28344, 0 ] ] }
+        - { cmd: close }
+    line: { color: "#000000" }
+  - elementId: "MH_Other_2_txt"
     elementType: text
     bounds: [ 519, 134, 47, 43 ]
     content:
@@ -89,7 +374,36 @@ elements:
       fontSize: 20
       color: "#FFFFFF"
       align: center
-  - elementId: "MH_Other_3"
+  - elementId: "MH_Other_2"
+    elementType: shape
+    bounds: [ 519, 134, 47, 43 ]
+    kind: custGeom
+    fill: "#4B649F"
+    path:
+      w: 509451
+      h: 459661
+      commands:
+        - { cmd: moveTo, pts: [ [ 28343, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 481107, 0 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 496761, 0 ], [ 509451, 12690 ], [ 509451, 28344 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 509451, 332765 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 509451, 348419 ], [ 496761, 361109 ], [ 481107, 361109 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 313285, 361109 ] ] }
+        - { cmd: lnTo, pts: [ [ 256124, 459661 ] ] }
+        - { cmd: lnTo, pts: [ [ 198964, 361109 ] ] }
+        - { cmd: lnTo, pts: [ [ 28343, 361109 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 12690, 361109 ], [ 0, 348419 ], [ 0, 332765 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 28344 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 12690 ], [ 12690, 0 ], [ 28343, 0 ] ] }
+        - { cmd: close }
+    line: { color: "#000000" }
+  - elementId: "MH_Other_3_txt"
     elementType: text
     bounds: [ 757, 134, 47, 43 ]
     content:
@@ -97,7 +411,36 @@ elements:
       fontSize: 20
       color: "#FFFFFF"
       align: center
-  - elementId: "MH_Other_4"
+  - elementId: "MH_Other_3"
+    elementType: shape
+    bounds: [ 757, 134, 47, 43 ]
+    kind: custGeom
+    fill: "#4B649F"
+    path:
+      w: 509451
+      h: 459661
+      commands:
+        - { cmd: moveTo, pts: [ [ 28344, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 481108, 0 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 496761, 0 ], [ 509451, 12690 ], [ 509451, 28344 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 509451, 332765 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 509451, 348419 ], [ 496761, 361109 ], [ 481108, 361109 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 313285, 361109 ] ] }
+        - { cmd: lnTo, pts: [ [ 256124, 459661 ] ] }
+        - { cmd: lnTo, pts: [ [ 198965, 361109 ] ] }
+        - { cmd: lnTo, pts: [ [ 28344, 361109 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 12690, 361109 ], [ 0, 348419 ], [ 0, 332765 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 28344 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 12690 ], [ 12690, 0 ], [ 28344, 0 ] ] }
+        - { cmd: close }
+    line: { color: "#000000" }
+  - elementId: "MH_Other_4_txt"
     elementType: text
     bounds: [ 281, 306, 47, 42 ]
     content:
@@ -105,7 +448,36 @@ elements:
       fontSize: 20
       color: "#FFFFFF"
       align: center
-  - elementId: "MH_Other_5"
+  - elementId: "MH_Other_4"
+    elementType: shape
+    bounds: [ 281, 306, 47, 42 ]
+    kind: custGeom
+    fill: "#4B649F"
+    path:
+      w: 509451
+      h: 459661
+      commands:
+        - { cmd: moveTo, pts: [ [ 28344, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 481107, 0 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 496761, 0 ], [ 509451, 12690 ], [ 509451, 28344 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 509451, 332765 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 509451, 348419 ], [ 496761, 361109 ], [ 481107, 361109 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 313285, 361109 ] ] }
+        - { cmd: lnTo, pts: [ [ 256124, 459661 ] ] }
+        - { cmd: lnTo, pts: [ [ 198964, 361109 ] ] }
+        - { cmd: lnTo, pts: [ [ 28344, 361109 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 12690, 361109 ], [ 0, 348419 ], [ 0, 332765 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 28344 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 12690 ], [ 12690, 0 ], [ 28344, 0 ] ] }
+        - { cmd: close }
+    line: { color: "#000000" }
+  - elementId: "MH_Other_5_txt"
     elementType: text
     bounds: [ 519, 306, 47, 42 ]
     content:
@@ -113,7 +485,36 @@ elements:
       fontSize: 20
       color: "#FFFFFF"
       align: center
-  - elementId: "MH_Other_6"
+  - elementId: "MH_Other_5"
+    elementType: shape
+    bounds: [ 519, 306, 47, 42 ]
+    kind: custGeom
+    fill: "#4B649F"
+    path:
+      w: 509451
+      h: 459661
+      commands:
+        - { cmd: moveTo, pts: [ [ 28343, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 481107, 0 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 496761, 0 ], [ 509451, 12690 ], [ 509451, 28344 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 509451, 332765 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 509451, 348419 ], [ 496761, 361109 ], [ 481107, 361109 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 313285, 361109 ] ] }
+        - { cmd: lnTo, pts: [ [ 256124, 459661 ] ] }
+        - { cmd: lnTo, pts: [ [ 198964, 361109 ] ] }
+        - { cmd: lnTo, pts: [ [ 28343, 361109 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 12690, 361109 ], [ 0, 348419 ], [ 0, 332765 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 28344 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 12690 ], [ 12690, 0 ], [ 28343, 0 ] ] }
+        - { cmd: close }
+    line: { color: "#000000" }
+  - elementId: "MH_Other_6_txt"
     elementType: text
     bounds: [ 757, 306, 47, 42 ]
     content:
@@ -121,6 +522,35 @@ elements:
       fontSize: 20
       color: "#FFFFFF"
       align: center
+  - elementId: "MH_Other_6"
+    elementType: shape
+    bounds: [ 757, 306, 47, 42 ]
+    kind: custGeom
+    fill: "#4B649F"
+    path:
+      w: 509451
+      h: 459661
+      commands:
+        - { cmd: moveTo, pts: [ [ 28343, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 481107, 0 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 496761, 0 ], [ 509451, 12690 ], [ 509451, 28344 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 509451, 332765 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 509451, 348419 ], [ 496761, 361109 ], [ 481107, 361109 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 313285, 361109 ] ] }
+        - { cmd: lnTo, pts: [ [ 256124, 459661 ] ] }
+        - { cmd: lnTo, pts: [ [ 198964, 361109 ] ] }
+        - { cmd: lnTo, pts: [ [ 28343, 361109 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 12690, 361109 ], [ 0, 348419 ], [ 0, 332765 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 28344 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 12690 ], [ 12690, 0 ], [ 28343, 0 ] ] }
+        - { cmd: close }
+    line: { color: "#000000" }
   - elementId: "文本框_21"
     elementType: text
     bounds: [ 148, 184, 180, 86 ]
@@ -190,10 +620,16 @@ expectedOverlaps:
       - 文本框_21
   - pair:
       - MH_SubTitle_1
+      - MH_Other_1_txt
+  - pair:
+      - MH_SubTitle_1
       - MH_Other_1
   - pair:
       - MH_SubTitle_1
       - 文本框_21
+  - pair:
+      - MH_SubTitle_2
+      - MH_Other_2_txt
   - pair:
       - MH_SubTitle_2
       - MH_Other_2
@@ -202,10 +638,16 @@ expectedOverlaps:
       - 文本框_22
   - pair:
       - MH_SubTitle_3
+      - MH_Other_3_txt
+  - pair:
+      - MH_SubTitle_3
       - MH_Other_3
   - pair:
       - MH_SubTitle_3
       - 文本框_23
+  - pair:
+      - MH_SubTitle_4
+      - MH_Other_4_txt
   - pair:
       - MH_SubTitle_4
       - MH_Other_4
@@ -214,13 +656,37 @@ expectedOverlaps:
       - 文本框_24
   - pair:
       - MH_SubTitle_5
+      - MH_Other_5_txt
+  - pair:
+      - MH_SubTitle_5
       - MH_Other_5
   - pair:
       - MH_SubTitle_5
       - 文本框_25
   - pair:
       - MH_SubTitle_6
+      - MH_Other_6_txt
+  - pair:
+      - MH_SubTitle_6
       - MH_Other_6
   - pair:
       - MH_SubTitle_6
       - 文本框_26
+  - pair:
+      - MH_Other_1_txt
+      - MH_Other_1
+  - pair:
+      - MH_Other_2_txt
+      - MH_Other_2
+  - pair:
+      - MH_Other_3_txt
+      - MH_Other_3
+  - pair:
+      - MH_Other_4_txt
+      - MH_Other_4
+  - pair:
+      - MH_Other_5_txt
+      - MH_Other_5
+  - pair:
+      - MH_Other_6_txt
+      - MH_Other_6

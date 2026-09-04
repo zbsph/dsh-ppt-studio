@@ -1,4 +1,4 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 background: { "type": "image", "src": "media/placeholder.png", "fit": "cover" }
 elements:
@@ -6,6 +6,13 @@ elements:
     elementType: shape
     bounds: [ 0, 0, 720, 405 ]
     kind: rect
+    fill:
+      type: gradient
+      stops:
+        - { pos: 12, color: "#000000" }
+        - { pos: 87, color: "#000000" }
+      angle: 45 # OOXML lin@ang 顺时针
+    # import: 渐变 #000000→#000000（linear, angle 45°）直通 fill.gradient
     line: { color: "#000000", width: 1 }
   - elementId: "矩形_170"
     elementType: shape

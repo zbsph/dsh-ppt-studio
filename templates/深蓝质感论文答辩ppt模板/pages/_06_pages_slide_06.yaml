@@ -1,4 +1,4 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 elements:
   - elementId: "图片_7"
@@ -40,6 +40,15 @@ elements:
     bounds: [ 46, 77, 303, 170 ]
     fit: cover
     src: "media/image4.jpg"
+  - elementId: "矩形_圆角_19_txt"
+    elementType: text
+    bounds: [ 112, 230, 158, 35 ]
+    content:
+      text: "国内研究现状"
+      fontSize: 20
+      bold: true
+      fontFamily: "微软雅黑"
+      align: center
   - elementId: "矩形_圆角_19"
     elementType: shape
     bounds: [ 112, 230, 158, 35 ]
@@ -64,6 +73,15 @@ elements:
       fontSize: 10.5
       color: "#000000"
       lineHeight: 1.5
+  - elementId: "矩形_圆角_26_txt"
+    elementType: text
+    bounds: [ 445, 229, 158, 35 ]
+    content:
+      text: "国内研究现状"
+      fontSize: 20
+      bold: true
+      fontFamily: "微软雅黑"
+      align: center
   - elementId: "矩形_圆角_26"
     elementType: shape
     bounds: [ 445, 229, 158, 35 ]
@@ -91,7 +109,19 @@ elements:
 expectedOverlaps:
   - pair:
       - 图片_7
+      - 矩形_圆角_26_txt
+  - pair:
+      - 图片_7
       - 矩形_圆角_26
   - pair:
       - 图片_5
+      - 矩形_圆角_19_txt
+  - pair:
+      - 图片_5
       - 矩形_圆角_19
+  - pair:
+      - 矩形_圆角_19_txt
+      - 矩形_圆角_19
+  - pair:
+      - 矩形_圆角_26_txt
+      - 矩形_圆角_26

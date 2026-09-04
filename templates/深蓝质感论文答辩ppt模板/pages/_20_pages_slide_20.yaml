@@ -1,4 +1,4 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 elements:
   - elementId: "灯片编号占位符_1"
@@ -21,125 +21,3391 @@ elements:
   - elementId: "Freeform_5"
     elementType: shape
     bounds: [ 419, 147, 236, 216 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 1755
+      h: 1606
+      commands:
+        - { cmd: moveTo, pts: [ [ 598, 1493 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 647, 1457 ], [ 684, 1410 ], [ 708, 1359 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 708, 1359 ], [ 708, 1359 ], [ 708, 1359 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 708, 1359 ], [ 708, 1358 ], [ 708, 1358 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 712, 1350 ], [ 715, 1343 ], [ 718, 1335 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 732, 1307 ], [ 753, 1281 ], [ 779, 1262 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 865, 1199 ], [ 985, 1218 ], [ 1048, 1304 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1058, 1318 ], [ 1058, 1318 ], [ 1058, 1318 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1065, 1331 ], [ 1073, 1344 ], [ 1082, 1356 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1195, 1511 ], [ 1412, 1544 ], [ 1567, 1431 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1721, 1318 ], [ 1755, 1101 ], [ 1642, 946 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1528, 792 ], [ 1311, 758 ], [ 1157, 872 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1101, 912 ], [ 1061, 967 ], [ 1038, 1028 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1024, 1056 ], [ 1004, 1083 ], [ 977, 1103 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 891, 1165 ], [ 771, 1147 ], [ 708, 1061 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 706, 1058 ], [ 703, 1055 ], [ 701, 1053 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 694, 1039 ], [ 686, 1026 ], [ 677, 1014 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 664, 988 ], [ 655, 959 ], [ 655, 928 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 653, 823 ], [ 737, 736 ], [ 842, 733 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 933, 750 ], [ 1030, 731 ], [ 1111, 672 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1265, 559 ], [ 1299, 342 ], [ 1186, 187 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1073, 33 ], [ 855, 0 ], [ 701, 113 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 558, 217 ], [ 519, 412 ], [ 603, 562 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 601, 561 ], [ 601, 561 ], [ 601, 561 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 624, 592 ], [ 638, 633 ], [ 639, 675 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 641, 781 ], [ 556, 867 ], [ 450, 870 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 449, 870 ], [ 449, 870 ], [ 449, 870 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 360, 858 ], [ 266, 875 ], [ 188, 933 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 34, 1046 ], [ 0, 1263 ], [ 113, 1418 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 226, 1572 ], [ 444, 1606 ], [ 598, 1493 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 1597, 979 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1692, 1109 ], [ 1664, 1292 ], [ 1534, 1387 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1404, 1482 ], [ 1221, 1454 ], [ 1126, 1324 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1031, 1194 ], [ 1059, 1011 ], [ 1189, 916 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1319, 821 ], [ 1502, 849 ], [ 1597, 979 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 734, 157 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 863, 62 ], [ 1046, 90 ], [ 1141, 220 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1236, 350 ], [ 1208, 533 ], [ 1078, 628 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 949, 723 ], [ 766, 695 ], [ 671, 565 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 575, 435 ], [ 604, 252 ], [ 734, 157 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 221, 977 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 351, 882 ], [ 533, 910 ], [ 629, 1040 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 724, 1170 ], [ 695, 1353 ], [ 566, 1448 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 436, 1543 ], [ 253, 1515 ], [ 158, 1385 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 63, 1255 ], [ 91, 1072 ], [ 221, 977 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_8"
     elementType: shape
     bounds: [ 306, 257, 219, 234 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 1634
+      h: 1740
+      commands:
+        - { cmd: moveTo, pts: [ [ 1383, 1217 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1361, 1161 ], [ 1325, 1115 ], [ 1281, 1077 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1281, 1077 ], [ 1281, 1077 ], [ 1281, 1077 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1281, 1077 ], [ 1280, 1077 ], [ 1280, 1077 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1273, 1072 ], [ 1267, 1067 ], [ 1260, 1062 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1236, 1042 ], [ 1217, 1016 ], [ 1204, 985 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1165, 887 ], [ 1212, 775 ], [ 1311, 735 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1328, 730 ], [ 1328, 730 ], [ 1328, 730 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1342, 726 ], [ 1356, 721 ], [ 1370, 715 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1548, 644 ], [ 1634, 441 ], [ 1562, 264 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1491, 87 ], [ 1288, 0 ], [ 1111, 72 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 934, 144 ], [ 847, 346 ], [ 919, 524 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 945, 588 ], [ 988, 640 ], [ 1041, 677 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1065, 697 ], [ 1086, 723 ], [ 1099, 755 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1138, 853 ], [ 1091, 966 ], [ 992, 1005 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 989, 1007 ], [ 985, 1008 ], [ 982, 1010 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 968, 1013 ], [ 953, 1018 ], [ 939, 1023 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 911, 1029 ], [ 881, 1031 ], [ 851, 1024 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 748, 999 ], [ 684, 897 ], [ 707, 795 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 746, 711 ], [ 752, 611 ], [ 715, 519 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 643, 341 ], [ 441, 255 ], [ 263, 327 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 86, 398 ], [ 0, 602 ], [ 72, 779 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 138, 943 ], [ 316, 1028 ], [ 485, 985 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 483, 987 ], [ 483, 987 ], [ 483, 987 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 519, 973 ], [ 561, 968 ], [ 602, 978 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 705, 1002 ], [ 769, 1106 ], [ 744, 1209 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 744, 1209 ], [ 744, 1209 ], [ 744, 1209 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 708, 1292 ], [ 704, 1388 ], [ 740, 1477 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 811, 1655 ], [ 1014, 1740 ], [ 1191, 1669 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1369, 1597 ], [ 1455, 1394 ], [ 1383, 1217 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 1132, 123 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1281, 63 ], [ 1451, 135 ], [ 1511, 285 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1572, 434 ], [ 1499, 604 ], [ 1350, 664 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1201, 725 ], [ 1030, 652 ], [ 970, 503 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 910, 354 ], [ 982, 183 ], [ 1132, 123 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 122, 758 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 62, 608 ], [ 135, 438 ], [ 284, 378 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 433, 318 ], [ 603, 390 ], [ 663, 539 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 724, 689 ], [ 651, 859 ], [ 502, 919 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 353, 979 ], [ 182, 907 ], [ 122, 758 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 791, 1457 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 731, 1307 ], [ 803, 1137 ], [ 952, 1077 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1102, 1017 ], [ 1272, 1089 ], [ 1332, 1238 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1392, 1388 ], [ 1320, 1558 ], [ 1171, 1618 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1021, 1678 ], [ 851, 1606 ], [ 791, 1457 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_9"
     elementType: shape
     bounds: [ 236, 219, 65, 65 ]
-    kind: rect
+    kind: custGeom
     fill: "#000000"
+    path:
+      w: 644
+      h: 644
+      commands:
+        - { cmd: moveTo, pts: [ [ 533, 524 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 421, 641 ], [ 236, 644 ], [ 120, 532 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4, 421 ], [ 0, 236 ], [ 112, 120 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 224, 4 ], [ 408, 0 ], [ 524, 112 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 641, 224 ], [ 644, 408 ], [ 533, 524 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_10"
     elementType: shape
     bounds: [ 322, 193, 65, 65 ]
-    kind: rect
+    kind: custGeom
     fill: "#000000"
+    path:
+      w: 644
+      h: 644
+      commands:
+        - { cmd: moveTo, pts: [ [ 532, 524 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 420, 640 ], [ 235, 644 ], [ 119, 532 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3, 421 ], [ 0, 236 ], [ 111, 120 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 223, 4 ], [ 408, 0 ], [ 524, 112 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 640, 223 ], [ 644, 408 ], [ 532, 524 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_11"
     elementType: shape
     bounds: [ 303, 289, 65, 65 ]
-    kind: rect
+    kind: custGeom
     fill: "#000000"
+    path:
+      w: 644
+      h: 644
+      commands:
+        - { cmd: moveTo, pts: [ [ 532, 524 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 420, 640 ], [ 235, 644 ], [ 119, 532 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3, 421 ], [ 0, 236 ], [ 111, 120 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 223, 4 ], [ 408, 0 ], [ 524, 112 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 640, 223 ], [ 644, 408 ], [ 532, 524 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_70"
     elementType: shape
     bounds: [ 286, 151, 26, 26 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 2077
+      h: 2076
+      commands:
+        - { cmd: moveTo, pts: [ [ 971, 140 ] ] }
+        - { cmd: lnTo, pts: [ [ 967, 140 ] ] }
+        - { cmd: lnTo, pts: [ [ 964, 142 ] ] }
+        - { cmd: lnTo, pts: [ [ 961, 145 ] ] }
+        - { cmd: lnTo, pts: [ [ 959, 149 ] ] }
+        - { cmd: lnTo, pts: [ [ 958, 152 ] ] }
+        - { cmd: lnTo, pts: [ [ 958, 277 ] ] }
+        - { cmd: lnTo, pts: [ [ 956, 296 ] ] }
+        - { cmd: lnTo, pts: [ [ 948, 314 ] ] }
+        - { cmd: lnTo, pts: [ [ 936, 329 ] ] }
+        - { cmd: lnTo, pts: [ [ 920, 340 ] ] }
+        - { cmd: lnTo, pts: [ [ 902, 346 ] ] }
+        - { cmd: lnTo, pts: [ [ 849, 360 ] ] }
+        - { cmd: lnTo, pts: [ [ 796, 377 ] ] }
+        - { cmd: lnTo, pts: [ [ 745, 397 ] ] }
+        - { cmd: lnTo, pts: [ [ 697, 422 ] ] }
+        - { cmd: lnTo, pts: [ [ 649, 451 ] ] }
+        - { cmd: lnTo, pts: [ [ 631, 460 ] ] }
+        - { cmd: lnTo, pts: [ [ 612, 463 ] ] }
+        - { cmd: lnTo, pts: [ [ 594, 461 ] ] }
+        - { cmd: lnTo, pts: [ [ 576, 455 ] ] }
+        - { cmd: lnTo, pts: [ [ 561, 443 ] ] }
+        - { cmd: lnTo, pts: [ [ 471, 352 ] ] }
+        - { cmd: lnTo, pts: [ [ 468, 350 ] ] }
+        - { cmd: lnTo, pts: [ [ 465, 349 ] ] }
+        - { cmd: lnTo, pts: [ [ 462, 349 ] ] }
+        - { cmd: lnTo, pts: [ [ 459, 349 ] ] }
+        - { cmd: lnTo, pts: [ [ 456, 350 ] ] }
+        - { cmd: lnTo, pts: [ [ 453, 352 ] ] }
+        - { cmd: lnTo, pts: [ [ 356, 450 ] ] }
+        - { cmd: lnTo, pts: [ [ 353, 456 ] ] }
+        - { cmd: lnTo, pts: [ [ 353, 462 ] ] }
+        - { cmd: lnTo, pts: [ [ 356, 467 ] ] }
+        - { cmd: lnTo, pts: [ [ 446, 557 ] ] }
+        - { cmd: lnTo, pts: [ [ 457, 573 ] ] }
+        - { cmd: lnTo, pts: [ [ 465, 591 ] ] }
+        - { cmd: lnTo, pts: [ [ 466, 610 ] ] }
+        - { cmd: lnTo, pts: [ [ 462, 629 ] ] }
+        - { cmd: lnTo, pts: [ [ 454, 645 ] ] }
+        - { cmd: lnTo, pts: [ [ 425, 693 ] ] }
+        - { cmd: lnTo, pts: [ [ 400, 742 ] ] }
+        - { cmd: lnTo, pts: [ [ 379, 793 ] ] }
+        - { cmd: lnTo, pts: [ [ 362, 845 ] ] }
+        - { cmd: lnTo, pts: [ [ 350, 899 ] ] }
+        - { cmd: lnTo, pts: [ [ 343, 918 ] ] }
+        - { cmd: lnTo, pts: [ [ 332, 933 ] ] }
+        - { cmd: lnTo, pts: [ [ 317, 945 ] ] }
+        - { cmd: lnTo, pts: [ [ 300, 952 ] ] }
+        - { cmd: lnTo, pts: [ [ 281, 955 ] ] }
+        - { cmd: lnTo, pts: [ [ 153, 955 ] ] }
+        - { cmd: lnTo, pts: [ [ 150, 955 ] ] }
+        - { cmd: lnTo, pts: [ [ 147, 958 ] ] }
+        - { cmd: lnTo, pts: [ [ 144, 961 ] ] }
+        - { cmd: lnTo, pts: [ [ 143, 964 ] ] }
+        - { cmd: lnTo, pts: [ [ 142, 967 ] ] }
+        - { cmd: lnTo, pts: [ [ 142, 1105 ] ] }
+        - { cmd: lnTo, pts: [ [ 143, 1109 ] ] }
+        - { cmd: lnTo, pts: [ [ 144, 1113 ] ] }
+        - { cmd: lnTo, pts: [ [ 147, 1115 ] ] }
+        - { cmd: lnTo, pts: [ [ 150, 1117 ] ] }
+        - { cmd: lnTo, pts: [ [ 153, 1118 ] ] }
+        - { cmd: lnTo, pts: [ [ 281, 1118 ] ] }
+        - { cmd: lnTo, pts: [ [ 300, 1120 ] ] }
+        - { cmd: lnTo, pts: [ [ 317, 1128 ] ] }
+        - { cmd: lnTo, pts: [ [ 332, 1140 ] ] }
+        - { cmd: lnTo, pts: [ [ 343, 1156 ] ] }
+        - { cmd: lnTo, pts: [ [ 350, 1174 ] ] }
+        - { cmd: lnTo, pts: [ [ 362, 1228 ] ] }
+        - { cmd: lnTo, pts: [ [ 379, 1280 ] ] }
+        - { cmd: lnTo, pts: [ [ 400, 1331 ] ] }
+        - { cmd: lnTo, pts: [ [ 425, 1379 ] ] }
+        - { cmd: lnTo, pts: [ [ 454, 1427 ] ] }
+        - { cmd: lnTo, pts: [ [ 462, 1445 ] ] }
+        - { cmd: lnTo, pts: [ [ 467, 1464 ] ] }
+        - { cmd: lnTo, pts: [ [ 465, 1483 ] ] }
+        - { cmd: lnTo, pts: [ [ 457, 1500 ] ] }
+        - { cmd: lnTo, pts: [ [ 446, 1515 ] ] }
+        - { cmd: lnTo, pts: [ [ 356, 1606 ] ] }
+        - { cmd: lnTo, pts: [ [ 353, 1611 ] ] }
+        - { cmd: lnTo, pts: [ [ 353, 1617 ] ] }
+        - { cmd: lnTo, pts: [ [ 356, 1623 ] ] }
+        - { cmd: lnTo, pts: [ [ 453, 1720 ] ] }
+        - { cmd: lnTo, pts: [ [ 456, 1722 ] ] }
+        - { cmd: lnTo, pts: [ [ 459, 1723 ] ] }
+        - { cmd: lnTo, pts: [ [ 462, 1724 ] ] }
+        - { cmd: lnTo, pts: [ [ 465, 1723 ] ] }
+        - { cmd: lnTo, pts: [ [ 468, 1722 ] ] }
+        - { cmd: lnTo, pts: [ [ 471, 1720 ] ] }
+        - { cmd: lnTo, pts: [ [ 559, 1630 ] ] }
+        - { cmd: lnTo, pts: [ [ 574, 1619 ] ] }
+        - { cmd: lnTo, pts: [ [ 591, 1612 ] ] }
+        - { cmd: lnTo, pts: [ [ 609, 1610 ] ] }
+        - { cmd: lnTo, pts: [ [ 629, 1614 ] ] }
+        - { cmd: lnTo, pts: [ [ 648, 1622 ] ] }
+        - { cmd: lnTo, pts: [ [ 695, 1651 ] ] }
+        - { cmd: lnTo, pts: [ [ 744, 1676 ] ] }
+        - { cmd: lnTo, pts: [ [ 795, 1697 ] ] }
+        - { cmd: lnTo, pts: [ [ 846, 1714 ] ] }
+        - { cmd: lnTo, pts: [ [ 900, 1726 ] ] }
+        - { cmd: lnTo, pts: [ [ 919, 1733 ] ] }
+        - { cmd: lnTo, pts: [ [ 935, 1744 ] ] }
+        - { cmd: lnTo, pts: [ [ 947, 1759 ] ] }
+        - { cmd: lnTo, pts: [ [ 955, 1776 ] ] }
+        - { cmd: lnTo, pts: [ [ 957, 1796 ] ] }
+        - { cmd: lnTo, pts: [ [ 957, 1922 ] ] }
+        - { cmd: lnTo, pts: [ [ 958, 1926 ] ] }
+        - { cmd: lnTo, pts: [ [ 959, 1929 ] ] }
+        - { cmd: lnTo, pts: [ [ 963, 1932 ] ] }
+        - { cmd: lnTo, pts: [ [ 966, 1934 ] ] }
+        - { cmd: lnTo, pts: [ [ 970, 1934 ] ] }
+        - { cmd: lnTo, pts: [ [ 1108, 1934 ] ] }
+        - { cmd: lnTo, pts: [ [ 1111, 1934 ] ] }
+        - { cmd: lnTo, pts: [ [ 1114, 1932 ] ] }
+        - { cmd: lnTo, pts: [ [ 1118, 1929 ] ] }
+        - { cmd: lnTo, pts: [ [ 1119, 1926 ] ] }
+        - { cmd: lnTo, pts: [ [ 1120, 1922 ] ] }
+        - { cmd: lnTo, pts: [ [ 1120, 1796 ] ] }
+        - { cmd: lnTo, pts: [ [ 1123, 1776 ] ] }
+        - { cmd: lnTo, pts: [ [ 1130, 1759 ] ] }
+        - { cmd: lnTo, pts: [ [ 1142, 1744 ] ] }
+        - { cmd: lnTo, pts: [ [ 1158, 1733 ] ] }
+        - { cmd: lnTo, pts: [ [ 1177, 1726 ] ] }
+        - { cmd: lnTo, pts: [ [ 1231, 1714 ] ] }
+        - { cmd: lnTo, pts: [ [ 1282, 1697 ] ] }
+        - { cmd: lnTo, pts: [ [ 1333, 1676 ] ] }
+        - { cmd: lnTo, pts: [ [ 1382, 1650 ] ] }
+        - { cmd: lnTo, pts: [ [ 1430, 1622 ] ] }
+        - { cmd: lnTo, pts: [ [ 1447, 1614 ] ] }
+        - { cmd: lnTo, pts: [ [ 1466, 1610 ] ] }
+        - { cmd: lnTo, pts: [ [ 1485, 1611 ] ] }
+        - { cmd: lnTo, pts: [ [ 1503, 1619 ] ] }
+        - { cmd: lnTo, pts: [ [ 1518, 1630 ] ] }
+        - { cmd: lnTo, pts: [ [ 1608, 1720 ] ] }
+        - { cmd: lnTo, pts: [ [ 1611, 1722 ] ] }
+        - { cmd: lnTo, pts: [ [ 1614, 1723 ] ] }
+        - { cmd: lnTo, pts: [ [ 1617, 1724 ] ] }
+        - { cmd: lnTo, pts: [ [ 1619, 1723 ] ] }
+        - { cmd: lnTo, pts: [ [ 1622, 1722 ] ] }
+        - { cmd: lnTo, pts: [ [ 1625, 1720 ] ] }
+        - { cmd: lnTo, pts: [ [ 1723, 1623 ] ] }
+        - { cmd: lnTo, pts: [ [ 1726, 1618 ] ] }
+        - { cmd: lnTo, pts: [ [ 1726, 1611 ] ] }
+        - { cmd: lnTo, pts: [ [ 1723, 1606 ] ] }
+        - { cmd: lnTo, pts: [ [ 1633, 1516 ] ] }
+        - { cmd: lnTo, pts: [ [ 1621, 1501 ] ] }
+        - { cmd: lnTo, pts: [ [ 1615, 1483 ] ] }
+        - { cmd: lnTo, pts: [ [ 1613, 1464 ] ] }
+        - { cmd: lnTo, pts: [ [ 1616, 1446 ] ] }
+        - { cmd: lnTo, pts: [ [ 1624, 1428 ] ] }
+        - { cmd: lnTo, pts: [ [ 1654, 1380 ] ] }
+        - { cmd: lnTo, pts: [ [ 1679, 1332 ] ] }
+        - { cmd: lnTo, pts: [ [ 1700, 1281 ] ] }
+        - { cmd: lnTo, pts: [ [ 1717, 1229 ] ] }
+        - { cmd: lnTo, pts: [ [ 1730, 1175 ] ] }
+        - { cmd: lnTo, pts: [ [ 1736, 1156 ] ] }
+        - { cmd: lnTo, pts: [ [ 1747, 1141 ] ] }
+        - { cmd: lnTo, pts: [ [ 1761, 1128 ] ] }
+        - { cmd: lnTo, pts: [ [ 1779, 1121 ] ] }
+        - { cmd: lnTo, pts: [ [ 1798, 1119 ] ] }
+        - { cmd: lnTo, pts: [ [ 1925, 1119 ] ] }
+        - { cmd: lnTo, pts: [ [ 1929, 1118 ] ] }
+        - { cmd: lnTo, pts: [ [ 1932, 1117 ] ] }
+        - { cmd: lnTo, pts: [ [ 1934, 1114 ] ] }
+        - { cmd: lnTo, pts: [ [ 1936, 1110 ] ] }
+        - { cmd: lnTo, pts: [ [ 1936, 1107 ] ] }
+        - { cmd: lnTo, pts: [ [ 1936, 969 ] ] }
+        - { cmd: lnTo, pts: [ [ 1936, 965 ] ] }
+        - { cmd: lnTo, pts: [ [ 1934, 962 ] ] }
+        - { cmd: lnTo, pts: [ [ 1932, 959 ] ] }
+        - { cmd: lnTo, pts: [ [ 1929, 958 ] ] }
+        - { cmd: lnTo, pts: [ [ 1925, 957 ] ] }
+        - { cmd: lnTo, pts: [ [ 1798, 957 ] ] }
+        - { cmd: lnTo, pts: [ [ 1779, 954 ] ] }
+        - { cmd: lnTo, pts: [ [ 1761, 946 ] ] }
+        - { cmd: lnTo, pts: [ [ 1747, 934 ] ] }
+        - { cmd: lnTo, pts: [ [ 1736, 919 ] ] }
+        - { cmd: lnTo, pts: [ [ 1730, 900 ] ] }
+        - { cmd: lnTo, pts: [ [ 1716, 847 ] ] }
+        - { cmd: lnTo, pts: [ [ 1699, 794 ] ] }
+        - { cmd: lnTo, pts: [ [ 1678, 744 ] ] }
+        - { cmd: lnTo, pts: [ [ 1654, 694 ] ] }
+        - { cmd: lnTo, pts: [ [ 1624, 648 ] ] }
+        - { cmd: lnTo, pts: [ [ 1616, 630 ] ] }
+        - { cmd: lnTo, pts: [ [ 1613, 611 ] ] }
+        - { cmd: lnTo, pts: [ [ 1615, 592 ] ] }
+        - { cmd: lnTo, pts: [ [ 1621, 574 ] ] }
+        - { cmd: lnTo, pts: [ [ 1633, 559 ] ] }
+        - { cmd: lnTo, pts: [ [ 1724, 468 ] ] }
+        - { cmd: lnTo, pts: [ [ 1728, 463 ] ] }
+        - { cmd: lnTo, pts: [ [ 1728, 457 ] ] }
+        - { cmd: lnTo, pts: [ [ 1724, 451 ] ] }
+        - { cmd: lnTo, pts: [ [ 1626, 354 ] ] }
+        - { cmd: lnTo, pts: [ [ 1623, 351 ] ] }
+        - { cmd: lnTo, pts: [ [ 1621, 350 ] ] }
+        - { cmd: lnTo, pts: [ [ 1618, 350 ] ] }
+        - { cmd: lnTo, pts: [ [ 1616, 350 ] ] }
+        - { cmd: lnTo, pts: [ [ 1613, 351 ] ] }
+        - { cmd: lnTo, pts: [ [ 1609, 354 ] ] }
+        - { cmd: lnTo, pts: [ [ 1520, 444 ] ] }
+        - { cmd: lnTo, pts: [ [ 1504, 456 ] ] }
+        - { cmd: lnTo, pts: [ [ 1486, 462 ] ] }
+        - { cmd: lnTo, pts: [ [ 1467, 464 ] ] }
+        - { cmd: lnTo, pts: [ [ 1449, 461 ] ] }
+        - { cmd: lnTo, pts: [ [ 1431, 452 ] ] }
+        - { cmd: lnTo, pts: [ [ 1384, 423 ] ] }
+        - { cmd: lnTo, pts: [ [ 1335, 399 ] ] }
+        - { cmd: lnTo, pts: [ [ 1284, 378 ] ] }
+        - { cmd: lnTo, pts: [ [ 1232, 361 ] ] }
+        - { cmd: lnTo, pts: [ [ 1178, 348 ] ] }
+        - { cmd: lnTo, pts: [ [ 1159, 341 ] ] }
+        - { cmd: lnTo, pts: [ [ 1143, 330 ] ] }
+        - { cmd: lnTo, pts: [ [ 1131, 315 ] ] }
+        - { cmd: lnTo, pts: [ [ 1124, 298 ] ] }
+        - { cmd: lnTo, pts: [ [ 1121, 278 ] ] }
+        - { cmd: lnTo, pts: [ [ 1121, 152 ] ] }
+        - { cmd: lnTo, pts: [ [ 1121, 149 ] ] }
+        - { cmd: lnTo, pts: [ [ 1119, 145 ] ] }
+        - { cmd: lnTo, pts: [ [ 1117, 142 ] ] }
+        - { cmd: lnTo, pts: [ [ 1112, 140 ] ] }
+        - { cmd: lnTo, pts: [ [ 1109, 140 ] ] }
+        - { cmd: lnTo, pts: [ [ 971, 140 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 970, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 1108, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 1139, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 1167, 12 ] ] }
+        - { cmd: lnTo, pts: [ [ 1193, 25 ] ] }
+        - { cmd: lnTo, pts: [ [ 1216, 44 ] ] }
+        - { cmd: lnTo, pts: [ [ 1234, 66 ] ] }
+        - { cmd: lnTo, pts: [ [ 1248, 93 ] ] }
+        - { cmd: lnTo, pts: [ [ 1257, 121 ] ] }
+        - { cmd: lnTo, pts: [ [ 1260, 152 ] ] }
+        - { cmd: lnTo, pts: [ [ 1260, 223 ] ] }
+        - { cmd: lnTo, pts: [ [ 1329, 245 ] ] }
+        - { cmd: lnTo, pts: [ [ 1394, 272 ] ] }
+        - { cmd: lnTo, pts: [ [ 1457, 305 ] ] }
+        - { cmd: lnTo, pts: [ [ 1508, 255 ] ] }
+        - { cmd: lnTo, pts: [ [ 1527, 239 ] ] }
+        - { cmd: lnTo, pts: [ [ 1547, 227 ] ] }
+        - { cmd: lnTo, pts: [ [ 1569, 217 ] ] }
+        - { cmd: lnTo, pts: [ [ 1592, 212 ] ] }
+        - { cmd: lnTo, pts: [ [ 1616, 210 ] ] }
+        - { cmd: lnTo, pts: [ [ 1640, 212 ] ] }
+        - { cmd: lnTo, pts: [ [ 1663, 217 ] ] }
+        - { cmd: lnTo, pts: [ [ 1684, 227 ] ] }
+        - { cmd: lnTo, pts: [ [ 1705, 239 ] ] }
+        - { cmd: lnTo, pts: [ [ 1723, 255 ] ] }
+        - { cmd: lnTo, pts: [ [ 1821, 352 ] ] }
+        - { cmd: lnTo, pts: [ [ 1839, 373 ] ] }
+        - { cmd: lnTo, pts: [ [ 1852, 397 ] ] }
+        - { cmd: lnTo, pts: [ [ 1862, 422 ] ] }
+        - { cmd: lnTo, pts: [ [ 1866, 447 ] ] }
+        - { cmd: lnTo, pts: [ [ 1866, 474 ] ] }
+        - { cmd: lnTo, pts: [ [ 1862, 499 ] ] }
+        - { cmd: lnTo, pts: [ [ 1852, 523 ] ] }
+        - { cmd: lnTo, pts: [ [ 1839, 546 ] ] }
+        - { cmd: lnTo, pts: [ [ 1821, 567 ] ] }
+        - { cmd: lnTo, pts: [ [ 1771, 618 ] ] }
+        - { cmd: lnTo, pts: [ [ 1796, 665 ] ] }
+        - { cmd: lnTo, pts: [ [ 1819, 714 ] ] }
+        - { cmd: lnTo, pts: [ [ 1837, 765 ] ] }
+        - { cmd: lnTo, pts: [ [ 1853, 816 ] ] }
+        - { cmd: lnTo, pts: [ [ 1925, 816 ] ] }
+        - { cmd: lnTo, pts: [ [ 1955, 818 ] ] }
+        - { cmd: lnTo, pts: [ [ 1984, 828 ] ] }
+        - { cmd: lnTo, pts: [ [ 2010, 842 ] ] }
+        - { cmd: lnTo, pts: [ [ 2032, 861 ] ] }
+        - { cmd: lnTo, pts: [ [ 2051, 883 ] ] }
+        - { cmd: lnTo, pts: [ [ 2065, 909 ] ] }
+        - { cmd: lnTo, pts: [ [ 2075, 938 ] ] }
+        - { cmd: lnTo, pts: [ [ 2077, 968 ] ] }
+        - { cmd: lnTo, pts: [ [ 2077, 1106 ] ] }
+        - { cmd: lnTo, pts: [ [ 2075, 1137 ] ] }
+        - { cmd: lnTo, pts: [ [ 2065, 1165 ] ] }
+        - { cmd: lnTo, pts: [ [ 2051, 1192 ] ] }
+        - { cmd: lnTo, pts: [ [ 2032, 1214 ] ] }
+        - { cmd: lnTo, pts: [ [ 2010, 1233 ] ] }
+        - { cmd: lnTo, pts: [ [ 1984, 1247 ] ] }
+        - { cmd: lnTo, pts: [ [ 1955, 1255 ] ] }
+        - { cmd: lnTo, pts: [ [ 1925, 1258 ] ] }
+        - { cmd: lnTo, pts: [ [ 1925, 1259 ] ] }
+        - { cmd: lnTo, pts: [ [ 1853, 1259 ] ] }
+        - { cmd: lnTo, pts: [ [ 1831, 1328 ] ] }
+        - { cmd: lnTo, pts: [ [ 1803, 1393 ] ] }
+        - { cmd: lnTo, pts: [ [ 1771, 1456 ] ] }
+        - { cmd: lnTo, pts: [ [ 1821, 1507 ] ] }
+        - { cmd: lnTo, pts: [ [ 1839, 1528 ] ] }
+        - { cmd: lnTo, pts: [ [ 1852, 1551 ] ] }
+        - { cmd: lnTo, pts: [ [ 1862, 1577 ] ] }
+        - { cmd: lnTo, pts: [ [ 1866, 1602 ] ] }
+        - { cmd: lnTo, pts: [ [ 1866, 1628 ] ] }
+        - { cmd: lnTo, pts: [ [ 1862, 1654 ] ] }
+        - { cmd: lnTo, pts: [ [ 1852, 1678 ] ] }
+        - { cmd: lnTo, pts: [ [ 1839, 1701 ] ] }
+        - { cmd: lnTo, pts: [ [ 1821, 1722 ] ] }
+        - { cmd: lnTo, pts: [ [ 1723, 1820 ] ] }
+        - { cmd: lnTo, pts: [ [ 1705, 1836 ] ] }
+        - { cmd: lnTo, pts: [ [ 1684, 1849 ] ] }
+        - { cmd: lnTo, pts: [ [ 1663, 1857 ] ] }
+        - { cmd: lnTo, pts: [ [ 1640, 1863 ] ] }
+        - { cmd: lnTo, pts: [ [ 1616, 1864 ] ] }
+        - { cmd: lnTo, pts: [ [ 1592, 1863 ] ] }
+        - { cmd: lnTo, pts: [ [ 1569, 1857 ] ] }
+        - { cmd: lnTo, pts: [ [ 1547, 1849 ] ] }
+        - { cmd: lnTo, pts: [ [ 1527, 1836 ] ] }
+        - { cmd: lnTo, pts: [ [ 1508, 1820 ] ] }
+        - { cmd: lnTo, pts: [ [ 1457, 1770 ] ] }
+        - { cmd: lnTo, pts: [ [ 1410, 1796 ] ] }
+        - { cmd: lnTo, pts: [ [ 1361, 1818 ] ] }
+        - { cmd: lnTo, pts: [ [ 1312, 1837 ] ] }
+        - { cmd: lnTo, pts: [ [ 1260, 1852 ] ] }
+        - { cmd: lnTo, pts: [ [ 1260, 1924 ] ] }
+        - { cmd: lnTo, pts: [ [ 1257, 1954 ] ] }
+        - { cmd: lnTo, pts: [ [ 1248, 1983 ] ] }
+        - { cmd: lnTo, pts: [ [ 1234, 2009 ] ] }
+        - { cmd: lnTo, pts: [ [ 1216, 2031 ] ] }
+        - { cmd: lnTo, pts: [ [ 1193, 2050 ] ] }
+        - { cmd: lnTo, pts: [ [ 1167, 2064 ] ] }
+        - { cmd: lnTo, pts: [ [ 1139, 2073 ] ] }
+        - { cmd: lnTo, pts: [ [ 1108, 2076 ] ] }
+        - { cmd: lnTo, pts: [ [ 970, 2076 ] ] }
+        - { cmd: lnTo, pts: [ [ 938, 2073 ] ] }
+        - { cmd: lnTo, pts: [ [ 910, 2064 ] ] }
+        - { cmd: lnTo, pts: [ [ 884, 2050 ] ] }
+        - { cmd: lnTo, pts: [ [ 861, 2031 ] ] }
+        - { cmd: lnTo, pts: [ [ 843, 2009 ] ] }
+        - { cmd: lnTo, pts: [ [ 829, 1983 ] ] }
+        - { cmd: lnTo, pts: [ [ 820, 1954 ] ] }
+        - { cmd: lnTo, pts: [ [ 817, 1924 ] ] }
+        - { cmd: lnTo, pts: [ [ 817, 1852 ] ] }
+        - { cmd: lnTo, pts: [ [ 748, 1831 ] ] }
+        - { cmd: lnTo, pts: [ [ 683, 1802 ] ] }
+        - { cmd: lnTo, pts: [ [ 620, 1770 ] ] }
+        - { cmd: lnTo, pts: [ [ 569, 1820 ] ] }
+        - { cmd: lnTo, pts: [ [ 550, 1836 ] ] }
+        - { cmd: lnTo, pts: [ [ 530, 1849 ] ] }
+        - { cmd: lnTo, pts: [ [ 508, 1857 ] ] }
+        - { cmd: lnTo, pts: [ [ 486, 1863 ] ] }
+        - { cmd: lnTo, pts: [ [ 461, 1864 ] ] }
+        - { cmd: lnTo, pts: [ [ 437, 1863 ] ] }
+        - { cmd: lnTo, pts: [ [ 414, 1857 ] ] }
+        - { cmd: lnTo, pts: [ [ 393, 1849 ] ] }
+        - { cmd: lnTo, pts: [ [ 372, 1836 ] ] }
+        - { cmd: lnTo, pts: [ [ 354, 1820 ] ] }
+        - { cmd: lnTo, pts: [ [ 256, 1722 ] ] }
+        - { cmd: lnTo, pts: [ [ 238, 1701 ] ] }
+        - { cmd: lnTo, pts: [ [ 225, 1678 ] ] }
+        - { cmd: lnTo, pts: [ [ 216, 1654 ] ] }
+        - { cmd: lnTo, pts: [ [ 211, 1628 ] ] }
+        - { cmd: lnTo, pts: [ [ 211, 1602 ] ] }
+        - { cmd: lnTo, pts: [ [ 216, 1577 ] ] }
+        - { cmd: lnTo, pts: [ [ 225, 1551 ] ] }
+        - { cmd: lnTo, pts: [ [ 238, 1528 ] ] }
+        - { cmd: lnTo, pts: [ [ 256, 1507 ] ] }
+        - { cmd: lnTo, pts: [ [ 306, 1456 ] ] }
+        - { cmd: lnTo, pts: [ [ 281, 1410 ] ] }
+        - { cmd: lnTo, pts: [ [ 259, 1360 ] ] }
+        - { cmd: lnTo, pts: [ [ 240, 1311 ] ] }
+        - { cmd: lnTo, pts: [ [ 224, 1259 ] ] }
+        - { cmd: lnTo, pts: [ [ 152, 1259 ] ] }
+        - { cmd: lnTo, pts: [ [ 122, 1256 ] ] }
+        - { cmd: lnTo, pts: [ [ 93, 1248 ] ] }
+        - { cmd: lnTo, pts: [ [ 67, 1233 ] ] }
+        - { cmd: lnTo, pts: [ [ 45, 1215 ] ] }
+        - { cmd: lnTo, pts: [ [ 26, 1192 ] ] }
+        - { cmd: lnTo, pts: [ [ 12, 1166 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 1138 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 1107 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 969 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 938 ] ] }
+        - { cmd: lnTo, pts: [ [ 12, 909 ] ] }
+        - { cmd: lnTo, pts: [ [ 26, 884 ] ] }
+        - { cmd: lnTo, pts: [ [ 45, 861 ] ] }
+        - { cmd: lnTo, pts: [ [ 67, 843 ] ] }
+        - { cmd: lnTo, pts: [ [ 93, 829 ] ] }
+        - { cmd: lnTo, pts: [ [ 122, 819 ] ] }
+        - { cmd: lnTo, pts: [ [ 152, 816 ] ] }
+        - { cmd: lnTo, pts: [ [ 224, 816 ] ] }
+        - { cmd: lnTo, pts: [ [ 246, 748 ] ] }
+        - { cmd: lnTo, pts: [ [ 274, 682 ] ] }
+        - { cmd: lnTo, pts: [ [ 306, 619 ] ] }
+        - { cmd: lnTo, pts: [ [ 256, 568 ] ] }
+        - { cmd: lnTo, pts: [ [ 238, 547 ] ] }
+        - { cmd: lnTo, pts: [ [ 225, 524 ] ] }
+        - { cmd: lnTo, pts: [ [ 216, 500 ] ] }
+        - { cmd: lnTo, pts: [ [ 211, 474 ] ] }
+        - { cmd: lnTo, pts: [ [ 211, 448 ] ] }
+        - { cmd: lnTo, pts: [ [ 216, 422 ] ] }
+        - { cmd: lnTo, pts: [ [ 225, 398 ] ] }
+        - { cmd: lnTo, pts: [ [ 238, 374 ] ] }
+        - { cmd: lnTo, pts: [ [ 256, 353 ] ] }
+        - { cmd: lnTo, pts: [ [ 354, 255 ] ] }
+        - { cmd: lnTo, pts: [ [ 372, 239 ] ] }
+        - { cmd: lnTo, pts: [ [ 393, 227 ] ] }
+        - { cmd: lnTo, pts: [ [ 414, 218 ] ] }
+        - { cmd: lnTo, pts: [ [ 437, 213 ] ] }
+        - { cmd: lnTo, pts: [ [ 461, 211 ] ] }
+        - { cmd: lnTo, pts: [ [ 486, 213 ] ] }
+        - { cmd: lnTo, pts: [ [ 508, 218 ] ] }
+        - { cmd: lnTo, pts: [ [ 530, 227 ] ] }
+        - { cmd: lnTo, pts: [ [ 550, 239 ] ] }
+        - { cmd: lnTo, pts: [ [ 569, 255 ] ] }
+        - { cmd: lnTo, pts: [ [ 620, 306 ] ] }
+        - { cmd: lnTo, pts: [ [ 667, 281 ] ] }
+        - { cmd: lnTo, pts: [ [ 716, 258 ] ] }
+        - { cmd: lnTo, pts: [ [ 765, 239 ] ] }
+        - { cmd: lnTo, pts: [ [ 817, 224 ] ] }
+        - { cmd: lnTo, pts: [ [ 817, 152 ] ] }
+        - { cmd: lnTo, pts: [ [ 820, 121 ] ] }
+        - { cmd: lnTo, pts: [ [ 829, 93 ] ] }
+        - { cmd: lnTo, pts: [ [ 843, 66 ] ] }
+        - { cmd: lnTo, pts: [ [ 861, 44 ] ] }
+        - { cmd: lnTo, pts: [ [ 884, 25 ] ] }
+        - { cmd: lnTo, pts: [ [ 910, 12 ] ] }
+        - { cmd: lnTo, pts: [ [ 938, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 970, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_71"
     elementType: shape
     bounds: [ 294, 158, 11, 11 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 886
+      h: 884
+      commands:
+        - { cmd: moveTo, pts: [ [ 443, 140 ] ] }
+        - { cmd: lnTo, pts: [ [ 398, 143 ] ] }
+        - { cmd: lnTo, pts: [ [ 356, 153 ] ] }
+        - { cmd: lnTo, pts: [ [ 316, 169 ] ] }
+        - { cmd: lnTo, pts: [ [ 279, 189 ] ] }
+        - { cmd: lnTo, pts: [ [ 245, 214 ] ] }
+        - { cmd: lnTo, pts: [ [ 215, 243 ] ] }
+        - { cmd: lnTo, pts: [ [ 189, 277 ] ] }
+        - { cmd: lnTo, pts: [ [ 169, 315 ] ] }
+        - { cmd: lnTo, pts: [ [ 153, 355 ] ] }
+        - { cmd: lnTo, pts: [ [ 144, 397 ] ] }
+        - { cmd: lnTo, pts: [ [ 141, 442 ] ] }
+        - { cmd: lnTo, pts: [ [ 144, 486 ] ] }
+        - { cmd: lnTo, pts: [ [ 153, 529 ] ] }
+        - { cmd: lnTo, pts: [ [ 169, 569 ] ] }
+        - { cmd: lnTo, pts: [ [ 189, 606 ] ] }
+        - { cmd: lnTo, pts: [ [ 215, 640 ] ] }
+        - { cmd: lnTo, pts: [ [ 245, 669 ] ] }
+        - { cmd: lnTo, pts: [ [ 279, 695 ] ] }
+        - { cmd: lnTo, pts: [ [ 316, 716 ] ] }
+        - { cmd: lnTo, pts: [ [ 356, 731 ] ] }
+        - { cmd: lnTo, pts: [ [ 398, 740 ] ] }
+        - { cmd: lnTo, pts: [ [ 443, 743 ] ] }
+        - { cmd: lnTo, pts: [ [ 488, 740 ] ] }
+        - { cmd: lnTo, pts: [ [ 530, 731 ] ] }
+        - { cmd: lnTo, pts: [ [ 570, 716 ] ] }
+        - { cmd: lnTo, pts: [ [ 607, 695 ] ] }
+        - { cmd: lnTo, pts: [ [ 641, 669 ] ] }
+        - { cmd: lnTo, pts: [ [ 670, 640 ] ] }
+        - { cmd: lnTo, pts: [ [ 696, 606 ] ] }
+        - { cmd: lnTo, pts: [ [ 717, 569 ] ] }
+        - { cmd: lnTo, pts: [ [ 732, 529 ] ] }
+        - { cmd: lnTo, pts: [ [ 741, 486 ] ] }
+        - { cmd: lnTo, pts: [ [ 745, 442 ] ] }
+        - { cmd: lnTo, pts: [ [ 741, 397 ] ] }
+        - { cmd: lnTo, pts: [ [ 732, 355 ] ] }
+        - { cmd: lnTo, pts: [ [ 717, 315 ] ] }
+        - { cmd: lnTo, pts: [ [ 696, 277 ] ] }
+        - { cmd: lnTo, pts: [ [ 670, 243 ] ] }
+        - { cmd: lnTo, pts: [ [ 641, 214 ] ] }
+        - { cmd: lnTo, pts: [ [ 607, 189 ] ] }
+        - { cmd: lnTo, pts: [ [ 570, 169 ] ] }
+        - { cmd: lnTo, pts: [ [ 530, 153 ] ] }
+        - { cmd: lnTo, pts: [ [ 488, 143 ] ] }
+        - { cmd: lnTo, pts: [ [ 443, 140 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 443, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 494, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 544, 11 ] ] }
+        - { cmd: lnTo, pts: [ [ 592, 25 ] ] }
+        - { cmd: lnTo, pts: [ [ 638, 45 ] ] }
+        - { cmd: lnTo, pts: [ [ 680, 68 ] ] }
+        - { cmd: lnTo, pts: [ [ 719, 97 ] ] }
+        - { cmd: lnTo, pts: [ [ 756, 130 ] ] }
+        - { cmd: lnTo, pts: [ [ 788, 165 ] ] }
+        - { cmd: lnTo, pts: [ [ 816, 205 ] ] }
+        - { cmd: lnTo, pts: [ [ 840, 248 ] ] }
+        - { cmd: lnTo, pts: [ [ 859, 293 ] ] }
+        - { cmd: lnTo, pts: [ [ 873, 340 ] ] }
+        - { cmd: lnTo, pts: [ [ 883, 390 ] ] }
+        - { cmd: lnTo, pts: [ [ 886, 442 ] ] }
+        - { cmd: lnTo, pts: [ [ 883, 493 ] ] }
+        - { cmd: lnTo, pts: [ [ 873, 543 ] ] }
+        - { cmd: lnTo, pts: [ [ 859, 590 ] ] }
+        - { cmd: lnTo, pts: [ [ 840, 636 ] ] }
+        - { cmd: lnTo, pts: [ [ 816, 679 ] ] }
+        - { cmd: lnTo, pts: [ [ 788, 718 ] ] }
+        - { cmd: lnTo, pts: [ [ 756, 754 ] ] }
+        - { cmd: lnTo, pts: [ [ 719, 787 ] ] }
+        - { cmd: lnTo, pts: [ [ 680, 815 ] ] }
+        - { cmd: lnTo, pts: [ [ 638, 839 ] ] }
+        - { cmd: lnTo, pts: [ [ 592, 858 ] ] }
+        - { cmd: lnTo, pts: [ [ 544, 872 ] ] }
+        - { cmd: lnTo, pts: [ [ 494, 880 ] ] }
+        - { cmd: lnTo, pts: [ [ 443, 884 ] ] }
+        - { cmd: lnTo, pts: [ [ 392, 880 ] ] }
+        - { cmd: lnTo, pts: [ [ 341, 872 ] ] }
+        - { cmd: lnTo, pts: [ [ 294, 858 ] ] }
+        - { cmd: lnTo, pts: [ [ 248, 839 ] ] }
+        - { cmd: lnTo, pts: [ [ 206, 815 ] ] }
+        - { cmd: lnTo, pts: [ [ 166, 787 ] ] }
+        - { cmd: lnTo, pts: [ [ 130, 754 ] ] }
+        - { cmd: lnTo, pts: [ [ 97, 718 ] ] }
+        - { cmd: lnTo, pts: [ [ 70, 679 ] ] }
+        - { cmd: lnTo, pts: [ [ 46, 636 ] ] }
+        - { cmd: lnTo, pts: [ [ 27, 590 ] ] }
+        - { cmd: lnTo, pts: [ [ 12, 543 ] ] }
+        - { cmd: lnTo, pts: [ [ 4, 493 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 442 ] ] }
+        - { cmd: lnTo, pts: [ [ 4, 390 ] ] }
+        - { cmd: lnTo, pts: [ [ 12, 340 ] ] }
+        - { cmd: lnTo, pts: [ [ 27, 293 ] ] }
+        - { cmd: lnTo, pts: [ [ 46, 248 ] ] }
+        - { cmd: lnTo, pts: [ [ 70, 205 ] ] }
+        - { cmd: lnTo, pts: [ [ 97, 165 ] ] }
+        - { cmd: lnTo, pts: [ [ 130, 130 ] ] }
+        - { cmd: lnTo, pts: [ [ 166, 97 ] ] }
+        - { cmd: lnTo, pts: [ [ 206, 68 ] ] }
+        - { cmd: lnTo, pts: [ [ 248, 45 ] ] }
+        - { cmd: lnTo, pts: [ [ 294, 25 ] ] }
+        - { cmd: lnTo, pts: [ [ 341, 11 ] ] }
+        - { cmd: lnTo, pts: [ [ 392, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 443, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_72"
     elementType: shape
     bounds: [ 273, 158, 32, 36 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 2541
+      h: 2906
+      commands:
+        - { cmd: moveTo, pts: [ [ 1063, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 1082, 1 ] ] }
+        - { cmd: lnTo, pts: [ [ 1098, 8 ] ] }
+        - { cmd: lnTo, pts: [ [ 1113, 17 ] ] }
+        - { cmd: lnTo, pts: [ [ 1125, 31 ] ] }
+        - { cmd: lnTo, pts: [ [ 1133, 48 ] ] }
+        - { cmd: lnTo, pts: [ [ 1137, 66 ] ] }
+        - { cmd: lnTo, pts: [ [ 1135, 85 ] ] }
+        - { cmd: lnTo, pts: [ [ 1130, 102 ] ] }
+        - { cmd: lnTo, pts: [ [ 1121, 116 ] ] }
+        - { cmd: lnTo, pts: [ [ 1107, 128 ] ] }
+        - { cmd: lnTo, pts: [ [ 1090, 136 ] ] }
+        - { cmd: lnTo, pts: [ [ 1036, 156 ] ] }
+        - { cmd: lnTo, pts: [ [ 983, 180 ] ] }
+        - { cmd: lnTo, pts: [ [ 917, 214 ] ] }
+        - { cmd: lnTo, pts: [ [ 854, 252 ] ] }
+        - { cmd: lnTo, pts: [ [ 793, 295 ] ] }
+        - { cmd: lnTo, pts: [ [ 736, 341 ] ] }
+        - { cmd: lnTo, pts: [ [ 684, 392 ] ] }
+        - { cmd: lnTo, pts: [ [ 634, 444 ] ] }
+        - { cmd: lnTo, pts: [ [ 590, 501 ] ] }
+        - { cmd: lnTo, pts: [ [ 549, 561 ] ] }
+        - { cmd: lnTo, pts: [ [ 512, 624 ] ] }
+        - { cmd: lnTo, pts: [ [ 479, 688 ] ] }
+        - { cmd: lnTo, pts: [ [ 452, 755 ] ] }
+        - { cmd: lnTo, pts: [ [ 428, 824 ] ] }
+        - { cmd: lnTo, pts: [ [ 409, 895 ] ] }
+        - { cmd: lnTo, pts: [ [ 397, 966 ] ] }
+        - { cmd: lnTo, pts: [ [ 388, 1040 ] ] }
+        - { cmd: lnTo, pts: [ [ 386, 1114 ] ] }
+        - { cmd: lnTo, pts: [ [ 386, 1297 ] ] }
+        - { cmd: lnTo, pts: [ [ 384, 1314 ] ] }
+        - { cmd: lnTo, pts: [ [ 378, 1330 ] ] }
+        - { cmd: lnTo, pts: [ [ 154, 1758 ] ] }
+        - { cmd: lnTo, pts: [ [ 147, 1775 ] ] }
+        - { cmd: lnTo, pts: [ [ 141, 1791 ] ] }
+        - { cmd: lnTo, pts: [ [ 139, 1806 ] ] }
+        - { cmd: lnTo, pts: [ [ 140, 1818 ] ] }
+        - { cmd: lnTo, pts: [ [ 145, 1829 ] ] }
+        - { cmd: lnTo, pts: [ [ 154, 1838 ] ] }
+        - { cmd: lnTo, pts: [ [ 169, 1846 ] ] }
+        - { cmd: lnTo, pts: [ [ 188, 1851 ] ] }
+        - { cmd: lnTo, pts: [ [ 211, 1852 ] ] }
+        - { cmd: lnTo, pts: [ [ 317, 1852 ] ] }
+        - { cmd: lnTo, pts: [ [ 336, 1855 ] ] }
+        - { cmd: lnTo, pts: [ [ 352, 1862 ] ] }
+        - { cmd: lnTo, pts: [ [ 366, 1873 ] ] }
+        - { cmd: lnTo, pts: [ [ 377, 1887 ] ] }
+        - { cmd: lnTo, pts: [ [ 384, 1904 ] ] }
+        - { cmd: lnTo, pts: [ [ 386, 1923 ] ] }
+        - { cmd: lnTo, pts: [ [ 386, 2330 ] ] }
+        - { cmd: lnTo, pts: [ [ 389, 2362 ] ] }
+        - { cmd: lnTo, pts: [ [ 399, 2392 ] ] }
+        - { cmd: lnTo, pts: [ [ 414, 2418 ] ] }
+        - { cmd: lnTo, pts: [ [ 433, 2443 ] ] }
+        - { cmd: lnTo, pts: [ [ 456, 2463 ] ] }
+        - { cmd: lnTo, pts: [ [ 482, 2477 ] ] }
+        - { cmd: lnTo, pts: [ [ 512, 2487 ] ] }
+        - { cmd: lnTo, pts: [ [ 543, 2491 ] ] }
+        - { cmd: lnTo, pts: [ [ 856, 2445 ] ] }
+        - { cmd: lnTo, pts: [ [ 870, 2444 ] ] }
+        - { cmd: lnTo, pts: [ [ 885, 2447 ] ] }
+        - { cmd: lnTo, pts: [ [ 899, 2452 ] ] }
+        - { cmd: lnTo, pts: [ [ 912, 2461 ] ] }
+        - { cmd: lnTo, pts: [ [ 924, 2476 ] ] }
+        - { cmd: lnTo, pts: [ [ 933, 2494 ] ] }
+        - { cmd: lnTo, pts: [ [ 936, 2514 ] ] }
+        - { cmd: lnTo, pts: [ [ 936, 2764 ] ] }
+        - { cmd: lnTo, pts: [ [ 2099, 2764 ] ] }
+        - { cmd: lnTo, pts: [ [ 2099, 1925 ] ] }
+        - { cmd: lnTo, pts: [ [ 2101, 1906 ] ] }
+        - { cmd: lnTo, pts: [ [ 2109, 1888 ] ] }
+        - { cmd: lnTo, pts: [ [ 2121, 1873 ] ] }
+        - { cmd: lnTo, pts: [ [ 2175, 1820 ] ] }
+        - { cmd: lnTo, pts: [ [ 2224, 1763 ] ] }
+        - { cmd: lnTo, pts: [ [ 2270, 1703 ] ] }
+        - { cmd: lnTo, pts: [ [ 2310, 1640 ] ] }
+        - { cmd: lnTo, pts: [ [ 2347, 1575 ] ] }
+        - { cmd: lnTo, pts: [ [ 2377, 1506 ] ] }
+        - { cmd: lnTo, pts: [ [ 2404, 1436 ] ] }
+        - { cmd: lnTo, pts: [ [ 2412, 1419 ] ] }
+        - { cmd: lnTo, pts: [ [ 2424, 1405 ] ] }
+        - { cmd: lnTo, pts: [ [ 2438, 1395 ] ] }
+        - { cmd: lnTo, pts: [ [ 2455, 1389 ] ] }
+        - { cmd: lnTo, pts: [ [ 2474, 1388 ] ] }
+        - { cmd: lnTo, pts: [ [ 2492, 1391 ] ] }
+        - { cmd: lnTo, pts: [ [ 2509, 1400 ] ] }
+        - { cmd: lnTo, pts: [ [ 2523, 1411 ] ] }
+        - { cmd: lnTo, pts: [ [ 2533, 1426 ] ] }
+        - { cmd: lnTo, pts: [ [ 2539, 1443 ] ] }
+        - { cmd: lnTo, pts: [ [ 2541, 1461 ] ] }
+        - { cmd: lnTo, pts: [ [ 2537, 1480 ] ] }
+        - { cmd: lnTo, pts: [ [ 2509, 1556 ] ] }
+        - { cmd: lnTo, pts: [ [ 2476, 1630 ] ] }
+        - { cmd: lnTo, pts: [ [ 2438, 1701 ] ] }
+        - { cmd: lnTo, pts: [ [ 2395, 1770 ] ] }
+        - { cmd: lnTo, pts: [ [ 2348, 1835 ] ] }
+        - { cmd: lnTo, pts: [ [ 2295, 1896 ] ] }
+        - { cmd: lnTo, pts: [ [ 2239, 1955 ] ] }
+        - { cmd: lnTo, pts: [ [ 2239, 2835 ] ] }
+        - { cmd: lnTo, pts: [ [ 2236, 2854 ] ] }
+        - { cmd: lnTo, pts: [ [ 2230, 2871 ] ] }
+        - { cmd: lnTo, pts: [ [ 2218, 2884 ] ] }
+        - { cmd: lnTo, pts: [ [ 2204, 2896 ] ] }
+        - { cmd: lnTo, pts: [ [ 2187, 2902 ] ] }
+        - { cmd: lnTo, pts: [ [ 2168, 2906 ] ] }
+        - { cmd: lnTo, pts: [ [ 865, 2906 ] ] }
+        - { cmd: lnTo, pts: [ [ 847, 2902 ] ] }
+        - { cmd: lnTo, pts: [ [ 830, 2896 ] ] }
+        - { cmd: lnTo, pts: [ [ 816, 2884 ] ] }
+        - { cmd: lnTo, pts: [ [ 805, 2871 ] ] }
+        - { cmd: lnTo, pts: [ [ 798, 2854 ] ] }
+        - { cmd: lnTo, pts: [ [ 796, 2835 ] ] }
+        - { cmd: lnTo, pts: [ [ 796, 2596 ] ] }
+        - { cmd: lnTo, pts: [ [ 558, 2631 ] ] }
+        - { cmd: lnTo, pts: [ [ 555, 2631 ] ] }
+        - { cmd: lnTo, pts: [ [ 551, 2631 ] ] }
+        - { cmd: lnTo, pts: [ [ 549, 2630 ] ] }
+        - { cmd: lnTo, pts: [ [ 503, 2627 ] ] }
+        - { cmd: lnTo, pts: [ [ 461, 2618 ] ] }
+        - { cmd: lnTo, pts: [ [ 421, 2602 ] ] }
+        - { cmd: lnTo, pts: [ [ 384, 2582 ] ] }
+        - { cmd: lnTo, pts: [ [ 350, 2557 ] ] }
+        - { cmd: lnTo, pts: [ [ 321, 2526 ] ] }
+        - { cmd: lnTo, pts: [ [ 295, 2493 ] ] }
+        - { cmd: lnTo, pts: [ [ 274, 2455 ] ] }
+        - { cmd: lnTo, pts: [ [ 260, 2415 ] ] }
+        - { cmd: lnTo, pts: [ [ 249, 2373 ] ] }
+        - { cmd: lnTo, pts: [ [ 246, 2329 ] ] }
+        - { cmd: lnTo, pts: [ [ 246, 1991 ] ] }
+        - { cmd: lnTo, pts: [ [ 211, 1991 ] ] }
+        - { cmd: lnTo, pts: [ [ 176, 1989 ] ] }
+        - { cmd: lnTo, pts: [ [ 143, 1983 ] ] }
+        - { cmd: lnTo, pts: [ [ 114, 1973 ] ] }
+        - { cmd: lnTo, pts: [ [ 87, 1961 ] ] }
+        - { cmd: lnTo, pts: [ [ 62, 1944 ] ] }
+        - { cmd: lnTo, pts: [ [ 41, 1924 ] ] }
+        - { cmd: lnTo, pts: [ [ 24, 1900 ] ] }
+        - { cmd: lnTo, pts: [ [ 12, 1874 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 1846 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 1817 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 1787 ] ] }
+        - { cmd: lnTo, pts: [ [ 5, 1756 ] ] }
+        - { cmd: lnTo, pts: [ [ 16, 1724 ] ] }
+        - { cmd: lnTo, pts: [ [ 30, 1693 ] ] }
+        - { cmd: lnTo, pts: [ [ 247, 1279 ] ] }
+        - { cmd: lnTo, pts: [ [ 247, 1114 ] ] }
+        - { cmd: lnTo, pts: [ [ 250, 1034 ] ] }
+        - { cmd: lnTo, pts: [ [ 257, 956 ] ] }
+        - { cmd: lnTo, pts: [ [ 271, 878 ] ] }
+        - { cmd: lnTo, pts: [ [ 289, 802 ] ] }
+        - { cmd: lnTo, pts: [ [ 313, 728 ] ] }
+        - { cmd: lnTo, pts: [ [ 341, 655 ] ] }
+        - { cmd: lnTo, pts: [ [ 374, 586 ] ] }
+        - { cmd: lnTo, pts: [ [ 412, 518 ] ] }
+        - { cmd: lnTo, pts: [ [ 453, 453 ] ] }
+        - { cmd: lnTo, pts: [ [ 498, 390 ] ] }
+        - { cmd: lnTo, pts: [ [ 549, 330 ] ] }
+        - { cmd: lnTo, pts: [ [ 602, 274 ] ] }
+        - { cmd: lnTo, pts: [ [ 659, 223 ] ] }
+        - { cmd: lnTo, pts: [ [ 721, 173 ] ] }
+        - { cmd: lnTo, pts: [ [ 785, 129 ] ] }
+        - { cmd: lnTo, pts: [ [ 854, 89 ] ] }
+        - { cmd: lnTo, pts: [ [ 924, 52 ] ] }
+        - { cmd: lnTo, pts: [ [ 983, 27 ] ] }
+        - { cmd: lnTo, pts: [ [ 1045, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 1063, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_93"
     elementType: shape
     bounds: [ 56, 151, 24, 36 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 1939
+      h: 2887
+      commands:
+        - { cmd: moveTo, pts: [ [ 1285, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 1398, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 1457, 4 ] ] }
+        - { cmd: lnTo, pts: [ [ 1514, 13 ] ] }
+        - { cmd: lnTo, pts: [ [ 1569, 28 ] ] }
+        - { cmd: lnTo, pts: [ [ 1621, 49 ] ] }
+        - { cmd: lnTo, pts: [ [ 1670, 75 ] ] }
+        - { cmd: lnTo, pts: [ [ 1717, 106 ] ] }
+        - { cmd: lnTo, pts: [ [ 1761, 140 ] ] }
+        - { cmd: lnTo, pts: [ [ 1799, 179 ] ] }
+        - { cmd: lnTo, pts: [ [ 1834, 223 ] ] }
+        - { cmd: lnTo, pts: [ [ 1865, 268 ] ] }
+        - { cmd: lnTo, pts: [ [ 1891, 318 ] ] }
+        - { cmd: lnTo, pts: [ [ 1912, 371 ] ] }
+        - { cmd: lnTo, pts: [ [ 1927, 426 ] ] }
+        - { cmd: lnTo, pts: [ [ 1936, 483 ] ] }
+        - { cmd: lnTo, pts: [ [ 1939, 542 ] ] }
+        - { cmd: lnTo, pts: [ [ 1939, 1064 ] ] }
+        - { cmd: lnTo, pts: [ [ 1936, 1103 ] ] }
+        - { cmd: lnTo, pts: [ [ 1930, 1140 ] ] }
+        - { cmd: lnTo, pts: [ [ 1918, 1175 ] ] }
+        - { cmd: lnTo, pts: [ [ 1903, 1208 ] ] }
+        - { cmd: lnTo, pts: [ [ 1884, 1240 ] ] }
+        - { cmd: lnTo, pts: [ [ 1861, 1269 ] ] }
+        - { cmd: lnTo, pts: [ [ 1834, 1295 ] ] }
+        - { cmd: lnTo, pts: [ [ 1834, 1764 ] ] }
+        - { cmd: lnTo, pts: [ [ 1831, 1784 ] ] }
+        - { cmd: lnTo, pts: [ [ 1825, 1801 ] ] }
+        - { cmd: lnTo, pts: [ [ 1814, 1814 ] ] }
+        - { cmd: lnTo, pts: [ [ 1799, 1825 ] ] }
+        - { cmd: lnTo, pts: [ [ 1782, 1832 ] ] }
+        - { cmd: lnTo, pts: [ [ 1764, 1835 ] ] }
+        - { cmd: lnTo, pts: [ [ 1745, 1832 ] ] }
+        - { cmd: lnTo, pts: [ [ 1728, 1825 ] ] }
+        - { cmd: lnTo, pts: [ [ 1714, 1814 ] ] }
+        - { cmd: lnTo, pts: [ [ 1703, 1801 ] ] }
+        - { cmd: lnTo, pts: [ [ 1696, 1784 ] ] }
+        - { cmd: lnTo, pts: [ [ 1694, 1764 ] ] }
+        - { cmd: lnTo, pts: [ [ 1694, 1260 ] ] }
+        - { cmd: lnTo, pts: [ [ 1696, 1243 ] ] }
+        - { cmd: lnTo, pts: [ [ 1701, 1227 ] ] }
+        - { cmd: lnTo, pts: [ [ 1712, 1213 ] ] }
+        - { cmd: lnTo, pts: [ [ 1725, 1203 ] ] }
+        - { cmd: lnTo, pts: [ [ 1746, 1186 ] ] }
+        - { cmd: lnTo, pts: [ [ 1764, 1165 ] ] }
+        - { cmd: lnTo, pts: [ [ 1779, 1143 ] ] }
+        - { cmd: lnTo, pts: [ [ 1790, 1119 ] ] }
+        - { cmd: lnTo, pts: [ [ 1796, 1092 ] ] }
+        - { cmd: lnTo, pts: [ [ 1798, 1064 ] ] }
+        - { cmd: lnTo, pts: [ [ 1798, 542 ] ] }
+        - { cmd: lnTo, pts: [ [ 1796, 492 ] ] }
+        - { cmd: lnTo, pts: [ [ 1786, 443 ] ] }
+        - { cmd: lnTo, pts: [ [ 1772, 397 ] ] }
+        - { cmd: lnTo, pts: [ [ 1751, 354 ] ] }
+        - { cmd: lnTo, pts: [ [ 1727, 313 ] ] }
+        - { cmd: lnTo, pts: [ [ 1697, 276 ] ] }
+        - { cmd: lnTo, pts: [ [ 1664, 242 ] ] }
+        - { cmd: lnTo, pts: [ [ 1627, 213 ] ] }
+        - { cmd: lnTo, pts: [ [ 1586, 188 ] ] }
+        - { cmd: lnTo, pts: [ [ 1543, 168 ] ] }
+        - { cmd: lnTo, pts: [ [ 1496, 154 ] ] }
+        - { cmd: lnTo, pts: [ [ 1448, 144 ] ] }
+        - { cmd: lnTo, pts: [ [ 1398, 141 ] ] }
+        - { cmd: lnTo, pts: [ [ 1285, 141 ] ] }
+        - { cmd: lnTo, pts: [ [ 1235, 144 ] ] }
+        - { cmd: lnTo, pts: [ [ 1186, 154 ] ] }
+        - { cmd: lnTo, pts: [ [ 1141, 168 ] ] }
+        - { cmd: lnTo, pts: [ [ 1097, 189 ] ] }
+        - { cmd: lnTo, pts: [ [ 1057, 213 ] ] }
+        - { cmd: lnTo, pts: [ [ 1019, 243 ] ] }
+        - { cmd: lnTo, pts: [ [ 985, 276 ] ] }
+        - { cmd: lnTo, pts: [ [ 957, 313 ] ] }
+        - { cmd: lnTo, pts: [ [ 931, 354 ] ] }
+        - { cmd: lnTo, pts: [ [ 912, 397 ] ] }
+        - { cmd: lnTo, pts: [ [ 897, 443 ] ] }
+        - { cmd: lnTo, pts: [ [ 887, 492 ] ] }
+        - { cmd: lnTo, pts: [ [ 884, 542 ] ] }
+        - { cmd: lnTo, pts: [ [ 884, 1064 ] ] }
+        - { cmd: lnTo, pts: [ [ 886, 1092 ] ] }
+        - { cmd: lnTo, pts: [ [ 894, 1119 ] ] }
+        - { cmd: lnTo, pts: [ [ 904, 1143 ] ] }
+        - { cmd: lnTo, pts: [ [ 918, 1165 ] ] }
+        - { cmd: lnTo, pts: [ [ 936, 1186 ] ] }
+        - { cmd: lnTo, pts: [ [ 958, 1203 ] ] }
+        - { cmd: lnTo, pts: [ [ 971, 1213 ] ] }
+        - { cmd: lnTo, pts: [ [ 981, 1227 ] ] }
+        - { cmd: lnTo, pts: [ [ 987, 1243 ] ] }
+        - { cmd: lnTo, pts: [ [ 989, 1260 ] ] }
+        - { cmd: lnTo, pts: [ [ 989, 1764 ] ] }
+        - { cmd: lnTo, pts: [ [ 987, 1786 ] ] }
+        - { cmd: lnTo, pts: [ [ 980, 1805 ] ] }
+        - { cmd: lnTo, pts: [ [ 969, 1823 ] ] }
+        - { cmd: lnTo, pts: [ [ 954, 1838 ] ] }
+        - { cmd: lnTo, pts: [ [ 937, 1849 ] ] }
+        - { cmd: lnTo, pts: [ [ 924, 1856 ] ] }
+        - { cmd: lnTo, pts: [ [ 904, 1865 ] ] }
+        - { cmd: lnTo, pts: [ [ 882, 1877 ] ] }
+        - { cmd: lnTo, pts: [ [ 854, 1891 ] ] }
+        - { cmd: lnTo, pts: [ [ 824, 1908 ] ] }
+        - { cmd: lnTo, pts: [ [ 789, 1926 ] ] }
+        - { cmd: lnTo, pts: [ [ 751, 1947 ] ] }
+        - { cmd: lnTo, pts: [ [ 710, 1972 ] ] }
+        - { cmd: lnTo, pts: [ [ 666, 1997 ] ] }
+        - { cmd: lnTo, pts: [ [ 620, 2025 ] ] }
+        - { cmd: lnTo, pts: [ [ 572, 2055 ] ] }
+        - { cmd: lnTo, pts: [ [ 523, 2087 ] ] }
+        - { cmd: lnTo, pts: [ [ 472, 2121 ] ] }
+        - { cmd: lnTo, pts: [ [ 420, 2156 ] ] }
+        - { cmd: lnTo, pts: [ [ 367, 2194 ] ] }
+        - { cmd: lnTo, pts: [ [ 314, 2234 ] ] }
+        - { cmd: lnTo, pts: [ [ 261, 2274 ] ] }
+        - { cmd: lnTo, pts: [ [ 206, 2318 ] ] }
+        - { cmd: lnTo, pts: [ [ 184, 2340 ] ] }
+        - { cmd: lnTo, pts: [ [ 165, 2367 ] ] }
+        - { cmd: lnTo, pts: [ [ 151, 2395 ] ] }
+        - { cmd: lnTo, pts: [ [ 144, 2426 ] ] }
+        - { cmd: lnTo, pts: [ [ 140, 2458 ] ] }
+        - { cmd: lnTo, pts: [ [ 140, 2817 ] ] }
+        - { cmd: lnTo, pts: [ [ 137, 2836 ] ] }
+        - { cmd: lnTo, pts: [ [ 131, 2852 ] ] }
+        - { cmd: lnTo, pts: [ [ 120, 2867 ] ] }
+        - { cmd: lnTo, pts: [ [ 105, 2877 ] ] }
+        - { cmd: lnTo, pts: [ [ 88, 2885 ] ] }
+        - { cmd: lnTo, pts: [ [ 70, 2887 ] ] }
+        - { cmd: lnTo, pts: [ [ 51, 2885 ] ] }
+        - { cmd: lnTo, pts: [ [ 34, 2877 ] ] }
+        - { cmd: lnTo, pts: [ [ 20, 2867 ] ] }
+        - { cmd: lnTo, pts: [ [ 10, 2852 ] ] }
+        - { cmd: lnTo, pts: [ [ 2, 2836 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 2817 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 2458 ] ] }
+        - { cmd: lnTo, pts: [ [ 2, 2418 ] ] }
+        - { cmd: lnTo, pts: [ [ 10, 2377 ] ] }
+        - { cmd: lnTo, pts: [ [ 22, 2339 ] ] }
+        - { cmd: lnTo, pts: [ [ 39, 2303 ] ] }
+        - { cmd: lnTo, pts: [ [ 62, 2269 ] ] }
+        - { cmd: lnTo, pts: [ [ 87, 2237 ] ] }
+        - { cmd: lnTo, pts: [ [ 118, 2209 ] ] }
+        - { cmd: lnTo, pts: [ [ 174, 2163 ] ] }
+        - { cmd: lnTo, pts: [ [ 231, 2120 ] ] }
+        - { cmd: lnTo, pts: [ [ 287, 2078 ] ] }
+        - { cmd: lnTo, pts: [ [ 344, 2039 ] ] }
+        - { cmd: lnTo, pts: [ [ 398, 2001 ] ] }
+        - { cmd: lnTo, pts: [ [ 452, 1965 ] ] }
+        - { cmd: lnTo, pts: [ [ 504, 1931 ] ] }
+        - { cmd: lnTo, pts: [ [ 555, 1901 ] ] }
+        - { cmd: lnTo, pts: [ [ 603, 1871 ] ] }
+        - { cmd: lnTo, pts: [ [ 649, 1844 ] ] }
+        - { cmd: lnTo, pts: [ [ 692, 1820 ] ] }
+        - { cmd: lnTo, pts: [ [ 731, 1798 ] ] }
+        - { cmd: lnTo, pts: [ [ 767, 1778 ] ] }
+        - { cmd: lnTo, pts: [ [ 799, 1761 ] ] }
+        - { cmd: lnTo, pts: [ [ 826, 1747 ] ] }
+        - { cmd: lnTo, pts: [ [ 849, 1736 ] ] }
+        - { cmd: lnTo, pts: [ [ 849, 1295 ] ] }
+        - { cmd: lnTo, pts: [ [ 822, 1269 ] ] }
+        - { cmd: lnTo, pts: [ [ 799, 1240 ] ] }
+        - { cmd: lnTo, pts: [ [ 780, 1208 ] ] }
+        - { cmd: lnTo, pts: [ [ 764, 1175 ] ] }
+        - { cmd: lnTo, pts: [ [ 753, 1140 ] ] }
+        - { cmd: lnTo, pts: [ [ 746, 1103 ] ] }
+        - { cmd: lnTo, pts: [ [ 744, 1064 ] ] }
+        - { cmd: lnTo, pts: [ [ 744, 542 ] ] }
+        - { cmd: lnTo, pts: [ [ 747, 483 ] ] }
+        - { cmd: lnTo, pts: [ [ 756, 426 ] ] }
+        - { cmd: lnTo, pts: [ [ 771, 371 ] ] }
+        - { cmd: lnTo, pts: [ [ 792, 318 ] ] }
+        - { cmd: lnTo, pts: [ [ 818, 268 ] ] }
+        - { cmd: lnTo, pts: [ [ 848, 223 ] ] }
+        - { cmd: lnTo, pts: [ [ 883, 179 ] ] }
+        - { cmd: lnTo, pts: [ [ 922, 140 ] ] }
+        - { cmd: lnTo, pts: [ [ 966, 106 ] ] }
+        - { cmd: lnTo, pts: [ [ 1012, 75 ] ] }
+        - { cmd: lnTo, pts: [ [ 1062, 49 ] ] }
+        - { cmd: lnTo, pts: [ [ 1114, 28 ] ] }
+        - { cmd: lnTo, pts: [ [ 1169, 13 ] ] }
+        - { cmd: lnTo, pts: [ [ 1226, 4 ] ] }
+        - { cmd: lnTo, pts: [ [ 1285, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_94"
     elementType: shape
     bounds: [ 70, 174, 6, 21 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 487
+      h: 1657
+      commands:
+        - { cmd: moveTo, pts: [ [ 190, 308 ] ] }
+        - { cmd: lnTo, pts: [ [ 144, 1406 ] ] }
+        - { cmd: lnTo, pts: [ [ 237, 1492 ] ] }
+        - { cmd: lnTo, pts: [ [ 335, 1404 ] ] }
+        - { cmd: lnTo, pts: [ [ 285, 311 ] ] }
+        - { cmd: lnTo, pts: [ [ 264, 313 ] ] }
+        - { cmd: lnTo, pts: [ [ 244, 314 ] ] }
+        - { cmd: lnTo, pts: [ [ 217, 313 ] ] }
+        - { cmd: lnTo, pts: [ [ 190, 308 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 416, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 435, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 452, 9 ] ] }
+        - { cmd: lnTo, pts: [ [ 466, 21 ] ] }
+        - { cmd: lnTo, pts: [ [ 477, 35 ] ] }
+        - { cmd: lnTo, pts: [ [ 484, 52 ] ] }
+        - { cmd: lnTo, pts: [ [ 487, 70 ] ] }
+        - { cmd: lnTo, pts: [ [ 484, 107 ] ] }
+        - { cmd: lnTo, pts: [ [ 476, 142 ] ] }
+        - { cmd: lnTo, pts: [ [ 463, 176 ] ] }
+        - { cmd: lnTo, pts: [ [ 445, 206 ] ] }
+        - { cmd: lnTo, pts: [ [ 422, 234 ] ] }
+        - { cmd: lnTo, pts: [ [ 477, 1431 ] ] }
+        - { cmd: lnTo, pts: [ [ 475, 1451 ] ] }
+        - { cmd: lnTo, pts: [ [ 466, 1470 ] ] }
+        - { cmd: lnTo, pts: [ [ 453, 1486 ] ] }
+        - { cmd: lnTo, pts: [ [ 284, 1638 ] ] }
+        - { cmd: lnTo, pts: [ [ 270, 1649 ] ] }
+        - { cmd: lnTo, pts: [ [ 254, 1655 ] ] }
+        - { cmd: lnTo, pts: [ [ 237, 1657 ] ] }
+        - { cmd: lnTo, pts: [ [ 221, 1655 ] ] }
+        - { cmd: lnTo, pts: [ [ 205, 1649 ] ] }
+        - { cmd: lnTo, pts: [ [ 190, 1639 ] ] }
+        - { cmd: lnTo, pts: [ [ 24, 1489 ] ] }
+        - { cmd: lnTo, pts: [ [ 14, 1478 ] ] }
+        - { cmd: lnTo, pts: [ [ 6, 1465 ] ] }
+        - { cmd: lnTo, pts: [ [ 2, 1450 ] ] }
+        - { cmd: lnTo, pts: [ [ 1, 1434 ] ] }
+        - { cmd: lnTo, pts: [ [ 54, 223 ] ] }
+        - { cmd: lnTo, pts: [ [ 35, 198 ] ] }
+        - { cmd: lnTo, pts: [ [ 20, 168 ] ] }
+        - { cmd: lnTo, pts: [ [ 10, 137 ] ] }
+        - { cmd: lnTo, pts: [ [ 2, 105 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 71 ] ] }
+        - { cmd: lnTo, pts: [ [ 2, 52 ] ] }
+        - { cmd: lnTo, pts: [ [ 10, 36 ] ] }
+        - { cmd: lnTo, pts: [ [ 20, 21 ] ] }
+        - { cmd: lnTo, pts: [ [ 34, 10 ] ] }
+        - { cmd: lnTo, pts: [ [ 51, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 70, 1 ] ] }
+        - { cmd: lnTo, pts: [ [ 88, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 105, 10 ] ] }
+        - { cmd: lnTo, pts: [ [ 120, 21 ] ] }
+        - { cmd: lnTo, pts: [ [ 131, 36 ] ] }
+        - { cmd: lnTo, pts: [ [ 137, 52 ] ] }
+        - { cmd: lnTo, pts: [ [ 140, 71 ] ] }
+        - { cmd: lnTo, pts: [ [ 143, 95 ] ] }
+        - { cmd: lnTo, pts: [ [ 151, 116 ] ] }
+        - { cmd: lnTo, pts: [ [ 163, 135 ] ] }
+        - { cmd: lnTo, pts: [ [ 179, 151 ] ] }
+        - { cmd: lnTo, pts: [ [ 198, 164 ] ] }
+        - { cmd: lnTo, pts: [ [ 219, 171 ] ] }
+        - { cmd: lnTo, pts: [ [ 244, 174 ] ] }
+        - { cmd: lnTo, pts: [ [ 264, 172 ] ] }
+        - { cmd: lnTo, pts: [ [ 283, 166 ] ] }
+        - { cmd: lnTo, pts: [ [ 301, 156 ] ] }
+        - { cmd: lnTo, pts: [ [ 306, 151 ] ] }
+        - { cmd: lnTo, pts: [ [ 313, 147 ] ] }
+        - { cmd: lnTo, pts: [ [ 327, 131 ] ] }
+        - { cmd: lnTo, pts: [ [ 337, 113 ] ] }
+        - { cmd: lnTo, pts: [ [ 344, 92 ] ] }
+        - { cmd: lnTo, pts: [ [ 346, 70 ] ] }
+        - { cmd: lnTo, pts: [ [ 349, 52 ] ] }
+        - { cmd: lnTo, pts: [ [ 355, 35 ] ] }
+        - { cmd: lnTo, pts: [ [ 366, 21 ] ] }
+        - { cmd: lnTo, pts: [ [ 381, 9 ] ] }
+        - { cmd: lnTo, pts: [ [ 398, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 416, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_95"
     elementType: shape
     bounds: [ 90, 171, 8, 8 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 632
+      h: 632
+      commands:
+        - { cmd: moveTo, pts: [ [ 140, 147 ] ] }
+        - { cmd: lnTo, pts: [ [ 140, 492 ] ] }
+        - { cmd: lnTo, pts: [ [ 487, 492 ] ] }
+        - { cmd: lnTo, pts: [ [ 476, 447 ] ] }
+        - { cmd: lnTo, pts: [ [ 460, 402 ] ] }
+        - { cmd: lnTo, pts: [ [ 440, 361 ] ] }
+        - { cmd: lnTo, pts: [ [ 416, 320 ] ] }
+        - { cmd: lnTo, pts: [ [ 387, 283 ] ] }
+        - { cmd: lnTo, pts: [ [ 352, 249 ] ] }
+        - { cmd: lnTo, pts: [ [ 314, 219 ] ] }
+        - { cmd: lnTo, pts: [ [ 274, 194 ] ] }
+        - { cmd: lnTo, pts: [ [ 232, 174 ] ] }
+        - { cmd: lnTo, pts: [ [ 187, 158 ] ] }
+        - { cmd: lnTo, pts: [ [ 140, 147 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 70, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 123, 2 ] ] }
+        - { cmd: lnTo, pts: [ [ 176, 10 ] ] }
+        - { cmd: lnTo, pts: [ [ 227, 22 ] ] }
+        - { cmd: lnTo, pts: [ [ 277, 40 ] ] }
+        - { cmd: lnTo, pts: [ [ 325, 61 ] ] }
+        - { cmd: lnTo, pts: [ [ 371, 87 ] ] }
+        - { cmd: lnTo, pts: [ [ 413, 117 ] ] }
+        - { cmd: lnTo, pts: [ [ 454, 151 ] ] }
+        - { cmd: lnTo, pts: [ [ 491, 190 ] ] }
+        - { cmd: lnTo, pts: [ [ 523, 230 ] ] }
+        - { cmd: lnTo, pts: [ [ 552, 273 ] ] }
+        - { cmd: lnTo, pts: [ [ 575, 317 ] ] }
+        - { cmd: lnTo, pts: [ [ 595, 363 ] ] }
+        - { cmd: lnTo, pts: [ [ 611, 412 ] ] }
+        - { cmd: lnTo, pts: [ [ 623, 461 ] ] }
+        - { cmd: lnTo, pts: [ [ 629, 511 ] ] }
+        - { cmd: lnTo, pts: [ [ 632, 562 ] ] }
+        - { cmd: lnTo, pts: [ [ 629, 581 ] ] }
+        - { cmd: lnTo, pts: [ [ 622, 598 ] ] }
+        - { cmd: lnTo, pts: [ [ 611, 612 ] ] }
+        - { cmd: lnTo, pts: [ [ 598, 623 ] ] }
+        - { cmd: lnTo, pts: [ [ 580, 630 ] ] }
+        - { cmd: lnTo, pts: [ [ 561, 632 ] ] }
+        - { cmd: lnTo, pts: [ [ 70, 632 ] ] }
+        - { cmd: lnTo, pts: [ [ 52, 630 ] ] }
+        - { cmd: lnTo, pts: [ [ 35, 623 ] ] }
+        - { cmd: lnTo, pts: [ [ 21, 612 ] ] }
+        - { cmd: lnTo, pts: [ [ 9, 598 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 581 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 562 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 70 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 51 ] ] }
+        - { cmd: lnTo, pts: [ [ 9, 34 ] ] }
+        - { cmd: lnTo, pts: [ [ 20, 20 ] ] }
+        - { cmd: lnTo, pts: [ [ 35, 10 ] ] }
+        - { cmd: lnTo, pts: [ [ 52, 2 ] ] }
+        - { cmd: lnTo, pts: [ [ 70, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_96"
     elementType: shape
     bounds: [ 79, 173, 17, 17 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 1395
+      h: 1394
+      commands:
+        - { cmd: moveTo, pts: [ [ 628, 145 ] ] }
+        - { cmd: lnTo, pts: [ [ 569, 156 ] ] }
+        - { cmd: lnTo, pts: [ [ 514, 172 ] ] }
+        - { cmd: lnTo, pts: [ [ 461, 194 ] ] }
+        - { cmd: lnTo, pts: [ [ 411, 220 ] ] }
+        - { cmd: lnTo, pts: [ [ 364, 252 ] ] }
+        - { cmd: lnTo, pts: [ [ 320, 287 ] ] }
+        - { cmd: lnTo, pts: [ [ 281, 328 ] ] }
+        - { cmd: lnTo, pts: [ [ 246, 372 ] ] }
+        - { cmd: lnTo, pts: [ [ 215, 419 ] ] }
+        - { cmd: lnTo, pts: [ [ 190, 470 ] ] }
+        - { cmd: lnTo, pts: [ [ 168, 524 ] ] }
+        - { cmd: lnTo, pts: [ [ 153, 579 ] ] }
+        - { cmd: lnTo, pts: [ [ 144, 638 ] ] }
+        - { cmd: lnTo, pts: [ [ 141, 697 ] ] }
+        - { cmd: lnTo, pts: [ [ 144, 758 ] ] }
+        - { cmd: lnTo, pts: [ [ 153, 816 ] ] }
+        - { cmd: lnTo, pts: [ [ 169, 873 ] ] }
+        - { cmd: lnTo, pts: [ [ 191, 927 ] ] }
+        - { cmd: lnTo, pts: [ [ 217, 978 ] ] }
+        - { cmd: lnTo, pts: [ [ 248, 1026 ] ] }
+        - { cmd: lnTo, pts: [ [ 284, 1069 ] ] }
+        - { cmd: lnTo, pts: [ [ 325, 1110 ] ] }
+        - { cmd: lnTo, pts: [ [ 369, 1146 ] ] }
+        - { cmd: lnTo, pts: [ [ 417, 1178 ] ] }
+        - { cmd: lnTo, pts: [ [ 468, 1205 ] ] }
+        - { cmd: lnTo, pts: [ [ 522, 1226 ] ] }
+        - { cmd: lnTo, pts: [ [ 578, 1241 ] ] }
+        - { cmd: lnTo, pts: [ [ 638, 1250 ] ] }
+        - { cmd: lnTo, pts: [ [ 697, 1254 ] ] }
+        - { cmd: lnTo, pts: [ [ 758, 1250 ] ] }
+        - { cmd: lnTo, pts: [ [ 815, 1242 ] ] }
+        - { cmd: lnTo, pts: [ [ 872, 1226 ] ] }
+        - { cmd: lnTo, pts: [ [ 925, 1206 ] ] }
+        - { cmd: lnTo, pts: [ [ 975, 1179 ] ] }
+        - { cmd: lnTo, pts: [ [ 1023, 1148 ] ] }
+        - { cmd: lnTo, pts: [ [ 1066, 1113 ] ] }
+        - { cmd: lnTo, pts: [ [ 1107, 1074 ] ] }
+        - { cmd: lnTo, pts: [ [ 1143, 1030 ] ] }
+        - { cmd: lnTo, pts: [ [ 1175, 983 ] ] }
+        - { cmd: lnTo, pts: [ [ 1201, 933 ] ] }
+        - { cmd: lnTo, pts: [ [ 1223, 880 ] ] }
+        - { cmd: lnTo, pts: [ [ 1239, 825 ] ] }
+        - { cmd: lnTo, pts: [ [ 1249, 767 ] ] }
+        - { cmd: lnTo, pts: [ [ 697, 767 ] ] }
+        - { cmd: lnTo, pts: [ [ 679, 765 ] ] }
+        - { cmd: lnTo, pts: [ [ 662, 758 ] ] }
+        - { cmd: lnTo, pts: [ [ 648, 747 ] ] }
+        - { cmd: lnTo, pts: [ [ 636, 732 ] ] }
+        - { cmd: lnTo, pts: [ [ 630, 716 ] ] }
+        - { cmd: lnTo, pts: [ [ 628, 697 ] ] }
+        - { cmd: lnTo, pts: [ [ 628, 145 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 697, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 716, 2 ] ] }
+        - { cmd: lnTo, pts: [ [ 733, 10 ] ] }
+        - { cmd: lnTo, pts: [ [ 747, 20 ] ] }
+        - { cmd: lnTo, pts: [ [ 759, 34 ] ] }
+        - { cmd: lnTo, pts: [ [ 765, 51 ] ] }
+        - { cmd: lnTo, pts: [ [ 768, 70 ] ] }
+        - { cmd: lnTo, pts: [ [ 768, 627 ] ] }
+        - { cmd: lnTo, pts: [ [ 1325, 627 ] ] }
+        - { cmd: lnTo, pts: [ [ 1343, 629 ] ] }
+        - { cmd: lnTo, pts: [ [ 1360, 636 ] ] }
+        - { cmd: lnTo, pts: [ [ 1375, 647 ] ] }
+        - { cmd: lnTo, pts: [ [ 1385, 662 ] ] }
+        - { cmd: lnTo, pts: [ [ 1392, 678 ] ] }
+        - { cmd: lnTo, pts: [ [ 1395, 697 ] ] }
+        - { cmd: lnTo, pts: [ [ 1392, 764 ] ] }
+        - { cmd: lnTo, pts: [ [ 1382, 829 ] ] }
+        - { cmd: lnTo, pts: [ [ 1367, 893 ] ] }
+        - { cmd: lnTo, pts: [ [ 1346, 954 ] ] }
+        - { cmd: lnTo, pts: [ [ 1320, 1012 ] ] }
+        - { cmd: lnTo, pts: [ [ 1289, 1066 ] ] }
+        - { cmd: lnTo, pts: [ [ 1252, 1118 ] ] }
+        - { cmd: lnTo, pts: [ [ 1212, 1167 ] ] }
+        - { cmd: lnTo, pts: [ [ 1167, 1212 ] ] }
+        - { cmd: lnTo, pts: [ [ 1119, 1252 ] ] }
+        - { cmd: lnTo, pts: [ [ 1067, 1288 ] ] }
+        - { cmd: lnTo, pts: [ [ 1012, 1320 ] ] }
+        - { cmd: lnTo, pts: [ [ 953, 1345 ] ] }
+        - { cmd: lnTo, pts: [ [ 893, 1366 ] ] }
+        - { cmd: lnTo, pts: [ [ 830, 1381 ] ] }
+        - { cmd: lnTo, pts: [ [ 765, 1391 ] ] }
+        - { cmd: lnTo, pts: [ [ 697, 1394 ] ] }
+        - { cmd: lnTo, pts: [ [ 630, 1391 ] ] }
+        - { cmd: lnTo, pts: [ [ 565, 1381 ] ] }
+        - { cmd: lnTo, pts: [ [ 502, 1366 ] ] }
+        - { cmd: lnTo, pts: [ [ 442, 1345 ] ] }
+        - { cmd: lnTo, pts: [ [ 383, 1320 ] ] }
+        - { cmd: lnTo, pts: [ [ 328, 1288 ] ] }
+        - { cmd: lnTo, pts: [ [ 276, 1252 ] ] }
+        - { cmd: lnTo, pts: [ [ 228, 1212 ] ] }
+        - { cmd: lnTo, pts: [ [ 183, 1167 ] ] }
+        - { cmd: lnTo, pts: [ [ 143, 1118 ] ] }
+        - { cmd: lnTo, pts: [ [ 107, 1066 ] ] }
+        - { cmd: lnTo, pts: [ [ 76, 1012 ] ] }
+        - { cmd: lnTo, pts: [ [ 49, 954 ] ] }
+        - { cmd: lnTo, pts: [ [ 28, 893 ] ] }
+        - { cmd: lnTo, pts: [ [ 13, 829 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 764 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 697 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 630 ] ] }
+        - { cmd: lnTo, pts: [ [ 13, 565 ] ] }
+        - { cmd: lnTo, pts: [ [ 28, 501 ] ] }
+        - { cmd: lnTo, pts: [ [ 49, 441 ] ] }
+        - { cmd: lnTo, pts: [ [ 76, 382 ] ] }
+        - { cmd: lnTo, pts: [ [ 107, 328 ] ] }
+        - { cmd: lnTo, pts: [ [ 143, 276 ] ] }
+        - { cmd: lnTo, pts: [ [ 183, 227 ] ] }
+        - { cmd: lnTo, pts: [ [ 228, 182 ] ] }
+        - { cmd: lnTo, pts: [ [ 276, 142 ] ] }
+        - { cmd: lnTo, pts: [ [ 328, 107 ] ] }
+        - { cmd: lnTo, pts: [ [ 383, 75 ] ] }
+        - { cmd: lnTo, pts: [ [ 442, 49 ] ] }
+        - { cmd: lnTo, pts: [ [ 502, 28 ] ] }
+        - { cmd: lnTo, pts: [ [ 565, 12 ] ] }
+        - { cmd: lnTo, pts: [ [ 630, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 697, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_107"
     elementType: shape
     bounds: [ 797, 251, 17, 5 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 1378
+      h: 371
+      commands:
+        - { cmd: moveTo, pts: [ [ 689, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 708, 2 ] ] }
+        - { cmd: lnTo, pts: [ [ 724, 10 ] ] }
+        - { cmd: lnTo, pts: [ [ 739, 20 ] ] }
+        - { cmd: lnTo, pts: [ [ 749, 35 ] ] }
+        - { cmd: lnTo, pts: [ [ 757, 51 ] ] }
+        - { cmd: lnTo, pts: [ [ 759, 70 ] ] }
+        - { cmd: lnTo, pts: [ [ 759, 230 ] ] }
+        - { cmd: lnTo, pts: [ [ 1307, 230 ] ] }
+        - { cmd: lnTo, pts: [ [ 1326, 232 ] ] }
+        - { cmd: lnTo, pts: [ [ 1343, 239 ] ] }
+        - { cmd: lnTo, pts: [ [ 1357, 250 ] ] }
+        - { cmd: lnTo, pts: [ [ 1368, 265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1375, 282 ] ] }
+        - { cmd: lnTo, pts: [ [ 1378, 300 ] ] }
+        - { cmd: lnTo, pts: [ [ 1376, 319 ] ] }
+        - { cmd: lnTo, pts: [ [ 1368, 336 ] ] }
+        - { cmd: lnTo, pts: [ [ 1358, 349 ] ] }
+        - { cmd: lnTo, pts: [ [ 1343, 361 ] ] }
+        - { cmd: lnTo, pts: [ [ 1326, 367 ] ] }
+        - { cmd: lnTo, pts: [ [ 1308, 371 ] ] }
+        - { cmd: lnTo, pts: [ [ 71, 371 ] ] }
+        - { cmd: lnTo, pts: [ [ 52, 367 ] ] }
+        - { cmd: lnTo, pts: [ [ 35, 361 ] ] }
+        - { cmd: lnTo, pts: [ [ 21, 349 ] ] }
+        - { cmd: lnTo, pts: [ [ 9, 336 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 319 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 300 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 282 ] ] }
+        - { cmd: lnTo, pts: [ [ 9, 265 ] ] }
+        - { cmd: lnTo, pts: [ [ 21, 250 ] ] }
+        - { cmd: lnTo, pts: [ [ 35, 239 ] ] }
+        - { cmd: lnTo, pts: [ [ 52, 232 ] ] }
+        - { cmd: lnTo, pts: [ [ 71, 230 ] ] }
+        - { cmd: lnTo, pts: [ [ 618, 230 ] ] }
+        - { cmd: lnTo, pts: [ [ 618, 70 ] ] }
+        - { cmd: lnTo, pts: [ [ 621, 51 ] ] }
+        - { cmd: lnTo, pts: [ [ 627, 35 ] ] }
+        - { cmd: lnTo, pts: [ [ 639, 20 ] ] }
+        - { cmd: lnTo, pts: [ [ 653, 10 ] ] }
+        - { cmd: lnTo, pts: [ [ 670, 2 ] ] }
+        - { cmd: lnTo, pts: [ [ 689, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_108"
     elementType: shape
     bounds: [ 787, 221, 38, 27 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 3034
+      h: 2187
+      commands:
+        - { cmd: moveTo, pts: [ [ 1510, 1339 ] ] }
+        - { cmd: lnTo, pts: [ [ 1467, 1342 ] ] }
+        - { cmd: lnTo, pts: [ [ 1427, 1351 ] ] }
+        - { cmd: lnTo, pts: [ [ 1388, 1364 ] ] }
+        - { cmd: lnTo, pts: [ [ 1352, 1383 ] ] }
+        - { cmd: lnTo, pts: [ [ 1318, 1407 ] ] }
+        - { cmd: lnTo, pts: [ [ 1288, 1434 ] ] }
+        - { cmd: lnTo, pts: [ [ 1263, 1465 ] ] }
+        - { cmd: lnTo, pts: [ [ 1242, 1500 ] ] }
+        - { cmd: lnTo, pts: [ [ 1225, 1537 ] ] }
+        - { cmd: lnTo, pts: [ [ 1213, 1577 ] ] }
+        - { cmd: lnTo, pts: [ [ 1808, 1577 ] ] }
+        - { cmd: lnTo, pts: [ [ 1795, 1537 ] ] }
+        - { cmd: lnTo, pts: [ [ 1778, 1500 ] ] }
+        - { cmd: lnTo, pts: [ [ 1757, 1465 ] ] }
+        - { cmd: lnTo, pts: [ [ 1732, 1434 ] ] }
+        - { cmd: lnTo, pts: [ [ 1702, 1407 ] ] }
+        - { cmd: lnTo, pts: [ [ 1669, 1383 ] ] }
+        - { cmd: lnTo, pts: [ [ 1633, 1364 ] ] }
+        - { cmd: lnTo, pts: [ [ 1594, 1351 ] ] }
+        - { cmd: lnTo, pts: [ [ 1553, 1342 ] ] }
+        - { cmd: lnTo, pts: [ [ 1510, 1339 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2114, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 2873, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 2906, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 2935, 12 ] ] }
+        - { cmd: lnTo, pts: [ [ 2963, 27 ] ] }
+        - { cmd: lnTo, pts: [ [ 2986, 47 ] ] }
+        - { cmd: lnTo, pts: [ [ 3006, 71 ] ] }
+        - { cmd: lnTo, pts: [ [ 3021, 98 ] ] }
+        - { cmd: lnTo, pts: [ [ 3030, 128 ] ] }
+        - { cmd: lnTo, pts: [ [ 3034, 160 ] ] }
+        - { cmd: lnTo, pts: [ [ 3034, 2027 ] ] }
+        - { cmd: lnTo, pts: [ [ 3030, 2058 ] ] }
+        - { cmd: lnTo, pts: [ [ 3021, 2089 ] ] }
+        - { cmd: lnTo, pts: [ [ 3006, 2117 ] ] }
+        - { cmd: lnTo, pts: [ [ 2986, 2140 ] ] }
+        - { cmd: lnTo, pts: [ [ 2963, 2160 ] ] }
+        - { cmd: lnTo, pts: [ [ 2935, 2175 ] ] }
+        - { cmd: lnTo, pts: [ [ 2906, 2184 ] ] }
+        - { cmd: lnTo, pts: [ [ 2873, 2187 ] ] }
+        - { cmd: lnTo, pts: [ [ 161, 2187 ] ] }
+        - { cmd: lnTo, pts: [ [ 128, 2184 ] ] }
+        - { cmd: lnTo, pts: [ [ 98, 2175 ] ] }
+        - { cmd: lnTo, pts: [ [ 71, 2160 ] ] }
+        - { cmd: lnTo, pts: [ [ 47, 2140 ] ] }
+        - { cmd: lnTo, pts: [ [ 28, 2117 ] ] }
+        - { cmd: lnTo, pts: [ [ 13, 2089 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 2058 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 2027 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 1644 ] ] }
+        - { cmd: lnTo, pts: [ [ 2, 1625 ] ] }
+        - { cmd: lnTo, pts: [ [ 10, 1608 ] ] }
+        - { cmd: lnTo, pts: [ [ 20, 1594 ] ] }
+        - { cmd: lnTo, pts: [ [ 34, 1582 ] ] }
+        - { cmd: lnTo, pts: [ [ 51, 1576 ] ] }
+        - { cmd: lnTo, pts: [ [ 70, 1573 ] ] }
+        - { cmd: lnTo, pts: [ [ 80, 1574 ] ] }
+        - { cmd: lnTo, pts: [ [ 91, 1577 ] ] }
+        - { cmd: lnTo, pts: [ [ 645, 1577 ] ] }
+        - { cmd: lnTo, pts: [ [ 655, 1532 ] ] }
+        - { cmd: lnTo, pts: [ [ 671, 1489 ] ] }
+        - { cmd: lnTo, pts: [ [ 691, 1448 ] ] }
+        - { cmd: lnTo, pts: [ [ 716, 1411 ] ] }
+        - { cmd: lnTo, pts: [ [ 744, 1376 ] ] }
+        - { cmd: lnTo, pts: [ [ 777, 1345 ] ] }
+        - { cmd: lnTo, pts: [ [ 813, 1318 ] ] }
+        - { cmd: lnTo, pts: [ [ 851, 1296 ] ] }
+        - { cmd: lnTo, pts: [ [ 893, 1277 ] ] }
+        - { cmd: lnTo, pts: [ [ 937, 1264 ] ] }
+        - { cmd: lnTo, pts: [ [ 982, 1255 ] ] }
+        - { cmd: lnTo, pts: [ [ 1030, 1252 ] ] }
+        - { cmd: lnTo, pts: [ [ 1049, 1254 ] ] }
+        - { cmd: lnTo, pts: [ [ 1066, 1262 ] ] }
+        - { cmd: lnTo, pts: [ [ 1080, 1272 ] ] }
+        - { cmd: lnTo, pts: [ [ 1090, 1287 ] ] }
+        - { cmd: lnTo, pts: [ [ 1098, 1304 ] ] }
+        - { cmd: lnTo, pts: [ [ 1100, 1322 ] ] }
+        - { cmd: lnTo, pts: [ [ 1098, 1341 ] ] }
+        - { cmd: lnTo, pts: [ [ 1090, 1358 ] ] }
+        - { cmd: lnTo, pts: [ [ 1080, 1372 ] ] }
+        - { cmd: lnTo, pts: [ [ 1066, 1383 ] ] }
+        - { cmd: lnTo, pts: [ [ 1049, 1390 ] ] }
+        - { cmd: lnTo, pts: [ [ 1030, 1393 ] ] }
+        - { cmd: lnTo, pts: [ [ 993, 1395 ] ] }
+        - { cmd: lnTo, pts: [ [ 957, 1404 ] ] }
+        - { cmd: lnTo, pts: [ [ 923, 1416 ] ] }
+        - { cmd: lnTo, pts: [ [ 892, 1434 ] ] }
+        - { cmd: lnTo, pts: [ [ 864, 1456 ] ] }
+        - { cmd: lnTo, pts: [ [ 838, 1482 ] ] }
+        - { cmd: lnTo, pts: [ [ 818, 1510 ] ] }
+        - { cmd: lnTo, pts: [ [ 801, 1542 ] ] }
+        - { cmd: lnTo, pts: [ [ 789, 1577 ] ] }
+        - { cmd: lnTo, pts: [ [ 1070, 1577 ] ] }
+        - { cmd: lnTo, pts: [ [ 1080, 1528 ] ] }
+        - { cmd: lnTo, pts: [ [ 1096, 1482 ] ] }
+        - { cmd: lnTo, pts: [ [ 1116, 1438 ] ] }
+        - { cmd: lnTo, pts: [ [ 1140, 1397 ] ] }
+        - { cmd: lnTo, pts: [ [ 1169, 1359 ] ] }
+        - { cmd: lnTo, pts: [ [ 1200, 1324 ] ] }
+        - { cmd: lnTo, pts: [ [ 1236, 1292 ] ] }
+        - { cmd: lnTo, pts: [ [ 1275, 1265 ] ] }
+        - { cmd: lnTo, pts: [ [ 1318, 1242 ] ] }
+        - { cmd: lnTo, pts: [ [ 1362, 1224 ] ] }
+        - { cmd: lnTo, pts: [ [ 1410, 1210 ] ] }
+        - { cmd: lnTo, pts: [ [ 1412, 1209 ] ] }
+        - { cmd: lnTo, pts: [ [ 1419, 1208 ] ] }
+        - { cmd: lnTo, pts: [ [ 1432, 1206 ] ] }
+        - { cmd: lnTo, pts: [ [ 1448, 1204 ] ] }
+        - { cmd: lnTo, pts: [ [ 1468, 1201 ] ] }
+        - { cmd: lnTo, pts: [ [ 1492, 1199 ] ] }
+        - { cmd: lnTo, pts: [ [ 1519, 1199 ] ] }
+        - { cmd: lnTo, pts: [ [ 1550, 1200 ] ] }
+        - { cmd: lnTo, pts: [ [ 1600, 1208 ] ] }
+        - { cmd: lnTo, pts: [ [ 1648, 1220 ] ] }
+        - { cmd: lnTo, pts: [ [ 1695, 1238 ] ] }
+        - { cmd: lnTo, pts: [ [ 1738, 1262 ] ] }
+        - { cmd: lnTo, pts: [ [ 1778, 1289 ] ] }
+        - { cmd: lnTo, pts: [ [ 1815, 1320 ] ] }
+        - { cmd: lnTo, pts: [ [ 1849, 1356 ] ] }
+        - { cmd: lnTo, pts: [ [ 1879, 1394 ] ] }
+        - { cmd: lnTo, pts: [ [ 1903, 1436 ] ] }
+        - { cmd: lnTo, pts: [ [ 1924, 1481 ] ] }
+        - { cmd: lnTo, pts: [ [ 1940, 1528 ] ] }
+        - { cmd: lnTo, pts: [ [ 1950, 1577 ] ] }
+        - { cmd: lnTo, pts: [ [ 2229, 1577 ] ] }
+        - { cmd: lnTo, pts: [ [ 2218, 1543 ] ] }
+        - { cmd: lnTo, pts: [ [ 2201, 1511 ] ] }
+        - { cmd: lnTo, pts: [ [ 2179, 1483 ] ] }
+        - { cmd: lnTo, pts: [ [ 2155, 1456 ] ] }
+        - { cmd: lnTo, pts: [ [ 2127, 1435 ] ] }
+        - { cmd: lnTo, pts: [ [ 2096, 1417 ] ] }
+        - { cmd: lnTo, pts: [ [ 2062, 1405 ] ] }
+        - { cmd: lnTo, pts: [ [ 2026, 1396 ] ] }
+        - { cmd: lnTo, pts: [ [ 1988, 1393 ] ] }
+        - { cmd: lnTo, pts: [ [ 1970, 1391 ] ] }
+        - { cmd: lnTo, pts: [ [ 1953, 1383 ] ] }
+        - { cmd: lnTo, pts: [ [ 1938, 1373 ] ] }
+        - { cmd: lnTo, pts: [ [ 1928, 1359 ] ] }
+        - { cmd: lnTo, pts: [ [ 1920, 1342 ] ] }
+        - { cmd: lnTo, pts: [ [ 1918, 1323 ] ] }
+        - { cmd: lnTo, pts: [ [ 1920, 1304 ] ] }
+        - { cmd: lnTo, pts: [ [ 1928, 1287 ] ] }
+        - { cmd: lnTo, pts: [ [ 1938, 1273 ] ] }
+        - { cmd: lnTo, pts: [ [ 1953, 1263 ] ] }
+        - { cmd: lnTo, pts: [ [ 1970, 1255 ] ] }
+        - { cmd: lnTo, pts: [ [ 1988, 1253 ] ] }
+        - { cmd: lnTo, pts: [ [ 2035, 1255 ] ] }
+        - { cmd: lnTo, pts: [ [ 2082, 1264 ] ] }
+        - { cmd: lnTo, pts: [ [ 2125, 1278 ] ] }
+        - { cmd: lnTo, pts: [ [ 2167, 1296 ] ] }
+        - { cmd: lnTo, pts: [ [ 2206, 1319 ] ] }
+        - { cmd: lnTo, pts: [ [ 2242, 1346 ] ] }
+        - { cmd: lnTo, pts: [ [ 2274, 1377 ] ] }
+        - { cmd: lnTo, pts: [ [ 2302, 1412 ] ] }
+        - { cmd: lnTo, pts: [ [ 2328, 1449 ] ] }
+        - { cmd: lnTo, pts: [ [ 2348, 1489 ] ] }
+        - { cmd: lnTo, pts: [ [ 2363, 1533 ] ] }
+        - { cmd: lnTo, pts: [ [ 2373, 1577 ] ] }
+        - { cmd: lnTo, pts: [ [ 2674, 1577 ] ] }
+        - { cmd: lnTo, pts: [ [ 2692, 1580 ] ] }
+        - { cmd: lnTo, pts: [ [ 2709, 1588 ] ] }
+        - { cmd: lnTo, pts: [ [ 2724, 1598 ] ] }
+        - { cmd: lnTo, pts: [ [ 2734, 1612 ] ] }
+        - { cmd: lnTo, pts: [ [ 2742, 1629 ] ] }
+        - { cmd: lnTo, pts: [ [ 2744, 1648 ] ] }
+        - { cmd: lnTo, pts: [ [ 2742, 1667 ] ] }
+        - { cmd: lnTo, pts: [ [ 2734, 1683 ] ] }
+        - { cmd: lnTo, pts: [ [ 2724, 1698 ] ] }
+        - { cmd: lnTo, pts: [ [ 2709, 1708 ] ] }
+        - { cmd: lnTo, pts: [ [ 2692, 1716 ] ] }
+        - { cmd: lnTo, pts: [ [ 2674, 1718 ] ] }
+        - { cmd: lnTo, pts: [ [ 140, 1718 ] ] }
+        - { cmd: lnTo, pts: [ [ 140, 2027 ] ] }
+        - { cmd: lnTo, pts: [ [ 143, 2037 ] ] }
+        - { cmd: lnTo, pts: [ [ 150, 2045 ] ] }
+        - { cmd: lnTo, pts: [ [ 161, 2048 ] ] }
+        - { cmd: lnTo, pts: [ [ 2873, 2048 ] ] }
+        - { cmd: lnTo, pts: [ [ 2883, 2045 ] ] }
+        - { cmd: lnTo, pts: [ [ 2891, 2037 ] ] }
+        - { cmd: lnTo, pts: [ [ 2893, 2027 ] ] }
+        - { cmd: lnTo, pts: [ [ 2893, 160 ] ] }
+        - { cmd: lnTo, pts: [ [ 2891, 150 ] ] }
+        - { cmd: lnTo, pts: [ [ 2883, 143 ] ] }
+        - { cmd: lnTo, pts: [ [ 2873, 140 ] ] }
+        - { cmd: lnTo, pts: [ [ 2114, 140 ] ] }
+        - { cmd: lnTo, pts: [ [ 2095, 137 ] ] }
+        - { cmd: lnTo, pts: [ [ 2078, 131 ] ] }
+        - { cmd: lnTo, pts: [ [ 2064, 119 ] ] }
+        - { cmd: lnTo, pts: [ [ 2053, 105 ] ] }
+        - { cmd: lnTo, pts: [ [ 2046, 89 ] ] }
+        - { cmd: lnTo, pts: [ [ 2044, 70 ] ] }
+        - { cmd: lnTo, pts: [ [ 2046, 52 ] ] }
+        - { cmd: lnTo, pts: [ [ 2053, 35 ] ] }
+        - { cmd: lnTo, pts: [ [ 2064, 20 ] ] }
+        - { cmd: lnTo, pts: [ [ 2078, 9 ] ] }
+        - { cmd: lnTo, pts: [ [ 2095, 2 ] ] }
+        - { cmd: lnTo, pts: [ [ 2114, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_109"
     elementType: shape
     bounds: [ 787, 221, 12, 18 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 993
+      h: 1455
+      commands:
+        - { cmd: moveTo, pts: [ [ 161, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 922, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 941, 2 ] ] }
+        - { cmd: lnTo, pts: [ [ 958, 9 ] ] }
+        - { cmd: lnTo, pts: [ [ 972, 20 ] ] }
+        - { cmd: lnTo, pts: [ [ 983, 35 ] ] }
+        - { cmd: lnTo, pts: [ [ 990, 52 ] ] }
+        - { cmd: lnTo, pts: [ [ 993, 70 ] ] }
+        - { cmd: lnTo, pts: [ [ 990, 89 ] ] }
+        - { cmd: lnTo, pts: [ [ 983, 105 ] ] }
+        - { cmd: lnTo, pts: [ [ 972, 119 ] ] }
+        - { cmd: lnTo, pts: [ [ 958, 131 ] ] }
+        - { cmd: lnTo, pts: [ [ 941, 137 ] ] }
+        - { cmd: lnTo, pts: [ [ 922, 140 ] ] }
+        - { cmd: lnTo, pts: [ [ 161, 140 ] ] }
+        - { cmd: lnTo, pts: [ [ 150, 143 ] ] }
+        - { cmd: lnTo, pts: [ [ 143, 150 ] ] }
+        - { cmd: lnTo, pts: [ [ 140, 160 ] ] }
+        - { cmd: lnTo, pts: [ [ 140, 1384 ] ] }
+        - { cmd: lnTo, pts: [ [ 138, 1404 ] ] }
+        - { cmd: lnTo, pts: [ [ 130, 1420 ] ] }
+        - { cmd: lnTo, pts: [ [ 120, 1434 ] ] }
+        - { cmd: lnTo, pts: [ [ 105, 1446 ] ] }
+        - { cmd: lnTo, pts: [ [ 89, 1452 ] ] }
+        - { cmd: lnTo, pts: [ [ 70, 1455 ] ] }
+        - { cmd: lnTo, pts: [ [ 51, 1452 ] ] }
+        - { cmd: lnTo, pts: [ [ 34, 1446 ] ] }
+        - { cmd: lnTo, pts: [ [ 20, 1434 ] ] }
+        - { cmd: lnTo, pts: [ [ 10, 1420 ] ] }
+        - { cmd: lnTo, pts: [ [ 2, 1404 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 1384 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 160 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 128 ] ] }
+        - { cmd: lnTo, pts: [ [ 13, 98 ] ] }
+        - { cmd: lnTo, pts: [ [ 28, 71 ] ] }
+        - { cmd: lnTo, pts: [ [ 47, 47 ] ] }
+        - { cmd: lnTo, pts: [ [ 71, 27 ] ] }
+        - { cmd: lnTo, pts: [ [ 98, 12 ] ] }
+        - { cmd: lnTo, pts: [ [ 128, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 161, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_110"
     elementType: shape
     bounds: [ 798, 212, 14, 24 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 1137
+      h: 1894
+      commands:
+        - { cmd: moveTo, pts: [ [ 574, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 589, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 603, 7 ] ] }
+        - { cmd: lnTo, pts: [ [ 617, 14 ] ] }
+        - { cmd: lnTo, pts: [ [ 627, 25 ] ] }
+        - { cmd: lnTo, pts: [ [ 887, 325 ] ] }
+        - { cmd: lnTo, pts: [ [ 913, 359 ] ] }
+        - { cmd: lnTo, pts: [ [ 934, 395 ] ] }
+        - { cmd: lnTo, pts: [ [ 951, 433 ] ] }
+        - { cmd: lnTo, pts: [ [ 964, 473 ] ] }
+        - { cmd: lnTo, pts: [ [ 971, 515 ] ] }
+        - { cmd: lnTo, pts: [ [ 974, 557 ] ] }
+        - { cmd: lnTo, pts: [ [ 974, 1118 ] ] }
+        - { cmd: lnTo, pts: [ [ 976, 1137 ] ] }
+        - { cmd: lnTo, pts: [ [ 980, 1155 ] ] }
+        - { cmd: lnTo, pts: [ [ 989, 1173 ] ] }
+        - { cmd: lnTo, pts: [ [ 1097, 1343 ] ] }
+        - { cmd: lnTo, pts: [ [ 1114, 1375 ] ] }
+        - { cmd: lnTo, pts: [ [ 1127, 1407 ] ] }
+        - { cmd: lnTo, pts: [ [ 1134, 1442 ] ] }
+        - { cmd: lnTo, pts: [ [ 1137, 1477 ] ] }
+        - { cmd: lnTo, pts: [ [ 1137, 1617 ] ] }
+        - { cmd: lnTo, pts: [ [ 1134, 1636 ] ] }
+        - { cmd: lnTo, pts: [ [ 1127, 1653 ] ] }
+        - { cmd: lnTo, pts: [ [ 1116, 1667 ] ] }
+        - { cmd: lnTo, pts: [ [ 1102, 1678 ] ] }
+        - { cmd: lnTo, pts: [ [ 1086, 1685 ] ] }
+        - { cmd: lnTo, pts: [ [ 1067, 1688 ] ] }
+        - { cmd: lnTo, pts: [ [ 912, 1688 ] ] }
+        - { cmd: lnTo, pts: [ [ 912, 1823 ] ] }
+        - { cmd: lnTo, pts: [ [ 909, 1841 ] ] }
+        - { cmd: lnTo, pts: [ [ 903, 1858 ] ] }
+        - { cmd: lnTo, pts: [ [ 891, 1873 ] ] }
+        - { cmd: lnTo, pts: [ [ 877, 1883 ] ] }
+        - { cmd: lnTo, pts: [ [ 860, 1891 ] ] }
+        - { cmd: lnTo, pts: [ [ 841, 1893 ] ] }
+        - { cmd: lnTo, pts: [ [ 823, 1891 ] ] }
+        - { cmd: lnTo, pts: [ [ 806, 1883 ] ] }
+        - { cmd: lnTo, pts: [ [ 793, 1873 ] ] }
+        - { cmd: lnTo, pts: [ [ 781, 1858 ] ] }
+        - { cmd: lnTo, pts: [ [ 773, 1841 ] ] }
+        - { cmd: lnTo, pts: [ [ 771, 1823 ] ] }
+        - { cmd: lnTo, pts: [ [ 771, 1676 ] ] }
+        - { cmd: lnTo, pts: [ [ 758, 1666 ] ] }
+        - { cmd: lnTo, pts: [ [ 747, 1652 ] ] }
+        - { cmd: lnTo, pts: [ [ 740, 1635 ] ] }
+        - { cmd: lnTo, pts: [ [ 737, 1617 ] ] }
+        - { cmd: lnTo, pts: [ [ 740, 1598 ] ] }
+        - { cmd: lnTo, pts: [ [ 747, 1581 ] ] }
+        - { cmd: lnTo, pts: [ [ 758, 1567 ] ] }
+        - { cmd: lnTo, pts: [ [ 772, 1556 ] ] }
+        - { cmd: lnTo, pts: [ [ 789, 1549 ] ] }
+        - { cmd: lnTo, pts: [ [ 807, 1546 ] ] }
+        - { cmd: lnTo, pts: [ [ 996, 1546 ] ] }
+        - { cmd: lnTo, pts: [ [ 996, 1477 ] ] }
+        - { cmd: lnTo, pts: [ [ 995, 1456 ] ] }
+        - { cmd: lnTo, pts: [ [ 988, 1436 ] ] }
+        - { cmd: lnTo, pts: [ [ 979, 1417 ] ] }
+        - { cmd: lnTo, pts: [ [ 871, 1247 ] ] }
+        - { cmd: lnTo, pts: [ [ 854, 1216 ] ] }
+        - { cmd: lnTo, pts: [ [ 842, 1184 ] ] }
+        - { cmd: lnTo, pts: [ [ 836, 1151 ] ] }
+        - { cmd: lnTo, pts: [ [ 833, 1116 ] ] }
+        - { cmd: lnTo, pts: [ [ 833, 556 ] ] }
+        - { cmd: lnTo, pts: [ [ 831, 526 ] ] }
+        - { cmd: lnTo, pts: [ [ 824, 497 ] ] }
+        - { cmd: lnTo, pts: [ [ 814, 468 ] ] }
+        - { cmd: lnTo, pts: [ [ 800, 442 ] ] }
+        - { cmd: lnTo, pts: [ [ 781, 416 ] ] }
+        - { cmd: lnTo, pts: [ [ 576, 178 ] ] }
+        - { cmd: lnTo, pts: [ [ 370, 417 ] ] }
+        - { cmd: lnTo, pts: [ [ 352, 442 ] ] }
+        - { cmd: lnTo, pts: [ [ 338, 468 ] ] }
+        - { cmd: lnTo, pts: [ [ 328, 497 ] ] }
+        - { cmd: lnTo, pts: [ [ 321, 526 ] ] }
+        - { cmd: lnTo, pts: [ [ 319, 556 ] ] }
+        - { cmd: lnTo, pts: [ [ 319, 1112 ] ] }
+        - { cmd: lnTo, pts: [ [ 316, 1149 ] ] }
+        - { cmd: lnTo, pts: [ [ 308, 1185 ] ] }
+        - { cmd: lnTo, pts: [ [ 294, 1219 ] ] }
+        - { cmd: lnTo, pts: [ [ 276, 1252 ] ] }
+        - { cmd: lnTo, pts: [ [ 160, 1418 ] ] }
+        - { cmd: lnTo, pts: [ [ 149, 1438 ] ] }
+        - { cmd: lnTo, pts: [ [ 143, 1459 ] ] }
+        - { cmd: lnTo, pts: [ [ 140, 1481 ] ] }
+        - { cmd: lnTo, pts: [ [ 140, 1547 ] ] }
+        - { cmd: lnTo, pts: [ [ 338, 1547 ] ] }
+        - { cmd: lnTo, pts: [ [ 357, 1549 ] ] }
+        - { cmd: lnTo, pts: [ [ 374, 1557 ] ] }
+        - { cmd: lnTo, pts: [ [ 388, 1567 ] ] }
+        - { cmd: lnTo, pts: [ [ 400, 1582 ] ] }
+        - { cmd: lnTo, pts: [ [ 406, 1599 ] ] }
+        - { cmd: lnTo, pts: [ [ 409, 1617 ] ] }
+        - { cmd: lnTo, pts: [ [ 406, 1636 ] ] }
+        - { cmd: lnTo, pts: [ [ 400, 1653 ] ] }
+        - { cmd: lnTo, pts: [ [ 388, 1667 ] ] }
+        - { cmd: lnTo, pts: [ [ 374, 1678 ] ] }
+        - { cmd: lnTo, pts: [ [ 357, 1685 ] ] }
+        - { cmd: lnTo, pts: [ [ 338, 1688 ] ] }
+        - { cmd: lnTo, pts: [ [ 338, 1688 ] ] }
+        - { cmd: lnTo, pts: [ [ 338, 1823 ] ] }
+        - { cmd: lnTo, pts: [ [ 335, 1842 ] ] }
+        - { cmd: lnTo, pts: [ [ 329, 1859 ] ] }
+        - { cmd: lnTo, pts: [ [ 317, 1873 ] ] }
+        - { cmd: lnTo, pts: [ [ 303, 1885 ] ] }
+        - { cmd: lnTo, pts: [ [ 287, 1891 ] ] }
+        - { cmd: lnTo, pts: [ [ 268, 1894 ] ] }
+        - { cmd: lnTo, pts: [ [ 250, 1891 ] ] }
+        - { cmd: lnTo, pts: [ [ 233, 1885 ] ] }
+        - { cmd: lnTo, pts: [ [ 218, 1873 ] ] }
+        - { cmd: lnTo, pts: [ [ 207, 1859 ] ] }
+        - { cmd: lnTo, pts: [ [ 200, 1842 ] ] }
+        - { cmd: lnTo, pts: [ [ 198, 1823 ] ] }
+        - { cmd: lnTo, pts: [ [ 198, 1688 ] ] }
+        - { cmd: lnTo, pts: [ [ 70, 1688 ] ] }
+        - { cmd: lnTo, pts: [ [ 52, 1685 ] ] }
+        - { cmd: lnTo, pts: [ [ 35, 1678 ] ] }
+        - { cmd: lnTo, pts: [ [ 20, 1667 ] ] }
+        - { cmd: lnTo, pts: [ [ 9, 1653 ] ] }
+        - { cmd: lnTo, pts: [ [ 2, 1636 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 1617 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 1481 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 1443 ] ] }
+        - { cmd: lnTo, pts: [ [ 11, 1406 ] ] }
+        - { cmd: lnTo, pts: [ [ 25, 1371 ] ] }
+        - { cmd: lnTo, pts: [ [ 45, 1338 ] ] }
+        - { cmd: lnTo, pts: [ [ 161, 1171 ] ] }
+        - { cmd: lnTo, pts: [ [ 171, 1154 ] ] }
+        - { cmd: lnTo, pts: [ [ 178, 1134 ] ] }
+        - { cmd: lnTo, pts: [ [ 180, 1113 ] ] }
+        - { cmd: lnTo, pts: [ [ 180, 556 ] ] }
+        - { cmd: lnTo, pts: [ [ 182, 515 ] ] }
+        - { cmd: lnTo, pts: [ [ 189, 473 ] ] }
+        - { cmd: lnTo, pts: [ [ 201, 433 ] ] }
+        - { cmd: lnTo, pts: [ [ 218, 395 ] ] }
+        - { cmd: lnTo, pts: [ [ 239, 359 ] ] }
+        - { cmd: lnTo, pts: [ [ 264, 326 ] ] }
+        - { cmd: lnTo, pts: [ [ 522, 25 ] ] }
+        - { cmd: lnTo, pts: [ [ 536, 12 ] ] }
+        - { cmd: lnTo, pts: [ [ 554, 4 ] ] }
+        - { cmd: lnTo, pts: [ [ 574, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_111"
     elementType: shape
     bounds: [ 805, 232, 2, 6 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 140
+      h: 445
+      commands:
+        - { cmd: moveTo, pts: [ [ 70, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 89, 2 ] ] }
+        - { cmd: lnTo, pts: [ [ 106, 9 ] ] }
+        - { cmd: lnTo, pts: [ [ 120, 20 ] ] }
+        - { cmd: lnTo, pts: [ [ 130, 35 ] ] }
+        - { cmd: lnTo, pts: [ [ 138, 52 ] ] }
+        - { cmd: lnTo, pts: [ [ 140, 70 ] ] }
+        - { cmd: lnTo, pts: [ [ 140, 375 ] ] }
+        - { cmd: lnTo, pts: [ [ 138, 394 ] ] }
+        - { cmd: lnTo, pts: [ [ 130, 412 ] ] }
+        - { cmd: lnTo, pts: [ [ 119, 426 ] ] }
+        - { cmd: lnTo, pts: [ [ 103, 438 ] ] }
+        - { cmd: lnTo, pts: [ [ 86, 444 ] ] }
+        - { cmd: lnTo, pts: [ [ 66, 445 ] ] }
+        - { cmd: lnTo, pts: [ [ 48, 442 ] ] }
+        - { cmd: lnTo, pts: [ [ 32, 435 ] ] }
+        - { cmd: lnTo, pts: [ [ 19, 422 ] ] }
+        - { cmd: lnTo, pts: [ [ 9, 408 ] ] }
+        - { cmd: lnTo, pts: [ [ 2, 391 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 372 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 70 ] ] }
+        - { cmd: lnTo, pts: [ [ 2, 52 ] ] }
+        - { cmd: lnTo, pts: [ [ 10, 35 ] ] }
+        - { cmd: lnTo, pts: [ [ 20, 20 ] ] }
+        - { cmd: lnTo, pts: [ [ 35, 9 ] ] }
+        - { cmd: lnTo, pts: [ [ 51, 2 ] ] }
+        - { cmd: lnTo, pts: [ [ 70, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_242"
     elementType: shape
     bounds: [ 353, 273, 33, 33 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 2664
+      h: 2664
+      commands:
+        - { cmd: moveTo, pts: [ [ 1720, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 1749, 4 ] ] }
+        - { cmd: lnTo, pts: [ [ 1777, 13 ] ] }
+        - { cmd: lnTo, pts: [ [ 1951, 86 ] ] }
+        - { cmd: lnTo, pts: [ [ 1977, 98 ] ] }
+        - { cmd: lnTo, pts: [ [ 2000, 115 ] ] }
+        - { cmd: lnTo, pts: [ [ 2020, 135 ] ] }
+        - { cmd: lnTo, pts: [ [ 2036, 158 ] ] }
+        - { cmd: lnTo, pts: [ [ 2050, 185 ] ] }
+        - { cmd: lnTo, pts: [ [ 2059, 212 ] ] }
+        - { cmd: lnTo, pts: [ [ 2063, 240 ] ] }
+        - { cmd: lnTo, pts: [ [ 2063, 268 ] ] }
+        - { cmd: lnTo, pts: [ [ 2059, 296 ] ] }
+        - { cmd: lnTo, pts: [ [ 2050, 324 ] ] }
+        - { cmd: lnTo, pts: [ [ 2005, 431 ] ] }
+        - { cmd: lnTo, pts: [ [ 2055, 471 ] ] }
+        - { cmd: lnTo, pts: [ [ 2104, 515 ] ] }
+        - { cmd: lnTo, pts: [ [ 2150, 560 ] ] }
+        - { cmd: lnTo, pts: [ [ 2193, 608 ] ] }
+        - { cmd: lnTo, pts: [ [ 2234, 660 ] ] }
+        - { cmd: lnTo, pts: [ [ 2341, 615 ] ] }
+        - { cmd: lnTo, pts: [ [ 2369, 606 ] ] }
+        - { cmd: lnTo, pts: [ [ 2396, 602 ] ] }
+        - { cmd: lnTo, pts: [ [ 2425, 602 ] ] }
+        - { cmd: lnTo, pts: [ [ 2453, 606 ] ] }
+        - { cmd: lnTo, pts: [ [ 2480, 615 ] ] }
+        - { cmd: lnTo, pts: [ [ 2506, 628 ] ] }
+        - { cmd: lnTo, pts: [ [ 2529, 645 ] ] }
+        - { cmd: lnTo, pts: [ [ 2549, 665 ] ] }
+        - { cmd: lnTo, pts: [ [ 2566, 688 ] ] }
+        - { cmd: lnTo, pts: [ [ 2580, 714 ] ] }
+        - { cmd: lnTo, pts: [ [ 2651, 888 ] ] }
+        - { cmd: lnTo, pts: [ [ 2660, 915 ] ] }
+        - { cmd: lnTo, pts: [ [ 2664, 944 ] ] }
+        - { cmd: lnTo, pts: [ [ 2664, 971 ] ] }
+        - { cmd: lnTo, pts: [ [ 2660, 999 ] ] }
+        - { cmd: lnTo, pts: [ [ 2651, 1027 ] ] }
+        - { cmd: lnTo, pts: [ [ 2638, 1052 ] ] }
+        - { cmd: lnTo, pts: [ [ 2621, 1075 ] ] }
+        - { cmd: lnTo, pts: [ [ 2601, 1095 ] ] }
+        - { cmd: lnTo, pts: [ [ 2577, 1112 ] ] }
+        - { cmd: lnTo, pts: [ [ 2552, 1126 ] ] }
+        - { cmd: lnTo, pts: [ [ 2445, 1170 ] ] }
+        - { cmd: lnTo, pts: [ [ 2453, 1251 ] ] }
+        - { cmd: lnTo, pts: [ [ 2456, 1331 ] ] }
+        - { cmd: lnTo, pts: [ [ 2453, 1413 ] ] }
+        - { cmd: lnTo, pts: [ [ 2445, 1493 ] ] }
+        - { cmd: lnTo, pts: [ [ 2552, 1538 ] ] }
+        - { cmd: lnTo, pts: [ [ 2579, 1552 ] ] }
+        - { cmd: lnTo, pts: [ [ 2602, 1568 ] ] }
+        - { cmd: lnTo, pts: [ [ 2622, 1589 ] ] }
+        - { cmd: lnTo, pts: [ [ 2638, 1612 ] ] }
+        - { cmd: lnTo, pts: [ [ 2650, 1636 ] ] }
+        - { cmd: lnTo, pts: [ [ 2660, 1662 ] ] }
+        - { cmd: lnTo, pts: [ [ 2664, 1691 ] ] }
+        - { cmd: lnTo, pts: [ [ 2664, 1719 ] ] }
+        - { cmd: lnTo, pts: [ [ 2660, 1748 ] ] }
+        - { cmd: lnTo, pts: [ [ 2651, 1775 ] ] }
+        - { cmd: lnTo, pts: [ [ 2579, 1949 ] ] }
+        - { cmd: lnTo, pts: [ [ 2565, 1976 ] ] }
+        - { cmd: lnTo, pts: [ [ 2548, 2000 ] ] }
+        - { cmd: lnTo, pts: [ [ 2528, 2019 ] ] }
+        - { cmd: lnTo, pts: [ [ 2505, 2035 ] ] }
+        - { cmd: lnTo, pts: [ [ 2479, 2048 ] ] }
+        - { cmd: lnTo, pts: [ [ 2453, 2056 ] ] }
+        - { cmd: lnTo, pts: [ [ 2426, 2062 ] ] }
+        - { cmd: lnTo, pts: [ [ 2397, 2062 ] ] }
+        - { cmd: lnTo, pts: [ [ 2369, 2058 ] ] }
+        - { cmd: lnTo, pts: [ [ 2340, 2048 ] ] }
+        - { cmd: lnTo, pts: [ [ 2233, 2004 ] ] }
+        - { cmd: lnTo, pts: [ [ 2192, 2054 ] ] }
+        - { cmd: lnTo, pts: [ [ 2149, 2103 ] ] }
+        - { cmd: lnTo, pts: [ [ 2103, 2149 ] ] }
+        - { cmd: lnTo, pts: [ [ 2054, 2191 ] ] }
+        - { cmd: lnTo, pts: [ [ 2004, 2232 ] ] }
+        - { cmd: lnTo, pts: [ [ 2048, 2340 ] ] }
+        - { cmd: lnTo, pts: [ [ 2058, 2367 ] ] }
+        - { cmd: lnTo, pts: [ [ 2062, 2395 ] ] }
+        - { cmd: lnTo, pts: [ [ 2062, 2423 ] ] }
+        - { cmd: lnTo, pts: [ [ 2058, 2452 ] ] }
+        - { cmd: lnTo, pts: [ [ 2048, 2479 ] ] }
+        - { cmd: lnTo, pts: [ [ 2035, 2504 ] ] }
+        - { cmd: lnTo, pts: [ [ 2019, 2528 ] ] }
+        - { cmd: lnTo, pts: [ [ 1999, 2548 ] ] }
+        - { cmd: lnTo, pts: [ [ 1975, 2564 ] ] }
+        - { cmd: lnTo, pts: [ [ 1950, 2578 ] ] }
+        - { cmd: lnTo, pts: [ [ 1776, 2650 ] ] }
+        - { cmd: lnTo, pts: [ [ 1753, 2657 ] ] }
+        - { cmd: lnTo, pts: [ [ 1730, 2661 ] ] }
+        - { cmd: lnTo, pts: [ [ 1706, 2664 ] ] }
+        - { cmd: lnTo, pts: [ [ 1672, 2660 ] ] }
+        - { cmd: lnTo, pts: [ [ 1637, 2650 ] ] }
+        - { cmd: lnTo, pts: [ [ 1610, 2636 ] ] }
+        - { cmd: lnTo, pts: [ [ 1588, 2619 ] ] }
+        - { cmd: lnTo, pts: [ [ 1568, 2599 ] ] }
+        - { cmd: lnTo, pts: [ [ 1551, 2576 ] ] }
+        - { cmd: lnTo, pts: [ [ 1538, 2551 ] ] }
+        - { cmd: lnTo, pts: [ [ 1472, 2391 ] ] }
+        - { cmd: lnTo, pts: [ [ 1467, 2373 ] ] }
+        - { cmd: lnTo, pts: [ [ 1467, 2355 ] ] }
+        - { cmd: lnTo, pts: [ [ 1472, 2338 ] ] }
+        - { cmd: lnTo, pts: [ [ 1481, 2322 ] ] }
+        - { cmd: lnTo, pts: [ [ 1493, 2309 ] ] }
+        - { cmd: lnTo, pts: [ [ 1510, 2299 ] ] }
+        - { cmd: lnTo, pts: [ [ 1528, 2295 ] ] }
+        - { cmd: lnTo, pts: [ [ 1546, 2295 ] ] }
+        - { cmd: lnTo, pts: [ [ 1564, 2300 ] ] }
+        - { cmd: lnTo, pts: [ [ 1579, 2308 ] ] }
+        - { cmd: lnTo, pts: [ [ 1593, 2321 ] ] }
+        - { cmd: lnTo, pts: [ [ 1602, 2338 ] ] }
+        - { cmd: lnTo, pts: [ [ 1667, 2497 ] ] }
+        - { cmd: lnTo, pts: [ [ 1674, 2508 ] ] }
+        - { cmd: lnTo, pts: [ [ 1681, 2515 ] ] }
+        - { cmd: lnTo, pts: [ [ 1691, 2520 ] ] }
+        - { cmd: lnTo, pts: [ [ 1701, 2523 ] ] }
+        - { cmd: lnTo, pts: [ [ 1713, 2523 ] ] }
+        - { cmd: lnTo, pts: [ [ 1722, 2520 ] ] }
+        - { cmd: lnTo, pts: [ [ 1896, 2449 ] ] }
+        - { cmd: lnTo, pts: [ [ 1906, 2443 ] ] }
+        - { cmd: lnTo, pts: [ [ 1914, 2435 ] ] }
+        - { cmd: lnTo, pts: [ [ 1919, 2425 ] ] }
+        - { cmd: lnTo, pts: [ [ 1923, 2415 ] ] }
+        - { cmd: lnTo, pts: [ [ 1923, 2404 ] ] }
+        - { cmd: lnTo, pts: [ [ 1919, 2394 ] ] }
+        - { cmd: lnTo, pts: [ [ 1853, 2235 ] ] }
+        - { cmd: lnTo, pts: [ [ 1849, 2216 ] ] }
+        - { cmd: lnTo, pts: [ [ 1849, 2197 ] ] }
+        - { cmd: lnTo, pts: [ [ 1855, 2178 ] ] }
+        - { cmd: lnTo, pts: [ [ 1865, 2162 ] ] }
+        - { cmd: lnTo, pts: [ [ 1879, 2149 ] ] }
+        - { cmd: lnTo, pts: [ [ 1932, 2111 ] ] }
+        - { cmd: lnTo, pts: [ [ 1982, 2071 ] ] }
+        - { cmd: lnTo, pts: [ [ 2028, 2027 ] ] }
+        - { cmd: lnTo, pts: [ [ 2072, 1981 ] ] }
+        - { cmd: lnTo, pts: [ [ 2112, 1931 ] ] }
+        - { cmd: lnTo, pts: [ [ 2150, 1878 ] ] }
+        - { cmd: lnTo, pts: [ [ 2163, 1864 ] ] }
+        - { cmd: lnTo, pts: [ [ 2179, 1854 ] ] }
+        - { cmd: lnTo, pts: [ [ 2197, 1849 ] ] }
+        - { cmd: lnTo, pts: [ [ 2216, 1848 ] ] }
+        - { cmd: lnTo, pts: [ [ 2236, 1853 ] ] }
+        - { cmd: lnTo, pts: [ [ 2395, 1919 ] ] }
+        - { cmd: lnTo, pts: [ [ 2408, 1922 ] ] }
+        - { cmd: lnTo, pts: [ [ 2421, 1921 ] ] }
+        - { cmd: lnTo, pts: [ [ 2433, 1916 ] ] }
+        - { cmd: lnTo, pts: [ [ 2442, 1908 ] ] }
+        - { cmd: lnTo, pts: [ [ 2450, 1896 ] ] }
+        - { cmd: lnTo, pts: [ [ 2523, 1722 ] ] }
+        - { cmd: lnTo, pts: [ [ 2525, 1710 ] ] }
+        - { cmd: lnTo, pts: [ [ 2524, 1696 ] ] }
+        - { cmd: lnTo, pts: [ [ 2519, 1684 ] ] }
+        - { cmd: lnTo, pts: [ [ 2511, 1675 ] ] }
+        - { cmd: lnTo, pts: [ [ 2499, 1668 ] ] }
+        - { cmd: lnTo, pts: [ [ 2340, 1602 ] ] }
+        - { cmd: lnTo, pts: [ [ 2323, 1592 ] ] }
+        - { cmd: lnTo, pts: [ [ 2310, 1578 ] ] }
+        - { cmd: lnTo, pts: [ [ 2301, 1561 ] ] }
+        - { cmd: lnTo, pts: [ [ 2297, 1542 ] ] }
+        - { cmd: lnTo, pts: [ [ 2298, 1523 ] ] }
+        - { cmd: lnTo, pts: [ [ 2310, 1447 ] ] }
+        - { cmd: lnTo, pts: [ [ 2316, 1370 ] ] }
+        - { cmd: lnTo, pts: [ [ 2316, 1293 ] ] }
+        - { cmd: lnTo, pts: [ [ 2310, 1218 ] ] }
+        - { cmd: lnTo, pts: [ [ 2298, 1141 ] ] }
+        - { cmd: lnTo, pts: [ [ 2297, 1122 ] ] }
+        - { cmd: lnTo, pts: [ [ 2301, 1103 ] ] }
+        - { cmd: lnTo, pts: [ [ 2310, 1086 ] ] }
+        - { cmd: lnTo, pts: [ [ 2322, 1072 ] ] }
+        - { cmd: lnTo, pts: [ [ 2340, 1063 ] ] }
+        - { cmd: lnTo, pts: [ [ 2499, 996 ] ] }
+        - { cmd: lnTo, pts: [ [ 2509, 991 ] ] }
+        - { cmd: lnTo, pts: [ [ 2517, 983 ] ] }
+        - { cmd: lnTo, pts: [ [ 2523, 973 ] ] }
+        - { cmd: lnTo, pts: [ [ 2525, 962 ] ] }
+        - { cmd: lnTo, pts: [ [ 2525, 952 ] ] }
+        - { cmd: lnTo, pts: [ [ 2523, 941 ] ] }
+        - { cmd: lnTo, pts: [ [ 2451, 768 ] ] }
+        - { cmd: lnTo, pts: [ [ 2445, 758 ] ] }
+        - { cmd: lnTo, pts: [ [ 2437, 751 ] ] }
+        - { cmd: lnTo, pts: [ [ 2428, 745 ] ] }
+        - { cmd: lnTo, pts: [ [ 2412, 742 ] ] }
+        - { cmd: lnTo, pts: [ [ 2396, 745 ] ] }
+        - { cmd: lnTo, pts: [ [ 2236, 811 ] ] }
+        - { cmd: lnTo, pts: [ [ 2217, 816 ] ] }
+        - { cmd: lnTo, pts: [ [ 2198, 815 ] ] }
+        - { cmd: lnTo, pts: [ [ 2180, 810 ] ] }
+        - { cmd: lnTo, pts: [ [ 2164, 799 ] ] }
+        - { cmd: lnTo, pts: [ [ 2150, 784 ] ] }
+        - { cmd: lnTo, pts: [ [ 2113, 732 ] ] }
+        - { cmd: lnTo, pts: [ [ 2072, 682 ] ] }
+        - { cmd: lnTo, pts: [ [ 2029, 636 ] ] }
+        - { cmd: lnTo, pts: [ [ 1983, 593 ] ] }
+        - { cmd: lnTo, pts: [ [ 1933, 551 ] ] }
+        - { cmd: lnTo, pts: [ [ 1880, 515 ] ] }
+        - { cmd: lnTo, pts: [ [ 1866, 501 ] ] }
+        - { cmd: lnTo, pts: [ [ 1855, 485 ] ] }
+        - { cmd: lnTo, pts: [ [ 1850, 467 ] ] }
+        - { cmd: lnTo, pts: [ [ 1850, 448 ] ] }
+        - { cmd: lnTo, pts: [ [ 1855, 429 ] ] }
+        - { cmd: lnTo, pts: [ [ 1920, 269 ] ] }
+        - { cmd: lnTo, pts: [ [ 1924, 258 ] ] }
+        - { cmd: lnTo, pts: [ [ 1924, 248 ] ] }
+        - { cmd: lnTo, pts: [ [ 1920, 237 ] ] }
+        - { cmd: lnTo, pts: [ [ 1915, 228 ] ] }
+        - { cmd: lnTo, pts: [ [ 1908, 221 ] ] }
+        - { cmd: lnTo, pts: [ [ 1898, 215 ] ] }
+        - { cmd: lnTo, pts: [ [ 1724, 143 ] ] }
+        - { cmd: lnTo, pts: [ [ 1711, 139 ] ] }
+        - { cmd: lnTo, pts: [ [ 1698, 140 ] ] }
+        - { cmd: lnTo, pts: [ [ 1686, 146 ] ] }
+        - { cmd: lnTo, pts: [ [ 1676, 154 ] ] }
+        - { cmd: lnTo, pts: [ [ 1670, 165 ] ] }
+        - { cmd: lnTo, pts: [ [ 1603, 325 ] ] }
+        - { cmd: lnTo, pts: [ [ 1594, 342 ] ] }
+        - { cmd: lnTo, pts: [ [ 1580, 354 ] ] }
+        - { cmd: lnTo, pts: [ [ 1563, 364 ] ] }
+        - { cmd: lnTo, pts: [ [ 1544, 368 ] ] }
+        - { cmd: lnTo, pts: [ [ 1524, 367 ] ] }
+        - { cmd: lnTo, pts: [ [ 1448, 354 ] ] }
+        - { cmd: lnTo, pts: [ [ 1372, 348 ] ] }
+        - { cmd: lnTo, pts: [ [ 1295, 348 ] ] }
+        - { cmd: lnTo, pts: [ [ 1218, 354 ] ] }
+        - { cmd: lnTo, pts: [ [ 1142, 367 ] ] }
+        - { cmd: lnTo, pts: [ [ 1122, 368 ] ] }
+        - { cmd: lnTo, pts: [ [ 1104, 364 ] ] }
+        - { cmd: lnTo, pts: [ [ 1087, 355 ] ] }
+        - { cmd: lnTo, pts: [ [ 1074, 342 ] ] }
+        - { cmd: lnTo, pts: [ [ 1063, 325 ] ] }
+        - { cmd: lnTo, pts: [ [ 998, 165 ] ] }
+        - { cmd: lnTo, pts: [ [ 991, 155 ] ] }
+        - { cmd: lnTo, pts: [ [ 984, 148 ] ] }
+        - { cmd: lnTo, pts: [ [ 975, 143 ] ] }
+        - { cmd: lnTo, pts: [ [ 964, 139 ] ] }
+        - { cmd: lnTo, pts: [ [ 953, 139 ] ] }
+        - { cmd: lnTo, pts: [ [ 943, 143 ] ] }
+        - { cmd: lnTo, pts: [ [ 769, 214 ] ] }
+        - { cmd: lnTo, pts: [ [ 757, 222 ] ] }
+        - { cmd: lnTo, pts: [ [ 749, 231 ] ] }
+        - { cmd: lnTo, pts: [ [ 745, 243 ] ] }
+        - { cmd: lnTo, pts: [ [ 743, 255 ] ] }
+        - { cmd: lnTo, pts: [ [ 746, 269 ] ] }
+        - { cmd: lnTo, pts: [ [ 812, 428 ] ] }
+        - { cmd: lnTo, pts: [ [ 817, 447 ] ] }
+        - { cmd: lnTo, pts: [ [ 816, 466 ] ] }
+        - { cmd: lnTo, pts: [ [ 811, 484 ] ] }
+        - { cmd: lnTo, pts: [ [ 801, 501 ] ] }
+        - { cmd: lnTo, pts: [ [ 786, 514 ] ] }
+        - { cmd: lnTo, pts: [ [ 733, 551 ] ] }
+        - { cmd: lnTo, pts: [ [ 684, 592 ] ] }
+        - { cmd: lnTo, pts: [ [ 637, 635 ] ] }
+        - { cmd: lnTo, pts: [ [ 593, 682 ] ] }
+        - { cmd: lnTo, pts: [ [ 553, 732 ] ] }
+        - { cmd: lnTo, pts: [ [ 515, 784 ] ] }
+        - { cmd: lnTo, pts: [ [ 502, 798 ] ] }
+        - { cmd: lnTo, pts: [ [ 486, 809 ] ] }
+        - { cmd: lnTo, pts: [ [ 468, 814 ] ] }
+        - { cmd: lnTo, pts: [ [ 449, 815 ] ] }
+        - { cmd: lnTo, pts: [ [ 430, 810 ] ] }
+        - { cmd: lnTo, pts: [ [ 270, 743 ] ] }
+        - { cmd: lnTo, pts: [ [ 260, 741 ] ] }
+        - { cmd: lnTo, pts: [ [ 249, 741 ] ] }
+        - { cmd: lnTo, pts: [ [ 238, 743 ] ] }
+        - { cmd: lnTo, pts: [ [ 229, 750 ] ] }
+        - { cmd: lnTo, pts: [ [ 221, 757 ] ] }
+        - { cmd: lnTo, pts: [ [ 215, 766 ] ] }
+        - { cmd: lnTo, pts: [ [ 144, 940 ] ] }
+        - { cmd: lnTo, pts: [ [ 140, 953 ] ] }
+        - { cmd: lnTo, pts: [ [ 141, 966 ] ] }
+        - { cmd: lnTo, pts: [ [ 146, 978 ] ] }
+        - { cmd: lnTo, pts: [ [ 154, 988 ] ] }
+        - { cmd: lnTo, pts: [ [ 166, 995 ] ] }
+        - { cmd: lnTo, pts: [ [ 326, 1061 ] ] }
+        - { cmd: lnTo, pts: [ [ 342, 1070 ] ] }
+        - { cmd: lnTo, pts: [ [ 354, 1083 ] ] }
+        - { cmd: lnTo, pts: [ [ 364, 1098 ] ] }
+        - { cmd: lnTo, pts: [ [ 368, 1116 ] ] }
+        - { cmd: lnTo, pts: [ [ 369, 1134 ] ] }
+        - { cmd: lnTo, pts: [ [ 364, 1152 ] ] }
+        - { cmd: lnTo, pts: [ [ 354, 1169 ] ] }
+        - { cmd: lnTo, pts: [ [ 342, 1182 ] ] }
+        - { cmd: lnTo, pts: [ [ 326, 1191 ] ] }
+        - { cmd: lnTo, pts: [ [ 309, 1195 ] ] }
+        - { cmd: lnTo, pts: [ [ 290, 1195 ] ] }
+        - { cmd: lnTo, pts: [ [ 272, 1191 ] ] }
+        - { cmd: lnTo, pts: [ [ 113, 1125 ] ] }
+        - { cmd: lnTo, pts: [ [ 87, 1111 ] ] }
+        - { cmd: lnTo, pts: [ [ 62, 1094 ] ] }
+        - { cmd: lnTo, pts: [ [ 43, 1074 ] ] }
+        - { cmd: lnTo, pts: [ [ 27, 1051 ] ] }
+        - { cmd: lnTo, pts: [ [ 14, 1027 ] ] }
+        - { cmd: lnTo, pts: [ [ 5, 999 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 972 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 944 ] ] }
+        - { cmd: lnTo, pts: [ [ 4, 915 ] ] }
+        - { cmd: lnTo, pts: [ [ 14, 887 ] ] }
+        - { cmd: lnTo, pts: [ [ 87, 713 ] ] }
+        - { cmd: lnTo, pts: [ [ 99, 687 ] ] }
+        - { cmd: lnTo, pts: [ [ 116, 664 ] ] }
+        - { cmd: lnTo, pts: [ [ 136, 644 ] ] }
+        - { cmd: lnTo, pts: [ [ 159, 627 ] ] }
+        - { cmd: lnTo, pts: [ [ 185, 615 ] ] }
+        - { cmd: lnTo, pts: [ [ 212, 605 ] ] }
+        - { cmd: lnTo, pts: [ [ 241, 601 ] ] }
+        - { cmd: lnTo, pts: [ [ 269, 601 ] ] }
+        - { cmd: lnTo, pts: [ [ 296, 605 ] ] }
+        - { cmd: lnTo, pts: [ [ 324, 615 ] ] }
+        - { cmd: lnTo, pts: [ [ 433, 659 ] ] }
+        - { cmd: lnTo, pts: [ [ 473, 608 ] ] }
+        - { cmd: lnTo, pts: [ [ 516, 560 ] ] }
+        - { cmd: lnTo, pts: [ [ 561, 514 ] ] }
+        - { cmd: lnTo, pts: [ [ 610, 470 ] ] }
+        - { cmd: lnTo, pts: [ [ 660, 430 ] ] }
+        - { cmd: lnTo, pts: [ [ 616, 323 ] ] }
+        - { cmd: lnTo, pts: [ [ 607, 294 ] ] }
+        - { cmd: lnTo, pts: [ [ 602, 266 ] ] }
+        - { cmd: lnTo, pts: [ [ 603, 237 ] ] }
+        - { cmd: lnTo, pts: [ [ 608, 210 ] ] }
+        - { cmd: lnTo, pts: [ [ 616, 184 ] ] }
+        - { cmd: lnTo, pts: [ [ 629, 158 ] ] }
+        - { cmd: lnTo, pts: [ [ 646, 136 ] ] }
+        - { cmd: lnTo, pts: [ [ 666, 115 ] ] }
+        - { cmd: lnTo, pts: [ [ 689, 98 ] ] }
+        - { cmd: lnTo, pts: [ [ 715, 85 ] ] }
+        - { cmd: lnTo, pts: [ [ 889, 13 ] ] }
+        - { cmd: lnTo, pts: [ [ 917, 4 ] ] }
+        - { cmd: lnTo, pts: [ [ 944, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 972, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 1001, 4 ] ] }
+        - { cmd: lnTo, pts: [ [ 1028, 13 ] ] }
+        - { cmd: lnTo, pts: [ [ 1054, 27 ] ] }
+        - { cmd: lnTo, pts: [ [ 1077, 43 ] ] }
+        - { cmd: lnTo, pts: [ [ 1097, 64 ] ] }
+        - { cmd: lnTo, pts: [ [ 1114, 87 ] ] }
+        - { cmd: lnTo, pts: [ [ 1126, 112 ] ] }
+        - { cmd: lnTo, pts: [ [ 1172, 219 ] ] }
+        - { cmd: lnTo, pts: [ [ 1252, 211 ] ] }
+        - { cmd: lnTo, pts: [ [ 1333, 208 ] ] }
+        - { cmd: lnTo, pts: [ [ 1414, 211 ] ] }
+        - { cmd: lnTo, pts: [ [ 1494, 219 ] ] }
+        - { cmd: lnTo, pts: [ [ 1540, 112 ] ] }
+        - { cmd: lnTo, pts: [ [ 1552, 86 ] ] }
+        - { cmd: lnTo, pts: [ [ 1570, 62 ] ] }
+        - { cmd: lnTo, pts: [ [ 1590, 42 ] ] }
+        - { cmd: lnTo, pts: [ [ 1613, 26 ] ] }
+        - { cmd: lnTo, pts: [ [ 1638, 13 ] ] }
+        - { cmd: lnTo, pts: [ [ 1664, 4 ] ] }
+        - { cmd: lnTo, pts: [ [ 1692, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 1720, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_243"
     elementType: shape
     bounds: [ 363, 282, 14, 14 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 1145
+      h: 1143
+      commands:
+        - { cmd: moveTo, pts: [ [ 569, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 573, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 634, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 694, 13 ] ] }
+        - { cmd: lnTo, pts: [ [ 752, 29 ] ] }
+        - { cmd: lnTo, pts: [ [ 807, 51 ] ] }
+        - { cmd: lnTo, pts: [ [ 860, 77 ] ] }
+        - { cmd: lnTo, pts: [ [ 908, 109 ] ] }
+        - { cmd: lnTo, pts: [ [ 954, 146 ] ] }
+        - { cmd: lnTo, pts: [ [ 995, 187 ] ] }
+        - { cmd: lnTo, pts: [ [ 1033, 232 ] ] }
+        - { cmd: lnTo, pts: [ [ 1065, 280 ] ] }
+        - { cmd: lnTo, pts: [ [ 1092, 332 ] ] }
+        - { cmd: lnTo, pts: [ [ 1114, 388 ] ] }
+        - { cmd: lnTo, pts: [ [ 1130, 445 ] ] }
+        - { cmd: lnTo, pts: [ [ 1140, 505 ] ] }
+        - { cmd: lnTo, pts: [ [ 1145, 567 ] ] }
+        - { cmd: lnTo, pts: [ [ 1142, 625 ] ] }
+        - { cmd: lnTo, pts: [ [ 1133, 682 ] ] }
+        - { cmd: lnTo, pts: [ [ 1119, 737 ] ] }
+        - { cmd: lnTo, pts: [ [ 1101, 790 ] ] }
+        - { cmd: lnTo, pts: [ [ 1077, 840 ] ] }
+        - { cmd: lnTo, pts: [ [ 1049, 888 ] ] }
+        - { cmd: lnTo, pts: [ [ 1016, 932 ] ] }
+        - { cmd: lnTo, pts: [ [ 979, 972 ] ] }
+        - { cmd: lnTo, pts: [ [ 939, 1010 ] ] }
+        - { cmd: lnTo, pts: [ [ 896, 1042 ] ] }
+        - { cmd: lnTo, pts: [ [ 848, 1072 ] ] }
+        - { cmd: lnTo, pts: [ [ 799, 1096 ] ] }
+        - { cmd: lnTo, pts: [ [ 746, 1116 ] ] }
+        - { cmd: lnTo, pts: [ [ 691, 1130 ] ] }
+        - { cmd: lnTo, pts: [ [ 634, 1139 ] ] }
+        - { cmd: lnTo, pts: [ [ 576, 1143 ] ] }
+        - { cmd: lnTo, pts: [ [ 575, 1143 ] ] }
+        - { cmd: lnTo, pts: [ [ 557, 1140 ] ] }
+        - { cmd: lnTo, pts: [ [ 540, 1133 ] ] }
+        - { cmd: lnTo, pts: [ [ 526, 1123 ] ] }
+        - { cmd: lnTo, pts: [ [ 515, 1108 ] ] }
+        - { cmd: lnTo, pts: [ [ 508, 1092 ] ] }
+        - { cmd: lnTo, pts: [ [ 506, 1073 ] ] }
+        - { cmd: lnTo, pts: [ [ 508, 1054 ] ] }
+        - { cmd: lnTo, pts: [ [ 514, 1037 ] ] }
+        - { cmd: lnTo, pts: [ [ 525, 1022 ] ] }
+        - { cmd: lnTo, pts: [ [ 539, 1012 ] ] }
+        - { cmd: lnTo, pts: [ [ 556, 1005 ] ] }
+        - { cmd: lnTo, pts: [ [ 575, 1002 ] ] }
+        - { cmd: lnTo, pts: [ [ 625, 999 ] ] }
+        - { cmd: lnTo, pts: [ [ 673, 990 ] ] }
+        - { cmd: lnTo, pts: [ [ 720, 976 ] ] }
+        - { cmd: lnTo, pts: [ [ 764, 957 ] ] }
+        - { cmd: lnTo, pts: [ [ 805, 933 ] ] }
+        - { cmd: lnTo, pts: [ [ 844, 905 ] ] }
+        - { cmd: lnTo, pts: [ [ 879, 873 ] ] }
+        - { cmd: lnTo, pts: [ [ 910, 838 ] ] }
+        - { cmd: lnTo, pts: [ [ 937, 799 ] ] }
+        - { cmd: lnTo, pts: [ [ 960, 758 ] ] }
+        - { cmd: lnTo, pts: [ [ 979, 714 ] ] }
+        - { cmd: lnTo, pts: [ [ 992, 666 ] ] }
+        - { cmd: lnTo, pts: [ [ 1000, 618 ] ] }
+        - { cmd: lnTo, pts: [ [ 1003, 568 ] ] }
+        - { cmd: lnTo, pts: [ [ 999, 514 ] ] }
+        - { cmd: lnTo, pts: [ [ 990, 463 ] ] }
+        - { cmd: lnTo, pts: [ [ 973, 413 ] ] }
+        - { cmd: lnTo, pts: [ [ 952, 367 ] ] }
+        - { cmd: lnTo, pts: [ [ 924, 324 ] ] }
+        - { cmd: lnTo, pts: [ [ 893, 284 ] ] }
+        - { cmd: lnTo, pts: [ [ 857, 248 ] ] }
+        - { cmd: lnTo, pts: [ [ 817, 216 ] ] }
+        - { cmd: lnTo, pts: [ [ 773, 190 ] ] }
+        - { cmd: lnTo, pts: [ [ 727, 169 ] ] }
+        - { cmd: lnTo, pts: [ [ 678, 153 ] ] }
+        - { cmd: lnTo, pts: [ [ 626, 143 ] ] }
+        - { cmd: lnTo, pts: [ [ 572, 139 ] ] }
+        - { cmd: lnTo, pts: [ [ 569, 139 ] ] }
+        - { cmd: lnTo, pts: [ [ 520, 142 ] ] }
+        - { cmd: lnTo, pts: [ [ 473, 151 ] ] }
+        - { cmd: lnTo, pts: [ [ 427, 165 ] ] }
+        - { cmd: lnTo, pts: [ [ 382, 184 ] ] }
+        - { cmd: lnTo, pts: [ [ 341, 207 ] ] }
+        - { cmd: lnTo, pts: [ [ 301, 235 ] ] }
+        - { cmd: lnTo, pts: [ [ 265, 268 ] ] }
+        - { cmd: lnTo, pts: [ [ 232, 305 ] ] }
+        - { cmd: lnTo, pts: [ [ 205, 345 ] ] }
+        - { cmd: lnTo, pts: [ [ 182, 387 ] ] }
+        - { cmd: lnTo, pts: [ [ 164, 431 ] ] }
+        - { cmd: lnTo, pts: [ [ 151, 478 ] ] }
+        - { cmd: lnTo, pts: [ [ 143, 525 ] ] }
+        - { cmd: lnTo, pts: [ [ 141, 575 ] ] }
+        - { cmd: lnTo, pts: [ [ 139, 592 ] ] }
+        - { cmd: lnTo, pts: [ [ 132, 610 ] ] }
+        - { cmd: lnTo, pts: [ [ 121, 624 ] ] }
+        - { cmd: lnTo, pts: [ [ 107, 636 ] ] }
+        - { cmd: lnTo, pts: [ [ 90, 643 ] ] }
+        - { cmd: lnTo, pts: [ [ 71, 645 ] ] }
+        - { cmd: lnTo, pts: [ [ 70, 645 ] ] }
+        - { cmd: lnTo, pts: [ [ 52, 643 ] ] }
+        - { cmd: lnTo, pts: [ [ 35, 636 ] ] }
+        - { cmd: lnTo, pts: [ [ 21, 625 ] ] }
+        - { cmd: lnTo, pts: [ [ 10, 610 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 593 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 576 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 519 ] ] }
+        - { cmd: lnTo, pts: [ [ 11, 463 ] ] }
+        - { cmd: lnTo, pts: [ [ 24, 409 ] ] }
+        - { cmd: lnTo, pts: [ [ 42, 356 ] ] }
+        - { cmd: lnTo, pts: [ [ 66, 306 ] ] }
+        - { cmd: lnTo, pts: [ [ 94, 258 ] ] }
+        - { cmd: lnTo, pts: [ [ 127, 213 ] ] }
+        - { cmd: lnTo, pts: [ [ 165, 170 ] ] }
+        - { cmd: lnTo, pts: [ [ 207, 132 ] ] }
+        - { cmd: lnTo, pts: [ [ 251, 98 ] ] }
+        - { cmd: lnTo, pts: [ [ 300, 69 ] ] }
+        - { cmd: lnTo, pts: [ [ 350, 44 ] ] }
+        - { cmd: lnTo, pts: [ [ 402, 25 ] ] }
+        - { cmd: lnTo, pts: [ [ 456, 12 ] ] }
+        - { cmd: lnTo, pts: [ [ 512, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 569, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_244"
     elementType: shape
     bounds: [ 343, 290, 26, 26 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 2058
+      h: 2058
+      commands:
+        - { cmd: moveTo, pts: [ [ 962, 141 ] ] }
+        - { cmd: lnTo, pts: [ [ 958, 143 ] ] }
+        - { cmd: lnTo, pts: [ [ 954, 145 ] ] }
+        - { cmd: lnTo, pts: [ [ 952, 147 ] ] }
+        - { cmd: lnTo, pts: [ [ 951, 150 ] ] }
+        - { cmd: lnTo, pts: [ [ 950, 153 ] ] }
+        - { cmd: lnTo, pts: [ [ 950, 279 ] ] }
+        - { cmd: lnTo, pts: [ [ 947, 299 ] ] }
+        - { cmd: lnTo, pts: [ [ 940, 315 ] ] }
+        - { cmd: lnTo, pts: [ [ 928, 330 ] ] }
+        - { cmd: lnTo, pts: [ [ 912, 342 ] ] }
+        - { cmd: lnTo, pts: [ [ 893, 348 ] ] }
+        - { cmd: lnTo, pts: [ [ 840, 361 ] ] }
+        - { cmd: lnTo, pts: [ [ 789, 378 ] ] }
+        - { cmd: lnTo, pts: [ [ 738, 398 ] ] }
+        - { cmd: lnTo, pts: [ [ 690, 423 ] ] }
+        - { cmd: lnTo, pts: [ [ 643, 451 ] ] }
+        - { cmd: lnTo, pts: [ [ 625, 460 ] ] }
+        - { cmd: lnTo, pts: [ [ 607, 464 ] ] }
+        - { cmd: lnTo, pts: [ [ 588, 462 ] ] }
+        - { cmd: lnTo, pts: [ [ 571, 455 ] ] }
+        - { cmd: lnTo, pts: [ [ 555, 443 ] ] }
+        - { cmd: lnTo, pts: [ [ 466, 352 ] ] }
+        - { cmd: lnTo, pts: [ [ 463, 350 ] ] }
+        - { cmd: lnTo, pts: [ [ 461, 349 ] ] }
+        - { cmd: lnTo, pts: [ [ 458, 349 ] ] }
+        - { cmd: lnTo, pts: [ [ 456, 349 ] ] }
+        - { cmd: lnTo, pts: [ [ 453, 350 ] ] }
+        - { cmd: lnTo, pts: [ [ 450, 352 ] ] }
+        - { cmd: lnTo, pts: [ [ 353, 449 ] ] }
+        - { cmd: lnTo, pts: [ [ 351, 452 ] ] }
+        - { cmd: lnTo, pts: [ [ 350, 456 ] ] }
+        - { cmd: lnTo, pts: [ [ 350, 459 ] ] }
+        - { cmd: lnTo, pts: [ [ 351, 462 ] ] }
+        - { cmd: lnTo, pts: [ [ 353, 465 ] ] }
+        - { cmd: lnTo, pts: [ [ 443, 554 ] ] }
+        - { cmd: lnTo, pts: [ [ 455, 569 ] ] }
+        - { cmd: lnTo, pts: [ [ 461, 587 ] ] }
+        - { cmd: lnTo, pts: [ [ 463, 606 ] ] }
+        - { cmd: lnTo, pts: [ [ 460, 625 ] ] }
+        - { cmd: lnTo, pts: [ [ 451, 642 ] ] }
+        - { cmd: lnTo, pts: [ [ 422, 688 ] ] }
+        - { cmd: lnTo, pts: [ [ 398, 737 ] ] }
+        - { cmd: lnTo, pts: [ [ 376, 788 ] ] }
+        - { cmd: lnTo, pts: [ [ 360, 839 ] ] }
+        - { cmd: lnTo, pts: [ [ 347, 892 ] ] }
+        - { cmd: lnTo, pts: [ [ 341, 911 ] ] }
+        - { cmd: lnTo, pts: [ [ 330, 927 ] ] }
+        - { cmd: lnTo, pts: [ [ 315, 938 ] ] }
+        - { cmd: lnTo, pts: [ [ 297, 947 ] ] }
+        - { cmd: lnTo, pts: [ [ 278, 949 ] ] }
+        - { cmd: lnTo, pts: [ [ 153, 949 ] ] }
+        - { cmd: lnTo, pts: [ [ 149, 950 ] ] }
+        - { cmd: lnTo, pts: [ [ 146, 951 ] ] }
+        - { cmd: lnTo, pts: [ [ 143, 954 ] ] }
+        - { cmd: lnTo, pts: [ [ 142, 957 ] ] }
+        - { cmd: lnTo, pts: [ [ 141, 960 ] ] }
+        - { cmd: lnTo, pts: [ [ 141, 1097 ] ] }
+        - { cmd: lnTo, pts: [ [ 142, 1101 ] ] }
+        - { cmd: lnTo, pts: [ [ 143, 1104 ] ] }
+        - { cmd: lnTo, pts: [ [ 146, 1107 ] ] }
+        - { cmd: lnTo, pts: [ [ 149, 1108 ] ] }
+        - { cmd: lnTo, pts: [ [ 153, 1109 ] ] }
+        - { cmd: lnTo, pts: [ [ 278, 1109 ] ] }
+        - { cmd: lnTo, pts: [ [ 297, 1111 ] ] }
+        - { cmd: lnTo, pts: [ [ 315, 1120 ] ] }
+        - { cmd: lnTo, pts: [ [ 330, 1131 ] ] }
+        - { cmd: lnTo, pts: [ [ 341, 1147 ] ] }
+        - { cmd: lnTo, pts: [ [ 347, 1166 ] ] }
+        - { cmd: lnTo, pts: [ [ 360, 1219 ] ] }
+        - { cmd: lnTo, pts: [ [ 376, 1270 ] ] }
+        - { cmd: lnTo, pts: [ [ 398, 1321 ] ] }
+        - { cmd: lnTo, pts: [ [ 422, 1368 ] ] }
+        - { cmd: lnTo, pts: [ [ 451, 1416 ] ] }
+        - { cmd: lnTo, pts: [ [ 460, 1433 ] ] }
+        - { cmd: lnTo, pts: [ [ 463, 1452 ] ] }
+        - { cmd: lnTo, pts: [ [ 461, 1470 ] ] }
+        - { cmd: lnTo, pts: [ [ 455, 1488 ] ] }
+        - { cmd: lnTo, pts: [ [ 443, 1504 ] ] }
+        - { cmd: lnTo, pts: [ [ 353, 1593 ] ] }
+        - { cmd: lnTo, pts: [ [ 351, 1596 ] ] }
+        - { cmd: lnTo, pts: [ [ 350, 1599 ] ] }
+        - { cmd: lnTo, pts: [ [ 350, 1602 ] ] }
+        - { cmd: lnTo, pts: [ [ 351, 1605 ] ] }
+        - { cmd: lnTo, pts: [ [ 353, 1609 ] ] }
+        - { cmd: lnTo, pts: [ [ 450, 1704 ] ] }
+        - { cmd: lnTo, pts: [ [ 453, 1708 ] ] }
+        - { cmd: lnTo, pts: [ [ 456, 1709 ] ] }
+        - { cmd: lnTo, pts: [ [ 458, 1709 ] ] }
+        - { cmd: lnTo, pts: [ [ 461, 1709 ] ] }
+        - { cmd: lnTo, pts: [ [ 463, 1708 ] ] }
+        - { cmd: lnTo, pts: [ [ 466, 1704 ] ] }
+        - { cmd: lnTo, pts: [ [ 555, 1616 ] ] }
+        - { cmd: lnTo, pts: [ [ 569, 1605 ] ] }
+        - { cmd: lnTo, pts: [ [ 586, 1598 ] ] }
+        - { cmd: lnTo, pts: [ [ 604, 1596 ] ] }
+        - { cmd: lnTo, pts: [ [ 624, 1599 ] ] }
+        - { cmd: lnTo, pts: [ [ 643, 1607 ] ] }
+        - { cmd: lnTo, pts: [ [ 690, 1636 ] ] }
+        - { cmd: lnTo, pts: [ [ 738, 1661 ] ] }
+        - { cmd: lnTo, pts: [ [ 789, 1682 ] ] }
+        - { cmd: lnTo, pts: [ [ 840, 1699 ] ] }
+        - { cmd: lnTo, pts: [ [ 893, 1713 ] ] }
+        - { cmd: lnTo, pts: [ [ 912, 1719 ] ] }
+        - { cmd: lnTo, pts: [ [ 928, 1730 ] ] }
+        - { cmd: lnTo, pts: [ [ 940, 1745 ] ] }
+        - { cmd: lnTo, pts: [ [ 948, 1762 ] ] }
+        - { cmd: lnTo, pts: [ [ 950, 1781 ] ] }
+        - { cmd: lnTo, pts: [ [ 950, 1907 ] ] }
+        - { cmd: lnTo, pts: [ [ 951, 1911 ] ] }
+        - { cmd: lnTo, pts: [ [ 952, 1914 ] ] }
+        - { cmd: lnTo, pts: [ [ 954, 1916 ] ] }
+        - { cmd: lnTo, pts: [ [ 958, 1918 ] ] }
+        - { cmd: lnTo, pts: [ [ 962, 1918 ] ] }
+        - { cmd: lnTo, pts: [ [ 1099, 1918 ] ] }
+        - { cmd: lnTo, pts: [ [ 1102, 1918 ] ] }
+        - { cmd: lnTo, pts: [ [ 1105, 1916 ] ] }
+        - { cmd: lnTo, pts: [ [ 1108, 1914 ] ] }
+        - { cmd: lnTo, pts: [ [ 1109, 1911 ] ] }
+        - { cmd: lnTo, pts: [ [ 1110, 1907 ] ] }
+        - { cmd: lnTo, pts: [ [ 1110, 1781 ] ] }
+        - { cmd: lnTo, pts: [ [ 1113, 1762 ] ] }
+        - { cmd: lnTo, pts: [ [ 1121, 1745 ] ] }
+        - { cmd: lnTo, pts: [ [ 1133, 1730 ] ] }
+        - { cmd: lnTo, pts: [ [ 1148, 1719 ] ] }
+        - { cmd: lnTo, pts: [ [ 1167, 1713 ] ] }
+        - { cmd: lnTo, pts: [ [ 1220, 1700 ] ] }
+        - { cmd: lnTo, pts: [ [ 1272, 1683 ] ] }
+        - { cmd: lnTo, pts: [ [ 1321, 1662 ] ] }
+        - { cmd: lnTo, pts: [ [ 1370, 1638 ] ] }
+        - { cmd: lnTo, pts: [ [ 1417, 1610 ] ] }
+        - { cmd: lnTo, pts: [ [ 1434, 1600 ] ] }
+        - { cmd: lnTo, pts: [ [ 1453, 1597 ] ] }
+        - { cmd: lnTo, pts: [ [ 1472, 1599 ] ] }
+        - { cmd: lnTo, pts: [ [ 1490, 1605 ] ] }
+        - { cmd: lnTo, pts: [ [ 1506, 1618 ] ] }
+        - { cmd: lnTo, pts: [ [ 1594, 1707 ] ] }
+        - { cmd: lnTo, pts: [ [ 1598, 1709 ] ] }
+        - { cmd: lnTo, pts: [ [ 1600, 1710 ] ] }
+        - { cmd: lnTo, pts: [ [ 1602, 1710 ] ] }
+        - { cmd: lnTo, pts: [ [ 1605, 1710 ] ] }
+        - { cmd: lnTo, pts: [ [ 1607, 1709 ] ] }
+        - { cmd: lnTo, pts: [ [ 1610, 1707 ] ] }
+        - { cmd: lnTo, pts: [ [ 1706, 1610 ] ] }
+        - { cmd: lnTo, pts: [ [ 1708, 1607 ] ] }
+        - { cmd: lnTo, pts: [ [ 1709, 1604 ] ] }
+        - { cmd: lnTo, pts: [ [ 1710, 1602 ] ] }
+        - { cmd: lnTo, pts: [ [ 1709, 1600 ] ] }
+        - { cmd: lnTo, pts: [ [ 1708, 1597 ] ] }
+        - { cmd: lnTo, pts: [ [ 1706, 1594 ] ] }
+        - { cmd: lnTo, pts: [ [ 1618, 1505 ] ] }
+        - { cmd: lnTo, pts: [ [ 1606, 1489 ] ] }
+        - { cmd: lnTo, pts: [ [ 1600, 1473 ] ] }
+        - { cmd: lnTo, pts: [ [ 1598, 1454 ] ] }
+        - { cmd: lnTo, pts: [ [ 1601, 1435 ] ] }
+        - { cmd: lnTo, pts: [ [ 1609, 1417 ] ] }
+        - { cmd: lnTo, pts: [ [ 1638, 1370 ] ] }
+        - { cmd: lnTo, pts: [ [ 1663, 1322 ] ] }
+        - { cmd: lnTo, pts: [ [ 1683, 1271 ] ] }
+        - { cmd: lnTo, pts: [ [ 1700, 1220 ] ] }
+        - { cmd: lnTo, pts: [ [ 1713, 1167 ] ] }
+        - { cmd: lnTo, pts: [ [ 1719, 1148 ] ] }
+        - { cmd: lnTo, pts: [ [ 1731, 1132 ] ] }
+        - { cmd: lnTo, pts: [ [ 1745, 1121 ] ] }
+        - { cmd: lnTo, pts: [ [ 1762, 1113 ] ] }
+        - { cmd: lnTo, pts: [ [ 1782, 1110 ] ] }
+        - { cmd: lnTo, pts: [ [ 1908, 1110 ] ] }
+        - { cmd: lnTo, pts: [ [ 1911, 1110 ] ] }
+        - { cmd: lnTo, pts: [ [ 1914, 1108 ] ] }
+        - { cmd: lnTo, pts: [ [ 1917, 1106 ] ] }
+        - { cmd: lnTo, pts: [ [ 1918, 1103 ] ] }
+        - { cmd: lnTo, pts: [ [ 1919, 1098 ] ] }
+        - { cmd: lnTo, pts: [ [ 1919, 961 ] ] }
+        - { cmd: lnTo, pts: [ [ 1918, 958 ] ] }
+        - { cmd: lnTo, pts: [ [ 1917, 955 ] ] }
+        - { cmd: lnTo, pts: [ [ 1914, 953 ] ] }
+        - { cmd: lnTo, pts: [ [ 1911, 951 ] ] }
+        - { cmd: lnTo, pts: [ [ 1908, 951 ] ] }
+        - { cmd: lnTo, pts: [ [ 1782, 951 ] ] }
+        - { cmd: lnTo, pts: [ [ 1762, 948 ] ] }
+        - { cmd: lnTo, pts: [ [ 1745, 940 ] ] }
+        - { cmd: lnTo, pts: [ [ 1731, 928 ] ] }
+        - { cmd: lnTo, pts: [ [ 1719, 912 ] ] }
+        - { cmd: lnTo, pts: [ [ 1713, 894 ] ] }
+        - { cmd: lnTo, pts: [ [ 1700, 840 ] ] }
+        - { cmd: lnTo, pts: [ [ 1683, 789 ] ] }
+        - { cmd: lnTo, pts: [ [ 1663, 739 ] ] }
+        - { cmd: lnTo, pts: [ [ 1638, 691 ] ] }
+        - { cmd: lnTo, pts: [ [ 1609, 644 ] ] }
+        - { cmd: lnTo, pts: [ [ 1601, 626 ] ] }
+        - { cmd: lnTo, pts: [ [ 1598, 607 ] ] }
+        - { cmd: lnTo, pts: [ [ 1599, 588 ] ] }
+        - { cmd: lnTo, pts: [ [ 1606, 570 ] ] }
+        - { cmd: lnTo, pts: [ [ 1618, 555 ] ] }
+        - { cmd: lnTo, pts: [ [ 1706, 466 ] ] }
+        - { cmd: lnTo, pts: [ [ 1708, 464 ] ] }
+        - { cmd: lnTo, pts: [ [ 1709, 461 ] ] }
+        - { cmd: lnTo, pts: [ [ 1710, 459 ] ] }
+        - { cmd: lnTo, pts: [ [ 1709, 457 ] ] }
+        - { cmd: lnTo, pts: [ [ 1708, 453 ] ] }
+        - { cmd: lnTo, pts: [ [ 1706, 450 ] ] }
+        - { cmd: lnTo, pts: [ [ 1610, 354 ] ] }
+        - { cmd: lnTo, pts: [ [ 1607, 352 ] ] }
+        - { cmd: lnTo, pts: [ [ 1605, 351 ] ] }
+        - { cmd: lnTo, pts: [ [ 1602, 350 ] ] }
+        - { cmd: lnTo, pts: [ [ 1600, 351 ] ] }
+        - { cmd: lnTo, pts: [ [ 1598, 352 ] ] }
+        - { cmd: lnTo, pts: [ [ 1594, 354 ] ] }
+        - { cmd: lnTo, pts: [ [ 1506, 443 ] ] }
+        - { cmd: lnTo, pts: [ [ 1490, 455 ] ] }
+        - { cmd: lnTo, pts: [ [ 1472, 462 ] ] }
+        - { cmd: lnTo, pts: [ [ 1453, 463 ] ] }
+        - { cmd: lnTo, pts: [ [ 1434, 460 ] ] }
+        - { cmd: lnTo, pts: [ [ 1417, 451 ] ] }
+        - { cmd: lnTo, pts: [ [ 1370, 423 ] ] }
+        - { cmd: lnTo, pts: [ [ 1321, 398 ] ] }
+        - { cmd: lnTo, pts: [ [ 1272, 378 ] ] }
+        - { cmd: lnTo, pts: [ [ 1220, 361 ] ] }
+        - { cmd: lnTo, pts: [ [ 1167, 348 ] ] }
+        - { cmd: lnTo, pts: [ [ 1148, 342 ] ] }
+        - { cmd: lnTo, pts: [ [ 1133, 330 ] ] }
+        - { cmd: lnTo, pts: [ [ 1120, 315 ] ] }
+        - { cmd: lnTo, pts: [ [ 1113, 299 ] ] }
+        - { cmd: lnTo, pts: [ [ 1110, 279 ] ] }
+        - { cmd: lnTo, pts: [ [ 1110, 153 ] ] }
+        - { cmd: lnTo, pts: [ [ 1109, 150 ] ] }
+        - { cmd: lnTo, pts: [ [ 1108, 147 ] ] }
+        - { cmd: lnTo, pts: [ [ 1105, 145 ] ] }
+        - { cmd: lnTo, pts: [ [ 1102, 143 ] ] }
+        - { cmd: lnTo, pts: [ [ 1099, 141 ] ] }
+        - { cmd: lnTo, pts: [ [ 962, 141 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 961, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 1098, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 1128, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 1157, 12 ] ] }
+        - { cmd: lnTo, pts: [ [ 1183, 26 ] ] }
+        - { cmd: lnTo, pts: [ [ 1205, 45 ] ] }
+        - { cmd: lnTo, pts: [ [ 1224, 67 ] ] }
+        - { cmd: lnTo, pts: [ [ 1238, 93 ] ] }
+        - { cmd: lnTo, pts: [ [ 1246, 121 ] ] }
+        - { cmd: lnTo, pts: [ [ 1250, 152 ] ] }
+        - { cmd: lnTo, pts: [ [ 1250, 223 ] ] }
+        - { cmd: lnTo, pts: [ [ 1300, 237 ] ] }
+        - { cmd: lnTo, pts: [ [ 1350, 256 ] ] }
+        - { cmd: lnTo, pts: [ [ 1398, 279 ] ] }
+        - { cmd: lnTo, pts: [ [ 1445, 303 ] ] }
+        - { cmd: lnTo, pts: [ [ 1494, 253 ] ] }
+        - { cmd: lnTo, pts: [ [ 1512, 237 ] ] }
+        - { cmd: lnTo, pts: [ [ 1532, 225 ] ] }
+        - { cmd: lnTo, pts: [ [ 1554, 216 ] ] }
+        - { cmd: lnTo, pts: [ [ 1578, 211 ] ] }
+        - { cmd: lnTo, pts: [ [ 1602, 209 ] ] }
+        - { cmd: lnTo, pts: [ [ 1631, 212 ] ] }
+        - { cmd: lnTo, pts: [ [ 1660, 221 ] ] }
+        - { cmd: lnTo, pts: [ [ 1686, 234 ] ] }
+        - { cmd: lnTo, pts: [ [ 1708, 253 ] ] }
+        - { cmd: lnTo, pts: [ [ 1805, 350 ] ] }
+        - { cmd: lnTo, pts: [ [ 1821, 368 ] ] }
+        - { cmd: lnTo, pts: [ [ 1834, 388 ] ] }
+        - { cmd: lnTo, pts: [ [ 1842, 410 ] ] }
+        - { cmd: lnTo, pts: [ [ 1849, 433 ] ] }
+        - { cmd: lnTo, pts: [ [ 1850, 457 ] ] }
+        - { cmd: lnTo, pts: [ [ 1848, 487 ] ] }
+        - { cmd: lnTo, pts: [ [ 1838, 516 ] ] }
+        - { cmd: lnTo, pts: [ [ 1824, 541 ] ] }
+        - { cmd: lnTo, pts: [ [ 1805, 564 ] ] }
+        - { cmd: lnTo, pts: [ [ 1756, 614 ] ] }
+        - { cmd: lnTo, pts: [ [ 1781, 661 ] ] }
+        - { cmd: lnTo, pts: [ [ 1802, 709 ] ] }
+        - { cmd: lnTo, pts: [ [ 1821, 758 ] ] }
+        - { cmd: lnTo, pts: [ [ 1837, 809 ] ] }
+        - { cmd: lnTo, pts: [ [ 1907, 809 ] ] }
+        - { cmd: lnTo, pts: [ [ 1937, 812 ] ] }
+        - { cmd: lnTo, pts: [ [ 1966, 820 ] ] }
+        - { cmd: lnTo, pts: [ [ 1992, 835 ] ] }
+        - { cmd: lnTo, pts: [ [ 2014, 853 ] ] }
+        - { cmd: lnTo, pts: [ [ 2033, 875 ] ] }
+        - { cmd: lnTo, pts: [ [ 2047, 901 ] ] }
+        - { cmd: lnTo, pts: [ [ 2055, 930 ] ] }
+        - { cmd: lnTo, pts: [ [ 2058, 960 ] ] }
+        - { cmd: lnTo, pts: [ [ 2058, 1097 ] ] }
+        - { cmd: lnTo, pts: [ [ 2055, 1128 ] ] }
+        - { cmd: lnTo, pts: [ [ 2047, 1156 ] ] }
+        - { cmd: lnTo, pts: [ [ 2033, 1182 ] ] }
+        - { cmd: lnTo, pts: [ [ 2014, 1205 ] ] }
+        - { cmd: lnTo, pts: [ [ 1992, 1223 ] ] }
+        - { cmd: lnTo, pts: [ [ 1966, 1238 ] ] }
+        - { cmd: lnTo, pts: [ [ 1937, 1246 ] ] }
+        - { cmd: lnTo, pts: [ [ 1907, 1249 ] ] }
+        - { cmd: lnTo, pts: [ [ 1837, 1249 ] ] }
+        - { cmd: lnTo, pts: [ [ 1821, 1300 ] ] }
+        - { cmd: lnTo, pts: [ [ 1802, 1349 ] ] }
+        - { cmd: lnTo, pts: [ [ 1781, 1397 ] ] }
+        - { cmd: lnTo, pts: [ [ 1756, 1444 ] ] }
+        - { cmd: lnTo, pts: [ [ 1805, 1494 ] ] }
+        - { cmd: lnTo, pts: [ [ 1821, 1512 ] ] }
+        - { cmd: lnTo, pts: [ [ 1834, 1532 ] ] }
+        - { cmd: lnTo, pts: [ [ 1842, 1554 ] ] }
+        - { cmd: lnTo, pts: [ [ 1849, 1577 ] ] }
+        - { cmd: lnTo, pts: [ [ 1850, 1600 ] ] }
+        - { cmd: lnTo, pts: [ [ 1848, 1631 ] ] }
+        - { cmd: lnTo, pts: [ [ 1838, 1659 ] ] }
+        - { cmd: lnTo, pts: [ [ 1824, 1684 ] ] }
+        - { cmd: lnTo, pts: [ [ 1805, 1708 ] ] }
+        - { cmd: lnTo, pts: [ [ 1708, 1805 ] ] }
+        - { cmd: lnTo, pts: [ [ 1690, 1820 ] ] }
+        - { cmd: lnTo, pts: [ [ 1670, 1833 ] ] }
+        - { cmd: lnTo, pts: [ [ 1648, 1841 ] ] }
+        - { cmd: lnTo, pts: [ [ 1625, 1847 ] ] }
+        - { cmd: lnTo, pts: [ [ 1602, 1849 ] ] }
+        - { cmd: lnTo, pts: [ [ 1571, 1846 ] ] }
+        - { cmd: lnTo, pts: [ [ 1544, 1837 ] ] }
+        - { cmd: lnTo, pts: [ [ 1517, 1824 ] ] }
+        - { cmd: lnTo, pts: [ [ 1494, 1805 ] ] }
+        - { cmd: lnTo, pts: [ [ 1445, 1755 ] ] }
+        - { cmd: lnTo, pts: [ [ 1398, 1779 ] ] }
+        - { cmd: lnTo, pts: [ [ 1350, 1801 ] ] }
+        - { cmd: lnTo, pts: [ [ 1300, 1820 ] ] }
+        - { cmd: lnTo, pts: [ [ 1250, 1835 ] ] }
+        - { cmd: lnTo, pts: [ [ 1250, 1906 ] ] }
+        - { cmd: lnTo, pts: [ [ 1246, 1936 ] ] }
+        - { cmd: lnTo, pts: [ [ 1238, 1965 ] ] }
+        - { cmd: lnTo, pts: [ [ 1224, 1991 ] ] }
+        - { cmd: lnTo, pts: [ [ 1205, 2013 ] ] }
+        - { cmd: lnTo, pts: [ [ 1183, 2032 ] ] }
+        - { cmd: lnTo, pts: [ [ 1157, 2046 ] ] }
+        - { cmd: lnTo, pts: [ [ 1128, 2054 ] ] }
+        - { cmd: lnTo, pts: [ [ 1098, 2058 ] ] }
+        - { cmd: lnTo, pts: [ [ 961, 2058 ] ] }
+        - { cmd: lnTo, pts: [ [ 930, 2054 ] ] }
+        - { cmd: lnTo, pts: [ [ 903, 2046 ] ] }
+        - { cmd: lnTo, pts: [ [ 876, 2032 ] ] }
+        - { cmd: lnTo, pts: [ [ 854, 2013 ] ] }
+        - { cmd: lnTo, pts: [ [ 835, 1991 ] ] }
+        - { cmd: lnTo, pts: [ [ 821, 1965 ] ] }
+        - { cmd: lnTo, pts: [ [ 812, 1936 ] ] }
+        - { cmd: lnTo, pts: [ [ 809, 1906 ] ] }
+        - { cmd: lnTo, pts: [ [ 809, 1835 ] ] }
+        - { cmd: lnTo, pts: [ [ 758, 1820 ] ] }
+        - { cmd: lnTo, pts: [ [ 709, 1801 ] ] }
+        - { cmd: lnTo, pts: [ [ 661, 1779 ] ] }
+        - { cmd: lnTo, pts: [ [ 615, 1755 ] ] }
+        - { cmd: lnTo, pts: [ [ 564, 1805 ] ] }
+        - { cmd: lnTo, pts: [ [ 546, 1820 ] ] }
+        - { cmd: lnTo, pts: [ [ 526, 1833 ] ] }
+        - { cmd: lnTo, pts: [ [ 504, 1841 ] ] }
+        - { cmd: lnTo, pts: [ [ 481, 1847 ] ] }
+        - { cmd: lnTo, pts: [ [ 458, 1849 ] ] }
+        - { cmd: lnTo, pts: [ [ 427, 1846 ] ] }
+        - { cmd: lnTo, pts: [ [ 400, 1837 ] ] }
+        - { cmd: lnTo, pts: [ [ 373, 1824 ] ] }
+        - { cmd: lnTo, pts: [ [ 350, 1805 ] ] }
+        - { cmd: lnTo, pts: [ [ 253, 1708 ] ] }
+        - { cmd: lnTo, pts: [ [ 236, 1687 ] ] }
+        - { cmd: lnTo, pts: [ [ 223, 1663 ] ] }
+        - { cmd: lnTo, pts: [ [ 214, 1639 ] ] }
+        - { cmd: lnTo, pts: [ [ 210, 1614 ] ] }
+        - { cmd: lnTo, pts: [ [ 210, 1587 ] ] }
+        - { cmd: lnTo, pts: [ [ 214, 1562 ] ] }
+        - { cmd: lnTo, pts: [ [ 223, 1538 ] ] }
+        - { cmd: lnTo, pts: [ [ 236, 1515 ] ] }
+        - { cmd: lnTo, pts: [ [ 253, 1494 ] ] }
+        - { cmd: lnTo, pts: [ [ 304, 1444 ] ] }
+        - { cmd: lnTo, pts: [ [ 278, 1397 ] ] }
+        - { cmd: lnTo, pts: [ [ 256, 1349 ] ] }
+        - { cmd: lnTo, pts: [ [ 237, 1300 ] ] }
+        - { cmd: lnTo, pts: [ [ 223, 1249 ] ] }
+        - { cmd: lnTo, pts: [ [ 152, 1249 ] ] }
+        - { cmd: lnTo, pts: [ [ 121, 1246 ] ] }
+        - { cmd: lnTo, pts: [ [ 93, 1238 ] ] }
+        - { cmd: lnTo, pts: [ [ 67, 1223 ] ] }
+        - { cmd: lnTo, pts: [ [ 44, 1205 ] ] }
+        - { cmd: lnTo, pts: [ [ 26, 1182 ] ] }
+        - { cmd: lnTo, pts: [ [ 12, 1156 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 1128 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 1097 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 960 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 930 ] ] }
+        - { cmd: lnTo, pts: [ [ 12, 901 ] ] }
+        - { cmd: lnTo, pts: [ [ 26, 875 ] ] }
+        - { cmd: lnTo, pts: [ [ 44, 853 ] ] }
+        - { cmd: lnTo, pts: [ [ 67, 835 ] ] }
+        - { cmd: lnTo, pts: [ [ 93, 820 ] ] }
+        - { cmd: lnTo, pts: [ [ 121, 812 ] ] }
+        - { cmd: lnTo, pts: [ [ 152, 809 ] ] }
+        - { cmd: lnTo, pts: [ [ 223, 809 ] ] }
+        - { cmd: lnTo, pts: [ [ 237, 758 ] ] }
+        - { cmd: lnTo, pts: [ [ 256, 709 ] ] }
+        - { cmd: lnTo, pts: [ [ 278, 661 ] ] }
+        - { cmd: lnTo, pts: [ [ 304, 614 ] ] }
+        - { cmd: lnTo, pts: [ [ 253, 564 ] ] }
+        - { cmd: lnTo, pts: [ [ 236, 543 ] ] }
+        - { cmd: lnTo, pts: [ [ 223, 520 ] ] }
+        - { cmd: lnTo, pts: [ [ 214, 496 ] ] }
+        - { cmd: lnTo, pts: [ [ 210, 470 ] ] }
+        - { cmd: lnTo, pts: [ [ 210, 444 ] ] }
+        - { cmd: lnTo, pts: [ [ 214, 419 ] ] }
+        - { cmd: lnTo, pts: [ [ 223, 394 ] ] }
+        - { cmd: lnTo, pts: [ [ 236, 371 ] ] }
+        - { cmd: lnTo, pts: [ [ 253, 350 ] ] }
+        - { cmd: lnTo, pts: [ [ 350, 253 ] ] }
+        - { cmd: lnTo, pts: [ [ 368, 237 ] ] }
+        - { cmd: lnTo, pts: [ [ 388, 225 ] ] }
+        - { cmd: lnTo, pts: [ [ 410, 216 ] ] }
+        - { cmd: lnTo, pts: [ [ 433, 211 ] ] }
+        - { cmd: lnTo, pts: [ [ 458, 209 ] ] }
+        - { cmd: lnTo, pts: [ [ 487, 212 ] ] }
+        - { cmd: lnTo, pts: [ [ 516, 221 ] ] }
+        - { cmd: lnTo, pts: [ [ 542, 234 ] ] }
+        - { cmd: lnTo, pts: [ [ 564, 253 ] ] }
+        - { cmd: lnTo, pts: [ [ 615, 303 ] ] }
+        - { cmd: lnTo, pts: [ [ 661, 279 ] ] }
+        - { cmd: lnTo, pts: [ [ 709, 256 ] ] }
+        - { cmd: lnTo, pts: [ [ 758, 237 ] ] }
+        - { cmd: lnTo, pts: [ [ 809, 223 ] ] }
+        - { cmd: lnTo, pts: [ [ 809, 152 ] ] }
+        - { cmd: lnTo, pts: [ [ 812, 121 ] ] }
+        - { cmd: lnTo, pts: [ [ 820, 93 ] ] }
+        - { cmd: lnTo, pts: [ [ 835, 67 ] ] }
+        - { cmd: lnTo, pts: [ [ 853, 45 ] ] }
+        - { cmd: lnTo, pts: [ [ 876, 26 ] ] }
+        - { cmd: lnTo, pts: [ [ 902, 12 ] ] }
+        - { cmd: lnTo, pts: [ [ 930, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 961, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_245"
     elementType: shape
     bounds: [ 351, 298, 11, 10 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 834
+      h: 834
+      commands:
+        - { cmd: moveTo, pts: [ [ 417, 140 ] ] }
+        - { cmd: lnTo, pts: [ [ 376, 143 ] ] }
+        - { cmd: lnTo, pts: [ [ 337, 151 ] ] }
+        - { cmd: lnTo, pts: [ [ 300, 166 ] ] }
+        - { cmd: lnTo, pts: [ [ 266, 185 ] ] }
+        - { cmd: lnTo, pts: [ [ 235, 208 ] ] }
+        - { cmd: lnTo, pts: [ [ 207, 236 ] ] }
+        - { cmd: lnTo, pts: [ [ 184, 266 ] ] }
+        - { cmd: lnTo, pts: [ [ 165, 300 ] ] }
+        - { cmd: lnTo, pts: [ [ 152, 337 ] ] }
+        - { cmd: lnTo, pts: [ [ 143, 376 ] ] }
+        - { cmd: lnTo, pts: [ [ 140, 417 ] ] }
+        - { cmd: lnTo, pts: [ [ 143, 458 ] ] }
+        - { cmd: lnTo, pts: [ [ 152, 497 ] ] }
+        - { cmd: lnTo, pts: [ [ 165, 533 ] ] }
+        - { cmd: lnTo, pts: [ [ 184, 568 ] ] }
+        - { cmd: lnTo, pts: [ [ 207, 598 ] ] }
+        - { cmd: lnTo, pts: [ [ 235, 626 ] ] }
+        - { cmd: lnTo, pts: [ [ 266, 649 ] ] }
+        - { cmd: lnTo, pts: [ [ 300, 668 ] ] }
+        - { cmd: lnTo, pts: [ [ 337, 681 ] ] }
+        - { cmd: lnTo, pts: [ [ 376, 691 ] ] }
+        - { cmd: lnTo, pts: [ [ 417, 694 ] ] }
+        - { cmd: lnTo, pts: [ [ 457, 691 ] ] }
+        - { cmd: lnTo, pts: [ [ 496, 681 ] ] }
+        - { cmd: lnTo, pts: [ [ 533, 668 ] ] }
+        - { cmd: lnTo, pts: [ [ 567, 649 ] ] }
+        - { cmd: lnTo, pts: [ [ 599, 626 ] ] }
+        - { cmd: lnTo, pts: [ [ 626, 598 ] ] }
+        - { cmd: lnTo, pts: [ [ 649, 568 ] ] }
+        - { cmd: lnTo, pts: [ [ 668, 534 ] ] }
+        - { cmd: lnTo, pts: [ [ 682, 497 ] ] }
+        - { cmd: lnTo, pts: [ [ 690, 458 ] ] }
+        - { cmd: lnTo, pts: [ [ 694, 417 ] ] }
+        - { cmd: lnTo, pts: [ [ 690, 376 ] ] }
+        - { cmd: lnTo, pts: [ [ 682, 337 ] ] }
+        - { cmd: lnTo, pts: [ [ 668, 300 ] ] }
+        - { cmd: lnTo, pts: [ [ 649, 266 ] ] }
+        - { cmd: lnTo, pts: [ [ 626, 236 ] ] }
+        - { cmd: lnTo, pts: [ [ 599, 208 ] ] }
+        - { cmd: lnTo, pts: [ [ 567, 185 ] ] }
+        - { cmd: lnTo, pts: [ [ 533, 166 ] ] }
+        - { cmd: lnTo, pts: [ [ 496, 151 ] ] }
+        - { cmd: lnTo, pts: [ [ 457, 143 ] ] }
+        - { cmd: lnTo, pts: [ [ 417, 140 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 416, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 468, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 519, 12 ] ] }
+        - { cmd: lnTo, pts: [ [ 567, 28 ] ] }
+        - { cmd: lnTo, pts: [ [ 612, 48 ] ] }
+        - { cmd: lnTo, pts: [ [ 655, 74 ] ] }
+        - { cmd: lnTo, pts: [ [ 694, 105 ] ] }
+        - { cmd: lnTo, pts: [ [ 728, 140 ] ] }
+        - { cmd: lnTo, pts: [ [ 759, 179 ] ] }
+        - { cmd: lnTo, pts: [ [ 784, 221 ] ] }
+        - { cmd: lnTo, pts: [ [ 805, 266 ] ] }
+        - { cmd: lnTo, pts: [ [ 821, 315 ] ] }
+        - { cmd: lnTo, pts: [ [ 831, 364 ] ] }
+        - { cmd: lnTo, pts: [ [ 834, 417 ] ] }
+        - { cmd: lnTo, pts: [ [ 831, 470 ] ] }
+        - { cmd: lnTo, pts: [ [ 821, 519 ] ] }
+        - { cmd: lnTo, pts: [ [ 805, 568 ] ] }
+        - { cmd: lnTo, pts: [ [ 785, 613 ] ] }
+        - { cmd: lnTo, pts: [ [ 759, 655 ] ] }
+        - { cmd: lnTo, pts: [ [ 728, 694 ] ] }
+        - { cmd: lnTo, pts: [ [ 694, 729 ] ] }
+        - { cmd: lnTo, pts: [ [ 655, 759 ] ] }
+        - { cmd: lnTo, pts: [ [ 612, 785 ] ] }
+        - { cmd: lnTo, pts: [ [ 567, 806 ] ] }
+        - { cmd: lnTo, pts: [ [ 520, 822 ] ] }
+        - { cmd: lnTo, pts: [ [ 469, 831 ] ] }
+        - { cmd: lnTo, pts: [ [ 417, 834 ] ] }
+        - { cmd: lnTo, pts: [ [ 365, 831 ] ] }
+        - { cmd: lnTo, pts: [ [ 314, 822 ] ] }
+        - { cmd: lnTo, pts: [ [ 266, 806 ] ] }
+        - { cmd: lnTo, pts: [ [ 221, 785 ] ] }
+        - { cmd: lnTo, pts: [ [ 179, 759 ] ] }
+        - { cmd: lnTo, pts: [ [ 140, 729 ] ] }
+        - { cmd: lnTo, pts: [ [ 105, 694 ] ] }
+        - { cmd: lnTo, pts: [ [ 75, 655 ] ] }
+        - { cmd: lnTo, pts: [ [ 48, 613 ] ] }
+        - { cmd: lnTo, pts: [ [ 27, 568 ] ] }
+        - { cmd: lnTo, pts: [ [ 12, 519 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 470 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 417 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 364 ] ] }
+        - { cmd: lnTo, pts: [ [ 12, 315 ] ] }
+        - { cmd: lnTo, pts: [ [ 27, 266 ] ] }
+        - { cmd: lnTo, pts: [ [ 48, 221 ] ] }
+        - { cmd: lnTo, pts: [ [ 74, 179 ] ] }
+        - { cmd: lnTo, pts: [ [ 104, 140 ] ] }
+        - { cmd: lnTo, pts: [ [ 139, 105 ] ] }
+        - { cmd: lnTo, pts: [ [ 178, 74 ] ] }
+        - { cmd: lnTo, pts: [ [ 220, 48 ] ] }
+        - { cmd: lnTo, pts: [ [ 265, 28 ] ] }
+        - { cmd: lnTo, pts: [ [ 314, 12 ] ] }
+        - { cmd: lnTo, pts: [ [ 364, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 416, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_74"
     elementType: shape
     bounds: [ 126, 151, 44, 44 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 3510
+      h: 3500
+      commands:
+        - { cmd: moveTo, pts: [ [ 649, 2545 ] ] }
+        - { cmd: lnTo, pts: [ [ 245, 2947 ] ] }
+        - { cmd: lnTo, pts: [ [ 221, 2975 ] ] }
+        - { cmd: lnTo, pts: [ [ 203, 3005 ] ] }
+        - { cmd: lnTo, pts: [ [ 190, 3035 ] ] }
+        - { cmd: lnTo, pts: [ [ 183, 3068 ] ] }
+        - { cmd: lnTo, pts: [ [ 181, 3102 ] ] }
+        - { cmd: lnTo, pts: [ [ 183, 3135 ] ] }
+        - { cmd: lnTo, pts: [ [ 190, 3168 ] ] }
+        - { cmd: lnTo, pts: [ [ 203, 3200 ] ] }
+        - { cmd: lnTo, pts: [ [ 221, 3230 ] ] }
+        - { cmd: lnTo, pts: [ [ 245, 3256 ] ] }
+        - { cmd: lnTo, pts: [ [ 271, 3279 ] ] }
+        - { cmd: lnTo, pts: [ [ 301, 3297 ] ] }
+        - { cmd: lnTo, pts: [ [ 333, 3310 ] ] }
+        - { cmd: lnTo, pts: [ [ 366, 3318 ] ] }
+        - { cmd: lnTo, pts: [ [ 399, 3320 ] ] }
+        - { cmd: lnTo, pts: [ [ 433, 3318 ] ] }
+        - { cmd: lnTo, pts: [ [ 466, 3310 ] ] }
+        - { cmd: lnTo, pts: [ [ 497, 3297 ] ] }
+        - { cmd: lnTo, pts: [ [ 527, 3279 ] ] }
+        - { cmd: lnTo, pts: [ [ 553, 3256 ] ] }
+        - { cmd: lnTo, pts: [ [ 957, 2853 ] ] }
+        - { cmd: lnTo, pts: [ [ 649, 2545 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 905, 2290 ] ] }
+        - { cmd: lnTo, pts: [ [ 776, 2417 ] ] }
+        - { cmd: lnTo, pts: [ [ 1086, 2726 ] ] }
+        - { cmd: lnTo, pts: [ [ 1214, 2597 ] ] }
+        - { cmd: lnTo, pts: [ [ 905, 2290 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2237, 180 ] ] }
+        - { cmd: lnTo, pts: [ [ 2167, 182 ] ] }
+        - { cmd: lnTo, pts: [ [ 2097, 189 ] ] }
+        - { cmd: lnTo, pts: [ [ 2028, 200 ] ] }
+        - { cmd: lnTo, pts: [ [ 1959, 215 ] ] }
+        - { cmd: lnTo, pts: [ [ 1892, 235 ] ] }
+        - { cmd: lnTo, pts: [ [ 1825, 260 ] ] }
+        - { cmd: lnTo, pts: [ [ 1760, 288 ] ] }
+        - { cmd: lnTo, pts: [ [ 1698, 321 ] ] }
+        - { cmd: lnTo, pts: [ [ 1636, 360 ] ] }
+        - { cmd: lnTo, pts: [ [ 1576, 401 ] ] }
+        - { cmd: lnTo, pts: [ [ 1519, 448 ] ] }
+        - { cmd: lnTo, pts: [ [ 1465, 498 ] ] }
+        - { cmd: lnTo, pts: [ [ 1411, 556 ] ] }
+        - { cmd: lnTo, pts: [ [ 1363, 615 ] ] }
+        - { cmd: lnTo, pts: [ [ 1319, 678 ] ] }
+        - { cmd: lnTo, pts: [ [ 1281, 741 ] ] }
+        - { cmd: lnTo, pts: [ [ 1247, 808 ] ] }
+        - { cmd: lnTo, pts: [ [ 1218, 876 ] ] }
+        - { cmd: lnTo, pts: [ [ 1193, 946 ] ] }
+        - { cmd: lnTo, pts: [ [ 1174, 1016 ] ] }
+        - { cmd: lnTo, pts: [ [ 1159, 1088 ] ] }
+        - { cmd: lnTo, pts: [ [ 1150, 1160 ] ] }
+        - { cmd: lnTo, pts: [ [ 1146, 1232 ] ] }
+        - { cmd: lnTo, pts: [ [ 1146, 1306 ] ] }
+        - { cmd: lnTo, pts: [ [ 1150, 1379 ] ] }
+        - { cmd: lnTo, pts: [ [ 1159, 1451 ] ] }
+        - { cmd: lnTo, pts: [ [ 1174, 1522 ] ] }
+        - { cmd: lnTo, pts: [ [ 1193, 1593 ] ] }
+        - { cmd: lnTo, pts: [ [ 1218, 1662 ] ] }
+        - { cmd: lnTo, pts: [ [ 1247, 1731 ] ] }
+        - { cmd: lnTo, pts: [ [ 1281, 1797 ] ] }
+        - { cmd: lnTo, pts: [ [ 1319, 1861 ] ] }
+        - { cmd: lnTo, pts: [ [ 1363, 1923 ] ] }
+        - { cmd: lnTo, pts: [ [ 1411, 1983 ] ] }
+        - { cmd: lnTo, pts: [ [ 1465, 2040 ] ] }
+        - { cmd: lnTo, pts: [ [ 1521, 2093 ] ] }
+        - { cmd: lnTo, pts: [ [ 1582, 2141 ] ] }
+        - { cmd: lnTo, pts: [ [ 1643, 2185 ] ] }
+        - { cmd: lnTo, pts: [ [ 1708, 2223 ] ] }
+        - { cmd: lnTo, pts: [ [ 1774, 2257 ] ] }
+        - { cmd: lnTo, pts: [ [ 1843, 2286 ] ] }
+        - { cmd: lnTo, pts: [ [ 1912, 2310 ] ] }
+        - { cmd: lnTo, pts: [ [ 1984, 2329 ] ] }
+        - { cmd: lnTo, pts: [ [ 2055, 2344 ] ] }
+        - { cmd: lnTo, pts: [ [ 2127, 2353 ] ] }
+        - { cmd: lnTo, pts: [ [ 2201, 2358 ] ] }
+        - { cmd: lnTo, pts: [ [ 2274, 2358 ] ] }
+        - { cmd: lnTo, pts: [ [ 2346, 2353 ] ] }
+        - { cmd: lnTo, pts: [ [ 2419, 2344 ] ] }
+        - { cmd: lnTo, pts: [ [ 2491, 2329 ] ] }
+        - { cmd: lnTo, pts: [ [ 2561, 2310 ] ] }
+        - { cmd: lnTo, pts: [ [ 2631, 2286 ] ] }
+        - { cmd: lnTo, pts: [ [ 2700, 2257 ] ] }
+        - { cmd: lnTo, pts: [ [ 2767, 2223 ] ] }
+        - { cmd: lnTo, pts: [ [ 2830, 2185 ] ] }
+        - { cmd: lnTo, pts: [ [ 2893, 2141 ] ] }
+        - { cmd: lnTo, pts: [ [ 2953, 2093 ] ] }
+        - { cmd: lnTo, pts: [ [ 3010, 2040 ] ] }
+        - { cmd: lnTo, pts: [ [ 3063, 1983 ] ] }
+        - { cmd: lnTo, pts: [ [ 3111, 1923 ] ] }
+        - { cmd: lnTo, pts: [ [ 3155, 1861 ] ] }
+        - { cmd: lnTo, pts: [ [ 3193, 1797 ] ] }
+        - { cmd: lnTo, pts: [ [ 3227, 1731 ] ] }
+        - { cmd: lnTo, pts: [ [ 3257, 1662 ] ] }
+        - { cmd: lnTo, pts: [ [ 3280, 1593 ] ] }
+        - { cmd: lnTo, pts: [ [ 3299, 1522 ] ] }
+        - { cmd: lnTo, pts: [ [ 3314, 1451 ] ] }
+        - { cmd: lnTo, pts: [ [ 3324, 1379 ] ] }
+        - { cmd: lnTo, pts: [ [ 3329, 1306 ] ] }
+        - { cmd: lnTo, pts: [ [ 3329, 1232 ] ] }
+        - { cmd: lnTo, pts: [ [ 3324, 1160 ] ] }
+        - { cmd: lnTo, pts: [ [ 3314, 1088 ] ] }
+        - { cmd: lnTo, pts: [ [ 3299, 1016 ] ] }
+        - { cmd: lnTo, pts: [ [ 3280, 946 ] ] }
+        - { cmd: lnTo, pts: [ [ 3257, 876 ] ] }
+        - { cmd: lnTo, pts: [ [ 3227, 808 ] ] }
+        - { cmd: lnTo, pts: [ [ 3193, 741 ] ] }
+        - { cmd: lnTo, pts: [ [ 3155, 678 ] ] }
+        - { cmd: lnTo, pts: [ [ 3111, 615 ] ] }
+        - { cmd: lnTo, pts: [ [ 3063, 556 ] ] }
+        - { cmd: lnTo, pts: [ [ 3010, 498 ] ] }
+        - { cmd: lnTo, pts: [ [ 2955, 448 ] ] }
+        - { cmd: lnTo, pts: [ [ 2898, 401 ] ] }
+        - { cmd: lnTo, pts: [ [ 2839, 360 ] ] }
+        - { cmd: lnTo, pts: [ [ 2777, 321 ] ] }
+        - { cmd: lnTo, pts: [ [ 2713, 288 ] ] }
+        - { cmd: lnTo, pts: [ [ 2648, 260 ] ] }
+        - { cmd: lnTo, pts: [ [ 2583, 235 ] ] }
+        - { cmd: lnTo, pts: [ [ 2514, 215 ] ] }
+        - { cmd: lnTo, pts: [ [ 2446, 200 ] ] }
+        - { cmd: lnTo, pts: [ [ 2376, 189 ] ] }
+        - { cmd: lnTo, pts: [ [ 2307, 182 ] ] }
+        - { cmd: lnTo, pts: [ [ 2237, 180 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2237, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 2319, 2 ] ] }
+        - { cmd: lnTo, pts: [ [ 2400, 11 ] ] }
+        - { cmd: lnTo, pts: [ [ 2480, 23 ] ] }
+        - { cmd: lnTo, pts: [ [ 2560, 41 ] ] }
+        - { cmd: lnTo, pts: [ [ 2639, 65 ] ] }
+        - { cmd: lnTo, pts: [ [ 2717, 93 ] ] }
+        - { cmd: lnTo, pts: [ [ 2792, 126 ] ] }
+        - { cmd: lnTo, pts: [ [ 2867, 165 ] ] }
+        - { cmd: lnTo, pts: [ [ 2938, 209 ] ] }
+        - { cmd: lnTo, pts: [ [ 3007, 258 ] ] }
+        - { cmd: lnTo, pts: [ [ 3074, 312 ] ] }
+        - { cmd: lnTo, pts: [ [ 3138, 371 ] ] }
+        - { cmd: lnTo, pts: [ [ 3197, 435 ] ] }
+        - { cmd: lnTo, pts: [ [ 3252, 502 ] ] }
+        - { cmd: lnTo, pts: [ [ 3300, 571 ] ] }
+        - { cmd: lnTo, pts: [ [ 3344, 642 ] ] }
+        - { cmd: lnTo, pts: [ [ 3383, 716 ] ] }
+        - { cmd: lnTo, pts: [ [ 3416, 791 ] ] }
+        - { cmd: lnTo, pts: [ [ 3445, 869 ] ] }
+        - { cmd: lnTo, pts: [ [ 3469, 947 ] ] }
+        - { cmd: lnTo, pts: [ [ 3487, 1027 ] ] }
+        - { cmd: lnTo, pts: [ [ 3499, 1107 ] ] }
+        - { cmd: lnTo, pts: [ [ 3508, 1188 ] ] }
+        - { cmd: lnTo, pts: [ [ 3510, 1270 ] ] }
+        - { cmd: lnTo, pts: [ [ 3510, 1270 ] ] }
+        - { cmd: lnTo, pts: [ [ 3508, 1350 ] ] }
+        - { cmd: lnTo, pts: [ [ 3499, 1432 ] ] }
+        - { cmd: lnTo, pts: [ [ 3487, 1512 ] ] }
+        - { cmd: lnTo, pts: [ [ 3469, 1592 ] ] }
+        - { cmd: lnTo, pts: [ [ 3445, 1670 ] ] }
+        - { cmd: lnTo, pts: [ [ 3416, 1748 ] ] }
+        - { cmd: lnTo, pts: [ [ 3383, 1823 ] ] }
+        - { cmd: lnTo, pts: [ [ 3344, 1896 ] ] }
+        - { cmd: lnTo, pts: [ [ 3300, 1968 ] ] }
+        - { cmd: lnTo, pts: [ [ 3252, 2037 ] ] }
+        - { cmd: lnTo, pts: [ [ 3197, 2104 ] ] }
+        - { cmd: lnTo, pts: [ [ 3138, 2167 ] ] }
+        - { cmd: lnTo, pts: [ [ 3074, 2226 ] ] }
+        - { cmd: lnTo, pts: [ [ 3007, 2280 ] ] }
+        - { cmd: lnTo, pts: [ [ 2938, 2330 ] ] }
+        - { cmd: lnTo, pts: [ [ 2867, 2374 ] ] }
+        - { cmd: lnTo, pts: [ [ 2792, 2412 ] ] }
+        - { cmd: lnTo, pts: [ [ 2717, 2446 ] ] }
+        - { cmd: lnTo, pts: [ [ 2639, 2474 ] ] }
+        - { cmd: lnTo, pts: [ [ 2560, 2498 ] ] }
+        - { cmd: lnTo, pts: [ [ 2480, 2516 ] ] }
+        - { cmd: lnTo, pts: [ [ 2400, 2528 ] ] }
+        - { cmd: lnTo, pts: [ [ 2319, 2536 ] ] }
+        - { cmd: lnTo, pts: [ [ 2237, 2539 ] ] }
+        - { cmd: lnTo, pts: [ [ 2156, 2536 ] ] }
+        - { cmd: lnTo, pts: [ [ 2075, 2528 ] ] }
+        - { cmd: lnTo, pts: [ [ 1994, 2516 ] ] }
+        - { cmd: lnTo, pts: [ [ 1915, 2498 ] ] }
+        - { cmd: lnTo, pts: [ [ 1837, 2474 ] ] }
+        - { cmd: lnTo, pts: [ [ 1759, 2447 ] ] }
+        - { cmd: lnTo, pts: [ [ 1684, 2413 ] ] }
+        - { cmd: lnTo, pts: [ [ 1610, 2375 ] ] }
+        - { cmd: lnTo, pts: [ [ 1538, 2331 ] ] }
+        - { cmd: lnTo, pts: [ [ 1469, 2282 ] ] }
+        - { cmd: lnTo, pts: [ [ 1403, 2228 ] ] }
+        - { cmd: lnTo, pts: [ [ 1251, 2380 ] ] }
+        - { cmd: lnTo, pts: [ [ 1405, 2534 ] ] }
+        - { cmd: lnTo, pts: [ [ 1419, 2551 ] ] }
+        - { cmd: lnTo, pts: [ [ 1427, 2569 ] ] }
+        - { cmd: lnTo, pts: [ [ 1432, 2588 ] ] }
+        - { cmd: lnTo, pts: [ [ 1432, 2608 ] ] }
+        - { cmd: lnTo, pts: [ [ 1427, 2627 ] ] }
+        - { cmd: lnTo, pts: [ [ 1419, 2645 ] ] }
+        - { cmd: lnTo, pts: [ [ 1405, 2661 ] ] }
+        - { cmd: lnTo, pts: [ [ 682, 3383 ] ] }
+        - { cmd: lnTo, pts: [ [ 647, 3414 ] ] }
+        - { cmd: lnTo, pts: [ [ 609, 3441 ] ] }
+        - { cmd: lnTo, pts: [ [ 570, 3462 ] ] }
+        - { cmd: lnTo, pts: [ [ 529, 3479 ] ] }
+        - { cmd: lnTo, pts: [ [ 486, 3490 ] ] }
+        - { cmd: lnTo, pts: [ [ 442, 3498 ] ] }
+        - { cmd: lnTo, pts: [ [ 399, 3500 ] ] }
+        - { cmd: lnTo, pts: [ [ 355, 3498 ] ] }
+        - { cmd: lnTo, pts: [ [ 312, 3490 ] ] }
+        - { cmd: lnTo, pts: [ [ 269, 3479 ] ] }
+        - { cmd: lnTo, pts: [ [ 229, 3462 ] ] }
+        - { cmd: lnTo, pts: [ [ 189, 3441 ] ] }
+        - { cmd: lnTo, pts: [ [ 151, 3414 ] ] }
+        - { cmd: lnTo, pts: [ [ 117, 3383 ] ] }
+        - { cmd: lnTo, pts: [ [ 86, 3349 ] ] }
+        - { cmd: lnTo, pts: [ [ 60, 3311 ] ] }
+        - { cmd: lnTo, pts: [ [ 38, 3272 ] ] }
+        - { cmd: lnTo, pts: [ [ 21, 3232 ] ] }
+        - { cmd: lnTo, pts: [ [ 10, 3189 ] ] }
+        - { cmd: lnTo, pts: [ [ 2, 3146 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 3102 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 3102 ] ] }
+        - { cmd: lnTo, pts: [ [ 2, 3059 ] ] }
+        - { cmd: lnTo, pts: [ [ 10, 3015 ] ] }
+        - { cmd: lnTo, pts: [ [ 21, 2973 ] ] }
+        - { cmd: lnTo, pts: [ [ 38, 2932 ] ] }
+        - { cmd: lnTo, pts: [ [ 60, 2892 ] ] }
+        - { cmd: lnTo, pts: [ [ 86, 2855 ] ] }
+        - { cmd: lnTo, pts: [ [ 117, 2820 ] ] }
+        - { cmd: lnTo, pts: [ [ 841, 2099 ] ] }
+        - { cmd: lnTo, pts: [ [ 857, 2085 ] ] }
+        - { cmd: lnTo, pts: [ [ 875, 2077 ] ] }
+        - { cmd: lnTo, pts: [ [ 895, 2072 ] ] }
+        - { cmd: lnTo, pts: [ [ 915, 2072 ] ] }
+        - { cmd: lnTo, pts: [ [ 934, 2077 ] ] }
+        - { cmd: lnTo, pts: [ [ 952, 2085 ] ] }
+        - { cmd: lnTo, pts: [ [ 969, 2099 ] ] }
+        - { cmd: lnTo, pts: [ [ 1123, 2253 ] ] }
+        - { cmd: lnTo, pts: [ [ 1275, 2101 ] ] }
+        - { cmd: lnTo, pts: [ [ 1221, 2035 ] ] }
+        - { cmd: lnTo, pts: [ [ 1172, 1965 ] ] }
+        - { cmd: lnTo, pts: [ [ 1129, 1894 ] ] }
+        - { cmd: lnTo, pts: [ [ 1090, 1821 ] ] }
+        - { cmd: lnTo, pts: [ [ 1056, 1745 ] ] }
+        - { cmd: lnTo, pts: [ [ 1029, 1668 ] ] }
+        - { cmd: lnTo, pts: [ [ 1005, 1590 ] ] }
+        - { cmd: lnTo, pts: [ [ 987, 1510 ] ] }
+        - { cmd: lnTo, pts: [ [ 974, 1430 ] ] }
+        - { cmd: lnTo, pts: [ [ 967, 1349 ] ] }
+        - { cmd: lnTo, pts: [ [ 964, 1267 ] ] }
+        - { cmd: lnTo, pts: [ [ 967, 1187 ] ] }
+        - { cmd: lnTo, pts: [ [ 974, 1106 ] ] }
+        - { cmd: lnTo, pts: [ [ 988, 1026 ] ] }
+        - { cmd: lnTo, pts: [ [ 1006, 946 ] ] }
+        - { cmd: lnTo, pts: [ [ 1030, 868 ] ] }
+        - { cmd: lnTo, pts: [ [ 1057, 790 ] ] }
+        - { cmd: lnTo, pts: [ [ 1091, 715 ] ] }
+        - { cmd: lnTo, pts: [ [ 1130, 642 ] ] }
+        - { cmd: lnTo, pts: [ [ 1174, 570 ] ] }
+        - { cmd: lnTo, pts: [ [ 1223, 501 ] ] }
+        - { cmd: lnTo, pts: [ [ 1277, 435 ] ] }
+        - { cmd: lnTo, pts: [ [ 1337, 371 ] ] }
+        - { cmd: lnTo, pts: [ [ 1400, 312 ] ] }
+        - { cmd: lnTo, pts: [ [ 1467, 258 ] ] }
+        - { cmd: lnTo, pts: [ [ 1536, 209 ] ] }
+        - { cmd: lnTo, pts: [ [ 1608, 165 ] ] }
+        - { cmd: lnTo, pts: [ [ 1682, 126 ] ] }
+        - { cmd: lnTo, pts: [ [ 1757, 93 ] ] }
+        - { cmd: lnTo, pts: [ [ 1835, 65 ] ] }
+        - { cmd: lnTo, pts: [ [ 1913, 41 ] ] }
+        - { cmd: lnTo, pts: [ [ 1993, 23 ] ] }
+        - { cmd: lnTo, pts: [ [ 2074, 11 ] ] }
+        - { cmd: lnTo, pts: [ [ 2156, 2 ] ] }
+        - { cmd: lnTo, pts: [ [ 2237, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_75"
     elementType: shape
     bounds: [ 143, 156, 22, 22 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 1765
+      h: 1760
+      commands:
+        - { cmd: moveTo, pts: [ [ 882, 181 ] ] }
+        - { cmd: lnTo, pts: [ [ 820, 184 ] ] }
+        - { cmd: lnTo, pts: [ [ 760, 191 ] ] }
+        - { cmd: lnTo, pts: [ [ 700, 205 ] ] }
+        - { cmd: lnTo, pts: [ [ 641, 223 ] ] }
+        - { cmd: lnTo, pts: [ [ 586, 246 ] ] }
+        - { cmd: lnTo, pts: [ [ 532, 274 ] ] }
+        - { cmd: lnTo, pts: [ [ 481, 307 ] ] }
+        - { cmd: lnTo, pts: [ [ 432, 344 ] ] }
+        - { cmd: lnTo, pts: [ [ 386, 385 ] ] }
+        - { cmd: lnTo, pts: [ [ 344, 431 ] ] }
+        - { cmd: lnTo, pts: [ [ 306, 480 ] ] }
+        - { cmd: lnTo, pts: [ [ 273, 532 ] ] }
+        - { cmd: lnTo, pts: [ [ 246, 585 ] ] }
+        - { cmd: lnTo, pts: [ [ 222, 641 ] ] }
+        - { cmd: lnTo, pts: [ [ 204, 698 ] ] }
+        - { cmd: lnTo, pts: [ [ 192, 758 ] ] }
+        - { cmd: lnTo, pts: [ [ 183, 819 ] ] }
+        - { cmd: lnTo, pts: [ [ 181, 881 ] ] }
+        - { cmd: lnTo, pts: [ [ 183, 942 ] ] }
+        - { cmd: lnTo, pts: [ [ 192, 1003 ] ] }
+        - { cmd: lnTo, pts: [ [ 204, 1062 ] ] }
+        - { cmd: lnTo, pts: [ [ 222, 1120 ] ] }
+        - { cmd: lnTo, pts: [ [ 246, 1175 ] ] }
+        - { cmd: lnTo, pts: [ [ 273, 1229 ] ] }
+        - { cmd: lnTo, pts: [ [ 306, 1280 ] ] }
+        - { cmd: lnTo, pts: [ [ 344, 1329 ] ] }
+        - { cmd: lnTo, pts: [ [ 386, 1375 ] ] }
+        - { cmd: lnTo, pts: [ [ 432, 1417 ] ] }
+        - { cmd: lnTo, pts: [ [ 481, 1454 ] ] }
+        - { cmd: lnTo, pts: [ [ 532, 1487 ] ] }
+        - { cmd: lnTo, pts: [ [ 586, 1515 ] ] }
+        - { cmd: lnTo, pts: [ [ 641, 1538 ] ] }
+        - { cmd: lnTo, pts: [ [ 700, 1556 ] ] }
+        - { cmd: lnTo, pts: [ [ 760, 1569 ] ] }
+        - { cmd: lnTo, pts: [ [ 820, 1577 ] ] }
+        - { cmd: lnTo, pts: [ [ 882, 1579 ] ] }
+        - { cmd: lnTo, pts: [ [ 944, 1577 ] ] }
+        - { cmd: lnTo, pts: [ [ 1005, 1569 ] ] }
+        - { cmd: lnTo, pts: [ [ 1065, 1556 ] ] }
+        - { cmd: lnTo, pts: [ [ 1122, 1538 ] ] }
+        - { cmd: lnTo, pts: [ [ 1179, 1515 ] ] }
+        - { cmd: lnTo, pts: [ [ 1232, 1487 ] ] }
+        - { cmd: lnTo, pts: [ [ 1284, 1454 ] ] }
+        - { cmd: lnTo, pts: [ [ 1333, 1417 ] ] }
+        - { cmd: lnTo, pts: [ [ 1379, 1375 ] ] }
+        - { cmd: lnTo, pts: [ [ 1420, 1329 ] ] }
+        - { cmd: lnTo, pts: [ [ 1457, 1280 ] ] }
+        - { cmd: lnTo, pts: [ [ 1490, 1229 ] ] }
+        - { cmd: lnTo, pts: [ [ 1518, 1175 ] ] }
+        - { cmd: lnTo, pts: [ [ 1541, 1120 ] ] }
+        - { cmd: lnTo, pts: [ [ 1559, 1062 ] ] }
+        - { cmd: lnTo, pts: [ [ 1573, 1003 ] ] }
+        - { cmd: lnTo, pts: [ [ 1581, 942 ] ] }
+        - { cmd: lnTo, pts: [ [ 1584, 881 ] ] }
+        - { cmd: lnTo, pts: [ [ 1581, 819 ] ] }
+        - { cmd: lnTo, pts: [ [ 1573, 758 ] ] }
+        - { cmd: lnTo, pts: [ [ 1559, 698 ] ] }
+        - { cmd: lnTo, pts: [ [ 1541, 641 ] ] }
+        - { cmd: lnTo, pts: [ [ 1518, 585 ] ] }
+        - { cmd: lnTo, pts: [ [ 1490, 532 ] ] }
+        - { cmd: lnTo, pts: [ [ 1457, 480 ] ] }
+        - { cmd: lnTo, pts: [ [ 1420, 431 ] ] }
+        - { cmd: lnTo, pts: [ [ 1379, 385 ] ] }
+        - { cmd: lnTo, pts: [ [ 1333, 344 ] ] }
+        - { cmd: lnTo, pts: [ [ 1284, 307 ] ] }
+        - { cmd: lnTo, pts: [ [ 1232, 274 ] ] }
+        - { cmd: lnTo, pts: [ [ 1179, 246 ] ] }
+        - { cmd: lnTo, pts: [ [ 1122, 223 ] ] }
+        - { cmd: lnTo, pts: [ [ 1065, 205 ] ] }
+        - { cmd: lnTo, pts: [ [ 1005, 191 ] ] }
+        - { cmd: lnTo, pts: [ [ 944, 184 ] ] }
+        - { cmd: lnTo, pts: [ [ 882, 181 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 882, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 952, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 1021, 12 ] ] }
+        - { cmd: lnTo, pts: [ [ 1089, 25 ] ] }
+        - { cmd: lnTo, pts: [ [ 1155, 44 ] ] }
+        - { cmd: lnTo, pts: [ [ 1220, 67 ] ] }
+        - { cmd: lnTo, pts: [ [ 1282, 96 ] ] }
+        - { cmd: lnTo, pts: [ [ 1342, 130 ] ] }
+        - { cmd: lnTo, pts: [ [ 1400, 168 ] ] }
+        - { cmd: lnTo, pts: [ [ 1454, 211 ] ] }
+        - { cmd: lnTo, pts: [ [ 1506, 258 ] ] }
+        - { cmd: lnTo, pts: [ [ 1553, 310 ] ] }
+        - { cmd: lnTo, pts: [ [ 1597, 364 ] ] }
+        - { cmd: lnTo, pts: [ [ 1635, 421 ] ] }
+        - { cmd: lnTo, pts: [ [ 1669, 482 ] ] }
+        - { cmd: lnTo, pts: [ [ 1698, 543 ] ] }
+        - { cmd: lnTo, pts: [ [ 1721, 608 ] ] }
+        - { cmd: lnTo, pts: [ [ 1740, 674 ] ] }
+        - { cmd: lnTo, pts: [ [ 1753, 742 ] ] }
+        - { cmd: lnTo, pts: [ [ 1761, 811 ] ] }
+        - { cmd: lnTo, pts: [ [ 1765, 881 ] ] }
+        - { cmd: lnTo, pts: [ [ 1761, 951 ] ] }
+        - { cmd: lnTo, pts: [ [ 1753, 1019 ] ] }
+        - { cmd: lnTo, pts: [ [ 1740, 1087 ] ] }
+        - { cmd: lnTo, pts: [ [ 1721, 1153 ] ] }
+        - { cmd: lnTo, pts: [ [ 1698, 1217 ] ] }
+        - { cmd: lnTo, pts: [ [ 1669, 1279 ] ] }
+        - { cmd: lnTo, pts: [ [ 1635, 1339 ] ] }
+        - { cmd: lnTo, pts: [ [ 1597, 1396 ] ] }
+        - { cmd: lnTo, pts: [ [ 1553, 1451 ] ] }
+        - { cmd: lnTo, pts: [ [ 1506, 1502 ] ] }
+        - { cmd: lnTo, pts: [ [ 1454, 1550 ] ] }
+        - { cmd: lnTo, pts: [ [ 1400, 1593 ] ] }
+        - { cmd: lnTo, pts: [ [ 1342, 1631 ] ] }
+        - { cmd: lnTo, pts: [ [ 1282, 1664 ] ] }
+        - { cmd: lnTo, pts: [ [ 1220, 1693 ] ] }
+        - { cmd: lnTo, pts: [ [ 1155, 1717 ] ] }
+        - { cmd: lnTo, pts: [ [ 1089, 1735 ] ] }
+        - { cmd: lnTo, pts: [ [ 1021, 1749 ] ] }
+        - { cmd: lnTo, pts: [ [ 952, 1758 ] ] }
+        - { cmd: lnTo, pts: [ [ 882, 1760 ] ] }
+        - { cmd: lnTo, pts: [ [ 812, 1758 ] ] }
+        - { cmd: lnTo, pts: [ [ 742, 1749 ] ] }
+        - { cmd: lnTo, pts: [ [ 674, 1735 ] ] }
+        - { cmd: lnTo, pts: [ [ 608, 1717 ] ] }
+        - { cmd: lnTo, pts: [ [ 545, 1693 ] ] }
+        - { cmd: lnTo, pts: [ [ 482, 1664 ] ] }
+        - { cmd: lnTo, pts: [ [ 422, 1631 ] ] }
+        - { cmd: lnTo, pts: [ [ 365, 1593 ] ] }
+        - { cmd: lnTo, pts: [ [ 310, 1550 ] ] }
+        - { cmd: lnTo, pts: [ [ 259, 1502 ] ] }
+        - { cmd: lnTo, pts: [ [ 211, 1451 ] ] }
+        - { cmd: lnTo, pts: [ [ 167, 1396 ] ] }
+        - { cmd: lnTo, pts: [ [ 129, 1339 ] ] }
+        - { cmd: lnTo, pts: [ [ 96, 1279 ] ] }
+        - { cmd: lnTo, pts: [ [ 67, 1217 ] ] }
+        - { cmd: lnTo, pts: [ [ 43, 1153 ] ] }
+        - { cmd: lnTo, pts: [ [ 25, 1087 ] ] }
+        - { cmd: lnTo, pts: [ [ 11, 1019 ] ] }
+        - { cmd: lnTo, pts: [ [ 2, 951 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 881 ] ] }
+        - { cmd: lnTo, pts: [ [ 2, 811 ] ] }
+        - { cmd: lnTo, pts: [ [ 11, 742 ] ] }
+        - { cmd: lnTo, pts: [ [ 25, 674 ] ] }
+        - { cmd: lnTo, pts: [ [ 43, 608 ] ] }
+        - { cmd: lnTo, pts: [ [ 67, 543 ] ] }
+        - { cmd: lnTo, pts: [ [ 96, 482 ] ] }
+        - { cmd: lnTo, pts: [ [ 129, 421 ] ] }
+        - { cmd: lnTo, pts: [ [ 167, 364 ] ] }
+        - { cmd: lnTo, pts: [ [ 211, 310 ] ] }
+        - { cmd: lnTo, pts: [ [ 259, 258 ] ] }
+        - { cmd: lnTo, pts: [ [ 310, 211 ] ] }
+        - { cmd: lnTo, pts: [ [ 365, 168 ] ] }
+        - { cmd: lnTo, pts: [ [ 422, 130 ] ] }
+        - { cmd: lnTo, pts: [ [ 482, 96 ] ] }
+        - { cmd: lnTo, pts: [ [ 545, 67 ] ] }
+        - { cmd: lnTo, pts: [ [ 608, 44 ] ] }
+        - { cmd: lnTo, pts: [ [ 674, 25 ] ] }
+        - { cmd: lnTo, pts: [ [ 742, 12 ] ] }
+        - { cmd: lnTo, pts: [ [ 812, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 882, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_76"
     elementType: shape
     bounds: [ 150, 162, 9, 9 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 726
+      h: 723
+      commands:
+        - { cmd: moveTo, pts: [ [ 363, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 387, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 409, 12 ] ] }
+        - { cmd: lnTo, pts: [ [ 427, 26 ] ] }
+        - { cmd: lnTo, pts: [ [ 442, 44 ] ] }
+        - { cmd: lnTo, pts: [ [ 450, 66 ] ] }
+        - { cmd: lnTo, pts: [ [ 453, 90 ] ] }
+        - { cmd: lnTo, pts: [ [ 453, 271 ] ] }
+        - { cmd: lnTo, pts: [ [ 635, 271 ] ] }
+        - { cmd: lnTo, pts: [ [ 660, 275 ] ] }
+        - { cmd: lnTo, pts: [ [ 681, 283 ] ] }
+        - { cmd: lnTo, pts: [ [ 699, 298 ] ] }
+        - { cmd: lnTo, pts: [ [ 714, 316 ] ] }
+        - { cmd: lnTo, pts: [ [ 722, 337 ] ] }
+        - { cmd: lnTo, pts: [ [ 726, 362 ] ] }
+        - { cmd: lnTo, pts: [ [ 722, 385 ] ] }
+        - { cmd: lnTo, pts: [ [ 714, 407 ] ] }
+        - { cmd: lnTo, pts: [ [ 699, 425 ] ] }
+        - { cmd: lnTo, pts: [ [ 681, 439 ] ] }
+        - { cmd: lnTo, pts: [ [ 660, 449 ] ] }
+        - { cmd: lnTo, pts: [ [ 635, 452 ] ] }
+        - { cmd: lnTo, pts: [ [ 453, 452 ] ] }
+        - { cmd: lnTo, pts: [ [ 453, 633 ] ] }
+        - { cmd: lnTo, pts: [ [ 450, 656 ] ] }
+        - { cmd: lnTo, pts: [ [ 442, 679 ] ] }
+        - { cmd: lnTo, pts: [ [ 427, 697 ] ] }
+        - { cmd: lnTo, pts: [ [ 409, 710 ] ] }
+        - { cmd: lnTo, pts: [ [ 387, 720 ] ] }
+        - { cmd: lnTo, pts: [ [ 363, 723 ] ] }
+        - { cmd: lnTo, pts: [ [ 339, 720 ] ] }
+        - { cmd: lnTo, pts: [ [ 317, 710 ] ] }
+        - { cmd: lnTo, pts: [ [ 299, 697 ] ] }
+        - { cmd: lnTo, pts: [ [ 285, 679 ] ] }
+        - { cmd: lnTo, pts: [ [ 276, 656 ] ] }
+        - { cmd: lnTo, pts: [ [ 272, 633 ] ] }
+        - { cmd: lnTo, pts: [ [ 272, 452 ] ] }
+        - { cmd: lnTo, pts: [ [ 91, 452 ] ] }
+        - { cmd: lnTo, pts: [ [ 67, 449 ] ] }
+        - { cmd: lnTo, pts: [ [ 45, 439 ] ] }
+        - { cmd: lnTo, pts: [ [ 27, 425 ] ] }
+        - { cmd: lnTo, pts: [ [ 13, 407 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 385 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 362 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 337 ] ] }
+        - { cmd: lnTo, pts: [ [ 13, 316 ] ] }
+        - { cmd: lnTo, pts: [ [ 27, 298 ] ] }
+        - { cmd: lnTo, pts: [ [ 45, 283 ] ] }
+        - { cmd: lnTo, pts: [ [ 67, 275 ] ] }
+        - { cmd: lnTo, pts: [ [ 91, 271 ] ] }
+        - { cmd: lnTo, pts: [ [ 272, 271 ] ] }
+        - { cmd: lnTo, pts: [ [ 272, 90 ] ] }
+        - { cmd: lnTo, pts: [ [ 276, 66 ] ] }
+        - { cmd: lnTo, pts: [ [ 285, 44 ] ] }
+        - { cmd: lnTo, pts: [ [ 299, 26 ] ] }
+        - { cmd: lnTo, pts: [ [ 317, 12 ] ] }
+        - { cmd: lnTo, pts: [ [ 339, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 363, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "1"
     elementType: text

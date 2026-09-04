@@ -1,10 +1,10 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 elements:
   - elementId: "上箭头_3"
     elementType: shape
     bounds: [ 367, 164, 239, 270 ]
-    kind: rect
+    kind: upArrow
     fill: "#79C9E2"
     line: { color: "#000000" }
   - elementId: "文本框_4"
@@ -29,7 +29,7 @@ elements:
   - elementId: "上箭头_6"
     elementType: shape
     bounds: [ 630, 164, 239, 270 ]
-    kind: rect
+    kind: upArrow
     fill: "#0485A8"
     line: { color: "#000000" }
   - elementId: "文本框_7"
@@ -115,20 +115,351 @@ elements:
   - elementId: "Freeform_58"
     elementType: shape
     bounds: [ 105, 293, 24, 28 ]
-    kind: rect
+    kind: custGeom
     fill: "#FFFFFF"
+    path:
+      w: 174
+      h: 200
+      commands:
+        - { cmd: moveTo, pts: [ [ 87, 21 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 114, 21 ], [ 137, 38 ], [ 145, 66 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 144, 52 ], [ 138, 39 ], [ 129, 29 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 119, 19 ], [ 105, 13 ], [ 90, 13 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 83, 13 ], [ 83, 13 ], [ 83, 13 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 68, 13 ], [ 54, 19 ], [ 44, 29 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 34, 39 ], [ 28, 53 ], [ 28, 68 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 28, 69 ], [ 28, 69 ], [ 28, 69 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 35, 39 ], [ 59, 21 ], [ 87, 21 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 145, 108 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 137, 139 ], [ 114, 166 ], [ 87, 166 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 59, 166 ], [ 35, 137 ], [ 28, 105 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 28, 119 ], [ 28, 119 ], [ 28, 119 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 28, 122 ], [ 25, 125 ], [ 22, 125 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 17, 125 ], [ 13, 126 ], [ 9, 126 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4, 126 ], [ 0, 122 ], [ 0, 117 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 80 ], [ 0, 80 ], [ 0, 80 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 75 ], [ 4, 71 ], [ 9, 71 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 15, 71 ], [ 15, 71 ], [ 15, 71 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 15, 68 ], [ 15, 68 ], [ 15, 68 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 15, 49 ], [ 23, 32 ], [ 35, 20 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 47, 7 ], [ 64, 0 ], [ 83, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 90, 0 ], [ 90, 0 ], [ 90, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 109, 0 ], [ 126, 7 ], [ 138, 20 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 150, 32 ], [ 158, 49 ], [ 158, 68 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 158, 71 ], [ 158, 71 ], [ 158, 71 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 165, 71 ], [ 165, 71 ], [ 165, 71 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 170, 71 ], [ 174, 75 ], [ 174, 80 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 174, 117 ], [ 174, 117 ], [ 174, 117 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 174, 122 ], [ 170, 126 ], [ 165, 126 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 158, 126 ], [ 158, 126 ], [ 158, 126 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 156, 141 ], [ 149, 160 ], [ 138, 171 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 128, 181 ], [ 115, 188 ], [ 100, 190 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 99, 196 ], [ 94, 200 ], [ 86, 200 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 79, 200 ], [ 72, 194 ], [ 72, 186 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 72, 178 ], [ 80, 172 ], [ 86, 172 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 93, 172 ], [ 95, 174 ], [ 97, 177 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 110, 175 ], [ 120, 170 ], [ 129, 161 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 139, 151 ], [ 145, 134 ], [ 145, 119 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 145, 108 ], [ 145, 108 ], [ 145, 108 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_70"
     elementType: shape
     bounds: [ 108, 194, 18, 29 ]
-    kind: rect
+    kind: custGeom
     fill: "#FFFFFF"
+    path:
+      w: 128
+      h: 204
+      commands:
+        - { cmd: moveTo, pts: [ [ 26, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 101, 0 ], [ 101, 0 ], [ 101, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 116, 0 ], [ 128, 13 ], [ 128, 27 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 128, 177 ], [ 128, 177 ], [ 128, 177 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 128, 192 ], [ 116, 204 ], [ 101, 204 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 26, 204 ], [ 26, 204 ], [ 26, 204 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 12, 204 ], [ 0, 192 ], [ 0, 177 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 26 ], [ 0, 26 ], [ 0, 26 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 12 ], [ 12, 0 ], [ 26, 0 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 58, 161 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 70, 161 ], [ 70, 161 ], [ 70, 161 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 73, 161 ], [ 76, 163 ], [ 76, 166 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 76, 178 ], [ 76, 178 ], [ 76, 178 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 76, 181 ], [ 73, 183 ], [ 70, 183 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 58, 183 ], [ 58, 183 ], [ 58, 183 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 54, 183 ], [ 52, 181 ], [ 52, 178 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 52, 166 ], [ 52, 166 ], [ 52, 166 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 52, 163 ], [ 54, 161 ], [ 58, 161 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 89, 161 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 102, 161 ], [ 102, 161 ], [ 102, 161 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 105, 161 ], [ 108, 163 ], [ 108, 166 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 108, 178 ], [ 108, 178 ], [ 108, 178 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 108, 181 ], [ 105, 183 ], [ 102, 183 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 89, 183 ], [ 89, 183 ], [ 89, 183 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 86, 183 ], [ 83, 181 ], [ 83, 178 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 83, 166 ], [ 83, 166 ], [ 83, 166 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 83, 163 ], [ 86, 161 ], [ 89, 161 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 58, 130 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 70, 130 ], [ 70, 130 ], [ 70, 130 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 73, 130 ], [ 76, 132 ], [ 76, 135 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 76, 148 ], [ 76, 148 ], [ 76, 148 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 76, 151 ], [ 73, 153 ], [ 70, 153 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 58, 153 ], [ 58, 153 ], [ 58, 153 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 54, 153 ], [ 52, 151 ], [ 52, 148 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 52, 135 ], [ 52, 135 ], [ 52, 135 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 52, 132 ], [ 54, 130 ], [ 58, 130 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 58, 100 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 70, 100 ], [ 70, 100 ], [ 70, 100 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 73, 100 ], [ 76, 102 ], [ 76, 105 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 76, 118 ], [ 76, 118 ], [ 76, 118 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 76, 120 ], [ 73, 123 ], [ 70, 123 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 58, 123 ], [ 58, 123 ], [ 58, 123 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 54, 123 ], [ 52, 120 ], [ 52, 118 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 52, 105 ], [ 52, 105 ], [ 52, 105 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 52, 102 ], [ 54, 100 ], [ 58, 100 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 89, 100 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 102, 100 ], [ 102, 100 ], [ 102, 100 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 105, 100 ], [ 108, 102 ], [ 108, 105 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 108, 118 ], [ 108, 118 ], [ 108, 118 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 108, 120 ], [ 105, 123 ], [ 102, 123 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 89, 123 ], [ 89, 123 ], [ 89, 123 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 86, 123 ], [ 83, 120 ], [ 83, 118 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 83, 105 ], [ 83, 105 ], [ 83, 105 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 83, 102 ], [ 86, 100 ], [ 89, 100 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 89, 130 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 102, 130 ], [ 102, 130 ], [ 102, 130 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 105, 130 ], [ 108, 132 ], [ 108, 135 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 108, 148 ], [ 108, 148 ], [ 108, 148 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 108, 151 ], [ 105, 153 ], [ 102, 153 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 89, 153 ], [ 89, 153 ], [ 89, 153 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 86, 153 ], [ 83, 151 ], [ 83, 148 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 83, 135 ], [ 83, 135 ], [ 83, 135 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 83, 132 ], [ 86, 130 ], [ 89, 130 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 26, 100 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 39, 100 ], [ 39, 100 ], [ 39, 100 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 42, 100 ], [ 44, 102 ], [ 44, 105 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 44, 118 ], [ 44, 118 ], [ 44, 118 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 44, 120 ], [ 42, 123 ], [ 39, 123 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 26, 123 ], [ 26, 123 ], [ 26, 123 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 23, 123 ], [ 20, 120 ], [ 20, 118 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 20, 105 ], [ 20, 105 ], [ 20, 105 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 20, 102 ], [ 23, 100 ], [ 26, 100 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 26, 161 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 39, 161 ], [ 39, 161 ], [ 39, 161 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 42, 161 ], [ 44, 163 ], [ 44, 166 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 44, 178 ], [ 44, 178 ], [ 44, 178 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 44, 181 ], [ 42, 183 ], [ 39, 183 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 26, 183 ], [ 26, 183 ], [ 26, 183 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 23, 183 ], [ 20, 181 ], [ 20, 178 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 20, 166 ], [ 20, 166 ], [ 20, 166 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 20, 163 ], [ 23, 161 ], [ 26, 161 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 26, 130 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 39, 130 ], [ 39, 130 ], [ 39, 130 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 42, 130 ], [ 44, 132 ], [ 44, 135 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 44, 148 ], [ 44, 148 ], [ 44, 148 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 44, 151 ], [ 42, 153 ], [ 39, 153 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 26, 153 ], [ 26, 153 ], [ 26, 153 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 23, 153 ], [ 20, 151 ], [ 20, 148 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 20, 135 ], [ 20, 135 ], [ 20, 135 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 20, 132 ], [ 23, 130 ], [ 26, 130 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 46, 11 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 82, 11 ], [ 82, 11 ], [ 82, 11 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 85, 11 ], [ 87, 12 ], [ 87, 15 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 87, 15 ], [ 87, 15 ], [ 87, 15 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 87, 17 ], [ 85, 18 ], [ 82, 18 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 46, 18 ], [ 46, 18 ], [ 46, 18 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 43, 18 ], [ 41, 17 ], [ 41, 15 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 41, 15 ], [ 41, 15 ], [ 41, 15 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 41, 12 ], [ 43, 11 ], [ 46, 11 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 31, 26 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 97, 26 ], [ 97, 26 ], [ 97, 26 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 103, 26 ], [ 108, 31 ], [ 108, 37 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 108, 76 ], [ 108, 76 ], [ 108, 76 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 108, 82 ], [ 103, 88 ], [ 97, 88 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 31, 88 ], [ 31, 88 ], [ 31, 88 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 25, 88 ], [ 20, 82 ], [ 20, 76 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 20, 37 ], [ 20, 37 ], [ 20, 37 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 20, 31 ], [ 25, 26 ], [ 31, 26 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_73"
     elementType: shape
     bounds: [ 102, 388, 29, 25 ]
-    kind: rect
+    kind: custGeom
     fill: "#FFFFFF"
+    path:
+      w: 206
+      h: 175
+      commands:
+        - { cmd: moveTo, pts: [ [ 75, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 75, 0 ], [ 75, 0 ], [ 75, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 77, 0 ], [ 79, 2 ], [ 79, 4 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 79, 9 ], [ 79, 9 ], [ 79, 9 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 87, 9 ], [ 95, 9 ], [ 102, 9 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 103, 9 ], [ 103, 9 ], [ 103, 9 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 104, 9 ], [ 104, 9 ], [ 104, 9 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 111, 9 ], [ 119, 9 ], [ 127, 9 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 127, 4 ], [ 127, 4 ], [ 127, 4 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 127, 2 ], [ 129, 0 ], [ 131, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 131, 0 ], [ 131, 0 ], [ 131, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 133, 0 ], [ 135, 2 ], [ 135, 4 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 135, 9 ], [ 135, 9 ], [ 135, 9 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 160, 10 ], [ 188, 12 ], [ 198, 27 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 203, 34 ], [ 206, 58 ], [ 205, 62 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 204, 69 ], [ 204, 69 ], [ 204, 69 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 202, 78 ], [ 181, 74 ], [ 174, 73 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 167, 71 ], [ 145, 65 ], [ 147, 55 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 148, 49 ], [ 148, 49 ], [ 148, 49 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 149, 45 ], [ 153, 45 ], [ 154, 41 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 155, 39 ], [ 157, 35 ], [ 153, 35 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 135, 35 ], [ 135, 35 ], [ 135, 35 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 135, 40 ], [ 135, 44 ], [ 135, 49 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 135, 55 ], [ 128, 60 ], [ 119, 60 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 118, 60 ], [ 116, 60 ], [ 114, 60 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 111, 60 ], [ 107, 63 ], [ 107, 67 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 107, 70 ], [ 107, 70 ], [ 107, 70 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 107, 70 ], [ 107, 72 ], [ 109, 73 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 131, 75 ], [ 147, 91 ], [ 147, 111 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 147, 118 ], [ 145, 124 ], [ 142, 130 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 133, 124 ], [ 133, 124 ], [ 133, 124 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 131, 122 ], [ 128, 123 ], [ 127, 124 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 127, 124 ], [ 127, 124 ], [ 127, 124 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 126, 126 ], [ 126, 129 ], [ 128, 130 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 137, 136 ], [ 137, 136 ], [ 137, 136 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 129, 145 ], [ 117, 150 ], [ 103, 150 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 79, 150 ], [ 59, 133 ], [ 59, 111 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 59, 92 ], [ 75, 75 ], [ 96, 73 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 98, 72 ], [ 99, 72 ], [ 99, 70 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 99, 67 ], [ 99, 67 ], [ 99, 67 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 99, 63 ], [ 95, 60 ], [ 91, 60 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 84, 60 ], [ 84, 60 ], [ 84, 60 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 80, 60 ], [ 72, 55 ], [ 71, 49 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 71, 49 ], [ 71, 49 ], [ 71, 49 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 71, 35 ], [ 71, 35 ], [ 71, 35 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 53, 35 ], [ 53, 35 ], [ 53, 35 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 49, 35 ], [ 51, 39 ], [ 52, 41 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 53, 45 ], [ 57, 45 ], [ 58, 49 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 59, 55 ], [ 59, 55 ], [ 59, 55 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 61, 65 ], [ 39, 71 ], [ 32, 73 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 25, 74 ], [ 4, 78 ], [ 2, 69 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1, 62 ], [ 1, 62 ], [ 1, 62 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 58 ], [ 3, 34 ], [ 8, 27 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 18, 12 ], [ 46, 10 ], [ 71, 9 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 71, 4 ], [ 71, 4 ], [ 71, 4 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 71, 2 ], [ 73, 0 ], [ 75, 0 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 147, 88 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 147, 88 ], [ 147, 88 ], [ 147, 88 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 160, 91 ], [ 168, 100 ], [ 174, 111 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 182, 125 ], [ 186, 143 ], [ 186, 162 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 186, 162 ], [ 186, 162 ], [ 186, 162 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 186, 168 ], [ 182, 173 ], [ 178, 174 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 178, 174 ], [ 178, 174 ], [ 178, 174 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 178, 174 ], [ 178, 174 ], [ 178, 174 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 177, 175 ], [ 176, 175 ], [ 175, 175 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 175, 175 ], [ 175, 175 ], [ 175, 175 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 175, 175 ], [ 175, 175 ], [ 175, 175 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 31, 175 ], [ 31, 175 ], [ 31, 175 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 31, 175 ], [ 31, 175 ], [ 31, 175 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 31, 175 ], [ 31, 175 ], [ 31, 175 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 30, 175 ], [ 29, 175 ], [ 28, 174 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 28, 174 ], [ 28, 174 ], [ 28, 174 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 28, 174 ], [ 28, 174 ], [ 28, 174 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 24, 173 ], [ 20, 168 ], [ 20, 162 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 20, 162 ], [ 20, 162 ], [ 20, 162 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 20, 143 ], [ 24, 125 ], [ 32, 111 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 38, 100 ], [ 46, 91 ], [ 59, 88 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 59, 88 ], [ 59, 88 ], [ 59, 88 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 59, 88 ], [ 59, 88 ], [ 59, 88 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 59, 88 ], [ 59, 88 ], [ 59, 88 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 54, 95 ], [ 52, 103 ], [ 52, 111 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 52, 136 ], [ 74, 156 ], [ 102, 157 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 102, 157 ], [ 103, 157 ], [ 103, 157 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 103, 157 ], [ 103, 157 ], [ 103, 157 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 103, 157 ], [ 104, 157 ], [ 104, 157 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 132, 156 ], [ 154, 136 ], [ 154, 111 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 154, 103 ], [ 152, 95 ], [ 147, 88 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 147, 88 ], [ 147, 88 ], [ 147, 88 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 147, 88 ], [ 147, 88 ], [ 147, 88 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 88, 51 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 119, 51 ], [ 119, 51 ], [ 119, 51 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 129, 51 ], [ 127, 43 ], [ 127, 35 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 79, 35 ], [ 79, 35 ], [ 79, 35 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 79, 44 ], [ 78, 51 ], [ 88, 51 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 110, 79 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 112, 77 ], [ 116, 77 ], [ 118, 78 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 121, 80 ], [ 121, 83 ], [ 119, 86 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 117, 88 ], [ 113, 88 ], [ 111, 86 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 109, 84 ], [ 108, 81 ], [ 110, 79 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 124, 138 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 124, 141 ], [ 122, 144 ], [ 119, 144 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 115, 144 ], [ 113, 142 ], [ 112, 139 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 112, 136 ], [ 114, 134 ], [ 118, 134 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 121, 134 ], [ 123, 136 ], [ 124, 138 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 109, 144 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 108, 146 ], [ 104, 147 ], [ 101, 147 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 98, 146 ], [ 97, 143 ], [ 98, 140 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 99, 137 ], [ 102, 136 ], [ 105, 137 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 108, 138 ], [ 110, 141 ], [ 109, 144 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 93, 143 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 90, 145 ], [ 87, 145 ], [ 85, 143 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 82, 141 ], [ 82, 137 ], [ 85, 135 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 87, 134 ], [ 90, 134 ], [ 93, 135 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 95, 137 ], [ 95, 141 ], [ 93, 143 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 79, 136 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 76, 137 ], [ 72, 135 ], [ 71, 133 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 70, 130 ], [ 72, 127 ], [ 75, 126 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 78, 125 ], [ 81, 127 ], [ 82, 129 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 83, 132 ], [ 81, 135 ], [ 79, 136 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 69, 124 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 66, 124 ], [ 64, 122 ], [ 64, 119 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 64, 116 ], [ 67, 114 ], [ 70, 114 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 73, 115 ], [ 75, 117 ], [ 75, 120 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 75, 123 ], [ 72, 125 ], [ 69, 124 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 66, 110 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 63, 109 ], [ 62, 106 ], [ 64, 104 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 65, 101 ], [ 69, 100 ], [ 72, 102 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 74, 103 ], [ 75, 106 ], [ 74, 109 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 72, 111 ], [ 69, 112 ], [ 66, 110 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 70, 97 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 68, 94 ], [ 68, 91 ], [ 71, 90 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 74, 88 ], [ 77, 89 ], [ 79, 91 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 81, 93 ], [ 80, 96 ], [ 78, 98 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 75, 100 ], [ 71, 99 ], [ 70, 97 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 80, 86 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 79, 83 ], [ 81, 80 ], [ 84, 80 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 87, 79 ], [ 90, 81 ], [ 91, 84 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 92, 87 ], [ 89, 89 ], [ 86, 90 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 83, 90 ], [ 80, 88 ], [ 80, 86 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 94, 79 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 95, 77 ], [ 98, 75 ], [ 101, 76 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 104, 77 ], [ 106, 79 ], [ 105, 82 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 104, 85 ], [ 101, 86 ], [ 98, 86 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 95, 85 ], [ 93, 82 ], [ 94, 79 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "文本框_1"
     elementType: text

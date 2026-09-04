@@ -1,4 +1,4 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 elements:
   - elementId: "矩形_8"
@@ -95,8 +95,52 @@ elements:
   - elementId: "任意形状_13"
     elementType: shape
     bounds: [ 97, 105, 776, 329 ]
-    kind: rect
+    kind: custGeom
     fill: "#79C9E2"
+    path:
+      w: 9858290
+      h: 4183553
+      commands:
+        - { cmd: moveTo, pts: [ [ 9858290, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 9750135, 270452 ] ] }
+        - { cmd: lnTo, pts: [ [ 9631163, 549355 ] ] }
+        - { cmd: lnTo, pts: [ [ 9544639, 481742 ] ] }
+        - { cmd: lnTo, pts: [ [ 8636133, 1200130 ] ] }
+        - { cmd: lnTo, pts: [ [ 7359898, 1200130 ] ] }
+        - { cmd: lnTo, pts: [ [ 7359898, 1850905 ] ] }
+        - { cmd: lnTo, pts: [ [ 7359898, 2197422 ] ] }
+        - { cmd: lnTo, pts: [ [ 6916461, 2197422 ] ] }
+        - { cmd: lnTo, pts: [ [ 6083664, 2197422 ] ] }
+        - { cmd: lnTo, pts: [ [ 6083664, 2848197 ] ] }
+        - { cmd: lnTo, pts: [ [ 6083664, 3194713 ] ] }
+        - { cmd: lnTo, pts: [ [ 5640226, 3194713 ] ] }
+        - { cmd: lnTo, pts: [ [ 4807429, 3194713 ] ] }
+        - { cmd: lnTo, pts: [ [ 4807429, 3845488 ] ] }
+        - { cmd: lnTo, pts: [ [ 4807429, 4183553 ] ] }
+        - { cmd: lnTo, pts: [ [ 4363991, 4183553 ] ] }
+        - { cmd: lnTo, pts: [ [ 3236710, 4183553 ] ] }
+        - { cmd: lnTo, pts: [ [ 3098572, 4183553 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 4183553 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 3846060 ] ] }
+        - { cmd: lnTo, pts: [ [ 3098572, 3846060 ] ] }
+        - { cmd: lnTo, pts: [ [ 3098572, 3845488 ] ] }
+        - { cmd: lnTo, pts: [ [ 4363991, 3845488 ] ] }
+        - { cmd: lnTo, pts: [ [ 4363991, 3194713 ] ] }
+        - { cmd: lnTo, pts: [ [ 4363991, 2848197 ] ] }
+        - { cmd: lnTo, pts: [ [ 4807429, 2848197 ] ] }
+        - { cmd: lnTo, pts: [ [ 5640226, 2848197 ] ] }
+        - { cmd: lnTo, pts: [ [ 5640226, 2197422 ] ] }
+        - { cmd: lnTo, pts: [ [ 5640226, 1850905 ] ] }
+        - { cmd: lnTo, pts: [ [ 6083664, 1850905 ] ] }
+        - { cmd: lnTo, pts: [ [ 6916461, 1850905 ] ] }
+        - { cmd: lnTo, pts: [ [ 6916461, 1200130 ] ] }
+        - { cmd: lnTo, pts: [ [ 6916461, 853614 ] ] }
+        - { cmd: lnTo, pts: [ [ 7359898, 853614 ] ] }
+        - { cmd: lnTo, pts: [ [ 8452269, 853614 ] ] }
+        - { cmd: lnTo, pts: [ [ 9241803, 245097 ] ] }
+        - { cmd: lnTo, pts: [ [ 9155279, 177484 ] ] }
+        - { cmd: lnTo, pts: [ [ 9512193, 84516 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "文本框_1"
     elementType: text

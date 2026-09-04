@@ -1,4 +1,4 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 background: { "type": "image", "src": "media/image1.jpeg", "fit": "cover" }
 elements:
@@ -63,6 +63,13 @@ elements:
       fontSize: 11
       color: "#000000"
       lineHeight: 1.5
+  - elementId: "矩形_圆角_16_txt"
+    elementType: text
+    bounds: [ 67, 420, 130, 31 ]
+    content:
+      text: "汇报人：第一PPT"
+      fontSize: 13
+      align: center
   - elementId: "矩形_圆角_16"
     elementType: shape
     bounds: [ 67, 420, 130, 31 ]
@@ -98,7 +105,13 @@ expectedOverlaps:
       - 文本框_15
   - pair:
       - 图片_4
+      - 矩形_圆角_16_txt
+  - pair:
+      - 图片_4
       - 矩形_圆角_16
   - pair:
       - 空心弧_7
       - 空心弧_8
+  - pair:
+      - 矩形_圆角_16_txt
+      - 矩形_圆角_16

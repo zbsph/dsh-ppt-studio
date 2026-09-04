@@ -1,7 +1,7 @@
 id: 简约商务
 name: 简约商务
 style: 商务
-scene: 商务演示
+scene: 商务汇报
 desc: 由用户导入的 deck 工程收纳（主题/版式取自原工程；可编辑后复用）
 words: ""
 colors:
@@ -33,7 +33,7 @@ pages:
   - pages/_18_pages_slide_18.yaml
   - pages/_19_pages_slide_19.yaml
   - pages/_20_pages_slide_20.yaml
-cleanup: 已声明 43 个出界元素为模板有意设计；已声明 223 对预期重叠；剩余 79
+cleanup: 已声明 43 个出界元素为模板有意设计；已声明 263 对预期重叠；剩余 79
   条（content×36、out×43——模板固有内容问题，复制工作区后按 verify 修复）
 sourcePptx: template.pptx
 previews: previews

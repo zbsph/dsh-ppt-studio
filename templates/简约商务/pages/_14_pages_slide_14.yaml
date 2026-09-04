@@ -1,4 +1,4 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 elements:
   - elementId: "圆角矩形_3"
@@ -82,8 +82,15 @@ elements:
     elementType: shape
     bounds: [ 189, 267, 64, 64 ]
     kind: ellipse
-    fill: "#FFFFFF"
+    fill: { "color": "#FFFFFF", "alpha": 60 }
     line: { color: "#000000", width: 2 }
+  - elementId: "椭圆_17_txt"
+    elementType: text
+    bounds: [ 195, 273, 52, 52 ]
+    content:
+      text: "1"
+      fontFamily: "Arial"
+      align: center
   - elementId: "椭圆_17"
     elementType: shape
     bounds: [ 195, 273, 52, 52 ]
@@ -94,8 +101,15 @@ elements:
     elementType: shape
     bounds: [ 363, 267, 64, 64 ]
     kind: ellipse
-    fill: "#FFFFFF"
+    fill: { "color": "#FFFFFF", "alpha": 60 }
     line: { color: "#000000", width: 2 }
+  - elementId: "椭圆_19_txt"
+    elementType: text
+    bounds: [ 369, 273, 52, 52 ]
+    content:
+      text: "2"
+      fontFamily: "Arial"
+      align: center
   - elementId: "椭圆_19"
     elementType: shape
     bounds: [ 369, 273, 52, 52 ]
@@ -106,8 +120,15 @@ elements:
     elementType: shape
     bounds: [ 537, 267, 64, 64 ]
     kind: ellipse
-    fill: "#FFFFFF"
+    fill: { "color": "#FFFFFF", "alpha": 60 }
     line: { color: "#000000", width: 2 }
+  - elementId: "椭圆_21_txt"
+    elementType: text
+    bounds: [ 543, 273, 52, 52 ]
+    content:
+      text: "3"
+      fontFamily: "Arial"
+      align: center
   - elementId: "椭圆_21"
     elementType: shape
     bounds: [ 543, 273, 52, 52 ]
@@ -118,8 +139,15 @@ elements:
     elementType: shape
     bounds: [ 711, 267, 64, 64 ]
     kind: ellipse
-    fill: "#FFFFFF"
+    fill: { "color": "#FFFFFF", "alpha": 60 }
     line: { color: "#000000", width: 2 }
+  - elementId: "椭圆_23_txt"
+    elementType: text
+    bounds: [ 716, 273, 52, 52 ]
+    content:
+      text: "4"
+      fontFamily: "Arial"
+      align: center
   - elementId: "椭圆_23"
     elementType: shape
     bounds: [ 716, 273, 52, 52 ]
@@ -221,10 +249,16 @@ expectedOverlaps:
       - 椭圆_16
   - pair:
       - 圆角矩形_3
+      - 椭圆_17_txt
+  - pair:
+      - 圆角矩形_3
       - 椭圆_17
   - pair:
       - 圆角矩形_3
       - 椭圆_18
+  - pair:
+      - 圆角矩形_3
+      - 椭圆_19_txt
   - pair:
       - 圆角矩形_3
       - 椭圆_19
@@ -233,22 +267,52 @@ expectedOverlaps:
       - 椭圆_20
   - pair:
       - 圆角矩形_3
+      - 椭圆_21_txt
+  - pair:
+      - 圆角矩形_3
       - 椭圆_21
   - pair:
       - 圆角矩形_3
       - 椭圆_22
+  - pair:
+      - 圆角矩形_3
+      - 椭圆_23_txt
   - pair:
       - 圆角矩形_3
       - 椭圆_23
   - pair:
       - 椭圆_16
+      - 椭圆_17_txt
+  - pair:
+      - 椭圆_16
       - 椭圆_17
+  - pair:
+      - 椭圆_17_txt
+      - 椭圆_17
+  - pair:
+      - 椭圆_18
+      - 椭圆_19_txt
   - pair:
       - 椭圆_18
       - 椭圆_19
   - pair:
+      - 椭圆_19_txt
+      - 椭圆_19
+  - pair:
+      - 椭圆_20
+      - 椭圆_21_txt
+  - pair:
       - 椭圆_20
       - 椭圆_21
   - pair:
+      - 椭圆_21_txt
+      - 椭圆_21
+  - pair:
       - 椭圆_22
+      - 椭圆_23_txt
+  - pair:
+      - 椭圆_22
+      - 椭圆_23
+  - pair:
+      - 椭圆_23_txt
       - 椭圆_23

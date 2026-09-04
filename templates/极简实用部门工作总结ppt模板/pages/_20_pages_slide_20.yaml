@@ -1,4 +1,4 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 elements:
   - elementId: "Oval_1"
@@ -22,17 +22,59 @@ elements:
   - elementId: "Freeform_90"
     elementType: shape
     bounds: [ 513, 47, 20, 8 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 98
+      h: 40
+      commands:
+        - { cmd: moveTo, pts: [ [ 49, 16 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 26, 16 ], [ 7, 9 ], [ 2, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1, 1 ], [ 0, 3 ], [ 0, 5 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 20 ], [ 0, 20 ], [ 0, 20 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 31 ], [ 22, 40 ], [ 49, 40 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 76, 40 ], [ 98, 31 ], [ 98, 20 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 98, 5 ], [ 98, 5 ], [ 98, 5 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 98, 3 ], [ 97, 1 ], [ 96, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 91, 9 ], [ 72, 16 ], [ 49, 16 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_91"
     elementType: shape
     bounds: [ 513, 54, 20, 9 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 98
+      h: 41
+      commands:
+        - { cmd: moveTo, pts: [ [ 49, 16 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 26, 16 ], [ 7, 9 ], [ 2, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1, 2 ], [ 0, 4 ], [ 0, 5 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 20 ], [ 0, 20 ], [ 0, 20 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 32 ], [ 22, 41 ], [ 49, 41 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 76, 41 ], [ 98, 32 ], [ 98, 20 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 98, 5 ], [ 98, 5 ], [ 98, 5 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 98, 4 ], [ 97, 2 ], [ 96, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 91, 9 ], [ 72, 16 ], [ 49, 16 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_92"
     elementType: shape
     bounds: [ 513, 41, 20, 8 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 98
+      h: 40
+      commands:
+        - { cmd: moveTo, pts: [ [ 96, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 95, 9 ], [ 75, 15 ], [ 49, 15 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 24, 15 ], [ 3, 9 ], [ 2, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1, 2 ], [ 0, 3 ], [ 0, 5 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 20 ], [ 0, 20 ], [ 0, 20 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 31 ], [ 22, 40 ], [ 49, 40 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 76, 40 ], [ 98, 31 ], [ 98, 20 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 98, 5 ], [ 98, 5 ], [ 98, 5 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 98, 3 ], [ 97, 2 ], [ 96, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Oval_93"
     elementType: shape
@@ -42,12 +84,71 @@ elements:
   - elementId: "Freeform_31"
     elementType: shape
     bounds: [ 193, 282, 13, 13 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 64
+      h: 63
+      commands:
+        - { cmd: moveTo, pts: [ [ 58, 34 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 31, 7 ], [ 31, 7 ], [ 31, 7 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 27, 2 ], [ 20, 1 ], [ 15, 3 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 11, 0 ], [ 11, 0 ], [ 11, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 9, 4 ], [ 9, 4 ], [ 9, 4 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4, 5 ], [ 4, 5 ], [ 4, 5 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2, 9 ], [ 2, 9 ], [ 2, 9 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 11 ], [ 0, 11 ], [ 0, 11 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4, 14 ], [ 4, 14 ], [ 4, 14 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3, 20 ], [ 4, 26 ], [ 8, 30 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 35, 57 ], [ 35, 57 ], [ 35, 57 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 41, 63 ], [ 52, 63 ], [ 58, 57 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 64, 50 ], [ 64, 40 ], [ 58, 34 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 53, 52 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 49, 56 ], [ 42, 56 ], [ 38, 51 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 14, 27 ], [ 14, 27 ], [ 14, 27 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 12, 26 ], [ 11, 23 ], [ 10, 21 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 14, 25 ], [ 14, 25 ], [ 14, 25 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 18, 28 ], [ 22, 28 ], [ 26, 25 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 29, 22 ], [ 29, 17 ], [ 26, 14 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 20, 9 ], [ 20, 9 ], [ 20, 9 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 23, 9 ], [ 26, 10 ], [ 29, 12 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 53, 36 ], [ 53, 36 ], [ 53, 36 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 57, 41 ], [ 57, 48 ], [ 53, 52 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_32"
     elementType: shape
     bounds: [ 182, 271, 14, 13 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 65
+      h: 62
+      commands:
+        - { cmd: moveTo, pts: [ [ 50, 60 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 53, 62 ], [ 53, 62 ], [ 53, 62 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 58, 60 ], [ 58, 60 ], [ 58, 60 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 60, 56 ], [ 60, 56 ], [ 60, 56 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 63, 56 ], [ 63, 56 ], [ 63, 56 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 65, 52 ], [ 65, 52 ], [ 65, 52 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 60, 48 ], [ 60, 48 ], [ 60, 48 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 62, 43 ], [ 60, 37 ], [ 56, 33 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 29, 6 ], [ 29, 6 ], [ 29, 6 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 23, 0 ], [ 12, 0 ], [ 6, 6 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 12 ], [ 0, 23 ], [ 6, 29 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 33, 56 ], [ 33, 56 ], [ 33, 56 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 38, 61 ], [ 44, 62 ], [ 50, 60 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 11, 27 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 7, 22 ], [ 7, 15 ], [ 11, 11 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 15, 7 ], [ 22, 7 ], [ 27, 11 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 51, 35 ], [ 51, 35 ], [ 51, 35 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 52, 37 ], [ 53, 39 ], [ 54, 41 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 51, 38 ], [ 46, 38 ], [ 43, 41 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 40, 44 ], [ 40, 49 ], [ 43, 52 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 44, 54 ], [ 44, 54 ], [ 44, 54 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 41, 54 ], [ 38, 53 ], [ 35, 51 ] ] }
+        - { cmd: lnTo, pts: [ [ 11, 27 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Rectangle_33"
     elementType: shape
@@ -72,7 +173,69 @@ elements:
   - elementId: "Freeform_67"
     elementType: shape
     bounds: [ 264, 342, 23, 26 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 111
+      h: 125
+      commands:
+        - { cmd: moveTo, pts: [ [ 66, 87 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 66, 78 ], [ 66, 78 ], [ 66, 78 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 108, 78 ], [ 108, 78 ], [ 108, 78 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 108, 71 ], [ 108, 71 ], [ 108, 71 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 108, 7 ], [ 108, 7 ], [ 108, 7 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 108, 0 ], [ 108, 0 ], [ 108, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 101, 0 ], [ 101, 0 ], [ 101, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 11, 0 ], [ 11, 0 ], [ 11, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4, 0 ], [ 4, 0 ], [ 4, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4, 7 ], [ 4, 7 ], [ 4, 7 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4, 71 ], [ 4, 71 ], [ 4, 71 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4, 78 ], [ 4, 78 ], [ 4, 78 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 45, 78 ], [ 45, 78 ], [ 45, 78 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 45, 87 ], [ 45, 87 ], [ 45, 87 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 87 ], [ 0, 87 ], [ 0, 87 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 120 ], [ 0, 120 ], [ 0, 120 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4, 120 ], [ 4, 120 ], [ 4, 120 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4, 125 ], [ 4, 125 ], [ 4, 125 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 10, 125 ], [ 10, 125 ], [ 10, 125 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 10, 120 ], [ 10, 120 ], [ 10, 120 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 99, 120 ], [ 99, 120 ], [ 99, 120 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 99, 125 ], [ 99, 125 ], [ 99, 125 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 106, 125 ], [ 106, 125 ], [ 106, 125 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 106, 120 ], [ 106, 120 ], [ 106, 120 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 111, 120 ], [ 111, 120 ], [ 111, 120 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 111, 87 ], [ 111, 87 ], [ 111, 87 ] ] }
+        - { cmd: lnTo, pts: [ [ 66, 87 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 18, 113 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 12, 113 ], [ 7, 108 ], [ 7, 102 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 7, 96 ], [ 12, 92 ], [ 18, 92 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 24, 92 ], [ 29, 96 ], [ 29, 102 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 29, 108 ], [ 24, 113 ], [ 18, 113 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 10, 71 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 10, 7 ], [ 10, 7 ], [ 10, 7 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 102, 7 ], [ 102, 7 ], [ 102, 7 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 102, 71 ], [ 102, 71 ], [ 102, 71 ] ] }
+        - { cmd: lnTo, pts: [ [ 10, 71 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 101, 114 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 69, 114 ], [ 69, 114 ], [ 69, 114 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 69, 109 ], [ 69, 109 ], [ 69, 109 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 101, 109 ], [ 101, 109 ], [ 101, 109 ] ] }
+        - { cmd: lnTo, pts: [ [ 101, 114 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 101, 105 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 69, 105 ], [ 69, 105 ], [ 69, 105 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 69, 101 ], [ 69, 101 ], [ 69, 101 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 101, 101 ], [ 101, 101 ], [ 101, 101 ] ] }
+        - { cmd: lnTo, pts: [ [ 101, 105 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 101, 97 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 69, 97 ], [ 69, 97 ], [ 69, 97 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 69, 92 ], [ 69, 92 ], [ 69, 92 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 101, 92 ], [ 101, 92 ], [ 101, 92 ] ] }
+        - { cmd: lnTo, pts: [ [ 101, 97 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Oval_68"
     elementType: shape

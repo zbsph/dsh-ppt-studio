@@ -1,34 +1,59 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 elements:
   - elementId: "矩形_5"
     elementType: shape
-    bounds: [0, 259, 351, 38]
+    bounds: [ 0, 259, 351, 38 ]
     kind: rect
     fill: "#000000"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
   - elementId: "矩形_4"
     elementType: shape
-    bounds: [0, 306, 960, 10]
+    bounds: [ 0, 306, 960, 10 ]
     kind: rect
     fill: "#DF3F4E"
-    line: {color: "#000000"}
+    line: { color: "#000000" }
   - elementId: "文本框_8"
     elementType: text
-    bounds: [373, 165, 565, 141]
+    bounds: [ 373, 165, 565, 141 ]
     content:
       text: "20XX年营销部门工作总结PPT模板"
       fontSize: 66
       color: "#000000"
       bold: true
       fontFamily: "Arial"
+  - elementId: "矩形_圆角_12_txt"
+    elementType: text
+    bounds: [ 380, 327, 89, 32 ]
+    content:
+      text: "公司名称"
+      fontSize: 16
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
   - elementId: "矩形_圆角_12"
     elementType: shape
-    bounds: [380, 327, 89, 32]
+    bounds: [ 380, 327, 89, 32 ]
     kind: roundRect
-    line: {color: "#000000", width: 1}
+    line: { color: "#000000", width: 1 }
+  - elementId: "矩形_圆角_13_txt"
+    elementType: text
+    bounds: [ 493, 328, 89, 32 ]
+    content:
+      text: "营销部"
+      fontSize: 16
+      color: "#000000"
+      fontFamily: "Arial"
+      align: center
   - elementId: "矩形_圆角_13"
     elementType: shape
-    bounds: [493, 328, 89, 32]
+    bounds: [ 493, 328, 89, 32 ]
     kind: roundRect
-    line: {color: "#000000", width: 1}
+    line: { color: "#000000", width: 1 }
+expectedOverlaps:
+  - pair:
+      - 矩形_圆角_12_txt
+      - 矩形_圆角_12
+  - pair:
+      - 矩形_圆角_13_txt
+      - 矩形_圆角_13

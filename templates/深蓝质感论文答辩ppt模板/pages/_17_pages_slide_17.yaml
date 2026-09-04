@@ -1,4 +1,4 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 elements:
   - elementId: "图片_4"
@@ -35,6 +35,14 @@ elements:
     bounds: [ 0, 0, 200, 50 ]
     content:
       text: "17"
+  - elementId: "矩形_圆角_6_txt"
+    elementType: text
+    bounds: [ 145, 110, 97, 34 ]
+    content:
+      text: "论文总结"
+      fontSize: 16
+      bold: true
+      align: center
   - elementId: "矩形_圆角_6"
     elementType: shape
     bounds: [ 145, 110, 97, 34 ]
@@ -51,6 +59,14 @@ elements:
       color: "#000000"
       align: right
       lineHeight: 1.5
+  - elementId: "矩形_圆角_89_txt"
+    elementType: text
+    bounds: [ 148, 237, 97, 34 ]
+    content:
+      text: "论文总结"
+      fontSize: 16
+      bold: true
+      align: center
   - elementId: "矩形_圆角_89"
     elementType: shape
     bounds: [ 148, 237, 97, 34 ]
@@ -67,6 +83,14 @@ elements:
       color: "#000000"
       align: right
       lineHeight: 1.5
+  - elementId: "矩形_圆角_93_txt"
+    elementType: text
+    bounds: [ 492, 112, 97, 34 ]
+    content:
+      text: "论文总结"
+      fontSize: 16
+      bold: true
+      align: center
   - elementId: "矩形_圆角_93"
     elementType: shape
     bounds: [ 492, 112, 97, 34 ]
@@ -82,6 +106,14 @@ elements:
       fontSize: 10.5
       color: "#000000"
       lineHeight: 1.5
+  - elementId: "矩形_圆角_95_txt"
+    elementType: text
+    bounds: [ 495, 239, 97, 34 ]
+    content:
+      text: "论文总结"
+      fontSize: 16
+      bold: true
+      align: center
   - elementId: "矩形_圆角_95"
     elementType: shape
     bounds: [ 495, 239, 97, 34 ]
@@ -106,3 +138,15 @@ expectedOverlaps:
   - pair:
       - 图片_4
       - 图片_2
+  - pair:
+      - 矩形_圆角_6_txt
+      - 矩形_圆角_6
+  - pair:
+      - 矩形_圆角_89_txt
+      - 矩形_圆角_89
+  - pair:
+      - 矩形_圆角_93_txt
+      - 矩形_圆角_93
+  - pair:
+      - 矩形_圆角_95_txt
+      - 矩形_圆角_95

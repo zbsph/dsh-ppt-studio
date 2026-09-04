@@ -1,4 +1,4 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 elements:
   - elementId: "圆角矩形_43"
@@ -61,8 +61,32 @@ elements:
   - elementId: "Freeform_5"
     elementType: shape
     bounds: [ 39, 54, 109, 98 ]
-    kind: rect
+    kind: custGeom
     fill: "#000000"
+    path:
+      w: 2740
+      h: 2446
+      commands:
+        - { cmd: moveTo, pts: [ [ 2151, 2315 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2128, 2353 ], [ 2096, 2386 ], [ 2055, 2410 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2012, 2435 ], [ 1965, 2446 ], [ 1918, 2445 ] ] }
+        - { cmd: lnTo, pts: [ [ 816, 2445 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 772, 2445 ], [ 726, 2434 ], [ 685, 2410 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 644, 2386 ], [ 611, 2353 ], [ 589, 2314 ] ] }
+        - { cmd: lnTo, pts: [ [ 36, 1356 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 13, 1317 ], [ 0, 1272 ], [ 0, 1223 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 1174 ], [ 13, 1129 ], [ 36, 1089 ] ] }
+        - { cmd: lnTo, pts: [ [ 587, 135 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 610, 96 ], [ 643, 61 ], [ 685, 37 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 724, 14 ], [ 767, 2 ], [ 810, 1 ] ] }
+        - { cmd: lnTo, pts: [ [ 1916, 1 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1963, 0 ], [ 2011, 11 ], [ 2055, 37 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2096, 60 ], [ 2129, 93 ], [ 2151, 132 ] ] }
+        - { cmd: lnTo, pts: [ [ 2702, 1086 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2726, 1126 ], [ 2740, 1173 ], [ 2740, 1223 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2740, 1274 ], [ 2726, 1321 ], [ 2701, 1361 ] ] }
+        - { cmd: lnTo, pts: [ [ 2151, 2315 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "TextBox_156"
     elementType: text
@@ -77,8 +101,32 @@ elements:
   - elementId: "Freeform_5-2"
     elementType: shape
     bounds: [ 640, 323, 64, 58 ]
-    kind: rect
+    kind: custGeom
     fill: "#000000"
+    path:
+      w: 2740
+      h: 2446
+      commands:
+        - { cmd: moveTo, pts: [ [ 2151, 2315 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2128, 2353 ], [ 2096, 2386 ], [ 2055, 2410 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2012, 2435 ], [ 1965, 2446 ], [ 1918, 2445 ] ] }
+        - { cmd: lnTo, pts: [ [ 816, 2445 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 772, 2445 ], [ 726, 2434 ], [ 685, 2410 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 644, 2386 ], [ 611, 2353 ], [ 589, 2314 ] ] }
+        - { cmd: lnTo, pts: [ [ 36, 1356 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 13, 1317 ], [ 0, 1272 ], [ 0, 1223 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 1174 ], [ 13, 1129 ], [ 36, 1089 ] ] }
+        - { cmd: lnTo, pts: [ [ 587, 135 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 610, 96 ], [ 643, 61 ], [ 685, 37 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 724, 14 ], [ 767, 2 ], [ 810, 1 ] ] }
+        - { cmd: lnTo, pts: [ [ 1916, 1 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1963, 0 ], [ 2011, 11 ], [ 2055, 37 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2096, 60 ], [ 2129, 93 ], [ 2151, 132 ] ] }
+        - { cmd: lnTo, pts: [ [ 2702, 1086 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2726, 1126 ], [ 2740, 1173 ], [ 2740, 1223 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2740, 1274 ], [ 2726, 1321 ], [ 2701, 1361 ] ] }
+        - { cmd: lnTo, pts: [ [ 2151, 2315 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "文本框_5"
     elementType: text

@@ -1,4 +1,4 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 background: { "type": "image", "src": "media/image12.jpg", "fit": "cover" }
 elements:
@@ -6,30 +6,144 @@ elements:
     elementType: shape
     bounds: [ 0, 0, 721, 405 ]
     kind: rect
-    fill: "#FFFFFF"
+    fill: { "color": "#FFFFFF", "alpha": 70 }
     line: { color: "#000000" }
   - elementId: "任意多边形_4"
     elementType: shape
     bounds: [ 108, 96, 148, 311 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 2502182
+      h: 5257800
+      commands:
+        - { cmd: moveTo, pts: [ [ 1754987, 5257800 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 1937867, 5146040 ], [ 2292620, 4897967 ], [ 2395067, 4617720 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 2497514, 4337473 ], [ 2583874, 3833707 ], [ 2369667, 3576320 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 2155460, 3318933 ], [ 1495907, 3225800 ], [ 1109827, 3073400 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 723747, 2921000 ], [ 154787, 2712720 ], [ 53187, 2550160 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ -48413, 2387600 ], [ 21014, 2251287 ], [ 53187, 2153920 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 85360, 2056553 ], [ 236067, 2072640 ], [ 246227, 1965960 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 256387, 1859280 ], [ 92980, 1821180 ], [ 98907, 1681480 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 104834, 1541780 ], [ 205587, 1264920 ], [ 281787, 1127760 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 357987, 990600 ], [ 442654, 919480 ], [ 556107, 858520 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 669560, 797560 ], [ 878687, 811107 ], [ 962507, 762000 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 1046327, 712893 ], [ 1070034, 651933 ], [ 1059027, 563880 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 1048020, 475827 ], [ 868527, 327660 ], [ 896467, 233680 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 924407, 139700 ], [ 1099667, 5080 ], [ 1226667, 0 ] ]
+          }
     line: { color: "#000000", width: 2 }
   - elementId: "flag-pole-with-black-flag_38306"
     elementType: shape
     bounds: [ 250, 278, 36, 43 ]
-    kind: rect
+    kind: custGeom
     fill: "#000000"
+    path:
+      w: 401
+      h: 478
+      commands:
+        - { cmd: moveTo, pts: [ [ 401, 89 ] ] }
+        - { cmd: lnTo, pts: [ [ 401, 293 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 292, 212 ], [ 182, 375 ], [ 73, 293 ] ] }
+        - { cmd: lnTo, pts: [ [ 73, 89 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 182, 171 ], [ 292, 7 ], [ 401, 89 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 39, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 18, 0 ], [ 0, 17 ], [ 0, 39 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 54 ], [ 9, 68 ], [ 23, 74 ] ] }
+        - { cmd: lnTo, pts: [ [ 23, 478 ] ] }
+        - { cmd: lnTo, pts: [ [ 56, 478 ] ] }
+        - { cmd: lnTo, pts: [ [ 56, 74 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 69, 68 ], [ 78, 54 ], [ 78, 39 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 78, 17 ], [ 61, 0 ], [ 39, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "flag-pole-with-black-flag_38306-2"
     elementType: shape
     bounds: [ 116, 175, 36, 43 ]
-    kind: rect
+    kind: custGeom
     fill: "#000000"
+    path:
+      w: 401
+      h: 478
+      commands:
+        - { cmd: moveTo, pts: [ [ 401, 89 ] ] }
+        - { cmd: lnTo, pts: [ [ 401, 293 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 292, 212 ], [ 182, 375 ], [ 73, 293 ] ] }
+        - { cmd: lnTo, pts: [ [ 73, 89 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 182, 171 ], [ 292, 7 ], [ 401, 89 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 39, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 18, 0 ], [ 0, 17 ], [ 0, 39 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 54 ], [ 9, 68 ], [ 23, 74 ] ] }
+        - { cmd: lnTo, pts: [ [ 23, 478 ] ] }
+        - { cmd: lnTo, pts: [ [ 56, 478 ] ] }
+        - { cmd: lnTo, pts: [ [ 56, 74 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 69, 68 ], [ 78, 54 ], [ 78, 39 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 78, 17 ], [ 61, 0 ], [ 39, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "flag-pole-with-black-flag_38306-3"
     elementType: shape
     bounds: [ 176, 55, 36, 43 ]
-    kind: rect
+    kind: custGeom
     fill: "#000000"
+    path:
+      w: 401
+      h: 478
+      commands:
+        - { cmd: moveTo, pts: [ [ 401, 89 ] ] }
+        - { cmd: lnTo, pts: [ [ 401, 293 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 292, 212 ], [ 182, 375 ], [ 73, 293 ] ] }
+        - { cmd: lnTo, pts: [ [ 73, 89 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 182, 171 ], [ 292, 7 ], [ 401, 89 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 39, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 18, 0 ], [ 0, 17 ], [ 0, 39 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 54 ], [ 9, 68 ], [ 23, 74 ] ] }
+        - { cmd: lnTo, pts: [ [ 23, 478 ] ] }
+        - { cmd: lnTo, pts: [ [ 56, 478 ] ] }
+        - { cmd: lnTo, pts: [ [ 56, 74 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 69, 68 ], [ 78, 54 ], [ 78, 39 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 78, 17 ], [ 61, 0 ], [ 39, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "矩形_13"
     elementType: shape
@@ -40,8 +154,18 @@ elements:
   - elementId: "任意多边形_12"
     elementType: shape
     bounds: [ 268, 87, 137, 31 ]
-    kind: rect
+    kind: custGeom
     fill: "#000000"
+    path:
+      w: 2326640
+      h: 518160
+      commands:
+        - { cmd: moveTo, pts: [ [ 0, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 1808480, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 2326640, 518160 ] ] }
+        - { cmd: lnTo, pts: [ [ 1808480, 518160 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 518160 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "文本框_14"
     elementType: text
@@ -73,8 +197,18 @@ elements:
   - elementId: "任意多边形_30"
     elementType: shape
     bounds: [ 195, 177, 137, 31 ]
-    kind: rect
+    kind: custGeom
     fill: "#000000"
+    path:
+      w: 2326640
+      h: 518160
+      commands:
+        - { cmd: moveTo, pts: [ [ 0, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 1808480, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 2326640, 518160 ] ] }
+        - { cmd: lnTo, pts: [ [ 1808480, 518160 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 518160 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "文本框_31"
     elementType: text
@@ -106,8 +240,18 @@ elements:
   - elementId: "任意多边形_38"
     elementType: shape
     bounds: [ 312, 282, 137, 31 ]
-    kind: rect
+    kind: custGeom
     fill: "#000000"
+    path:
+      w: 2326640
+      h: 518160
+      commands:
+        - { cmd: moveTo, pts: [ [ 0, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 1808480, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 2326640, 518160 ] ] }
+        - { cmd: lnTo, pts: [ [ 1808480, 518160 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 518160 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "文本框_39"
     elementType: text

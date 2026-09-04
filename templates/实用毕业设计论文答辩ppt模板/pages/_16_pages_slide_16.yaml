@@ -1,4 +1,4 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 elements:
   - elementId: "图片_1"
@@ -40,10 +40,46 @@ elements:
   - elementId: "KSO_Shape"
     elementType: shape
     bounds: [ 437, 212, 86, 52 ]
-    kind: rect
+    kind: custGeom
     fill: "#4B649F"
+    path:
+      w: 3931
+      h: 2392
+      commands:
+        - { cmd: moveTo, pts: [ [ 3046, 1287 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3046, 1287 ], [ 2618, 850 ], [ 2027, 850 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1450, 850 ], [ 880, 1287 ], [ 880, 1287 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 560, 1154 ], [ 560, 1154 ], [ 560, 1154 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 560, 1546 ], [ 560, 1546 ], [ 560, 1546 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 610, 1563 ], [ 647, 1610 ], [ 647, 1666 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 647, 1723 ], [ 609, 1769 ], [ 558, 1786 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 653, 2208 ], [ 653, 2208 ], [ 653, 2208 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 373, 2208 ], [ 373, 2208 ], [ 373, 2208 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 469, 1784 ], [ 469, 1784 ], [ 469, 1784 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 423, 1764 ], [ 391, 1719 ], [ 391, 1666 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 391, 1614 ], [ 422, 1570 ], [ 466, 1549 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 466, 1115 ], [ 466, 1115 ], [ 466, 1115 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 920 ], [ 0, 920 ], [ 0, 920 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2050, 0 ], [ 2050, 0 ], [ 2050, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3931, 932 ], [ 3931, 932 ], [ 3931, 932 ] ] }
+        - { cmd: lnTo, pts: [ [ 3046, 1287 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2004, 1072 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2598, 1072 ], [ 2929, 1386 ], [ 2929, 1386 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2929, 2147 ], [ 2929, 2147 ], [ 2929, 2147 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2929, 2147 ], [ 2586, 2392 ], [ 1957, 2392 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1328, 2392 ], [ 1099, 2147 ], [ 1099, 2147 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1099, 1386 ], [ 1099, 1386 ], [ 1099, 1386 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1099, 1386 ], [ 1410, 1072 ], [ 2004, 1072 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 1992, 2252 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2404, 2252 ], [ 2738, 2168 ], [ 2738, 2066 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2738, 1963 ], [ 2404, 1879 ], [ 1992, 1879 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1581, 1879 ], [ 1247, 1963 ], [ 1247, 2066 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1247, 2168 ], [ 1581, 2252 ], [ 1992, 2252 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
-  - elementId: "任意多边形_9"
+  - elementId: "任意多边形_9_txt"
     elementType: text
     bounds: [ 92, 259, 223, 74 ]
     content:
@@ -53,6 +89,21 @@ elements:
       bold: true
       align: center
       lineHeight: 0.9
+  - elementId: "任意多边形_9"
+    elementType: shape
+    bounds: [ 92, 259, 223, 74 ]
+    kind: custGeom
+    path:
+      w: 2837889
+      h: 935213
+      commands:
+        - { cmd: moveTo, pts: [ [ 0, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 2837889, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 2837889, 935213 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 935213 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 0 ] ] }
+        - { cmd: close }
+    line: { color: "#000000" }
   - elementId: "椭圆_10"
     elementType: shape
     bounds: [ 92, 237, 18, 18 ]
@@ -164,10 +215,10 @@ elements:
   - elementId: "燕尾形_28"
     elementType: shape
     bounds: [ 324, 217, 82, 157 ]
-    kind: rect
+    kind: chevron
     fill: "#4B649F"
     line: { color: "#000000" }
-  - elementId: "任意多边形_29"
+  - elementId: "任意多边形_29_txt"
     elementType: text
     bounds: [ 406, 217, 224, 157 ]
     content:
@@ -177,13 +228,28 @@ elements:
       bold: true
       align: center
       lineHeight: 0.9
+  - elementId: "任意多边形_29"
+    elementType: shape
+    bounds: [ 406, 217, 224, 157 ]
+    kind: custGeom
+    path:
+      w: 2841299
+      h: 1988909
+      commands:
+        - { cmd: moveTo, pts: [ [ 0, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 2841299, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 2841299, 1988909 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 1988909 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 0 ] ] }
+        - { cmd: close }
+    line: { color: "#000000" }
   - elementId: "燕尾形_30"
     elementType: shape
     bounds: [ 630, 217, 82, 157 ]
-    kind: rect
+    kind: chevron
     fill: "#4B649F"
     line: { color: "#000000" }
-  - elementId: "任意多边形_31"
+  - elementId: "任意多边形_31_txt"
     elementType: text
     bounds: [ 721, 204, 190, 190 ]
     content:
@@ -193,6 +259,31 @@ elements:
       bold: true
       align: center
       lineHeight: 0.9
+  - elementId: "任意多边形_31"
+    elementType: shape
+    bounds: [ 721, 204, 190, 190 ]
+    kind: custGeom
+    fill: "#4B649F"
+    path:
+      w: 2415104
+      h: 2415104
+      commands:
+        - { cmd: moveTo, pts: [ [ 0, 1207552 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 540639 ], [ 540639, 0 ], [ 1207552, 0 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 1874465, 0 ], [ 2415104, 540639 ], [ 2415104, 1207552 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 2415104, 1874465 ], [ 1874465, 2415104 ], [ 1207552, 2415104 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 540639, 2415104 ], [ 0, 1874465 ], [ 0, 1207552 ] ]
+          }
+        - { cmd: close }
+    line: { color: "#000000" }
 expectedOverlaps:
   - pair:
       - 椭圆_6
@@ -202,16 +293,37 @@ expectedOverlaps:
       - KSO_Shape
   - pair:
       - 椭圆_6
+      - 任意多边形_29_txt
+  - pair:
+      - 椭圆_6
       - 任意多边形_29
   - pair:
       - 椭圆_7
       - KSO_Shape
   - pair:
       - 椭圆_7
+      - 任意多边形_29_txt
+  - pair:
+      - 椭圆_7
       - 任意多边形_29
   - pair:
       - KSO_Shape
+      - 任意多边形_29_txt
+  - pair:
+      - KSO_Shape
       - 任意多边形_29
+  - pair:
+      - 任意多边形_9_txt
+      - 任意多边形_9
+  - pair:
+      - 任意多边形_9_txt
+      - 椭圆_18
+  - pair:
+      - 任意多边形_9_txt
+      - 椭圆_20
+  - pair:
+      - 任意多边形_9_txt
+      - 椭圆_21
   - pair:
       - 任意多边形_9
       - 椭圆_18
@@ -221,3 +333,9 @@ expectedOverlaps:
   - pair:
       - 任意多边形_9
       - 椭圆_21
+  - pair:
+      - 任意多边形_29_txt
+      - 任意多边形_29
+  - pair:
+      - 任意多边形_31_txt
+      - 任意多边形_31

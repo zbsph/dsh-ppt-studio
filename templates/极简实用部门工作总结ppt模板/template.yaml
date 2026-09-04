@@ -1,7 +1,7 @@
 id: 极简实用部门工作总结ppt模板
 name: 极简实用部门工作总结PPT模板
 style: 工作总结
-scene: 部门汇报/年终总结
+scene: 部门工作总结
 desc: 由用户导入的 deck 工程收纳（主题/版式取自原工程；可编辑后复用）
 words: ""
 colors:
@@ -35,8 +35,8 @@ pages:
   - pages/_20_pages_slide_20.yaml
   - pages/_21_pages_slide_21.yaml
   - pages/_22_pages_slide_22.yaml
-cleanup: 已声明 7 个出界元素为模板有意设计；已声明 264 对预期重叠；剩余 60
-  条（text×6、out×7、content×47——模板固有内容问题，复制工作区后按 verify 修复）
+cleanup: 已声明 7 个出界元素为模板有意设计；已声明 271 对预期重叠；剩余 61
+  条（text×6、out×7、content×48——模板固有内容问题，复制工作区后按 verify 修复）
 sourcePptx: template.pptx
 previews: previews
 styleAudit:

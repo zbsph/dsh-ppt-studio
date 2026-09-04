@@ -1,4 +1,4 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 elements:
   - elementId: "矩形_1"
@@ -9,14 +9,60 @@ elements:
   - elementId: "任意多边形_5"
     elementType: shape
     bounds: [ 0, -1, 361, 406 ]
-    kind: rect
+    kind: custGeom
     fill: "#000000"
+    path:
+      w: 6119446
+      h: 6881149
+      commands:
+        - { cmd: moveTo, pts: [ [ 0, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 5473182, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 5522799, 125839 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 5908791, 1180033 ], [ 6119446, 2318747 ], [ 6119446, 3506661 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 6119446, 4524874 ], [ 5964679, 5506939 ], [ 5677386, 6430615 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 5524942, 6881149 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 6881149 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "任意多边形_9"
     elementType: shape
     bounds: [ 323, -2, 69, 406 ]
-    kind: rect
+    kind: custGeom
     fill: "#000000"
+    path:
+      w: 1173802
+      h: 6881149
+      commands:
+        - { cmd: moveTo, pts: [ [ 0, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 553595, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 577155, 59753 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 963147, 1113947 ], [ 1173802, 2252660 ], [ 1173802, 3440575 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 1173802, 4628490 ], [ 963147, 5767203 ], [ 577155, 6821398 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 553596, 6881149 ] ] }
+        - { cmd: lnTo, pts: [ [ 51760, 6881149 ] ] }
+        - { cmd: lnTo, pts: [ [ 204204, 6430615 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 491497, 5506939 ], [ 646264, 4524874 ], [ 646264, 3506661 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 646264, 2318747 ], [ 435609, 1180033 ], [ 49617, 125839 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 0, 0 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "文本框_10"
     elementType: text

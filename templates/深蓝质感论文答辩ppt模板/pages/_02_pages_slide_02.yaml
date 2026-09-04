@@ -1,4 +1,4 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 elements:
   - elementId: "直角三角形_18"
@@ -20,7 +20,7 @@ elements:
     elementType: shape
     bounds: [ 12, 47, 696, 311 ]
     kind: rect
-    fill: "#FFFFFF"
+    fill: { "color": "#FFFFFF", "alpha": 80 }
     line: { color: "#000000" }
   - elementId: "文本框_6"
     elementType: text
@@ -39,6 +39,12 @@ elements:
       fontSize: 10.5
       color: "#000000"
       fontFamily: "Calibri Light"
+      align: center
+  - elementId: "椭圆_82_txt"
+    elementType: text
+    bounds: [ 41, 157, 30, 30 ]
+    content:
+      text: "1"
       align: center
   - elementId: "椭圆_82"
     elementType: shape
@@ -63,6 +69,12 @@ elements:
       fontSize: 10.5
       color: "#000000"
       fontFamily: "Calibri Light"
+  - elementId: "椭圆_86_txt"
+    elementType: text
+    bounds: [ 390, 157, 30, 30 ]
+    content:
+      text: "2"
+      align: center
   - elementId: "椭圆_86"
     elementType: shape
     bounds: [ 390, 157, 30, 30 ]
@@ -86,6 +98,12 @@ elements:
       fontSize: 10.5
       color: "#000000"
       fontFamily: "Calibri Light"
+  - elementId: "椭圆_90_txt"
+    elementType: text
+    bounds: [ 41, 255, 30, 30 ]
+    content:
+      text: "3"
+      align: center
   - elementId: "椭圆_90"
     elementType: shape
     bounds: [ 41, 255, 30, 30 ]
@@ -109,6 +127,12 @@ elements:
       fontSize: 10.5
       color: "#000000"
       fontFamily: "Calibri Light"
+  - elementId: "椭圆_94_txt"
+    elementType: text
+    bounds: [ 390, 255, 30, 30 ]
+    content:
+      text: "4"
+      align: center
   - elementId: "椭圆_94"
     elementType: shape
     bounds: [ 390, 255, 30, 30 ]
@@ -165,6 +189,9 @@ expectedOverlaps:
       - 矩形_81
   - pair:
       - 直角三角形_19
+      - 椭圆_82_txt
+  - pair:
+      - 直角三角形_19
       - 椭圆_82
   - pair:
       - 图片_21
@@ -177,6 +204,9 @@ expectedOverlaps:
       - 矩形_81
   - pair:
       - 图片_21
+      - 椭圆_82_txt
+  - pair:
+      - 图片_21
       - 椭圆_82
   - pair:
       - 图片_21
@@ -184,6 +214,9 @@ expectedOverlaps:
   - pair:
       - 图片_21
       - 矩形_85
+  - pair:
+      - 图片_21
+      - 椭圆_86_txt
   - pair:
       - 图片_21
       - 椭圆_86
@@ -195,6 +228,9 @@ expectedOverlaps:
       - 矩形_89
   - pair:
       - 图片_21
+      - 椭圆_90_txt
+  - pair:
+      - 图片_21
       - 椭圆_90
   - pair:
       - 图片_21
@@ -202,6 +238,9 @@ expectedOverlaps:
   - pair:
       - 图片_21
       - 矩形_93
+  - pair:
+      - 图片_21
+      - 椭圆_94_txt
   - pair:
       - 图片_21
       - 椭圆_94
@@ -219,6 +258,9 @@ expectedOverlaps:
       - 矩形_81
   - pair:
       - 矩形_22
+      - 椭圆_82_txt
+  - pair:
+      - 矩形_22
       - 椭圆_82
   - pair:
       - 矩形_22
@@ -226,6 +268,9 @@ expectedOverlaps:
   - pair:
       - 矩形_22
       - 矩形_85
+  - pair:
+      - 矩形_22
+      - 椭圆_86_txt
   - pair:
       - 矩形_22
       - 椭圆_86
@@ -237,6 +282,9 @@ expectedOverlaps:
       - 矩形_89
   - pair:
       - 矩形_22
+      - 椭圆_90_txt
+  - pair:
+      - 矩形_22
       - 椭圆_90
   - pair:
       - 矩形_22
@@ -246,6 +294,9 @@ expectedOverlaps:
       - 矩形_93
   - pair:
       - 矩形_22
+      - 椭圆_94_txt
+  - pair:
+      - 矩形_22
       - 椭圆_94
   - pair:
       - 矩形_22
@@ -253,3 +304,15 @@ expectedOverlaps:
   - pair:
       - 矩形_22
       - 文本框_155
+  - pair:
+      - 椭圆_82_txt
+      - 椭圆_82
+  - pair:
+      - 椭圆_86_txt
+      - 椭圆_86
+  - pair:
+      - 椭圆_90_txt
+      - 椭圆_90
+  - pair:
+      - 椭圆_94_txt
+      - 椭圆_94

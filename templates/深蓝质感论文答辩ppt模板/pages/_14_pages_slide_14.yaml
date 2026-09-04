@@ -1,4 +1,4 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 elements:
   - elementId: "矩形_圆角_1"
@@ -104,8 +104,92 @@ elements:
   - elementId: "AutoShape_112"
     elementType: shape
     bounds: [ 426, 139, 41, 41 ]
-    kind: rect
+    kind: custGeom
     fill: "#FFFFFF"
+    path:
+      w: 21020
+      h: 21600
+      commands:
+        - { cmd: moveTo, pts: [ [ 18846, 7946 ] ] }
+        - { cmd: lnTo, pts: [ [ 17740, 9091 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 17740, 8939 ], [ 17758, 8792 ], [ 17744, 8636 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 17629, 7331 ], [ 17036, 6068 ], [ 16074, 5080 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 15004, 3980 ], [ 13585, 3348 ], [ 12180, 3345 ] ] }
+        - { cmd: lnTo, pts: [ [ 13268, 2218 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 13812, 1659 ], [ 14572, 1350 ], [ 15403, 1350 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 16460, 1350 ], [ 17546, 1840 ], [ 18381, 2696 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 19165, 3500 ], [ 19631, 4499 ], [ 19698, 5510 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 19760, 6453 ], [ 19457, 7317 ], [ 18846, 7946 ] ] }
+        - { cmd: moveTo, pts: [ [ 5828, 19329 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 5813, 18424 ], [ 5454, 17481 ], [ 4730, 16739 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4046, 16034 ], [ 3150, 15628 ], [ 2257, 15592 ] ] }
+        - { cmd: lnTo, pts: [ [ 2911, 13157 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2959, 12995 ], [ 3052, 12835 ], [ 3168, 12695 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4485, 11726 ], [ 6512, 12012 ], [ 7920, 13460 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 9409, 14990 ], [ 9639, 17230 ], [ 8492, 18568 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 8416, 18609 ], [ 8339, 18648 ], [ 8256, 18675 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 8256, 18675 ], [ 5828, 19329 ], [ 5828, 19329 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2737, 20164 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2665, 20181 ], [ 2443, 20239 ], [ 2291, 20249 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1751, 20244 ], [ 1313, 19792 ], [ 1313, 19237 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1321, 19124 ], [ 1365, 18929 ], [ 1380, 18857 ] ] }
+        - { cmd: lnTo, pts: [ [ 2071, 16283 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2822, 16261 ], [ 3630, 16562 ], [ 4265, 17215 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4911, 17878 ], [ 5214, 18725 ], [ 5181, 19504 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 5181, 19504 ], [ 2737, 20164 ], [ 2737, 20164 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 6888, 11179 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 6280, 10927 ], [ 5642, 10783 ], [ 5004, 10774 ] ] }
+        - { cmd: lnTo, pts: [ [ 10063, 5536 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 10838, 4759 ], [ 11966, 4536 ], [ 13077, 4819 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 13077, 4819 ], [ 6888, 11179 ], [ 6888, 11179 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 9717, 13672 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 9473, 13258 ], [ 9194, 12859 ], [ 8848, 12505 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 8447, 12093 ], [ 7986, 11770 ], [ 7507, 11498 ] ] }
+        - { cmd: lnTo, pts: [ [ 13767, 5064 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 14259, 5288 ], [ 14729, 5607 ], [ 15145, 6035 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 15500, 6398 ], [ 15775, 6806 ], [ 15987, 7229 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 15987, 7229 ], [ 9717, 13672 ], [ 9717, 13672 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 10519, 16061 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 10465, 15452 ], [ 10298, 14854 ], [ 10047, 14288 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 16257, 7906 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 16637, 9140 ], [ 16442, 10429 ], [ 15610, 11284 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 15604, 11290 ], [ 15598, 11293 ], [ 15593, 11298 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 15602, 11306 ] ] }
+        - { cmd: lnTo, pts: [ [ 10525, 16565 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 10527, 16397 ], [ 10534, 16232 ], [ 10519, 16061 ] ]
+          }
+        - { cmd: moveTo, pts: [ [ 19308, 1741 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 18228, 632 ], [ 16805, 0 ], [ 15403, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 14220, 0 ], [ 13131, 450 ], [ 12335, 1266 ] ] }
+        - { cmd: lnTo, pts: [ [ 9138, 4577 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 9129, 4585 ], [ 9118, 4592 ], [ 9108, 4602 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 9103, 4608 ], [ 9100, 4614 ], [ 9095, 4620 ] ] }
+        - { cmd: lnTo, pts: [ [ 9096, 4621 ] ] }
+        - { cmd: lnTo, pts: [ [ 2310, 11647 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1998, 11966 ], [ 1771, 12364 ], [ 1645, 12797 ] ] }
+        - { cmd: lnTo, pts: [ [ 102, 18541 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 100, 18557 ], [ 0, 19008 ], [ 0, 19237 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 20541 ], [ 1030, 21599 ], [ 2302, 21599 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2554, 21599 ], [ 3044, 21475 ], [ 3062, 21473 ] ] }
+        - { cmd: lnTo, pts: [ [ 8630, 19969 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 9054, 19839 ], [ 9439, 19604 ], [ 9750, 19283 ] ] }
+        - { cmd: lnTo, pts: [ [ 19776, 8899 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 21600, 7023 ], [ 21394, 3881 ], [ 19308, 1741 ] ] }
     line: { color: "#000000" }
   - elementId: "椭圆_48"
     elementType: shape
@@ -116,12 +200,89 @@ elements:
   - elementId: "AutoShape_113"
     elementType: shape
     bounds: [ 199, 225, 19, 28 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 21600
+      h: 21600
+      commands:
+        - { cmd: moveTo, pts: [ [ 15386, 14175 ] ] }
+        - { cmd: lnTo, pts: [ [ 6223, 14175 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 5734, 13446 ], [ 5147, 12716 ], [ 4568, 12003 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3287, 10427 ], [ 1963, 8797 ], [ 1963, 7425 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1963, 4075 ], [ 5927, 1350 ], [ 10800, 1350 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 15672, 1350 ], [ 19636, 4075 ], [ 19636, 7425 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 19636, 8787 ], [ 18312, 10425 ], [ 17029, 12011 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 16455, 12723 ], [ 15873, 13449 ], [ 15386, 14175 ] ]
+          }
+        - { cmd: moveTo, pts: [ [ 10800, 20249 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 9805, 20249 ], [ 9347, 20171 ], [ 8839, 19406 ] ] }
+        - { cmd: lnTo, pts: [ [ 13000, 19048 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 12398, 20164 ], [ 11959, 20249 ], [ 10800, 20249 ] ]
+          }
+        - { cmd: moveTo, pts: [ [ 7595, 16813 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 7417, 16407 ], [ 7215, 15978 ], [ 6991, 15525 ] ] }
+        - { cmd: lnTo, pts: [ [ 14616, 15525 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 14496, 15767 ], [ 14375, 16010 ], [ 14270, 16239 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 14270, 16239 ], [ 7595, 16813 ], [ 7595, 16813 ] ]
+          }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 13345, 18343 ] ] }
+        - { cmd: lnTo, pts: [ [ 8476, 18762 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 8303, 18416 ], [ 8116, 18011 ], [ 7890, 17483 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 7887, 17477 ], [ 7883, 17469 ], [ 7881, 17462 ] ] }
+        - { cmd: lnTo, pts: [ [ 13957, 16941 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 13871, 17140 ], [ 13778, 17350 ], [ 13698, 17537 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 13569, 17841 ], [ 13453, 18104 ], [ 13345, 18343 ] ]
+          }
+        - { cmd: moveTo, pts: [ [ 10800, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4835, 0 ], [ 0, 3324 ], [ 0, 7425 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 10146 ], [ 3621, 13029 ], [ 4939, 15562 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 6906, 19339 ], [ 6688, 21599 ], [ 10800, 21599 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 14972, 21599 ], [ 14692, 19349 ], [ 16660, 15577 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 17983, 13039 ], [ 21600, 10124 ], [ 21600, 7425 ] ]
+          }
+        - { cmd: cubicBezTo, pts: [ [ 21600, 3324 ], [ 16764, 0 ], [ 10800, 0 ] ] }
     line: { color: "#000000" }
   - elementId: "AutoShape_114"
     elementType: shape
     bounds: [ 204, 230, 6, 6 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 21600
+      h: 21600
+      commands:
+        - { cmd: moveTo, pts: [ [ 19938, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 8943, 0 ], [ 0, 8942 ], [ 0, 19938 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 20855 ], [ 743, 21600 ], [ 1661, 21600 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2579, 21600 ], [ 3323, 20855 ], [ 3323, 19938 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3323, 10777 ], [ 10777, 3323 ], [ 19938, 3323 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 20856, 3323 ], [ 21600, 2578 ], [ 21600, 1661 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 21600, 744 ], [ 20856, 0 ], [ 19938, 0 ] ] }
     line: { color: "#000000" }
   - elementId: "椭圆_49"
     elementType: shape
@@ -132,17 +293,219 @@ elements:
   - elementId: "AutoShape_123"
     elementType: shape
     bounds: [ 251, 169, 28, 28 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 21600
+      h: 21600
+      commands:
+        - { cmd: moveTo, pts: [ [ 18180, 12132 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 17710, 12226 ], [ 17327, 12561 ], [ 17170, 13012 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 17083, 13261 ], [ 16981, 13503 ], [ 16868, 13738 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 16658, 14169 ], [ 16694, 14677 ], [ 16959, 15075 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 18131, 16833 ] ] }
+        - { cmd: lnTo, pts: [ [ 16832, 18132 ] ] }
+        - { cmd: lnTo, pts: [ [ 15075, 16960 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 14850, 16810 ], [ 14589, 16733 ], [ 14326, 16733 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 14126, 16733 ], [ 13924, 16778 ], [ 13738, 16868 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 13504, 16981 ], [ 13262, 17083 ], [ 13012, 17170 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 12561, 17327 ], [ 12226, 17712 ], [ 12133, 18180 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 11717, 20249 ] ] }
+        - { cmd: lnTo, pts: [ [ 9881, 20249 ] ] }
+        - { cmd: lnTo, pts: [ [ 9467, 18180 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 9373, 17712 ], [ 9039, 17327 ], [ 8588, 17170 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 8339, 17083 ], [ 8096, 16983 ], [ 7861, 16869 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 7675, 16778 ], [ 7474, 16733 ], [ 7273, 16733 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 7011, 16733 ], [ 6750, 16810 ], [ 6525, 16960 ] ] }
+        - { cmd: lnTo, pts: [ [ 4767, 18132 ] ] }
+        - { cmd: lnTo, pts: [ [ 3468, 16833 ] ] }
+        - { cmd: lnTo, pts: [ [ 4639, 15075 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4904, 14677 ], [ 4939, 14169 ], [ 4732, 13738 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4618, 13504 ], [ 4516, 13263 ], [ 4429, 13013 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4273, 12561 ], [ 3888, 12227 ], [ 3419, 12133 ] ] }
+        - { cmd: lnTo, pts: [ [ 1350, 11718 ] ] }
+        - { cmd: lnTo, pts: [ [ 1349, 9882 ] ] }
+        - { cmd: lnTo, pts: [ [ 3419, 9468 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3888, 9374 ], [ 4273, 9039 ], [ 4429, 8588 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4516, 8338 ], [ 4617, 8096 ], [ 4731, 7862 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4940, 7431 ], [ 4905, 6923 ], [ 4639, 6524 ] ] }
+        - { cmd: lnTo, pts: [ [ 3468, 4767 ] ] }
+        - { cmd: lnTo, pts: [ [ 4767, 3468 ] ] }
+        - { cmd: lnTo, pts: [ [ 6525, 4639 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 6750, 4790 ], [ 7011, 4866 ], [ 7273, 4866 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 7474, 4866 ], [ 7674, 4822 ], [ 7861, 4732 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 8095, 4619 ], [ 8337, 4517 ], [ 8586, 4430 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 9039, 4272 ], [ 9373, 3888 ], [ 9467, 3420 ] ] }
+        - { cmd: lnTo, pts: [ [ 9881, 1350 ] ] }
+        - { cmd: lnTo, pts: [ [ 11717, 1350 ] ] }
+        - { cmd: lnTo, pts: [ [ 12131, 3420 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 12225, 3888 ], [ 12560, 4272 ], [ 13012, 4430 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 13261, 4517 ], [ 13502, 4617 ], [ 13737, 4731 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 13924, 4822 ], [ 14125, 4866 ], [ 14326, 4866 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 14589, 4866 ], [ 14850, 4790 ], [ 15075, 4639 ] ] }
+        - { cmd: lnTo, pts: [ [ 16832, 3468 ] ] }
+        - { cmd: lnTo, pts: [ [ 18131, 4767 ] ] }
+        - { cmd: lnTo, pts: [ [ 16959, 6524 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 16694, 6923 ], [ 16660, 7431 ], [ 16867, 7861 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 16980, 8096 ], [ 17083, 8337 ], [ 17170, 8587 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 17327, 9039 ], [ 17710, 9373 ], [ 18180, 9467 ] ] }
+        - { cmd: lnTo, pts: [ [ 20248, 9882 ] ] }
+        - { cmd: lnTo, pts: [ [ 20250, 11718 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 20250, 11718 ], [ 18180, 12132 ], [ 18180, 12132 ] ]
+          }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 20513, 8558 ] ] }
+        - { cmd: lnTo, pts: [ [ 18445, 8143 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 18341, 7844 ], [ 18218, 7554 ], [ 18082, 7273 ] ] }
+        - { cmd: lnTo, pts: [ [ 19254, 5516 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 19611, 4980 ], [ 19540, 4268 ], [ 19085, 3813 ] ] }
+        - { cmd: lnTo, pts: [ [ 17787, 2514 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 17526, 2253 ], [ 17181, 2118 ], [ 16831, 2118 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 16573, 2118 ], [ 16312, 2193 ], [ 16084, 2345 ] ] }
+        - { cmd: lnTo, pts: [ [ 14326, 3516 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 14044, 3380 ], [ 13754, 3258 ], [ 13455, 3155 ] ] }
+        - { cmd: lnTo, pts: [ [ 13041, 1085 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 12916, 454 ], [ 12361, 0 ], [ 11717, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 9881, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 9238, 0 ], [ 8684, 454 ], [ 8557, 1085 ] ] }
+        - { cmd: lnTo, pts: [ [ 8143, 3155 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 7843, 3258 ], [ 7554, 3381 ], [ 7273, 3516 ] ] }
+        - { cmd: lnTo, pts: [ [ 5516, 2345 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 5287, 2193 ], [ 5026, 2118 ], [ 4767, 2118 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4419, 2118 ], [ 4073, 2253 ], [ 3812, 2514 ] ] }
+        - { cmd: lnTo, pts: [ [ 2514, 3813 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2059, 4268 ], [ 1988, 4980 ], [ 2345, 5516 ] ] }
+        - { cmd: lnTo, pts: [ [ 3516, 7273 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3380, 7555 ], [ 3258, 7844 ], [ 3154, 8144 ] ] }
+        - { cmd: lnTo, pts: [ [ 1085, 8558 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 454, 8684 ], [ 0, 9238 ], [ 0, 9882 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 11718 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 12361 ], [ 454, 12916 ], [ 1085, 13042 ] ] }
+        - { cmd: lnTo, pts: [ [ 3154, 13456 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3258, 13755 ], [ 3380, 14046 ], [ 3516, 14326 ] ] }
+        - { cmd: lnTo, pts: [ [ 2345, 16083 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1988, 16619 ], [ 2059, 17332 ], [ 2514, 17787 ] ] }
+        - { cmd: lnTo, pts: [ [ 3812, 19086 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4073, 19346 ], [ 4419, 19482 ], [ 4767, 19482 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 5026, 19482 ], [ 5287, 19406 ], [ 5516, 19254 ] ] }
+        - { cmd: lnTo, pts: [ [ 7273, 18083 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 7554, 18220 ], [ 7843, 18341 ], [ 8143, 18445 ] ] }
+        - { cmd: lnTo, pts: [ [ 8557, 20514 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 8684, 21146 ], [ 9238, 21599 ], [ 9881, 21599 ] ] }
+        - { cmd: lnTo, pts: [ [ 11717, 21599 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 12361, 21599 ], [ 12916, 21146 ], [ 13041, 20514 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 13456, 18445 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 13755, 18341 ], [ 14046, 18219 ], [ 14326, 18083 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 16084, 19254 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 16312, 19406 ], [ 16573, 19482 ], [ 16831, 19482 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 17181, 19482 ], [ 17526, 19346 ], [ 17787, 19086 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 19085, 17787 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 19540, 17332 ], [ 19611, 16619 ], [ 19254, 16083 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 18082, 14326 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 18219, 14045 ], [ 18341, 13755 ], [ 18445, 13456 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 20513, 13042 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 21145, 12916 ], [ 21599, 12361 ], [ 21599, 11718 ] ]
+          }
+        - { cmd: lnTo, pts: [ [ 21599, 9882 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 21599, 9238 ], [ 21145, 8684 ], [ 20513, 8558 ] ] }
     line: { color: "#000000" }
   - elementId: "AutoShape_124"
     elementType: shape
     bounds: [ 259, 177, 12, 12 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 21600
+      h: 21600
+      commands:
+        - { cmd: moveTo, pts: [ [ 10800, 20250 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 5580, 20250 ], [ 1350, 16017 ], [ 1350, 10800 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1350, 5582 ], [ 5580, 1349 ], [ 10800, 1349 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 16016, 1349 ], [ 20250, 5582 ], [ 20250, 10800 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 20250, 16017 ], [ 16016, 20250 ], [ 10800, 20250 ] ]
+          }
+        - { cmd: moveTo, pts: [ [ 10800, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4836, 0 ], [ 0, 4836 ], [ 0, 10800 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 16763 ], [ 4836, 21600 ], [ 10800, 21600 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 16763, 21600 ], [ 21599, 16763 ], [ 21599, 10800 ] ]
+          }
+        - { cmd: cubicBezTo, pts: [ [ 21599, 4836 ], [ 16763, 0 ], [ 10800, 0 ] ] }
     line: { color: "#000000" }
   - elementId: "AutoShape_125"
     elementType: shape
     bounds: [ 262, 179, 7, 7 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 21600
+      h: 21600
+      commands:
+        - { cmd: moveTo, pts: [ [ 10800, 18900 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 6328, 18900 ], [ 2699, 15271 ], [ 2699, 10800 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2699, 6329 ], [ 6328, 2700 ], [ 10800, 2700 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 15271, 2700 ], [ 18899, 6329 ], [ 18899, 10800 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 18899, 15271 ], [ 15271, 18900 ], [ 10800, 18900 ] ]
+          }
+        - { cmd: moveTo, pts: [ [ 10800, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 4830, 0 ], [ 0, 4833 ], [ 0, 10800 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 16766 ], [ 4830, 21599 ], [ 10800, 21599 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 16764, 21599 ], [ 21600, 16766 ], [ 21600, 10800 ] ]
+          }
+        - { cmd: cubicBezTo, pts: [ [ 21600, 4833 ], [ 16764, 0 ], [ 10800, 0 ] ] }
     line: { color: "#000000" }
   - elementId: "椭圆_50"
     elementType: shape
@@ -153,12 +516,63 @@ elements:
   - elementId: "AutoShape_126"
     elementType: shape
     bounds: [ 195, 169, 28, 28 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 21600
+      h: 21600
+      commands:
+        - { cmd: moveTo, pts: [ [ 13499, 14850 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 9772, 14850 ], [ 6749, 11827 ], [ 6749, 8100 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 6749, 4372 ], [ 9772, 1350 ], [ 13499, 1350 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 17227, 1350 ], [ 20249, 4372 ], [ 20249, 8100 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 20249, 11827 ], [ 17227, 14850 ], [ 13499, 14850 ] ]
+          }
+        - { cmd: moveTo, pts: [ [ 3236, 20042 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3019, 20266 ], [ 2718, 20408 ], [ 2382, 20408 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1724, 20408 ], [ 1191, 19875 ], [ 1191, 19218 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1191, 18881 ], [ 1332, 18580 ], [ 1557, 18363 ] ] }
+        - { cmd: lnTo, pts: [ [ 1551, 18358 ] ] }
+        - { cmd: lnTo, pts: [ [ 6996, 12913 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 7472, 13555 ], [ 8039, 14122 ], [ 8680, 14599 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 8680, 14599 ], [ 3236, 20042 ], [ 3236, 20042 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 13499, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 9026, 0 ], [ 5399, 3626 ], [ 5399, 8100 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 5399, 9467 ], [ 5742, 10754 ], [ 6341, 11884 ] ] }
+        - { cmd: lnTo, pts: [ [ 709, 17515 ] ] }
+        - { cmd: lnTo, pts: [ [ 713, 17520 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 274, 17953 ], [ 0, 18552 ], [ 0, 19218 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 20533 ], [ 1066, 21599 ], [ 2382, 21599 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3047, 21599 ], [ 3647, 21326 ], [ 4079, 20885 ] ] }
+        - { cmd: lnTo, pts: [ [ 4078, 20884 ] ] }
+        - { cmd: lnTo, pts: [ [ 9708, 15255 ] ] }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 10839, 15856 ], [ 12128, 16200 ], [ 13499, 16200 ] ]
+          }
+        - {
+            cmd: cubicBezTo,
+            pts: [ [ 17973, 16200 ], [ 21600, 12573 ], [ 21600, 8100 ] ]
+          }
+        - { cmd: cubicBezTo, pts: [ [ 21600, 3626 ], [ 17973, 0 ], [ 13499, 0 ] ] }
     line: { color: "#000000" }
   - elementId: "AutoShape_127"
     elementType: shape
     bounds: [ 206, 173, 7, 7 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 21600
+      h: 21600
+      commands:
+        - { cmd: moveTo, pts: [ [ 20160, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 9025, 0 ], [ 0, 9025 ], [ 0, 20160 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 20954 ], [ 644, 21600 ], [ 1440, 21600 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2235, 21600 ], [ 2880, 20954 ], [ 2880, 20160 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2880, 10618 ], [ 10617, 2880 ], [ 20160, 2880 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 20955, 2880 ], [ 21599, 2234 ], [ 21599, 1440 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 21599, 645 ], [ 20955, 0 ], [ 20160, 0 ] ] }
     line: { color: "#000000" }
 expectedOverlaps:
   - pair:

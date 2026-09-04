@@ -1,4 +1,4 @@
-# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留，渐变归一为主色）
+# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
 elements:
   - elementId: "Oval_9"
@@ -85,17 +85,53 @@ elements:
   - elementId: "Freeform_19"
     elementType: shape
     bounds: [ 180, -105, 10, 25 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 83
+      h: 202
+      commands:
+        - { cmd: moveTo, pts: [ [ 71, 38 ] ] }
+        - { cmd: lnTo, pts: [ [ 42, 9 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 52 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 202 ] ] }
+        - { cmd: lnTo, pts: [ [ 83, 202 ] ] }
+        - { cmd: lnTo, pts: [ [ 83, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 71, 38 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_20"
     elementType: shape
     bounds: [ 167, -96, 10, 17 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 35
+      h: 56
+      commands:
+        - { cmd: moveTo, pts: [ [ 11, 9 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 2 ], [ 0, 2 ], [ 0, 2 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 56 ], [ 0, 56 ], [ 0, 56 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 35, 56 ], [ 35, 56 ], [ 35, 56 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 35, 0 ], [ 35, 0 ], [ 35, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 26, 8 ], [ 26, 8 ], [ 26, 8 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 24, 10 ], [ 21, 11 ], [ 17, 11 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 15, 11 ], [ 13, 11 ], [ 11, 9 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_21"
     elementType: shape
     bounds: [ 154, -99, 10, 19 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 83
+      h: 152
+      commands:
+        - { cmd: moveTo, pts: [ [ 83, 14 ] ] }
+        - { cmd: lnTo, pts: [ [ 64, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 55 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 152 ] ] }
+        - { cmd: lnTo, pts: [ [ 83, 152 ] ] }
+        - { cmd: lnTo, pts: [ [ 83, 14 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Rectangle_22"
     elementType: shape
@@ -105,7 +141,28 @@ elements:
   - elementId: "Freeform_23"
     elementType: shape
     bounds: [ 154, -112, 36, 18 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 120
+      h: 59
+      commands:
+        - { cmd: moveTo, pts: [ [ 9, 53 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 26, 38 ], [ 26, 38 ], [ 26, 38 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 58, 58 ], [ 58, 58 ], [ 58, 58 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 59, 59 ], [ 60, 59 ], [ 60, 59 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 62, 59 ], [ 63, 59 ], [ 64, 58 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 105, 20 ], [ 105, 20 ], [ 105, 20 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 112, 28 ], [ 112, 28 ], [ 112, 28 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 120, 0 ], [ 120, 0 ], [ 120, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 92, 7 ], [ 92, 7 ], [ 92, 7 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 97, 13 ], [ 97, 13 ], [ 97, 13 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 60, 48 ], [ 60, 48 ], [ 60, 48 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 28, 27 ], [ 28, 27 ], [ 28, 27 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 26, 26 ], [ 24, 26 ], [ 22, 28 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2, 45 ], [ 2, 45 ], [ 2, 45 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 47 ], [ 0, 50 ], [ 2, 52 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3, 54 ], [ 7, 55 ], [ 9, 53 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "TextBox_34-3"
     elementType: text
@@ -144,8 +201,34 @@ elements:
   - elementId: "Freeform_5"
     elementType: shape
     bounds: [ 267, 325, 16, 16 ]
-    kind: rect
+    kind: custGeom
     fill: "#FFFFFF"
+    path:
+      w: 133
+      h: 138
+      commands:
+        - { cmd: moveTo, pts: [ [ 129, 119 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 104, 93 ], [ 104, 93 ], [ 104, 93 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 102, 90 ], [ 97, 89 ], [ 93, 90 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 90, 86 ], [ 90, 86 ], [ 90, 86 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 98, 77 ], [ 103, 65 ], [ 103, 52 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 103, 23 ], [ 80, 0 ], [ 51, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 23, 0 ], [ 0, 23 ], [ 0, 52 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 80 ], [ 23, 103 ], [ 51, 103 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 63, 103 ], [ 73, 99 ], [ 82, 93 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 86, 97 ], [ 86, 97 ], [ 86, 97 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 84, 101 ], [ 85, 106 ], [ 88, 109 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 113, 135 ], [ 113, 135 ], [ 113, 135 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 115, 137 ], [ 118, 138 ], [ 121, 138 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 124, 138 ], [ 126, 137 ], [ 129, 135 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 133, 131 ], [ 133, 124 ], [ 129, 119 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 51, 84 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 33, 84 ], [ 19, 70 ], [ 19, 52 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 19, 33 ], [ 33, 19 ], [ 51, 19 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 70, 19 ], [ 84, 33 ], [ 84, 52 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 84, 70 ], [ 70, 84 ], [ 51, 84 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "TextBox_34-5"
     elementType: text
@@ -167,8 +250,44 @@ elements:
   - elementId: "Freeform_17"
     elementType: shape
     bounds: [ 51, 331, 16, 15 ]
-    kind: rect
+    kind: custGeom
     fill: "#FFFFFF"
+    path:
+      w: 133
+      h: 123
+      commands:
+        - { cmd: moveTo, pts: [ [ 124, 84 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 129, 84 ], [ 133, 80 ], [ 133, 75 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 133, 71 ], [ 129, 67 ], [ 124, 67 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 113, 67 ], [ 113, 67 ], [ 113, 67 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 113, 66 ], [ 113, 65 ], [ 113, 64 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 124, 64 ], [ 124, 64 ], [ 124, 64 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 129, 64 ], [ 132, 61 ], [ 132, 56 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 132, 51 ], [ 129, 47 ], [ 124, 47 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 90, 47 ], [ 90, 47 ], [ 90, 47 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 66, 45 ], [ 73, 31 ], [ 74, 23 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 75, 8 ], [ 69, 0 ], [ 64, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 63, 0 ], [ 53, 1 ], [ 54, 5 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 54, 8 ], [ 56, 24 ], [ 48, 33 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 42, 40 ], [ 33, 52 ], [ 29, 57 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 57 ], [ 0, 57 ], [ 0, 57 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 114 ], [ 0, 114 ], [ 0, 114 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 31, 114 ], [ 31, 114 ], [ 31, 114 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 38, 119 ], [ 46, 121 ], [ 54, 122 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 61, 122 ], [ 69, 122 ], [ 76, 123 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 77, 123 ], [ 78, 123 ], [ 79, 123 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 105, 123 ], [ 105, 123 ], [ 105, 123 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 110, 123 ], [ 114, 119 ], [ 114, 114 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 114, 109 ], [ 110, 105 ], [ 105, 105 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 103, 105 ], [ 103, 105 ], [ 103, 105 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 103, 105 ], [ 103, 104 ], [ 104, 103 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 117, 103 ], [ 117, 103 ], [ 117, 103 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 122, 103 ], [ 125, 99 ], [ 125, 95 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 125, 90 ], [ 122, 86 ], [ 117, 86 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 109, 86 ], [ 109, 86 ], [ 109, 86 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 109, 85 ], [ 110, 85 ], [ 110, 84 ] ] }
+        - { cmd: lnTo, pts: [ [ 124, 84 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "TextBox_34-6"
     elementType: text
@@ -190,24 +309,920 @@ elements:
   - elementId: "KSO_Shape"
     elementType: shape
     bounds: [ 492, 329, 15, 18 ]
-    kind: rect
+    kind: custGeom
     fill: "#FFFFFF"
+    path:
+      w: 3807
+      h: 4578
+      commands:
+        - { cmd: moveTo, pts: [ [ 3118, 1530 ] ] }
+        - { cmd: lnTo, pts: [ [ 3118, 1530 ] ] }
+        - { cmd: lnTo, pts: [ [ 3099, 1512 ] ] }
+        - { cmd: lnTo, pts: [ [ 3077, 1494 ] ] }
+        - { cmd: lnTo, pts: [ [ 3031, 1454 ] ] }
+        - { cmd: lnTo, pts: [ [ 2980, 1413 ] ] }
+        - { cmd: lnTo, pts: [ [ 2925, 1371 ] ] }
+        - { cmd: lnTo, pts: [ [ 2809, 1285 ] ] }
+        - { cmd: lnTo, pts: [ [ 2692, 1197 ] ] }
+        - { cmd: lnTo, pts: [ [ 2636, 1154 ] ] }
+        - { cmd: lnTo, pts: [ [ 2582, 1112 ] ] }
+        - { cmd: lnTo, pts: [ [ 2533, 1071 ] ] }
+        - { cmd: lnTo, pts: [ [ 2510, 1052 ] ] }
+        - { cmd: lnTo, pts: [ [ 2489, 1031 ] ] }
+        - { cmd: lnTo, pts: [ [ 2469, 1013 ] ] }
+        - { cmd: lnTo, pts: [ [ 2451, 995 ] ] }
+        - { cmd: lnTo, pts: [ [ 2434, 976 ] ] }
+        - { cmd: lnTo, pts: [ [ 2419, 959 ] ] }
+        - { cmd: lnTo, pts: [ [ 2407, 943 ] ] }
+        - { cmd: lnTo, pts: [ [ 2396, 926 ] ] }
+        - { cmd: lnTo, pts: [ [ 2388, 911 ] ] }
+        - { cmd: lnTo, pts: [ [ 2383, 897 ] ] }
+        - { cmd: lnTo, pts: [ [ 2370, 857 ] ] }
+        - { cmd: lnTo, pts: [ [ 2386, 854 ] ] }
+        - { cmd: lnTo, pts: [ [ 2400, 850 ] ] }
+        - { cmd: lnTo, pts: [ [ 2413, 844 ] ] }
+        - { cmd: lnTo, pts: [ [ 2424, 836 ] ] }
+        - { cmd: lnTo, pts: [ [ 2434, 826 ] ] }
+        - { cmd: lnTo, pts: [ [ 2437, 821 ] ] }
+        - { cmd: lnTo, pts: [ [ 2440, 816 ] ] }
+        - { cmd: lnTo, pts: [ [ 2443, 811 ] ] }
+        - { cmd: lnTo, pts: [ [ 2445, 805 ] ] }
+        - { cmd: lnTo, pts: [ [ 2446, 799 ] ] }
+        - { cmd: lnTo, pts: [ [ 2446, 794 ] ] }
+        - { cmd: lnTo, pts: [ [ 2446, 787 ] ] }
+        - { cmd: lnTo, pts: [ [ 2444, 781 ] ] }
+        - { cmd: lnTo, pts: [ [ 2442, 775 ] ] }
+        - { cmd: lnTo, pts: [ [ 2439, 768 ] ] }
+        - { cmd: lnTo, pts: [ [ 2436, 762 ] ] }
+        - { cmd: lnTo, pts: [ [ 2431, 757 ] ] }
+        - { cmd: lnTo, pts: [ [ 2425, 752 ] ] }
+        - { cmd: lnTo, pts: [ [ 2420, 748 ] ] }
+        - { cmd: lnTo, pts: [ [ 2414, 744 ] ] }
+        - { cmd: lnTo, pts: [ [ 2407, 740 ] ] }
+        - { cmd: lnTo, pts: [ [ 2400, 737 ] ] }
+        - { cmd: lnTo, pts: [ [ 2392, 734 ] ] }
+        - { cmd: lnTo, pts: [ [ 2384, 732 ] ] }
+        - { cmd: lnTo, pts: [ [ 2376, 731 ] ] }
+        - { cmd: lnTo, pts: [ [ 2366, 730 ] ] }
+        - { cmd: lnTo, pts: [ [ 2357, 730 ] ] }
+        - { cmd: lnTo, pts: [ [ 2352, 730 ] ] }
+        - { cmd: lnTo, pts: [ [ 2354, 716 ] ] }
+        - { cmd: lnTo, pts: [ [ 2356, 704 ] ] }
+        - { cmd: lnTo, pts: [ [ 2359, 691 ] ] }
+        - { cmd: lnTo, pts: [ [ 2362, 680 ] ] }
+        - { cmd: lnTo, pts: [ [ 2370, 655 ] ] }
+        - { cmd: lnTo, pts: [ [ 2382, 630 ] ] }
+        - { cmd: lnTo, pts: [ [ 2395, 604 ] ] }
+        - { cmd: lnTo, pts: [ [ 2410, 577 ] ] }
+        - { cmd: lnTo, pts: [ [ 2445, 515 ] ] }
+        - { cmd: lnTo, pts: [ [ 2464, 479 ] ] }
+        - { cmd: lnTo, pts: [ [ 2486, 438 ] ] }
+        - { cmd: lnTo, pts: [ [ 2507, 394 ] ] }
+        - { cmd: lnTo, pts: [ [ 2530, 343 ] ] }
+        - { cmd: lnTo, pts: [ [ 2554, 286 ] ] }
+        - { cmd: lnTo, pts: [ [ 2578, 222 ] ] }
+        - { cmd: lnTo, pts: [ [ 2602, 152 ] ] }
+        - { cmd: lnTo, pts: [ [ 2614, 113 ] ] }
+        - { cmd: lnTo, pts: [ [ 2627, 74 ] ] }
+        - { cmd: lnTo, pts: [ [ 2579, 59 ] ] }
+        - { cmd: lnTo, pts: [ [ 2535, 47 ] ] }
+        - { cmd: lnTo, pts: [ [ 2494, 36 ] ] }
+        - { cmd: lnTo, pts: [ [ 2455, 27 ] ] }
+        - { cmd: lnTo, pts: [ [ 2418, 19 ] ] }
+        - { cmd: lnTo, pts: [ [ 2384, 13 ] ] }
+        - { cmd: lnTo, pts: [ [ 2352, 8 ] ] }
+        - { cmd: lnTo, pts: [ [ 2322, 3 ] ] }
+        - { cmd: lnTo, pts: [ [ 2293, 1 ] ] }
+        - { cmd: lnTo, pts: [ [ 2265, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 2240, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 2216, 2 ] ] }
+        - { cmd: lnTo, pts: [ [ 2193, 5 ] ] }
+        - { cmd: lnTo, pts: [ [ 2171, 10 ] ] }
+        - { cmd: lnTo, pts: [ [ 2148, 14 ] ] }
+        - { cmd: lnTo, pts: [ [ 2127, 20 ] ] }
+        - { cmd: lnTo, pts: [ [ 2107, 27 ] ] }
+        - { cmd: lnTo, pts: [ [ 2086, 35 ] ] }
+        - { cmd: lnTo, pts: [ [ 2065, 44 ] ] }
+        - { cmd: lnTo, pts: [ [ 2044, 54 ] ] }
+        - { cmd: lnTo, pts: [ [ 2002, 78 ] ] }
+        - { cmd: lnTo, pts: [ [ 1957, 103 ] ] }
+        - { cmd: lnTo, pts: [ [ 1907, 132 ] ] }
+        - { cmd: lnTo, pts: [ [ 1852, 163 ] ] }
+        - { cmd: lnTo, pts: [ [ 1791, 197 ] ] }
+        - { cmd: lnTo, pts: [ [ 1757, 215 ] ] }
+        - { cmd: lnTo, pts: [ [ 1720, 234 ] ] }
+        - { cmd: lnTo, pts: [ [ 1694, 238 ] ] }
+        - { cmd: lnTo, pts: [ [ 1670, 240 ] ] }
+        - { cmd: lnTo, pts: [ [ 1646, 239 ] ] }
+        - { cmd: lnTo, pts: [ [ 1624, 237 ] ] }
+        - { cmd: lnTo, pts: [ [ 1603, 233 ] ] }
+        - { cmd: lnTo, pts: [ [ 1584, 225 ] ] }
+        - { cmd: lnTo, pts: [ [ 1566, 218 ] ] }
+        - { cmd: lnTo, pts: [ [ 1548, 209 ] ] }
+        - { cmd: lnTo, pts: [ [ 1532, 199 ] ] }
+        - { cmd: lnTo, pts: [ [ 1516, 188 ] ] }
+        - { cmd: lnTo, pts: [ [ 1500, 176 ] ] }
+        - { cmd: lnTo, pts: [ [ 1486, 162 ] ] }
+        - { cmd: lnTo, pts: [ [ 1457, 136 ] ] }
+        - { cmd: lnTo, pts: [ [ 1428, 109 ] ] }
+        - { cmd: lnTo, pts: [ [ 1413, 97 ] ] }
+        - { cmd: lnTo, pts: [ [ 1398, 85 ] ] }
+        - { cmd: lnTo, pts: [ [ 1382, 73 ] ] }
+        - { cmd: lnTo, pts: [ [ 1366, 63 ] ] }
+        - { cmd: lnTo, pts: [ [ 1350, 53 ] ] }
+        - { cmd: lnTo, pts: [ [ 1331, 45 ] ] }
+        - { cmd: lnTo, pts: [ [ 1313, 38 ] ] }
+        - { cmd: lnTo, pts: [ [ 1293, 33 ] ] }
+        - { cmd: lnTo, pts: [ [ 1271, 30 ] ] }
+        - { cmd: lnTo, pts: [ [ 1249, 29 ] ] }
+        - { cmd: lnTo, pts: [ [ 1225, 31 ] ] }
+        - { cmd: lnTo, pts: [ [ 1199, 35 ] ] }
+        - { cmd: lnTo, pts: [ [ 1171, 41 ] ] }
+        - { cmd: lnTo, pts: [ [ 1142, 50 ] ] }
+        - { cmd: lnTo, pts: [ [ 1110, 63 ] ] }
+        - { cmd: lnTo, pts: [ [ 1077, 79 ] ] }
+        - { cmd: lnTo, pts: [ [ 1112, 150 ] ] }
+        - { cmd: lnTo, pts: [ [ 1146, 216 ] ] }
+        - { cmd: lnTo, pts: [ [ 1179, 275 ] ] }
+        - { cmd: lnTo, pts: [ [ 1211, 330 ] ] }
+        - { cmd: lnTo, pts: [ [ 1242, 379 ] ] }
+        - { cmd: lnTo, pts: [ [ 1270, 424 ] ] }
+        - { cmd: lnTo, pts: [ [ 1298, 465 ] ] }
+        - { cmd: lnTo, pts: [ [ 1324, 503 ] ] }
+        - { cmd: lnTo, pts: [ [ 1370, 568 ] ] }
+        - { cmd: lnTo, pts: [ [ 1390, 597 ] ] }
+        - { cmd: lnTo, pts: [ [ 1408, 625 ] ] }
+        - { cmd: lnTo, pts: [ [ 1423, 652 ] ] }
+        - { cmd: lnTo, pts: [ [ 1436, 678 ] ] }
+        - { cmd: lnTo, pts: [ [ 1442, 691 ] ] }
+        - { cmd: lnTo, pts: [ [ 1447, 704 ] ] }
+        - { cmd: lnTo, pts: [ [ 1452, 716 ] ] }
+        - { cmd: lnTo, pts: [ [ 1455, 730 ] ] }
+        - { cmd: lnTo, pts: [ [ 1439, 733 ] ] }
+        - { cmd: lnTo, pts: [ [ 1425, 738 ] ] }
+        - { cmd: lnTo, pts: [ [ 1412, 744 ] ] }
+        - { cmd: lnTo, pts: [ [ 1401, 751 ] ] }
+        - { cmd: lnTo, pts: [ [ 1391, 760 ] ] }
+        - { cmd: lnTo, pts: [ [ 1387, 765 ] ] }
+        - { cmd: lnTo, pts: [ [ 1384, 770 ] ] }
+        - { cmd: lnTo, pts: [ [ 1382, 776 ] ] }
+        - { cmd: lnTo, pts: [ [ 1380, 782 ] ] }
+        - { cmd: lnTo, pts: [ [ 1379, 788 ] ] }
+        - { cmd: lnTo, pts: [ [ 1378, 794 ] ] }
+        - { cmd: lnTo, pts: [ [ 1379, 799 ] ] }
+        - { cmd: lnTo, pts: [ [ 1380, 805 ] ] }
+        - { cmd: lnTo, pts: [ [ 1382, 811 ] ] }
+        - { cmd: lnTo, pts: [ [ 1384, 816 ] ] }
+        - { cmd: lnTo, pts: [ [ 1387, 821 ] ] }
+        - { cmd: lnTo, pts: [ [ 1391, 826 ] ] }
+        - { cmd: lnTo, pts: [ [ 1401, 836 ] ] }
+        - { cmd: lnTo, pts: [ [ 1412, 843 ] ] }
+        - { cmd: lnTo, pts: [ [ 1425, 850 ] ] }
+        - { cmd: lnTo, pts: [ [ 1439, 854 ] ] }
+        - { cmd: lnTo, pts: [ [ 1455, 857 ] ] }
+        - { cmd: lnTo, pts: [ [ 1454, 866 ] ] }
+        - { cmd: lnTo, pts: [ [ 1451, 876 ] ] }
+        - { cmd: lnTo, pts: [ [ 1445, 892 ] ] }
+        - { cmd: lnTo, pts: [ [ 1438, 907 ] ] }
+        - { cmd: lnTo, pts: [ [ 1428, 923 ] ] }
+        - { cmd: lnTo, pts: [ [ 1416, 941 ] ] }
+        - { cmd: lnTo, pts: [ [ 1401, 959 ] ] }
+        - { cmd: lnTo, pts: [ [ 1384, 977 ] ] }
+        - { cmd: lnTo, pts: [ [ 1366, 997 ] ] }
+        - { cmd: lnTo, pts: [ [ 1346, 1016 ] ] }
+        - { cmd: lnTo, pts: [ [ 1323, 1035 ] ] }
+        - { cmd: lnTo, pts: [ [ 1300, 1056 ] ] }
+        - { cmd: lnTo, pts: [ [ 1249, 1097 ] ] }
+        - { cmd: lnTo, pts: [ [ 1194, 1141 ] ] }
+        - { cmd: lnTo, pts: [ [ 1136, 1185 ] ] }
+        - { cmd: lnTo, pts: [ [ 1014, 1275 ] ] }
+        - { cmd: lnTo, pts: [ [ 893, 1363 ] ] }
+        - { cmd: lnTo, pts: [ [ 835, 1407 ] ] }
+        - { cmd: lnTo, pts: [ [ 781, 1450 ] ] }
+        - { cmd: lnTo, pts: [ [ 732, 1491 ] ] }
+        - { cmd: lnTo, pts: [ [ 710, 1511 ] ] }
+        - { cmd: lnTo, pts: [ [ 689, 1530 ] ] }
+        - { cmd: lnTo, pts: [ [ 666, 1554 ] ] }
+        - { cmd: lnTo, pts: [ [ 643, 1579 ] ] }
+        - { cmd: lnTo, pts: [ [ 619, 1608 ] ] }
+        - { cmd: lnTo, pts: [ [ 595, 1639 ] ] }
+        - { cmd: lnTo, pts: [ [ 570, 1673 ] ] }
+        - { cmd: lnTo, pts: [ [ 546, 1709 ] ] }
+        - { cmd: lnTo, pts: [ [ 520, 1747 ] ] }
+        - { cmd: lnTo, pts: [ [ 495, 1788 ] ] }
+        - { cmd: lnTo, pts: [ [ 470, 1832 ] ] }
+        - { cmd: lnTo, pts: [ [ 444, 1877 ] ] }
+        - { cmd: lnTo, pts: [ [ 419, 1923 ] ] }
+        - { cmd: lnTo, pts: [ [ 393, 1972 ] ] }
+        - { cmd: lnTo, pts: [ [ 369, 2023 ] ] }
+        - { cmd: lnTo, pts: [ [ 343, 2076 ] ] }
+        - { cmd: lnTo, pts: [ [ 319, 2130 ] ] }
+        - { cmd: lnTo, pts: [ [ 294, 2185 ] ] }
+        - { cmd: lnTo, pts: [ [ 271, 2242 ] ] }
+        - { cmd: lnTo, pts: [ [ 247, 2300 ] ] }
+        - { cmd: lnTo, pts: [ [ 224, 2359 ] ] }
+        - { cmd: lnTo, pts: [ [ 203, 2420 ] ] }
+        - { cmd: lnTo, pts: [ [ 181, 2482 ] ] }
+        - { cmd: lnTo, pts: [ [ 161, 2544 ] ] }
+        - { cmd: lnTo, pts: [ [ 141, 2606 ] ] }
+        - { cmd: lnTo, pts: [ [ 122, 2670 ] ] }
+        - { cmd: lnTo, pts: [ [ 105, 2733 ] ] }
+        - { cmd: lnTo, pts: [ [ 89, 2798 ] ] }
+        - { cmd: lnTo, pts: [ [ 73, 2863 ] ] }
+        - { cmd: lnTo, pts: [ [ 59, 2928 ] ] }
+        - { cmd: lnTo, pts: [ [ 46, 2993 ] ] }
+        - { cmd: lnTo, pts: [ [ 35, 3058 ] ] }
+        - { cmd: lnTo, pts: [ [ 24, 3123 ] ] }
+        - { cmd: lnTo, pts: [ [ 16, 3188 ] ] }
+        - { cmd: lnTo, pts: [ [ 10, 3253 ] ] }
+        - { cmd: lnTo, pts: [ [ 5, 3317 ] ] }
+        - { cmd: lnTo, pts: [ [ 1, 3380 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 3443 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 3505 ] ] }
+        - { cmd: lnTo, pts: [ [ 3, 3567 ] ] }
+        - { cmd: lnTo, pts: [ [ 7, 3629 ] ] }
+        - { cmd: lnTo, pts: [ [ 13, 3688 ] ] }
+        - { cmd: lnTo, pts: [ [ 22, 3747 ] ] }
+        - { cmd: lnTo, pts: [ [ 27, 3775 ] ] }
+        - { cmd: lnTo, pts: [ [ 32, 3804 ] ] }
+        - { cmd: lnTo, pts: [ [ 40, 3832 ] ] }
+        - { cmd: lnTo, pts: [ [ 46, 3860 ] ] }
+        - { cmd: lnTo, pts: [ [ 54, 3887 ] ] }
+        - { cmd: lnTo, pts: [ [ 62, 3914 ] ] }
+        - { cmd: lnTo, pts: [ [ 70, 3941 ] ] }
+        - { cmd: lnTo, pts: [ [ 80, 3968 ] ] }
+        - { cmd: lnTo, pts: [ [ 90, 3993 ] ] }
+        - { cmd: lnTo, pts: [ [ 101, 4019 ] ] }
+        - { cmd: lnTo, pts: [ [ 112, 4044 ] ] }
+        - { cmd: lnTo, pts: [ [ 124, 4069 ] ] }
+        - { cmd: lnTo, pts: [ [ 136, 4093 ] ] }
+        - { cmd: lnTo, pts: [ [ 150, 4116 ] ] }
+        - { cmd: lnTo, pts: [ [ 164, 4140 ] ] }
+        - { cmd: lnTo, pts: [ [ 179, 4162 ] ] }
+        - { cmd: lnTo, pts: [ [ 194, 4185 ] ] }
+        - { cmd: lnTo, pts: [ [ 211, 4206 ] ] }
+        - { cmd: lnTo, pts: [ [ 227, 4227 ] ] }
+        - { cmd: lnTo, pts: [ [ 244, 4248 ] ] }
+        - { cmd: lnTo, pts: [ [ 263, 4268 ] ] }
+        - { cmd: lnTo, pts: [ [ 282, 4288 ] ] }
+        - { cmd: lnTo, pts: [ [ 302, 4307 ] ] }
+        - { cmd: lnTo, pts: [ [ 323, 4325 ] ] }
+        - { cmd: lnTo, pts: [ [ 344, 4343 ] ] }
+        - { cmd: lnTo, pts: [ [ 367, 4360 ] ] }
+        - { cmd: lnTo, pts: [ [ 389, 4376 ] ] }
+        - { cmd: lnTo, pts: [ [ 413, 4391 ] ] }
+        - { cmd: lnTo, pts: [ [ 438, 4407 ] ] }
+        - { cmd: lnTo, pts: [ [ 463, 4421 ] ] }
+        - { cmd: lnTo, pts: [ [ 490, 4435 ] ] }
+        - { cmd: lnTo, pts: [ [ 516, 4449 ] ] }
+        - { cmd: lnTo, pts: [ [ 545, 4461 ] ] }
+        - { cmd: lnTo, pts: [ [ 573, 4472 ] ] }
+        - { cmd: lnTo, pts: [ [ 603, 4483 ] ] }
+        - { cmd: lnTo, pts: [ [ 634, 4493 ] ] }
+        - { cmd: lnTo, pts: [ [ 665, 4503 ] ] }
+        - { cmd: lnTo, pts: [ [ 698, 4511 ] ] }
+        - { cmd: lnTo, pts: [ [ 731, 4519 ] ] }
+        - { cmd: lnTo, pts: [ [ 765, 4526 ] ] }
+        - { cmd: lnTo, pts: [ [ 801, 4532 ] ] }
+        - { cmd: lnTo, pts: [ [ 836, 4537 ] ] }
+        - { cmd: lnTo, pts: [ [ 873, 4541 ] ] }
+        - { cmd: lnTo, pts: [ [ 912, 4545 ] ] }
+        - { cmd: lnTo, pts: [ [ 950, 4548 ] ] }
+        - { cmd: lnTo, pts: [ [ 990, 4549 ] ] }
+        - { cmd: lnTo, pts: [ [ 1475, 4566 ] ] }
+        - { cmd: lnTo, pts: [ [ 1751, 4575 ] ] }
+        - { cmd: lnTo, pts: [ [ 1874, 4578 ] ] }
+        - { cmd: lnTo, pts: [ [ 1903, 4578 ] ] }
+        - { cmd: lnTo, pts: [ [ 1932, 4578 ] ] }
+        - { cmd: lnTo, pts: [ [ 2056, 4575 ] ] }
+        - { cmd: lnTo, pts: [ [ 2332, 4566 ] ] }
+        - { cmd: lnTo, pts: [ [ 2817, 4549 ] ] }
+        - { cmd: lnTo, pts: [ [ 2856, 4548 ] ] }
+        - { cmd: lnTo, pts: [ [ 2895, 4545 ] ] }
+        - { cmd: lnTo, pts: [ [ 2933, 4541 ] ] }
+        - { cmd: lnTo, pts: [ [ 2970, 4537 ] ] }
+        - { cmd: lnTo, pts: [ [ 3006, 4532 ] ] }
+        - { cmd: lnTo, pts: [ [ 3042, 4526 ] ] }
+        - { cmd: lnTo, pts: [ [ 3075, 4519 ] ] }
+        - { cmd: lnTo, pts: [ [ 3109, 4511 ] ] }
+        - { cmd: lnTo, pts: [ [ 3142, 4503 ] ] }
+        - { cmd: lnTo, pts: [ [ 3173, 4493 ] ] }
+        - { cmd: lnTo, pts: [ [ 3204, 4483 ] ] }
+        - { cmd: lnTo, pts: [ [ 3233, 4472 ] ] }
+        - { cmd: lnTo, pts: [ [ 3262, 4461 ] ] }
+        - { cmd: lnTo, pts: [ [ 3290, 4449 ] ] }
+        - { cmd: lnTo, pts: [ [ 3317, 4435 ] ] }
+        - { cmd: lnTo, pts: [ [ 3343, 4421 ] ] }
+        - { cmd: lnTo, pts: [ [ 3369, 4407 ] ] }
+        - { cmd: lnTo, pts: [ [ 3393, 4391 ] ] }
+        - { cmd: lnTo, pts: [ [ 3418, 4376 ] ] }
+        - { cmd: lnTo, pts: [ [ 3440, 4360 ] ] }
+        - { cmd: lnTo, pts: [ [ 3462, 4343 ] ] }
+        - { cmd: lnTo, pts: [ [ 3484, 4325 ] ] }
+        - { cmd: lnTo, pts: [ [ 3504, 4307 ] ] }
+        - { cmd: lnTo, pts: [ [ 3525, 4288 ] ] }
+        - { cmd: lnTo, pts: [ [ 3544, 4268 ] ] }
+        - { cmd: lnTo, pts: [ [ 3562, 4248 ] ] }
+        - { cmd: lnTo, pts: [ [ 3580, 4227 ] ] }
+        - { cmd: lnTo, pts: [ [ 3596, 4206 ] ] }
+        - { cmd: lnTo, pts: [ [ 3612, 4185 ] ] }
+        - { cmd: lnTo, pts: [ [ 3628, 4162 ] ] }
+        - { cmd: lnTo, pts: [ [ 3643, 4140 ] ] }
+        - { cmd: lnTo, pts: [ [ 3657, 4116 ] ] }
+        - { cmd: lnTo, pts: [ [ 3670, 4093 ] ] }
+        - { cmd: lnTo, pts: [ [ 3683, 4069 ] ] }
+        - { cmd: lnTo, pts: [ [ 3695, 4044 ] ] }
+        - { cmd: lnTo, pts: [ [ 3706, 4019 ] ] }
+        - { cmd: lnTo, pts: [ [ 3716, 3993 ] ] }
+        - { cmd: lnTo, pts: [ [ 3726, 3968 ] ] }
+        - { cmd: lnTo, pts: [ [ 3737, 3941 ] ] }
+        - { cmd: lnTo, pts: [ [ 3745, 3914 ] ] }
+        - { cmd: lnTo, pts: [ [ 3753, 3887 ] ] }
+        - { cmd: lnTo, pts: [ [ 3760, 3860 ] ] }
+        - { cmd: lnTo, pts: [ [ 3767, 3832 ] ] }
+        - { cmd: lnTo, pts: [ [ 3774, 3804 ] ] }
+        - { cmd: lnTo, pts: [ [ 3779, 3775 ] ] }
+        - { cmd: lnTo, pts: [ [ 3784, 3747 ] ] }
+        - { cmd: lnTo, pts: [ [ 3794, 3688 ] ] }
+        - { cmd: lnTo, pts: [ [ 3800, 3629 ] ] }
+        - { cmd: lnTo, pts: [ [ 3804, 3567 ] ] }
+        - { cmd: lnTo, pts: [ [ 3807, 3505 ] ] }
+        - { cmd: lnTo, pts: [ [ 3807, 3443 ] ] }
+        - { cmd: lnTo, pts: [ [ 3806, 3380 ] ] }
+        - { cmd: lnTo, pts: [ [ 3802, 3317 ] ] }
+        - { cmd: lnTo, pts: [ [ 3797, 3253 ] ] }
+        - { cmd: lnTo, pts: [ [ 3791, 3188 ] ] }
+        - { cmd: lnTo, pts: [ [ 3781, 3123 ] ] }
+        - { cmd: lnTo, pts: [ [ 3772, 3058 ] ] }
+        - { cmd: lnTo, pts: [ [ 3761, 2993 ] ] }
+        - { cmd: lnTo, pts: [ [ 3748, 2928 ] ] }
+        - { cmd: lnTo, pts: [ [ 3733, 2863 ] ] }
+        - { cmd: lnTo, pts: [ [ 3718, 2798 ] ] }
+        - { cmd: lnTo, pts: [ [ 3702, 2733 ] ] }
+        - { cmd: lnTo, pts: [ [ 3685, 2670 ] ] }
+        - { cmd: lnTo, pts: [ [ 3665, 2606 ] ] }
+        - { cmd: lnTo, pts: [ [ 3646, 2544 ] ] }
+        - { cmd: lnTo, pts: [ [ 3625, 2482 ] ] }
+        - { cmd: lnTo, pts: [ [ 3604, 2420 ] ] }
+        - { cmd: lnTo, pts: [ [ 3582, 2359 ] ] }
+        - { cmd: lnTo, pts: [ [ 3559, 2300 ] ] }
+        - { cmd: lnTo, pts: [ [ 3536, 2242 ] ] }
+        - { cmd: lnTo, pts: [ [ 3512, 2185 ] ] }
+        - { cmd: lnTo, pts: [ [ 3488, 2130 ] ] }
+        - { cmd: lnTo, pts: [ [ 3463, 2076 ] ] }
+        - { cmd: lnTo, pts: [ [ 3438, 2023 ] ] }
+        - { cmd: lnTo, pts: [ [ 3413, 1972 ] ] }
+        - { cmd: lnTo, pts: [ [ 3388, 1923 ] ] }
+        - { cmd: lnTo, pts: [ [ 3363, 1877 ] ] }
+        - { cmd: lnTo, pts: [ [ 3336, 1832 ] ] }
+        - { cmd: lnTo, pts: [ [ 3311, 1788 ] ] }
+        - { cmd: lnTo, pts: [ [ 3286, 1747 ] ] }
+        - { cmd: lnTo, pts: [ [ 3261, 1709 ] ] }
+        - { cmd: lnTo, pts: [ [ 3236, 1673 ] ] }
+        - { cmd: lnTo, pts: [ [ 3211, 1639 ] ] }
+        - { cmd: lnTo, pts: [ [ 3187, 1608 ] ] }
+        - { cmd: lnTo, pts: [ [ 3164, 1579 ] ] }
+        - { cmd: lnTo, pts: [ [ 3141, 1554 ] ] }
+        - { cmd: lnTo, pts: [ [ 3118, 1530 ] ] }
+        - { cmd: close }
+        - { cmd: moveTo, pts: [ [ 2776, 3860 ] ] }
+        - { cmd: lnTo, pts: [ [ 2776, 3860 ] ] }
+        - { cmd: lnTo, pts: [ [ 2751, 3878 ] ] }
+        - { cmd: lnTo, pts: [ [ 2728, 3894 ] ] }
+        - { cmd: lnTo, pts: [ [ 2705, 3909 ] ] }
+        - { cmd: lnTo, pts: [ [ 2681, 3921 ] ] }
+        - { cmd: lnTo, pts: [ [ 2660, 3931 ] ] }
+        - { cmd: lnTo, pts: [ [ 2638, 3940 ] ] }
+        - { cmd: lnTo, pts: [ [ 2617, 3947 ] ] }
+        - { cmd: lnTo, pts: [ [ 2597, 3953 ] ] }
+        - { cmd: lnTo, pts: [ [ 2577, 3959 ] ] }
+        - { cmd: lnTo, pts: [ [ 2558, 3963 ] ] }
+        - { cmd: lnTo, pts: [ [ 2521, 3969 ] ] }
+        - { cmd: lnTo, pts: [ [ 2487, 3973 ] ] }
+        - { cmd: lnTo, pts: [ [ 2455, 3977 ] ] }
+        - { cmd: lnTo, pts: [ [ 2428, 3979 ] ] }
+        - { cmd: lnTo, pts: [ [ 2398, 3980 ] ] }
+        - { cmd: lnTo, pts: [ [ 2365, 3980 ] ] }
+        - { cmd: lnTo, pts: [ [ 2329, 3978 ] ] }
+        - { cmd: lnTo, pts: [ [ 2289, 3975 ] ] }
+        - { cmd: lnTo, pts: [ [ 2246, 3971 ] ] }
+        - { cmd: lnTo, pts: [ [ 2199, 3964 ] ] }
+        - { cmd: lnTo, pts: [ [ 2149, 3957 ] ] }
+        - { cmd: lnTo, pts: [ [ 2046, 3940 ] ] }
+        - { cmd: lnTo, pts: [ [ 1956, 3928 ] ] }
+        - { cmd: lnTo, pts: [ [ 1916, 3923 ] ] }
+        - { cmd: lnTo, pts: [ [ 1879, 3920 ] ] }
+        - { cmd: lnTo, pts: [ [ 1847, 3918 ] ] }
+        - { cmd: lnTo, pts: [ [ 1818, 3917 ] ] }
+        - { cmd: lnTo, pts: [ [ 1786, 3917 ] ] }
+        - { cmd: lnTo, pts: [ [ 1754, 3919 ] ] }
+        - { cmd: lnTo, pts: [ [ 1724, 3921 ] ] }
+        - { cmd: lnTo, pts: [ [ 1692, 3925 ] ] }
+        - { cmd: lnTo, pts: [ [ 1661, 3929 ] ] }
+        - { cmd: lnTo, pts: [ [ 1631, 3934 ] ] }
+        - { cmd: lnTo, pts: [ [ 1601, 3940 ] ] }
+        - { cmd: lnTo, pts: [ [ 1573, 3946 ] ] }
+        - { cmd: lnTo, pts: [ [ 1516, 3960 ] ] }
+        - { cmd: lnTo, pts: [ [ 1462, 3974 ] ] }
+        - { cmd: lnTo, pts: [ [ 1362, 4001 ] ] }
+        - { cmd: lnTo, pts: [ [ 1350, 4000 ] ] }
+        - { cmd: lnTo, pts: [ [ 1338, 3998 ] ] }
+        - { cmd: lnTo, pts: [ [ 1327, 3995 ] ] }
+        - { cmd: lnTo, pts: [ [ 1317, 3992 ] ] }
+        - { cmd: lnTo, pts: [ [ 1296, 3985 ] ] }
+        - { cmd: lnTo, pts: [ [ 1276, 3976 ] ] }
+        - { cmd: lnTo, pts: [ [ 1259, 3964 ] ] }
+        - { cmd: lnTo, pts: [ [ 1243, 3951 ] ] }
+        - { cmd: lnTo, pts: [ [ 1229, 3937 ] ] }
+        - { cmd: lnTo, pts: [ [ 1223, 3929 ] ] }
+        - { cmd: lnTo, pts: [ [ 1218, 3922 ] ] }
+        - { cmd: lnTo, pts: [ [ 1213, 3914 ] ] }
+        - { cmd: lnTo, pts: [ [ 1209, 3906 ] ] }
+        - { cmd: lnTo, pts: [ [ 1206, 3896 ] ] }
+        - { cmd: lnTo, pts: [ [ 1203, 3888 ] ] }
+        - { cmd: lnTo, pts: [ [ 1201, 3880 ] ] }
+        - { cmd: lnTo, pts: [ [ 1200, 3871 ] ] }
+        - { cmd: lnTo, pts: [ [ 1199, 3862 ] ] }
+        - { cmd: lnTo, pts: [ [ 1200, 3854 ] ] }
+        - { cmd: lnTo, pts: [ [ 1201, 3845 ] ] }
+        - { cmd: lnTo, pts: [ [ 1203, 3836 ] ] }
+        - { cmd: lnTo, pts: [ [ 1206, 3827 ] ] }
+        - { cmd: lnTo, pts: [ [ 1210, 3818 ] ] }
+        - { cmd: lnTo, pts: [ [ 1215, 3810 ] ] }
+        - { cmd: lnTo, pts: [ [ 1220, 3802 ] ] }
+        - { cmd: lnTo, pts: [ [ 1227, 3793 ] ] }
+        - { cmd: lnTo, pts: [ [ 1236, 3785 ] ] }
+        - { cmd: lnTo, pts: [ [ 1288, 3749 ] ] }
+        - { cmd: lnTo, pts: [ [ 1314, 3730 ] ] }
+        - { cmd: lnTo, pts: [ [ 1341, 3710 ] ] }
+        - { cmd: lnTo, pts: [ [ 1367, 3689 ] ] }
+        - { cmd: lnTo, pts: [ [ 1392, 3667 ] ] }
+        - { cmd: lnTo, pts: [ [ 1417, 3644 ] ] }
+        - { cmd: lnTo, pts: [ [ 1440, 3618 ] ] }
+        - { cmd: lnTo, pts: [ [ 1462, 3593 ] ] }
+        - { cmd: lnTo, pts: [ [ 1472, 3579 ] ] }
+        - { cmd: lnTo, pts: [ [ 1482, 3565 ] ] }
+        - { cmd: lnTo, pts: [ [ 1491, 3550 ] ] }
+        - { cmd: lnTo, pts: [ [ 1499, 3536 ] ] }
+        - { cmd: lnTo, pts: [ [ 1508, 3521 ] ] }
+        - { cmd: lnTo, pts: [ [ 1515, 3504 ] ] }
+        - { cmd: lnTo, pts: [ [ 1522, 3488 ] ] }
+        - { cmd: lnTo, pts: [ [ 1528, 3472 ] ] }
+        - { cmd: lnTo, pts: [ [ 1533, 3454 ] ] }
+        - { cmd: lnTo, pts: [ [ 1537, 3437 ] ] }
+        - { cmd: lnTo, pts: [ [ 1541, 3419 ] ] }
+        - { cmd: lnTo, pts: [ [ 1544, 3399 ] ] }
+        - { cmd: lnTo, pts: [ [ 1546, 3381 ] ] }
+        - { cmd: lnTo, pts: [ [ 1547, 3361 ] ] }
+        - { cmd: lnTo, pts: [ [ 1547, 3337 ] ] }
+        - { cmd: lnTo, pts: [ [ 1547, 3311 ] ] }
+        - { cmd: lnTo, pts: [ [ 1164, 3282 ] ] }
+        - { cmd: lnTo, pts: [ [ 1151, 3280 ] ] }
+        - { cmd: lnTo, pts: [ [ 1137, 3277 ] ] }
+        - { cmd: lnTo, pts: [ [ 1124, 3273 ] ] }
+        - { cmd: lnTo, pts: [ [ 1111, 3268 ] ] }
+        - { cmd: lnTo, pts: [ [ 1099, 3261 ] ] }
+        - { cmd: lnTo, pts: [ [ 1088, 3254 ] ] }
+        - { cmd: lnTo, pts: [ [ 1077, 3246 ] ] }
+        - { cmd: lnTo, pts: [ [ 1066, 3236 ] ] }
+        - { cmd: lnTo, pts: [ [ 1057, 3226 ] ] }
+        - { cmd: lnTo, pts: [ [ 1049, 3216 ] ] }
+        - { cmd: lnTo, pts: [ [ 1042, 3205 ] ] }
+        - { cmd: lnTo, pts: [ [ 1036, 3193 ] ] }
+        - { cmd: lnTo, pts: [ [ 1030, 3180 ] ] }
+        - { cmd: lnTo, pts: [ [ 1026, 3168 ] ] }
+        - { cmd: lnTo, pts: [ [ 1024, 3155 ] ] }
+        - { cmd: lnTo, pts: [ [ 1022, 3142 ] ] }
+        - { cmd: lnTo, pts: [ [ 1022, 3128 ] ] }
+        - { cmd: lnTo, pts: [ [ 1023, 3115 ] ] }
+        - { cmd: lnTo, pts: [ [ 1025, 3103 ] ] }
+        - { cmd: lnTo, pts: [ [ 1029, 3092 ] ] }
+        - { cmd: lnTo, pts: [ [ 1034, 3081 ] ] }
+        - { cmd: lnTo, pts: [ [ 1040, 3069 ] ] }
+        - { cmd: lnTo, pts: [ [ 1047, 3060 ] ] }
+        - { cmd: lnTo, pts: [ [ 1055, 3051 ] ] }
+        - { cmd: lnTo, pts: [ [ 1063, 3043 ] ] }
+        - { cmd: lnTo, pts: [ [ 1074, 3036 ] ] }
+        - { cmd: lnTo, pts: [ [ 1085, 3030 ] ] }
+        - { cmd: lnTo, pts: [ [ 1096, 3025 ] ] }
+        - { cmd: lnTo, pts: [ [ 1108, 3020 ] ] }
+        - { cmd: lnTo, pts: [ [ 1120, 3017 ] ] }
+        - { cmd: lnTo, pts: [ [ 1134, 3016 ] ] }
+        - { cmd: lnTo, pts: [ [ 1148, 3016 ] ] }
+        - { cmd: lnTo, pts: [ [ 1518, 3029 ] ] }
+        - { cmd: lnTo, pts: [ [ 1463, 2843 ] ] }
+        - { cmd: lnTo, pts: [ [ 1145, 2843 ] ] }
+        - { cmd: lnTo, pts: [ [ 1131, 2843 ] ] }
+        - { cmd: lnTo, pts: [ [ 1117, 2841 ] ] }
+        - { cmd: lnTo, pts: [ [ 1104, 2837 ] ] }
+        - { cmd: lnTo, pts: [ [ 1092, 2833 ] ] }
+        - { cmd: lnTo, pts: [ [ 1081, 2827 ] ] }
+        - { cmd: lnTo, pts: [ [ 1070, 2821 ] ] }
+        - { cmd: lnTo, pts: [ [ 1059, 2813 ] ] }
+        - { cmd: lnTo, pts: [ [ 1050, 2805 ] ] }
+        - { cmd: lnTo, pts: [ [ 1042, 2794 ] ] }
+        - { cmd: lnTo, pts: [ [ 1035, 2784 ] ] }
+        - { cmd: lnTo, pts: [ [ 1028, 2773 ] ] }
+        - { cmd: lnTo, pts: [ [ 1023, 2762 ] ] }
+        - { cmd: lnTo, pts: [ [ 1019, 2750 ] ] }
+        - { cmd: lnTo, pts: [ [ 1016, 2736 ] ] }
+        - { cmd: lnTo, pts: [ [ 1015, 2723 ] ] }
+        - { cmd: lnTo, pts: [ [ 1014, 2710 ] ] }
+        - { cmd: lnTo, pts: [ [ 1015, 2696 ] ] }
+        - { cmd: lnTo, pts: [ [ 1018, 2682 ] ] }
+        - { cmd: lnTo, pts: [ [ 1021, 2669 ] ] }
+        - { cmd: lnTo, pts: [ [ 1026, 2657 ] ] }
+        - { cmd: lnTo, pts: [ [ 1032, 2645 ] ] }
+        - { cmd: lnTo, pts: [ [ 1039, 2633 ] ] }
+        - { cmd: lnTo, pts: [ [ 1047, 2623 ] ] }
+        - { cmd: lnTo, pts: [ [ 1056, 2613 ] ] }
+        - { cmd: lnTo, pts: [ [ 1065, 2604 ] ] }
+        - { cmd: lnTo, pts: [ [ 1077, 2596 ] ] }
+        - { cmd: lnTo, pts: [ [ 1088, 2588 ] ] }
+        - { cmd: lnTo, pts: [ [ 1100, 2581 ] ] }
+        - { cmd: lnTo, pts: [ [ 1112, 2576 ] ] }
+        - { cmd: lnTo, pts: [ [ 1126, 2572 ] ] }
+        - { cmd: lnTo, pts: [ [ 1139, 2569 ] ] }
+        - { cmd: lnTo, pts: [ [ 1153, 2568 ] ] }
+        - { cmd: lnTo, pts: [ [ 1390, 2554 ] ] }
+        - { cmd: lnTo, pts: [ [ 1383, 2518 ] ] }
+        - { cmd: lnTo, pts: [ [ 1378, 2483 ] ] }
+        - { cmd: lnTo, pts: [ [ 1374, 2448 ] ] }
+        - { cmd: lnTo, pts: [ [ 1371, 2414 ] ] }
+        - { cmd: lnTo, pts: [ [ 1369, 2382 ] ] }
+        - { cmd: lnTo, pts: [ [ 1369, 2350 ] ] }
+        - { cmd: lnTo, pts: [ [ 1370, 2320 ] ] }
+        - { cmd: lnTo, pts: [ [ 1372, 2291 ] ] }
+        - { cmd: lnTo, pts: [ [ 1376, 2254 ] ] }
+        - { cmd: lnTo, pts: [ [ 1381, 2220 ] ] }
+        - { cmd: lnTo, pts: [ [ 1388, 2186 ] ] }
+        - { cmd: lnTo, pts: [ [ 1398, 2154 ] ] }
+        - { cmd: lnTo, pts: [ [ 1408, 2122 ] ] }
+        - { cmd: lnTo, pts: [ [ 1419, 2092 ] ] }
+        - { cmd: lnTo, pts: [ [ 1432, 2063 ] ] }
+        - { cmd: lnTo, pts: [ [ 1447, 2036 ] ] }
+        - { cmd: lnTo, pts: [ [ 1464, 2008 ] ] }
+        - { cmd: lnTo, pts: [ [ 1481, 1983 ] ] }
+        - { cmd: lnTo, pts: [ [ 1500, 1958 ] ] }
+        - { cmd: lnTo, pts: [ [ 1521, 1935 ] ] }
+        - { cmd: lnTo, pts: [ [ 1543, 1912 ] ] }
+        - { cmd: lnTo, pts: [ [ 1567, 1891 ] ] }
+        - { cmd: lnTo, pts: [ [ 1592, 1870 ] ] }
+        - { cmd: lnTo, pts: [ [ 1619, 1851 ] ] }
+        - { cmd: lnTo, pts: [ [ 1646, 1835 ] ] }
+        - { cmd: lnTo, pts: [ [ 1673, 1820 ] ] }
+        - { cmd: lnTo, pts: [ [ 1701, 1805 ] ] }
+        - { cmd: lnTo, pts: [ [ 1730, 1792 ] ] }
+        - { cmd: lnTo, pts: [ [ 1759, 1780 ] ] }
+        - { cmd: lnTo, pts: [ [ 1789, 1770 ] ] }
+        - { cmd: lnTo, pts: [ [ 1819, 1760 ] ] }
+        - { cmd: lnTo, pts: [ [ 1850, 1752 ] ] }
+        - { cmd: lnTo, pts: [ [ 1881, 1745 ] ] }
+        - { cmd: lnTo, pts: [ [ 1914, 1740 ] ] }
+        - { cmd: lnTo, pts: [ [ 1947, 1735 ] ] }
+        - { cmd: lnTo, pts: [ [ 1979, 1732 ] ] }
+        - { cmd: lnTo, pts: [ [ 2014, 1730 ] ] }
+        - { cmd: lnTo, pts: [ [ 2047, 1729 ] ] }
+        - { cmd: lnTo, pts: [ [ 2083, 1730 ] ] }
+        - { cmd: lnTo, pts: [ [ 2119, 1732 ] ] }
+        - { cmd: lnTo, pts: [ [ 2149, 1734 ] ] }
+        - { cmd: lnTo, pts: [ [ 2179, 1737 ] ] }
+        - { cmd: lnTo, pts: [ [ 2208, 1742 ] ] }
+        - { cmd: lnTo, pts: [ [ 2238, 1747 ] ] }
+        - { cmd: lnTo, pts: [ [ 2267, 1754 ] ] }
+        - { cmd: lnTo, pts: [ [ 2294, 1762 ] ] }
+        - { cmd: lnTo, pts: [ [ 2322, 1770 ] ] }
+        - { cmd: lnTo, pts: [ [ 2349, 1779 ] ] }
+        - { cmd: lnTo, pts: [ [ 2376, 1789 ] ] }
+        - { cmd: lnTo, pts: [ [ 2401, 1801 ] ] }
+        - { cmd: lnTo, pts: [ [ 2426, 1813 ] ] }
+        - { cmd: lnTo, pts: [ [ 2452, 1827 ] ] }
+        - { cmd: lnTo, pts: [ [ 2476, 1841 ] ] }
+        - { cmd: lnTo, pts: [ [ 2501, 1856 ] ] }
+        - { cmd: lnTo, pts: [ [ 2524, 1873 ] ] }
+        - { cmd: lnTo, pts: [ [ 2548, 1890 ] ] }
+        - { cmd: lnTo, pts: [ [ 2570, 1908 ] ] }
+        - { cmd: lnTo, pts: [ [ 2591, 1928 ] ] }
+        - { cmd: lnTo, pts: [ [ 2612, 1948 ] ] }
+        - { cmd: lnTo, pts: [ [ 2631, 1969 ] ] }
+        - { cmd: lnTo, pts: [ [ 2651, 1992 ] ] }
+        - { cmd: lnTo, pts: [ [ 2668, 2015 ] ] }
+        - { cmd: lnTo, pts: [ [ 2684, 2040 ] ] }
+        - { cmd: lnTo, pts: [ [ 2700, 2065 ] ] }
+        - { cmd: lnTo, pts: [ [ 2715, 2091 ] ] }
+        - { cmd: lnTo, pts: [ [ 2729, 2118 ] ] }
+        - { cmd: lnTo, pts: [ [ 2742, 2146 ] ] }
+        - { cmd: lnTo, pts: [ [ 2754, 2175 ] ] }
+        - { cmd: lnTo, pts: [ [ 2767, 2205 ] ] }
+        - { cmd: lnTo, pts: [ [ 2778, 2235 ] ] }
+        - { cmd: lnTo, pts: [ [ 2788, 2266 ] ] }
+        - { cmd: lnTo, pts: [ [ 2797, 2297 ] ] }
+        - { cmd: lnTo, pts: [ [ 2796, 2305 ] ] }
+        - { cmd: lnTo, pts: [ [ 2794, 2314 ] ] }
+        - { cmd: lnTo, pts: [ [ 2788, 2329 ] ] }
+        - { cmd: lnTo, pts: [ [ 2781, 2343 ] ] }
+        - { cmd: lnTo, pts: [ [ 2771, 2356 ] ] }
+        - { cmd: lnTo, pts: [ [ 2760, 2368 ] ] }
+        - { cmd: lnTo, pts: [ [ 2753, 2373 ] ] }
+        - { cmd: lnTo, pts: [ [ 2746, 2377 ] ] }
+        - { cmd: lnTo, pts: [ [ 2739, 2381 ] ] }
+        - { cmd: lnTo, pts: [ [ 2732, 2384 ] ] }
+        - { cmd: lnTo, pts: [ [ 2724, 2387 ] ] }
+        - { cmd: lnTo, pts: [ [ 2717, 2389 ] ] }
+        - { cmd: lnTo, pts: [ [ 2709, 2390 ] ] }
+        - { cmd: lnTo, pts: [ [ 2699, 2391 ] ] }
+        - { cmd: lnTo, pts: [ [ 2691, 2391 ] ] }
+        - { cmd: lnTo, pts: [ [ 2682, 2390 ] ] }
+        - { cmd: lnTo, pts: [ [ 2673, 2389 ] ] }
+        - { cmd: lnTo, pts: [ [ 2664, 2386 ] ] }
+        - { cmd: lnTo, pts: [ [ 2655, 2383 ] ] }
+        - { cmd: lnTo, pts: [ [ 2645, 2379 ] ] }
+        - { cmd: lnTo, pts: [ [ 2635, 2374 ] ] }
+        - { cmd: lnTo, pts: [ [ 2626, 2367 ] ] }
+        - { cmd: lnTo, pts: [ [ 2616, 2359 ] ] }
+        - { cmd: lnTo, pts: [ [ 2607, 2351 ] ] }
+        - { cmd: lnTo, pts: [ [ 2597, 2342 ] ] }
+        - { cmd: lnTo, pts: [ [ 2587, 2331 ] ] }
+        - { cmd: lnTo, pts: [ [ 2577, 2320 ] ] }
+        - { cmd: lnTo, pts: [ [ 2568, 2306 ] ] }
+        - { cmd: lnTo, pts: [ [ 2551, 2259 ] ] }
+        - { cmd: lnTo, pts: [ [ 2533, 2217 ] ] }
+        - { cmd: lnTo, pts: [ [ 2517, 2178 ] ] }
+        - { cmd: lnTo, pts: [ [ 2501, 2144 ] ] }
+        - { cmd: lnTo, pts: [ [ 2492, 2128 ] ] }
+        - { cmd: lnTo, pts: [ [ 2482, 2113 ] ] }
+        - { cmd: lnTo, pts: [ [ 2472, 2098 ] ] }
+        - { cmd: lnTo, pts: [ [ 2461, 2083 ] ] }
+        - { cmd: lnTo, pts: [ [ 2450, 2069 ] ] }
+        - { cmd: lnTo, pts: [ [ 2438, 2055 ] ] }
+        - { cmd: lnTo, pts: [ [ 2424, 2042 ] ] }
+        - { cmd: lnTo, pts: [ [ 2410, 2027 ] ] }
+        - { cmd: lnTo, pts: [ [ 2395, 2014 ] ] }
+        - { cmd: lnTo, pts: [ [ 2379, 2002 ] ] }
+        - { cmd: lnTo, pts: [ [ 2363, 1990 ] ] }
+        - { cmd: lnTo, pts: [ [ 2347, 1978 ] ] }
+        - { cmd: lnTo, pts: [ [ 2330, 1968 ] ] }
+        - { cmd: lnTo, pts: [ [ 2313, 1959 ] ] }
+        - { cmd: lnTo, pts: [ [ 2296, 1950 ] ] }
+        - { cmd: lnTo, pts: [ [ 2278, 1942 ] ] }
+        - { cmd: lnTo, pts: [ [ 2260, 1935 ] ] }
+        - { cmd: lnTo, pts: [ [ 2242, 1929 ] ] }
+        - { cmd: lnTo, pts: [ [ 2223, 1922 ] ] }
+        - { cmd: lnTo, pts: [ [ 2204, 1918 ] ] }
+        - { cmd: lnTo, pts: [ [ 2184, 1913 ] ] }
+        - { cmd: lnTo, pts: [ [ 2165, 1910 ] ] }
+        - { cmd: lnTo, pts: [ [ 2144, 1908 ] ] }
+        - { cmd: lnTo, pts: [ [ 2124, 1906 ] ] }
+        - { cmd: lnTo, pts: [ [ 2101, 1905 ] ] }
+        - { cmd: lnTo, pts: [ [ 2079, 1904 ] ] }
+        - { cmd: lnTo, pts: [ [ 2058, 1905 ] ] }
+        - { cmd: lnTo, pts: [ [ 2036, 1906 ] ] }
+        - { cmd: lnTo, pts: [ [ 2016, 1908 ] ] }
+        - { cmd: lnTo, pts: [ [ 1996, 1912 ] ] }
+        - { cmd: lnTo, pts: [ [ 1976, 1916 ] ] }
+        - { cmd: lnTo, pts: [ [ 1958, 1920 ] ] }
+        - { cmd: lnTo, pts: [ [ 1940, 1927 ] ] }
+        - { cmd: lnTo, pts: [ [ 1921, 1934 ] ] }
+        - { cmd: lnTo, pts: [ [ 1904, 1941 ] ] }
+        - { cmd: lnTo, pts: [ [ 1887, 1950 ] ] }
+        - { cmd: lnTo, pts: [ [ 1870, 1959 ] ] }
+        - { cmd: lnTo, pts: [ [ 1855, 1969 ] ] }
+        - { cmd: lnTo, pts: [ [ 1839, 1981 ] ] }
+        - { cmd: lnTo, pts: [ [ 1824, 1993 ] ] }
+        - { cmd: lnTo, pts: [ [ 1810, 2005 ] ] }
+        - { cmd: lnTo, pts: [ [ 1797, 2018 ] ] }
+        - { cmd: lnTo, pts: [ [ 1784, 2031 ] ] }
+        - { cmd: lnTo, pts: [ [ 1772, 2045 ] ] }
+        - { cmd: lnTo, pts: [ [ 1761, 2059 ] ] }
+        - { cmd: lnTo, pts: [ [ 1752, 2073 ] ] }
+        - { cmd: lnTo, pts: [ [ 1743, 2087 ] ] }
+        - { cmd: lnTo, pts: [ [ 1735, 2103 ] ] }
+        - { cmd: lnTo, pts: [ [ 1728, 2118 ] ] }
+        - { cmd: lnTo, pts: [ [ 1720, 2133 ] ] }
+        - { cmd: lnTo, pts: [ [ 1715, 2150 ] ] }
+        - { cmd: lnTo, pts: [ [ 1711, 2166 ] ] }
+        - { cmd: lnTo, pts: [ [ 1707, 2182 ] ] }
+        - { cmd: lnTo, pts: [ [ 1704, 2199 ] ] }
+        - { cmd: lnTo, pts: [ [ 1702, 2216 ] ] }
+        - { cmd: lnTo, pts: [ [ 1701, 2234 ] ] }
+        - { cmd: lnTo, pts: [ [ 1702, 2258 ] ] }
+        - { cmd: lnTo, pts: [ [ 1703, 2286 ] ] }
+        - { cmd: lnTo, pts: [ [ 1706, 2319 ] ] }
+        - { cmd: lnTo, pts: [ [ 1710, 2354 ] ] }
+        - { cmd: lnTo, pts: [ [ 1716, 2396 ] ] }
+        - { cmd: lnTo, pts: [ [ 1725, 2441 ] ] }
+        - { cmd: lnTo, pts: [ [ 1734, 2491 ] ] }
+        - { cmd: lnTo, pts: [ [ 1745, 2545 ] ] }
+        - { cmd: lnTo, pts: [ [ 2179, 2552 ] ] }
+        - { cmd: lnTo, pts: [ [ 2195, 2554 ] ] }
+        - { cmd: lnTo, pts: [ [ 2212, 2556 ] ] }
+        - { cmd: lnTo, pts: [ [ 2226, 2560 ] ] }
+        - { cmd: lnTo, pts: [ [ 2241, 2566 ] ] }
+        - { cmd: lnTo, pts: [ [ 2254, 2572 ] ] }
+        - { cmd: lnTo, pts: [ [ 2268, 2580 ] ] }
+        - { cmd: lnTo, pts: [ [ 2280, 2589 ] ] }
+        - { cmd: lnTo, pts: [ [ 2291, 2598 ] ] }
+        - { cmd: lnTo, pts: [ [ 2302, 2609 ] ] }
+        - { cmd: lnTo, pts: [ [ 2311, 2620 ] ] }
+        - { cmd: lnTo, pts: [ [ 2319, 2632 ] ] }
+        - { cmd: lnTo, pts: [ [ 2326, 2645 ] ] }
+        - { cmd: lnTo, pts: [ [ 2332, 2658 ] ] }
+        - { cmd: lnTo, pts: [ [ 2336, 2672 ] ] }
+        - { cmd: lnTo, pts: [ [ 2339, 2685 ] ] }
+        - { cmd: lnTo, pts: [ [ 2340, 2701 ] ] }
+        - { cmd: lnTo, pts: [ [ 2339, 2715 ] ] }
+        - { cmd: lnTo, pts: [ [ 2337, 2729 ] ] }
+        - { cmd: lnTo, pts: [ [ 2334, 2742 ] ] }
+        - { cmd: lnTo, pts: [ [ 2329, 2756 ] ] }
+        - { cmd: lnTo, pts: [ [ 2323, 2769 ] ] }
+        - { cmd: lnTo, pts: [ [ 2314, 2780 ] ] }
+        - { cmd: lnTo, pts: [ [ 2306, 2791 ] ] }
+        - { cmd: lnTo, pts: [ [ 2296, 2801 ] ] }
+        - { cmd: lnTo, pts: [ [ 2285, 2811 ] ] }
+        - { cmd: lnTo, pts: [ [ 2274, 2819 ] ] }
+        - { cmd: lnTo, pts: [ [ 2260, 2826 ] ] }
+        - { cmd: lnTo, pts: [ [ 2246, 2832 ] ] }
+        - { cmd: lnTo, pts: [ [ 2232, 2837 ] ] }
+        - { cmd: lnTo, pts: [ [ 2217, 2841 ] ] }
+        - { cmd: lnTo, pts: [ [ 2201, 2843 ] ] }
+        - { cmd: lnTo, pts: [ [ 2185, 2843 ] ] }
+        - { cmd: lnTo, pts: [ [ 1814, 2843 ] ] }
+        - { cmd: lnTo, pts: [ [ 1840, 2948 ] ] }
+        - { cmd: lnTo, pts: [ [ 1850, 2993 ] ] }
+        - { cmd: lnTo, pts: [ [ 1859, 3032 ] ] }
+        - { cmd: lnTo, pts: [ [ 2183, 3027 ] ] }
+        - { cmd: lnTo, pts: [ [ 2199, 3027 ] ] }
+        - { cmd: lnTo, pts: [ [ 2215, 3029 ] ] }
+        - { cmd: lnTo, pts: [ [ 2230, 3032 ] ] }
+        - { cmd: lnTo, pts: [ [ 2244, 3036 ] ] }
+        - { cmd: lnTo, pts: [ [ 2257, 3042 ] ] }
+        - { cmd: lnTo, pts: [ [ 2270, 3048 ] ] }
+        - { cmd: lnTo, pts: [ [ 2282, 3055 ] ] }
+        - { cmd: lnTo, pts: [ [ 2292, 3064 ] ] }
+        - { cmd: lnTo, pts: [ [ 2302, 3073 ] ] }
+        - { cmd: lnTo, pts: [ [ 2310, 3085 ] ] }
+        - { cmd: lnTo, pts: [ [ 2317, 3095 ] ] }
+        - { cmd: lnTo, pts: [ [ 2324, 3107 ] ] }
+        - { cmd: lnTo, pts: [ [ 2328, 3119 ] ] }
+        - { cmd: lnTo, pts: [ [ 2331, 3133 ] ] }
+        - { cmd: lnTo, pts: [ [ 2333, 3147 ] ] }
+        - { cmd: lnTo, pts: [ [ 2333, 3160 ] ] }
+        - { cmd: lnTo, pts: [ [ 2331, 3174 ] ] }
+        - { cmd: lnTo, pts: [ [ 2328, 3188 ] ] }
+        - { cmd: lnTo, pts: [ [ 2324, 3202 ] ] }
+        - { cmd: lnTo, pts: [ [ 2317, 3214 ] ] }
+        - { cmd: lnTo, pts: [ [ 2310, 3226 ] ] }
+        - { cmd: lnTo, pts: [ [ 2302, 3238 ] ] }
+        - { cmd: lnTo, pts: [ [ 2293, 3249 ] ] }
+        - { cmd: lnTo, pts: [ [ 2283, 3259 ] ] }
+        - { cmd: lnTo, pts: [ [ 2271, 3269 ] ] }
+        - { cmd: lnTo, pts: [ [ 2258, 3277 ] ] }
+        - { cmd: lnTo, pts: [ [ 2245, 3284 ] ] }
+        - { cmd: lnTo, pts: [ [ 2232, 3291 ] ] }
+        - { cmd: lnTo, pts: [ [ 2218, 3297 ] ] }
+        - { cmd: lnTo, pts: [ [ 2202, 3301 ] ] }
+        - { cmd: lnTo, pts: [ [ 2187, 3304 ] ] }
+        - { cmd: lnTo, pts: [ [ 2171, 3306 ] ] }
+        - { cmd: lnTo, pts: [ [ 1867, 3316 ] ] }
+        - { cmd: lnTo, pts: [ [ 1865, 3343 ] ] }
+        - { cmd: lnTo, pts: [ [ 1862, 3367 ] ] }
+        - { cmd: lnTo, pts: [ [ 1857, 3395 ] ] }
+        - { cmd: lnTo, pts: [ [ 1852, 3422 ] ] }
+        - { cmd: lnTo, pts: [ [ 1847, 3448 ] ] }
+        - { cmd: lnTo, pts: [ [ 1840, 3474 ] ] }
+        - { cmd: lnTo, pts: [ [ 1833, 3498 ] ] }
+        - { cmd: lnTo, pts: [ [ 1823, 3522 ] ] }
+        - { cmd: lnTo, pts: [ [ 1814, 3545 ] ] }
+        - { cmd: lnTo, pts: [ [ 1803, 3568 ] ] }
+        - { cmd: lnTo, pts: [ [ 1791, 3590 ] ] }
+        - { cmd: lnTo, pts: [ [ 1778, 3612 ] ] }
+        - { cmd: lnTo, pts: [ [ 1761, 3634 ] ] }
+        - { cmd: lnTo, pts: [ [ 1745, 3655 ] ] }
+        - { cmd: lnTo, pts: [ [ 1726, 3676 ] ] }
+        - { cmd: lnTo, pts: [ [ 1705, 3698 ] ] }
+        - { cmd: lnTo, pts: [ [ 1682, 3718 ] ] }
+        - { cmd: lnTo, pts: [ [ 1657, 3740 ] ] }
+        - { cmd: lnTo, pts: [ [ 1686, 3736 ] ] }
+        - { cmd: lnTo, pts: [ [ 1708, 3732 ] ] }
+        - { cmd: lnTo, pts: [ [ 1729, 3731 ] ] }
+        - { cmd: lnTo, pts: [ [ 1746, 3731 ] ] }
+        - { cmd: lnTo, pts: [ [ 1781, 3734 ] ] }
+        - { cmd: lnTo, pts: [ [ 1801, 3736 ] ] }
+        - { cmd: lnTo, pts: [ [ 1824, 3736 ] ] }
+        - { cmd: lnTo, pts: [ [ 1861, 3737 ] ] }
+        - { cmd: lnTo, pts: [ [ 1898, 3738 ] ] }
+        - { cmd: lnTo, pts: [ [ 1934, 3739 ] ] }
+        - { cmd: lnTo, pts: [ [ 1973, 3741 ] ] }
+        - { cmd: lnTo, pts: [ [ 2012, 3744 ] ] }
+        - { cmd: lnTo, pts: [ [ 2051, 3748 ] ] }
+        - { cmd: lnTo, pts: [ [ 2090, 3752 ] ] }
+        - { cmd: lnTo, pts: [ [ 2130, 3757 ] ] }
+        - { cmd: lnTo, pts: [ [ 2191, 3764 ] ] }
+        - { cmd: lnTo, pts: [ [ 2247, 3769 ] ] }
+        - { cmd: lnTo, pts: [ [ 2297, 3772 ] ] }
+        - { cmd: lnTo, pts: [ [ 2343, 3774 ] ] }
+        - { cmd: lnTo, pts: [ [ 2384, 3775 ] ] }
+        - { cmd: lnTo, pts: [ [ 2419, 3775 ] ] }
+        - { cmd: lnTo, pts: [ [ 2450, 3774 ] ] }
+        - { cmd: lnTo, pts: [ [ 2476, 3771 ] ] }
+        - { cmd: lnTo, pts: [ [ 2502, 3767 ] ] }
+        - { cmd: lnTo, pts: [ [ 2530, 3761 ] ] }
+        - { cmd: lnTo, pts: [ [ 2561, 3752 ] ] }
+        - { cmd: lnTo, pts: [ [ 2595, 3740 ] ] }
+        - { cmd: lnTo, pts: [ [ 2629, 3725 ] ] }
+        - { cmd: lnTo, pts: [ [ 2646, 3717 ] ] }
+        - { cmd: lnTo, pts: [ [ 2664, 3708 ] ] }
+        - { cmd: lnTo, pts: [ [ 2682, 3698 ] ] }
+        - { cmd: lnTo, pts: [ [ 2699, 3687 ] ] }
+        - { cmd: lnTo, pts: [ [ 2718, 3675 ] ] }
+        - { cmd: lnTo, pts: [ [ 2735, 3663 ] ] }
+        - { cmd: lnTo, pts: [ [ 2751, 3661 ] ] }
+        - { cmd: lnTo, pts: [ [ 2767, 3660 ] ] }
+        - { cmd: lnTo, pts: [ [ 2782, 3661 ] ] }
+        - { cmd: lnTo, pts: [ [ 2795, 3664 ] ] }
+        - { cmd: lnTo, pts: [ [ 2808, 3669 ] ] }
+        - { cmd: lnTo, pts: [ [ 2814, 3672 ] ] }
+        - { cmd: lnTo, pts: [ [ 2819, 3675 ] ] }
+        - { cmd: lnTo, pts: [ [ 2824, 3679 ] ] }
+        - { cmd: lnTo, pts: [ [ 2828, 3684 ] ] }
+        - { cmd: lnTo, pts: [ [ 2832, 3689 ] ] }
+        - { cmd: lnTo, pts: [ [ 2835, 3695 ] ] }
+        - { cmd: lnTo, pts: [ [ 2837, 3701 ] ] }
+        - { cmd: lnTo, pts: [ [ 2839, 3707 ] ] }
+        - { cmd: lnTo, pts: [ [ 2840, 3714 ] ] }
+        - { cmd: lnTo, pts: [ [ 2841, 3722 ] ] }
+        - { cmd: lnTo, pts: [ [ 2840, 3730 ] ] }
+        - { cmd: lnTo, pts: [ [ 2839, 3740 ] ] }
+        - { cmd: lnTo, pts: [ [ 2837, 3749 ] ] }
+        - { cmd: lnTo, pts: [ [ 2834, 3759 ] ] }
+        - { cmd: lnTo, pts: [ [ 2831, 3769 ] ] }
+        - { cmd: lnTo, pts: [ [ 2826, 3780 ] ] }
+        - { cmd: lnTo, pts: [ [ 2820, 3792 ] ] }
+        - { cmd: lnTo, pts: [ [ 2814, 3804 ] ] }
+        - { cmd: lnTo, pts: [ [ 2797, 3830 ] ] }
+        - { cmd: lnTo, pts: [ [ 2776, 3860 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_11"
     elementType: shape
     bounds: [ 176, 157, 41, 20 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 324
+      h: 163
+      commands:
+        - { cmd: moveTo, pts: [ [ 324, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 270, 163 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 163 ] ] }
+        - { cmd: lnTo, pts: [ [ 54, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 324, 0 ] ] }
     line: { color: "#000000" }
   - elementId: "Freeform_12"
     elementType: shape
     bounds: [ 176, 147, 35, 27 ]
-    kind: rect
+    kind: custGeom
+    path:
+      w: 283
+      h: 213
+      commands:
+        - { cmd: moveTo, pts: [ [ 44, 81 ] ] }
+        - { cmd: lnTo, pts: [ [ 49, 71 ] ] }
+        - { cmd: lnTo, pts: [ [ 59, 71 ] ] }
+        - { cmd: lnTo, pts: [ [ 283, 71 ] ] }
+        - { cmd: lnTo, pts: [ [ 283, 43 ] ] }
+        - { cmd: lnTo, pts: [ [ 184, 43 ] ] }
+        - { cmd: lnTo, pts: [ [ 149, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 18, 0 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 43 ] ] }
+        - { cmd: lnTo, pts: [ [ 0, 213 ] ] }
+        - { cmd: lnTo, pts: [ [ 44, 81 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "Freeform_134"
     elementType: shape
     bounds: [ 269, 262, 8, 19 ]
-    kind: rect
+    kind: custGeom
     fill: "#FFFFFF"
+    path:
+      w: 21
+      h: 47
+      commands:
+        - { cmd: moveTo, pts: [ [ 18, 26 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 18, 2 ], [ 18, 2 ], [ 18, 2 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 18, 0 ], [ 17, 0 ], [ 16, 0 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 15, 0 ], [ 14, 0 ], [ 14, 2 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 14, 26 ], [ 14, 26 ], [ 14, 26 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 12, 26 ], [ 11, 28 ], [ 11, 30 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 11, 30 ], [ 11, 31 ], [ 12, 32 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 1, 43 ], [ 1, 43 ], [ 1, 43 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 0, 44 ], [ 0, 46 ], [ 1, 46 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 2, 47 ], [ 2, 47 ], [ 3, 47 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 3, 47 ], [ 4, 47 ], [ 4, 46 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 15, 34 ], [ 15, 34 ], [ 15, 34 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 15, 35 ], [ 16, 35 ], [ 16, 35 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 19, 35 ], [ 21, 32 ], [ 21, 30 ] ] }
+        - { cmd: cubicBezTo, pts: [ [ 21, 28 ], [ 20, 26 ], [ 18, 26 ] ] }
+        - { cmd: close }
     line: { color: "#000000" }
   - elementId: "TextBox_13"
     elementType: text

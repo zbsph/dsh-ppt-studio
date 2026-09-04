@@ -1,7 +1,7 @@
 id: 深蓝质感论文答辩ppt模板
 name: 深蓝质感论文答辩PPT模板
 style: 学术答辩
-scene: 毕业论文/项目答辩
+scene: 论文答辩
 desc: 由用户导入的 deck 工程收纳（主题/版式取自原工程；可编辑后复用）
 words: ""
 colors:
@@ -37,7 +37,7 @@ pages:
   - pages/_22_pages_slide_22.yaml
   - pages/_23_pages_slide_23.yaml
   - pages/_24_pages_slide_24.yaml
-cleanup: 已声明 74 个出界元素为模板有意设计；已声明 1608 对预期重叠；剩余 159
+cleanup: 已声明 74 个出界元素为模板有意设计；已声明 1629 对预期重叠；剩余 159
   条（out×74、text×15、content×70——模板固有内容问题，复制工作区后按 verify 修复）
 sourcePptx: template.pptx
 previews: previews
