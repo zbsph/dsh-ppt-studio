@@ -29,3 +29,4 @@ examples/import-realtest-regression/
 templates/*/preview/
 templates/*/previews/
 templates/*/_cleanup-tmp/
+examples/fx/*/preview/
