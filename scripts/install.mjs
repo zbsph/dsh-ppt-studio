@@ -99,4 +99,19 @@ if (!noPreset) {
   }
 }
 
+// ── 4) 内置手册 skill（README 承诺"安装后提问即用"——必须随装）──────────────────
+const skillSrcDir = join(root, 'skills', 'ppt-studio-manual')
+const skillDstDir = join(prefix, 'skills', 'ppt-studio-manual')
+if (!noPreset && existsSync(skillSrcDir)) {
+  const dst = join(skillDstDir, 'SKILL.md')
+  if (existsSync(dst) && !force) steps.push(`手册 skill 已存在（幂等跳过）：${dst}`)
+  else {
+    mkdirSync(skillDstDir, { recursive: true })
+    writeFileSync(dst, readFileSync(join(skillSrcDir, 'SKILL.md'), 'utf8'), 'utf8')
+    steps.push(`手册 skill 已写入：${dst}`)
+  }
+} else if (!noPreset) {
+  console.warn('⚠ 包内缺少 skills/ppt-studio-manual（此包打包不完整）——提问式手册不可用')
+}
+
 console.log(`dsh-ppt-studio v${pkg.version} 安装/校验完成（${prefix} / profile=${profile}）\n- ` + steps.join('\n- ') + '\n\n下一步：重启 dsh web → 会话切换「PPT 工作室」→ 直接提需求。')
