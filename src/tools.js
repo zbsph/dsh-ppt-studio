@@ -18,7 +18,7 @@ import { importPptx } from './pptd/import-pptx.js'
 import { verifyDeck, measuredCrossCheck } from './verify.js'
 import { SCHEMA_REF, scaffoldProject } from './scaffold.js'
 import { applyAutoDeclare } from './autodeclare.js'
-import { listTemplates, templateWorkspace, registerTemplate, materializeTemplate, buildTemplateGallery } from './templates.js'
+import { listTemplates, templateWorkspace, registerTemplate, materializeTemplate } from './templates.js'
 import { surgicalPatch } from './surgical.js'
 import { measureLayout } from './measurement.js'
 import { crosscheckReport } from './crosscheck.js'
@@ -237,22 +237,13 @@ export function registerTools(ctx) {
 
   reg({
     name: 'ppt_templates',
-    description: '内置模板库列表（id/名称/风格/适用场景/预览图路径 + 可视化画廊链接）。从头任务的 S0/S2 展示给用户选择（画廊页面看真身后在对话里说"用「XX」模板"）；选定后用 ppt_new dir=... template=<id> 或 /ppt template <id> 生成工作区',
+    description: '内置模板库列表（id/名称/风格/适用场景/预览图路径）。从头任务的 S0/S2 展示给用户选择；选定后用 ppt_new dir=... template=<id> 或 /ppt template <id> 生成工作区',
     parameters: {},
     output: markdownResult(),
     async execute() {
       const list = await listTemplates()
       if (!list.length) return '（模板库为空：templates/ 目录缺失或未打包）'
-      let galleryUrl = ''
-      try {
-        const gal = await buildTemplateGallery()
-        const origin = previewOrigin(ctx.get('webServer'))
-        galleryUrl = origin + gal.url
-      } catch { /* 画廊构建失败不阻塞文本清单 */ }
-      const galleryLine = galleryUrl
-        ? `## 🎨 可视化选择（浏览器打开看模板真身，选好后在对话里说"用「XX」模板"）\n[打开模板画廊 →](${galleryUrl})\n\n---\n`
-        : ''
-      return `${galleryLine}内置模板库（${list.length} 套 · 风格版权自研）：\n\n${list.map((t) => `## ${t.id} — ${t.name}\n风格：${t.style}\n适用：${t.scene}\n关键词：${t.words}\n色板：${t.colors.join('  ')}\n预览图：${t.preview ?? '（未生成）'}\n`).join('\n---\n')}\n使用：ppt_new dir=<新目录> template=<id>（复制模板工作区；模板一致性断言 themeConformance=strict 默认开启）`
+      return `内置模板库（${list.length} 套 · 风格版权自研）：\n\n${list.map((t) => `## ${t.id} — ${t.name}\n风格：${t.style}\n适用：${t.scene}\n关键词：${t.words}\n色板：${t.colors.join('  ')}\n预览图：${t.preview ?? '（未生成）'}\n`).join('\n---\n')}\n使用：ppt_new dir=<新目录> template=<id>（复制模板工作区；模板一致性断言 themeConformance=strict 默认开启）`
     },
   })
 

@@ -104,17 +104,17 @@ export function registerPreviewRoute(ctx) {
   if (ROUTE_REG.count > 0) {
     // 幂等分支（双装配源）：只计数，不重复注册
     ROUTE_REG.count++
-    return ctx.effect(() => { ROUTE_REG.count--; releaseRouteIfZero() }, 'ppt-studio: preview + gallery routes (ref)')
+    return ctx.effect(() => { ROUTE_REG.count--; releaseRouteIfZero() }, 'ppt-studio: preview route (ref)')
   }
   const unregister = []
-  // ① 预览根静态服务（/ppt-preview）
+  // 预览根静态服务（/ppt-preview；v0.14.2 起幂等注册——双装配源不重复）
   unregister.push(ws.register({
       kind: 'prefix',
       path: '/ppt-preview', // prefix 语义：path 不带尾斜杠（实测：带斜杠不命中）
       async handler(req, res) {
         try {
           const u = new URL(req.url ?? '/', 'http://localhost') // 仅作为解析相对路径的基准，不用于输出
-          // token 允许字母/数字/连字符（hex 预览 token 与 'tpl-gallery' 固定 token 均匹配；此前 [a-zA-Z0-9]+ 不含 '-' → 画廊 404）
+          // token 允许字母/数字/连字符（hex 预览 token 与固定 token 均匹配；v0.14.1 曾因 [a-zA-Z0-9]+ 不含 '-' 导致画廊 404）
           const m = u.pathname.match(/^\/ppt-preview\/([a-zA-Z0-9-]+)\/(.*)$/)
           if (!m) return notFound(res)
           const root = await resolveToken(m[1])
@@ -133,30 +133,9 @@ export function registerPreviewRoute(ctx) {
         }
       },
     }))
-    // ② 模板画廊资源（/ppt-template-assets，v0.14）：白名单校验（id ∈ 模板库 + file 正则），零路径穿越
-    unregister.push(ws.register({
-      kind: 'prefix',
-      path: '/ppt-template-assets',
-      async handler(req, res) {
-        try {
-          const u = new URL(req.url ?? '/', 'http://localhost')
-          const m = u.pathname.match(/^\/ppt-template-assets\/([^/]+)\/(.+)$/)
-          if (!m) return notFound(res)
-          const { validateTemplateAsset } = await import('./templates.js')
-          const file = await validateTemplateAsset(decodeURIComponent(m[1]), decodeURIComponent(m[2]))
-          if (!file) return notFound(res)
-          const buf = await readFile(file)
-          res.writeHead(200, { 'Content-Type': MIME[extname(file).toLowerCase()] ?? 'application/octet-stream', 'Content-Length': buf.length, 'Cache-Control': 'private, max-age=3600' })
-          res.end(buf)
-        } catch {
-          res.writeHead(500)
-          res.end('asset error')
-        }
-      },
-    }))
     ROUTE_REG.unregister = () => { for (const u of unregister) if (typeof u === 'function') { try { u() } catch { /* 幂等 */ } } }
     ROUTE_REG.count++
-    return ctx.effect(() => { ROUTE_REG.count--; releaseRouteIfZero() }, 'ppt-studio: preview + gallery routes')
+    return ctx.effect(() => { ROUTE_REG.count--; releaseRouteIfZero() }, 'ppt-studio: preview route')
 }
 
 function notFound(res) {
