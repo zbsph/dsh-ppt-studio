@@ -1,0 +1,33 @@
+pageType: content
+background: "#F8FAFC"
+expectedOutOfSafeArea: [logo, logo_t, footer, footer_t]
+elements:
+  - elementId: logo
+    elementType: shape
+    kind: ellipse
+    bounds: [895, 8, 40, 30]
+    fill: "#2563EB"
+  - elementId: logo_t
+    elementType: text
+    bounds: [897, 12, 36, 24]
+    content: {text: "S", style: "$body", color: "#FFFFFF", align: center}
+  - elementId: sa_title
+    elementType: text
+    bounds: [60, 70, 600, 40]
+    content: {text: "安全区与页脚带声明（logo 落在安全区外）", style: "$h1"}
+  - elementId: sa_body
+    elementType: text
+    bounds: [60, 140, 840, 200]
+    content: {text: "主题 safeArea 定义为顶/底/左/右 34/26/40/40px：内容不得侵入。\n页脚带（y≥514）属于安全区外——如需放角标，用 expectedOutOfSafeArea 声明（已声明 logo）。", style: "$body"}
+  - elementId: footer
+    elementType: shape
+    kind: rect
+    bounds: [0, 514, 960, 26]
+    fill: "#E2E8F0"
+  - elementId: footer_t
+    elementType: text
+    bounds: [60, 518, 300, 20]
+    content: {text: "页脚带：夹具页脚 © v1.0.0", style: "$small"}
+expectedOverlaps:
+  - {pair: [logo, logo_t]}
+  - {pair: [footer, footer_t]}

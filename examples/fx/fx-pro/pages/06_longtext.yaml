@@ -1,0 +1,13 @@
+pageType: content
+background: "#F8FAFC"
+elements:
+  - elementId: lt_head
+    elementType: text
+    bounds: [60, 60, 500, 40]
+    content: {text: "长文本容纳（保守估算 + 显式断行）", style: "$h1"}
+  - elementId: lt_body
+    elementType: text
+    bounds: [60, 130, 840, 340]
+    content:
+      text: "这一段用于验证长文本在保守估算下的处理：中文全角加粗按 1.06 系数、行高 1.2、标点禁则——\n显式断行是长句的最佳实践，容器也必须给足高度。\n本夹具故意把每行控制在 40 字以内，并预留 340px 高度（约 20 行×16.8px），确保门禁零错误，\n同时验证保守估算不误报：若容器足够，estimate 与实测应一致。"
+      style: "$body"

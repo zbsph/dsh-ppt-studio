@@ -19,7 +19,8 @@
     "skills",
     "scripts",
     "agent-presets",
-    "examples",
+    "examples/smoke",
+    "examples/fx",
     "README.md"
   ],
   "license": "MIT",

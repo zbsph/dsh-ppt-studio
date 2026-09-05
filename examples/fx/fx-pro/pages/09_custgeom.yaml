@@ -1,0 +1,32 @@
+pageType: content
+background: "#F8FAFC"
+expectedOutOfSafeArea: [arc]
+elements:
+  - elementId: cg_head
+    elementType: text
+    bounds: [60, 60, 600, 40]
+    content: {text: "custGeom 自定义几何（弧带装饰）", style: "$h1"}
+  - elementId: arc
+    elementType: shape
+    kind: custGeom
+    bounds: [600, 320, 320, 200]
+    path:
+      w: 320
+      h: 200
+      commands:
+        - {cmd: moveTo, pts: [[0, 200]]}
+        - {cmd: arcTo, pts: [[160, 100]], wR: 160, hR: 100, stAng: 0, swAng: 5400000}
+        - {cmd: lnTo, pts: [[200, 60]]}
+        - {cmd: cubicBezTo, pts: [[180, 40], [120, 20], [0, 20]]}
+        - {cmd: close}
+    fill: {color: "#2563EB", alpha: 35}
+  - elementId: cg_body
+    elementType: text
+    bounds: [60, 140, 500, 160]
+    content: {text: "弧带为装饰层（role: decoration 豁免重叠）；几何：moveTo/arcTo/lnTo/cubicBezTo/close。", style: "$body"}
+  - elementId: deco
+    elementType: shape
+    kind: ellipse
+    bounds: [700, 60, 120, 120]
+    fill: {color: "#F59E0B", alpha: 30}
+    role: decoration

@@ -1,0 +1,6 @@
+pageType: content
+elements:
+  - elementId: t
+    elementType: text
+    bounds: [40, 40, 300, 40]
+    content: {text: "极简页", style: "$body"}

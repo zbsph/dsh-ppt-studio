@@ -1,0 +1,57 @@
+pageType: content
+background: "#F8FAFC"
+elements:
+  - elementId: sm_head
+    elementType: text
+    bounds: [60, 60, 600, 40]
+    content: {text: "总结：一条可验证的生产线", style: "$h1"}
+  - elementId: sm_a
+    elementType: shape
+    kind: roundRect
+    bounds: [60, 130, 260, 180]
+    fill: "#DBEAFE"
+  - elementId: sm_a_t
+    elementType: text
+    bounds: [80, 150, 220, 60]
+    content: {text: "声明制", style: "$h2", color: "#1E3A8A", align: center}
+  - elementId: sm_a_b
+    elementType: text
+    bounds: [80, 220, 220, 70]
+    content: {text: "冲突防不住？声明设计意图", style: "$body"}
+  - elementId: sm_b
+    elementType: shape
+    kind: roundRect
+    bounds: [350, 130, 260, 180]
+    fill: "#FEF3C7"
+  - elementId: sm_b_t
+    elementType: text
+    bounds: [370, 150, 220, 60]
+    content: {text: "双轨审阅", style: "$h2", color: "#92400E", align: center}
+  - elementId: sm_b_b
+    elementType: text
+    bounds: [370, 220, 220, 70]
+    content: {text: "数字门禁 + 视觉审阅 + 真渲染", style: "$body"}
+  - elementId: sm_c
+    elementType: shape
+    kind: roundRect
+    bounds: [640, 130, 260, 180]
+    fill: "#D1FAE5"
+  - elementId: sm_c_t
+    elementType: text
+    bounds: [660, 150, 220, 60]
+    content: {text: "保真交付", style: "$h2", color: "#065F46", align: center}
+  - elementId: sm_c_b
+    elementType: text
+    bounds: [660, 220, 220, 70]
+    content: {text: "splice / slice / patch", style: "$body"}
+  - elementId: sm_foot
+    elementType: text
+    bounds: [60, 360, 840, 90]
+    content: {text: "结论：元素区块冲突被机器防住（声明制），质量可验证（三轨），保真可一指令（splice）。", style: "$body"}
+expectedOverlaps:
+  - {pair: [sm_a, sm_a_t]}
+  - {pair: [sm_a, sm_a_b]}
+  - {pair: [sm_b, sm_b_t]}
+  - {pair: [sm_b, sm_b_b]}
+  - {pair: [sm_c, sm_c_t]}
+  - {pair: [sm_c, sm_c_b]}

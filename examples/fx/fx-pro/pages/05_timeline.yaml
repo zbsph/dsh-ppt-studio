@@ -1,0 +1,71 @@
+pageType: content
+background: "#F8FAFC"
+elements:
+  - elementId: tl_head
+    elementType: text
+    bounds: [60, 60, 500, 40]
+    content: {text: "实施路线（五阶段）", style: "$h1"}
+  - elementId: tl_line
+    elementType: line
+    points: [[80, 200], [860, 200]]
+    line: {color: "#94A3B8", width: 2}
+  - elementId: st1
+    elementType: shape
+    kind: pentagon
+    bounds: [60, 140, 140, 60]
+    fill: "#2563EB"
+  - elementId: st1_t
+    elementType: text
+    bounds: [70, 148, 120, 44]
+    content: {text: "建模", style: "$h2", color: "#FFFFFF", align: center}
+  - elementId: st2
+    elementType: shape
+    kind: pentagon
+    bounds: [220, 140, 140, 60]
+    fill: "#3B82F6"
+  - elementId: st2_t
+    elementType: text
+    bounds: [230, 148, 120, 44]
+    content: {text: "映射", style: "$h2", color: "#FFFFFF", align: center}
+  - elementId: st3
+    elementType: shape
+    kind: pentagon
+    bounds: [380, 140, 140, 60]
+    fill: "#F59E0B"
+  - elementId: st3_t
+    elementType: text
+    bounds: [390, 148, 120, 44]
+    content: {text: "仿真", style: "$h2", color: "#FFFFFF", align: center}
+  - elementId: st4
+    elementType: shape
+    kind: pentagon
+    bounds: [540, 140, 140, 60]
+    fill: "#8B5CF6"
+  - elementId: st4_t
+    elementType: text
+    bounds: [550, 148, 120, 44]
+    content: {text: "验证", style: "$h2", color: "#FFFFFF", align: center}
+  - elementId: st5
+    elementType: shape
+    kind: pentagon
+    bounds: [700, 140, 140, 60]
+    fill: "#10B981"
+  - elementId: st5_t
+    elementType: text
+    bounds: [710, 148, 120, 44]
+    content: {text: "推广", style: "$h2", color: "#FFFFFF", align: center}
+  - elementId: tl_note
+    elementType: text
+    bounds: [80, 300, 800, 100]
+    content: {text: "单向推进 + 每阶段门禁：建模评审 → 映射校验 → 仿真对标 → 验证报告 → 批量复制\n（时间线为示意图，非真实排期）", style: "$body"}
+expectedOverlaps:
+  - {pair: [st1, tl_line]}
+  - {pair: [st2, tl_line]}
+  - {pair: [st3, tl_line]}
+  - {pair: [st4, tl_line]}
+  - {pair: [st5, tl_line]}
+  - {pair: [st1, st1_t]}
+  - {pair: [st2, st2_t]}
+  - {pair: [st3, st3_t]}
+  - {pair: [st4, st4_t]}
+  - {pair: [st5, st5_t]}
