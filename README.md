@@ -310,6 +310,24 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 **Q：新增一页怎么注册？**
 → 复制母版去 `_` 前缀改名（如 `_06_...` → `06_...`）+ 在 deck.yaml `pages:` 注册；或新写完整页。
 
+**Q：表格在 PowerPoint 里看不见/空白？**
+→ 这是 v1.0.0-修订前旧引擎的结构 bug（graphicFrame 嵌套 `<a:xfrm>`，PowerPoint 打开时静默弃帧）——**已修复**；导出报告现在带 parity 回读自证（表 N/N · 图 M/M · 结构合法）。旧产物请重新 `ppt_export`。
+
+**Q：为什么线画并没穿过标签，verify 还报重叠？**
+→ 已修复（P6）：线元素按**真实几何**判定（线段×矩形 / 线段×线段），AABB 假阳性不再报、也不进声明队列；真跨越仍按"连线/箭头"声明制处理。
+
+**Q：真渲染图上为什么有水印？**
+→ 比例参考标注（"1px=1pt · 960×540" + 细边框），防人工读图坐标误判（P9）；脚本参数 `noWatermark` 可关。
+
+**Q：PowerShell 解压 .pptx 报"not a supported archive format"？**
+→ `Expand-Archive` 只认 .zip：先复制为 .zip 再解压，或 `tar -xzf <file> -C <out>`；读 zip 内 XML 请显式 UTF-8（P3/P4）。
+
+**Q：改码后为什么会话里还是旧行为？**
+→ 插件经 agent preset 会话装配（重启才生效）。修复后验证清单：`node scripts/build.mjs` → `node scripts/smoke.mjs`（回归）→ 会话内直跑 `node -e "import(...lib...)...验证修复产物"` → **重启 host 用真工具复验**；重启前需导出用 `engine=python-pptx` 兜底（P11）。
+
+**Q：网页/百科内容查不到？**
+→ `web_fetch` 受本机网络/DNS 限制（非公网 IP 拦截）；`ppt_crosscheck` 数据核查表为"页面 source 自证"机制，交付说明已如实标注（P2，环境侧）。
+
 ---
 
 ## 9. 环境与能力边界

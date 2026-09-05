@@ -6,6 +6,7 @@ lib/
 # 生成物/回归临时工程（脚本每次重建；保留手写 examples/smoke 源 yaml）
 examples/smoke/preview/
 examples/autodeclare-smoke/
+examples/table-smoke/
 examples/fx/*.pptx
 examples/fx/ren-*/
 examples/fx/reimport/

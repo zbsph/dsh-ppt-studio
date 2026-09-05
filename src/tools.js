@@ -573,7 +573,20 @@ export function registerTools(ctx) {
           const phNote = r.mediaPlaceholders?.length
             ? `\n\n⚠ 缺失媒体 ${r.mediaPlaceholders.length} 个（${r.mediaPlaceholders.join('、')}）已用 1×1 白色占位导出——请替换真实图片或删除页面引用（可重新 ppt_import 提取或人工补图）`
             : ''
-          return `✓ 已导出（pptd 引擎，${r.slides} 页）：${r.file}${fit}${phNote}${floorNote}${chartNote}${await withAudit(r.file)}`
+          const parityNote = r.parity
+            ? (r.parity.ok
+              ? `\n✅ 元素 parity 回读：表 ${r.parity.tablesExp}/${r.parity.tablesOut} · 图 ${r.parity.imagesExp}/${r.parity.imagesOut} · 结构合法（无 PowerPoint 弃帧类嵌套 xfrm）`
+              : `\n✗ 元素 parity 不一致：表 期望${r.parity.tablesExp}/实际${r.parity.tablesOut} · 图 期望${r.parity.imagesExp}/实际${r.parity.imagesOut} · 非法帧 ${r.parity.illegalFrames}——请勿交付，附本输出反馈插件团队`)
+            : ''
+          // P8（测试反馈）：真渲染抽查策略——含复杂元素的页必须覆盖（P1 事故的直接防线）
+          const riskyPages = (ctx0.pages ?? []).map((p, i) => {
+            const es = p.page.elements ?? []
+            return es.some((e) => ['table', 'chart', 'image'].includes(e.elementType) || e.kind === 'custGeom') ? i + 1 : null
+          }).filter(Boolean)
+          const renderNote = riskyPages.length
+            ? `\nP8 真渲染抽查：建议优先覆盖含 table/chart/image/custGeom 的页 → 第 ${riskyPages.join('、')} 页（每类至少一页；audit 档导出自动全页真渲染）`
+            : ''
+          return `✓ 已导出（pptd 引擎，${r.slides} 页）：${r.file}${fit}${phNote}${parityNote}${renderNote}${floorNote}${chartNote}${await withAudit(r.file)}`
         } catch (error) {
           // 自动回退链（C1 决定）：auto 且 pptd 硬失败 → 有 python-pptx 则兜底并醒目标注降级（绝不静默）
           if (eff.allowFallback) {

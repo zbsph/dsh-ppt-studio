@@ -17,7 +17,8 @@ const PS1 = `param(
   [string]$Out,
   [int]$W = 1920,
   [int]$H = 1080,
-  [int[]]$Pages = @()
+  [string]$PagesJson = '',
+  [switch]$NoWatermark
 )
 $ErrorActionPreference = 'Stop'
 $pp = $null
@@ -27,11 +28,29 @@ try {
   $pres = $pp.Presentations.Open($Pptx, -1, 0, 0)
   $n = $pres.Slides.Count
   New-Item -ItemType Directory -Force -Path $Out | Out-Null
-  $list = if ($Pages.Length -gt 0) { $Pages | Sort-Object -Unique } else { 1..$n }
+  # P5 修复：多页解析（"4,1" 按逗号拆——此前 -Pages 4,1 被绑定成 41）
+  $list = if ($PagesJson -ne '') { ($PagesJson -split ',') | ForEach-Object { [int]$_ } | Sort-Object -Unique } else { 1..$n }
   foreach ($i in $list) {
     $pres.Slides.Item($i).Export((Join-Path $Out ('{0:D2}.png' -f $i)), 'PNG', $W, $H)
   }
   $pres.Close()
+  # P9：真渲染图叠加轻量比例标注（1px=1pt · 960×540）+ 细边框——降低人工读图坐标误判
+  if (-not $NoWatermark) {
+    Add-Type -AssemblyName System.Drawing
+    foreach ($f in Get-ChildItem $Out -Filter '*.png') {
+      try {
+        $img = [System.Drawing.Image]::FromFile($f.FullName)
+        $g = [System.Drawing.Graphics]::FromImage($img)
+        $g.SmoothingMode = 'AntiAlias'
+        $font = New-Object System.Drawing.Font('Microsoft YaHei', 12, [System.Drawing.FontStyle]::Regular)
+        $brush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(110, 60, 60, 60))
+        $g.DrawString('1px=1pt · 960×540（比例参考）', $font, $brush, 8, ($img.Height - 34))
+        $pen = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(80, 90, 90, 90), 1)
+        $g.DrawRectangle($pen, 0, 0, ($img.Width - 1), ($img.Height - 1))
+        $g.Dispose(); $img.Dispose(); $font.Dispose(); $brush.Dispose(); $pen.Dispose()
+      } catch { }
+    }
+  }
   Write-Output ("OK:" + $list.Count)
 } finally {
   if ($pp) { try { $pp.Quit() } catch { } }
@@ -63,7 +82,7 @@ export function findPowerPoint() {
  * 渲染 pptx → 逐页 PNG。
  * @returns { pages, outDir, files }；COM 不可用/渲染失败抛错（调用方负责降级）。
  */
-export async function renderPptxToPng(pptx, outDir, { width = 1920, height = 1080, timeoutMs = 240000, pages } = {}) {
+export async function renderPptxToPng(pptx, outDir, { width = 1920, height = 1080, timeoutMs = 240000, pages, noWatermark = false } = {}) {
   if (!existsSync(pptx)) throw new Error(`pptx 不存在：${pptx}`)
   await mkdir(outDir, { recursive: true })
   const ps1 = join(tmpdir(), `dsh-ppt-render-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.ps1`)
@@ -71,8 +90,9 @@ export async function renderPptxToPng(pptx, outDir, { width = 1920, height = 108
   try {
     const args = ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', ps1,
       '-Pptx', pptx, '-Out', outDir, '-W', String(width), '-H', String(height)]
-    // A5 修复（反馈二）：按页渲染（COM 整册 20 页看一页 → 只渲染指定页，编号保持原页号）
-    if (pages && pages.length) args.push('-Pages', pages.join(','))
+    // A5/P5：按页渲染（单参数 JSON 串，避免 PS 数组绑定把 "4,1" 解析成 41）；水印默认开（P9）
+    if (pages && pages.length) args.push('-PagesJson', pages.join(','))
+    if (noWatermark) args.push('-NoWatermark')
     const stdout = await new Promise((resolve, reject) => {
       const child = spawn('powershell.exe', args, { windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] })
       let out = ''

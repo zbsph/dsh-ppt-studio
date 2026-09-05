@@ -259,7 +259,7 @@ export function analyzePage(page, size) {
       } else {
         findings.push({
           severity: 'error', code: 'out-of-page', id: el.id,
-          message: `元素 "${el.id}" 超出页面安全区：${fmtRect(b)}（页面 ${pw}×${ph}，安全区 ${fmtSa(sa)}）—— 如属有意设计（logo/角标等），请将 "${el.id}" 加入本页 expectedOutOfSafeArea 后重验`,
+          message: `元素 "${el.id}" 超出页面安全区：${fmtRect(b)}（页面 ${pw}×${ph}，安全区 ${fmtSa(sa)}）—— 如属有意设计（logo/角标等），请将 "${el.id}" 加入本页 expectedOutOfSafeArea 后重验\n    P7 建议坐标：${safeAdvice(b, sa, pw, ph)}`,
           area: b,
         })
       }
@@ -299,6 +299,9 @@ export function analyzePage(page, size) {
       const ox = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)
       const oy = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y)
       if (ox > TOL && oy > TOL) {
+        // P6 修复（测试反馈 ★）：线元素按真实几何判定——AABB 相交 ≠ 线段相交
+        // （手绘矢量战图/箭头的 AABB 假阳性曾产生约 30 对"模糊意图"声明）
+        if (!realOverlapGeom(els[i], els[j])) continue
         const ki = els[i].kind
         const kj = els[j].kind
         const ri = roleOf(els[i])
@@ -576,6 +579,22 @@ function fmtSa(sa) {
   return `上${sa.top ?? 0} 下${sa.bottom ?? 0} 左${sa.left ?? 0} 右${sa.right ?? 0}`
 }
 
+/** P7（测试反馈）：给出"一步到位"的合格区间建议，省一圈试错。 */
+function safeAdvice(b, sa, pw, ph) {
+  const sx0 = sa.left ?? 0, sx1 = pw - (sa.right ?? 0)
+  const sy0 = sa.top ?? 0, sy1 = ph - (sa.bottom ?? 0)
+  const xs = []
+  const ys = []
+  if (b.x < sx0) xs.push(`x ≥ ${Math.floor(sx0)}`)
+  if (b.x + b.w > sx1) xs.push(`x ≤ ${Math.floor(sx1 - b.w)}`)
+  if (b.y < sy0) ys.push(`y ≥ ${Math.floor(sy0)}`)
+  if (b.y + b.h > sy1) ys.push(`y ≤ ${Math.floor(sy1 - b.h)}`)
+  const parts = []
+  if (xs.length) parts.push('x：' + xs.join(' 且 '))
+  if (ys.length) parts.push('y：' + ys.join(' 且 '))
+  return parts.length ? parts.join('；') + `（当前尺寸 ${Math.round(b.w)}×${Math.round(b.h)}pt 不变）` : '（边界内）'
+}
+
 /**
  * 一键声明数据源（反馈 D2 ★★）：收集页面上所有"警告级未声明重叠对"——
  * 承载/装饰模式（shape×text、image×text、line×任意），不含内容互压（content-collision
@@ -592,6 +611,7 @@ export function collectDeclarable(page, size) {
       const ox = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)
       const oy = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y)
       if (ox <= TOL || oy <= TOL) continue
+      if (!realOverlapGeom(els[i], els[j])) continue // P6：线元素 AABB 假阳性不进声明
       const ri = roleOf(els[i])
       const rj = roleOf(els[j])
       if (ri === 'decoration' || rj === 'decoration') continue // 已完全豁免，无需声明
@@ -631,6 +651,46 @@ function contains(outer, inner) {
   const T = 1
   return inner.x >= outer.x - T && inner.y >= outer.y - T
     && inner.x + inner.w <= outer.x + outer.w + T && inner.y + inner.h <= outer.y + outer.h + T
+}
+
+/** 线段 vs 矩形真实相交（Liang-Barsky 裁剪，pad = 线宽/2 + 容差）。 */
+function segRectHit(p1, p2, rect, pad = 1) {
+  const x0 = rect.x - pad, y0 = rect.y - pad, x1 = rect.x + rect.w + pad, y1 = rect.y + rect.h + pad
+  const dx = p2[0] - p1[0], dy = p2[1] - p1[1]
+  let t0 = 0, t1 = 1
+  const p = [-dx, dx, -dy, dy]
+  const q = [p1[0] - x0, x1 - p1[0], p1[1] - y0, y1 - p1[1]]
+  for (let i = 0; i < 4; i++) {
+    if (p[i] === 0) { if (q[i] < 0) return false }
+    else {
+      const t = q[i] / p[i]
+      if (p[i] < 0) { if (t > t1) return false; if (t > t0) t0 = t }
+      else { if (t < t0) return false; if (t < t1) t1 = t }
+    }
+  }
+  return true
+}
+
+/** 线段互交（跨立测试：异号 = 相交）。 */
+function segsHit(a1, a2, b1, b2) {
+  const cross = (ox, oy, px, py) => ox * py - oy * px
+  const d1 = cross(b2[0] - b1[0], b2[1] - b1[1], a1[0] - b1[0], a1[1] - b1[1])
+  const d2 = cross(b2[0] - b1[0], b2[1] - b1[1], a2[0] - b1[0], a2[1] - b1[1])
+  const d3 = cross(a2[0] - a1[0], a2[1] - a1[1], b1[0] - a1[0], b1[1] - a1[1])
+  const d4 = cross(a2[0] - a1[0], a2[1] - a1[1], b2[0] - a1[0], b2[1] - a1[1])
+  return ((d1 > 0) !== (d2 > 0)) && ((d3 > 0) !== (d4 > 0))
+}
+
+/**
+ * P6 修复（测试反馈 ★）：元素对真实重叠判定——线元素用线段真实几何（线段×矩形 / 线段×线段），
+ * 非线元素沿用 AABB。返回 false = AABB 假阳性（不报重叠、不进声明、不进 collectDeclarable）。
+ */
+function realOverlapGeom(a, b) {
+  const isLine = (e) => e.kind === 'line' && Array.isArray(e.points) && e.points.length >= 2
+  if (isLine(a) && isLine(b)) return segsHit(a.points[0], a.points[1], b.points[0], b.points[1])
+  if (isLine(a)) return segRectHit(a.points[0], a.points[1], b.bounds, (a.line?.width ?? 1) / 2 + 1)
+  if (isLine(b)) return segRectHit(b.points[0], b.points[1], a.bounds, (b.line?.width ?? 1) / 2 + 1)
+  return true
 }
 
 /** 设计声明集合：expectedOverlaps: [{pair: [idA, idB]}] → Set("A × B" 排序键)。 */

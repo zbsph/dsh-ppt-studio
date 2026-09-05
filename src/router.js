@@ -104,6 +104,7 @@ export function workflowSection(taskType, cfg) {
       '9. 审美建议（ppt_verify 输出的 [·] 建议）不是门禁，但请逐条斟酌采纳；overlap/out-of-page/text-overflow 错误仍必须清零（审美改进不得引入元素区块冲突）。',
       '10. 引擎：auto 默认 = pptd（自研主引擎，图表矢量拼绘）；pptd 硬失败时自动回退 python-pptx（报告醒目标注降级）；python-pptx 仅用户显式指定时使用（其图表降级为表格）——除非用户要求，不要自行切换引擎。',
       '11. 质量档 audit（/ppt quality audit，从严门禁）：禁 autoDeclare（工具已拦）；每页必须 ppt_shot + 读图视觉审阅（无读图能力则降级结构 Lint 并在交付说明标注"未经视觉审阅"）；导出报告必须包含并核对 audit 回读断言（页数/尺寸/最小字号 ≥ minFontSize）；有 Office 时导出后自动 **Office 真渲染**（成品视觉审核，逐页 read_image）；交付说明含素材来源与数据脱敏/假设标注。',
+      '12. **真渲染抽检铁律（P1 事故教训）**：有 Office 时，真渲染抽查**必须覆盖所有含 table/chart/image/custGeom 的页**（每类至少一页，其余页轮换）——不要只挑"美观重点页"；抽查后逐页 read_image（渲染图已带 1px=1pt 比例标注水印，降低坐标误判）。导出报告会给出建议覆盖页清单（P8 行）。',
     ].join('\n'),
   }
 }

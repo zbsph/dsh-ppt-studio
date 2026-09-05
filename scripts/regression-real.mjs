@@ -44,6 +44,16 @@ if (existsSync(join(REAL_DECK, 'deck.yaml'))) {
     ok('真实 deck：导出 0 缩字（E2 承诺）', exp.autoFit.length === 0, `autoFit=${JSON.stringify(exp.autoFit)}`)
     const parts = zipRead(await readFile(exp.file))
     ok('真实 deck：OOXML 结构完整', parts.has('[Content_Types].xml') && parts.has('ppt/presentation.xml'))
+    // 表格导出回读断言（1.0.1：表格空白事故 → graphicFrame 嵌套 a:xfrm 非法结构 / 缺 tableStyleId）
+    const tables = ctx.pages.flatMap((p) => (p.page.elements ?? []).filter((e) => e.elementType === 'table').map((e) => e.elementId))
+    if (tables.length) {
+      const slidesXml = []
+      for (let i = 1; i <= ctx.pages.length; i++) slidesXml.push(parts.get(`ppt/slides/slide${i}.xml`)?.toString('utf8') ?? '')
+      const badFrame = slidesXml.filter((x) => /<p:xfrm><a:xfrm>/.test(x))
+      ok('真实 deck：表格 graphicFrame 无嵌套 a:xfrm', badFrame.length === 0, `违规帧=${badFrame.length}`)
+      const styled = slidesXml.filter((x) => x.includes('<a:tableStyleId>'))
+      ok('真实 deck：表槽含 tableStyleId', styled.length >= tables.length, `tables=${tables.length} styled=${styled.length}`)
+    }
   } catch (e) {
     ok('真实 deck：全链回归', false, e?.message)
   } finally {

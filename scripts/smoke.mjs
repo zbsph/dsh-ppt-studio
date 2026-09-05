@@ -1098,5 +1098,56 @@ await (await import('node:fs/promises')).rm(seedOut, { force: true })
 await (await import('node:fs/promises')).rm(spl.out, { force: true })
 await (await import('node:fs/promises')).rm(sl.out, { force: true })
 
+// ══ 32. v1.0.0-修订：P1 表格导出结构回归 + parity + P6 线真实相交（一致性）═══════════
+const { collectDeclarable } = await import('../lib/verify.js')
+// P1：带表格 deck 导出 → graphicFrame 无嵌套 a:xfrm + tableStyleId + parity 完整
+const tDeck = join(root, 'examples', 'table-smoke')
+await rm(tDeck, { recursive: true, force: true })
+await mkdir(join(tDeck, 'pages'), { recursive: true })
+await fsp.writeFile(join(tDeck, 'deck.yaml'), ['version: 1', 'title: tbl', 'size: [960, 540]', 'pages:', '  - pages/01.yaml', '', ''].join('\n'))
+await fsp.writeFile(join(tDeck, 'pages', '01.yaml'), [
+  'pageType: content', 'elements:',
+  '  - elementId: tbl', '    elementType: table', '    bounds: [60, 100, 500, 240]',
+  '    cols: [维度, 指标A, 指标B]',
+  '    rows:', '      - [效率, 45.6%, -12%]', '      - [成本, +8%, -3%]', '', ''].join('\n'))
+const tCtx = await resolveDeck(tDeck)
+const tExp = await exportPptx(tCtx, { out: join(tDeck, 't.pptx'), engine: 'pptd' })
+const tZip = zipRead(await fsp.readFile(tExp.file))
+let tBad = 0
+let tStyled = 0
+for (const [k, v] of tZip) {
+  if (!/^ppt\/slides\/slide\d+\.xml$/.test(k)) continue
+  const x = decodeXml(v)
+  if (x.includes('<p:xfrm><a:xfrm>')) tBad++
+  if (x.includes('<a:tableStyleId>')) tStyled++
+}
+ok('v1.0.0-修订 P1: 表格 graphicFrame 无嵌套 a:xfrm（PowerPoint 弃帧根源）', tBad === 0, `bad=${tBad}`)
+ok('v1.0.0-修订 P1: 表槽含 tableStyleId（部分版本弃帧的第二根源）', tStyled >= 1, `styled=${tStyled}`)
+ok('v1.0.0-修订 P1: 导出 parity 自证（表 1/1 · 图 0/0 · 结构合法）', tExp.parity?.ok === true, JSON.stringify(tExp.parity))
+await rm(tDeck, { recursive: true, force: true })
+// P6：线元素真实相交——AABB 假阳性不算重叠/不进声明；真跨越仍报/可声明
+const p6Layout = {
+  size: { width: 960, height: 540 },
+  theme: { colors: {} },
+  pages: [{
+    index: 0, name: 'p6', id: 'p6',
+    elements: [
+      { id: 'diag', kind: 'line', points: [[50, 300], [400, 50]], bounds: { x: 50, y: 50, w: 350, h: 250 }, line: { color: '#000000', width: 1 } },
+      { id: 'miss', kind: 'shape', bounds: { x: 330, y: 120, w: 50, h: 50 }, fill: '#3E4E63' }, // 仅 AABB 相交（线段从上方掠过）
+      { id: 'hit', kind: 'shape', bounds: { x: 120, y: 180, w: 80, h: 60 }, fill: '#D64253' }, // 线段真穿过
+    ],
+  }],
+}
+const vP6 = verifyDeck(p6Layout).text
+const decP6 = collectDeclarable(p6Layout.pages[0], p6Layout.size)
+const keyOf = (a, b) => [a, b].sort().join(' × ')
+ok('v1.0.0-修订 P6: AABB 假阳性不算重叠（diag×miss 无错误）',
+  !vP6.includes('diag') || !/- \[✗\]/.test(vP6.split('\n').find((l) => l.includes('diag') && l.includes('miss')) ?? ''), '')
+ok('v1.0.0-修订 P6: 真跨越仍报错（diag×hit unexpected-overlap）',
+  vP6.includes('diag') && vP6.includes('hit') && vP6.includes('unexpected-overlap'),
+  vP6.split('\n').filter((l) => l.includes('unexpected-overlap')).slice(0, 1).join('; ').slice(0, 100))
+ok('v1.0.0-修订 P6: collectDeclarable 与判据一致（只建议 diag×hit）',
+  decP6.length === 1 && decP6[0].join(' × ') === keyOf('diag', 'hit'), JSON.stringify(decP6))
+
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)

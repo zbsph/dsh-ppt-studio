@@ -89,10 +89,12 @@ ok('⑥ slice：仅 1 张 slide + 母版布局保留', sSingle.length === 1 && s
 // ⑦ Office COM（可选）
 const { findPowerPoint, renderPptxToPng } = await import('../lib/msrender.js')
 if (findPowerPoint()) {
-  const r1 = await renderPptxToPng(spl.out, join(fx, 'ren-spliced'), { pages: [3], timeoutMs: 150000 })
+  // P5 回归：多页参数 pages=[1,3] 应产出两页 PNG（此前 "4,1" 被 PS 解析成 41）
+  const r1 = await renderPptxToPng(spl.out, join(fx, 'ren-spliced'), { pages: [1, 3], timeoutMs: 150000 })
   const r2 = await renderPptxToPng(slc.out, join(fx, 'ren-single'), { pages: [1], timeoutMs: 150000 })
-  ok('⑦ Office COM 真渲染：spliced[3] + single[1] 产出 PNG', r1.files.length === 1 && r2.files.length === 1,
-    `spliced=${r1.files[0]?.split(/[\\/]/).pop()} single=${r2.files[0]?.split(/[\\/]/).pop()}`)
+  ok('⑦ Office COM 真渲染：spliced pages=[1,3]（多页 P5 回归）+ single[1] 产出 PNG',
+    r1.files.length === 2 && r2.files.length === 1,
+    `spliced=${r1.files.map((f) => f.split(/[\\/]/).pop()).join(',')} single=${r2.files[0]?.split(/[\\/]/).pop()}`)
 } else {
   ok('⑦ Office COM 不可用——标注后继续', true, '无 PowerPoint')
 }

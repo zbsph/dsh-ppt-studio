@@ -34,6 +34,7 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
     const shapes = []
     const media = []
     const mediaSeen = new Map()
+    const counts = { table: 0, image: 0, chart: 0 }
     const addMedia = (srcPath) => {
       if (mediaSeen.has(srcPath)) return mediaSeen.get(srcPath)
       const rId = `rId${media.length + 2}`
@@ -48,12 +49,14 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
         case 'shape': shapes.push(shapeSp(el)); break
         case 'line': shapes.push(connectorSp(el)); break
         case 'image': {
+          counts.image++
           const rId = addMedia(el.src)
           shapes.push(picSp(el, rId))
           break
         }
-        case 'table': shapes.push(tableFrame(el)); break
+        case 'table': counts.table++; shapes.push(tableFrame(el)); break
         case 'chart': {
+          counts.chart++
           const issue = chartIssue(el.chart)
           if (issue) report.chartInfos.push(`第 ${page.index + 1} 页（${page.name}）${el.id}: ${issue}`)
           shapes.push(...chartSp(el))
@@ -73,6 +76,7 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
       page,
       shapes,
       media,
+      counts,
       spTree: `<p:spTree>${spTreeHeader()}${shapes.join('')}</p:spTree>`,
       bg,
     })
@@ -113,6 +117,24 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
         files[`ppt/media/${bn}`] = TINY_PNG
       }
     }
+  }
+
+  // P1 防线（测试反馈 ★）：导出产物 parity 回读——
+  // layout 元素计数 == OOXML 计数 + 结构不变量（graphicFrame 无嵌套 a:xfrm = PowerPoint 弃帧根源）
+  let tablesExp = 0, tablesOut = 0, imagesExp = 0, imagesOut = 0, illegal = 0
+  for (let i = 0; i < slides.length; i++) {
+    const s = slides[i]
+    tablesExp += s.counts.table
+    imagesExp += s.counts.image
+    const xml = files[`ppt/slides/slide${i + 1}.xml`]
+    const txt = typeof xml === 'string' ? xml : String(xml)
+    tablesOut += (txt.match(/graphicData uri="http:\/\/schemas\.openxmlformats\.org\/drawingml\/2006\/table"/g) ?? []).length
+    imagesOut += (txt.match(/<p:pic>/g) ?? []).length
+    if (txt.includes('<p:xfrm><a:xfrm>')) illegal++
+  }
+  report.parity = {
+    tablesExp, tablesOut, imagesExp, imagesOut, illegalFrames: illegal,
+    ok: tablesExp === tablesOut && imagesExp === imagesOut && illegal === 0,
   }
 
   // out：绝对路径原样使用；相对路径相对 deck 目录（反馈 E1 ★）
@@ -266,6 +288,9 @@ function picSp(el, rId) {
 }
 
 // ── table ─────────────────────────────────────────────────────────────────
+/** PowerPoint 默认表格样式（python-pptx/PowerPoint 落盘同一 GUID）；无样式时部分版本丢弃表格（P1 事故）。 */
+const TABLE_STYLE_ID = '{5C22544A-7EE6-4342-B048-85BDC9FD1C3A}'
+
 function tableFrame(el) {
   const id = nid()
   const rows = [el.header ? [...el.cols] : null, ...el.rows.map((r) => [...r])].filter(Boolean)
@@ -280,17 +305,21 @@ function tableFrame(el) {
       const fill = isH ? '<a:solidFill><a:srgbClr val="DDEBF7"/></a:solidFill>' : '<a:noFill/>'
       const rPr = '<a:rPr lang="zh-CN" sz="1100"' + (isH ? ' b="1"' : '') + '><a:solidFill><a:srgbClr val="1F2937"/></a:solidFill></a:rPr>'
       const tb = '<a:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r>' + rPr + '<a:t>' + xm(cell ?? '') + '</a:t></a:r></a:p></a:txBody>'
-      const mar = '<a:marL l="45720" r="45720" t="22860" b="22860" anchor="ctr"/>'
-      return '<a:tc>' + tb + '<a:tcPr>' + fill
+      // P1 修复（测试反馈 ★）：tcPr 子元素顺序须为 lnL..lnB → fill → marL（ECMA-376 CT_TableCellProperties）；
+      // anchor 是 tcPr 的属性而非 marL 的属性。
+      return '<a:tc>' + tb + '<a:tcPr anchor="ctr">'
         + '<a:lnL><a:noFill/></a:lnL><a:lnR><a:noFill/></a:lnR><a:lnT><a:noFill/></a:lnT><a:lnB><a:noFill/></a:lnB>'
-        + mar + '</a:tcPr></a:tc>'
+        + fill + '<a:marL l="45720" r="45720" t="22860" b="22860"/></a:tcPr></a:tc>'
     }).join('')
     return '<a:tr h="' + Math.floor(emu(el.bounds.h) / rows.length) + '">' + tds + '</a:tr>'
   }).join('')
+  // P1 修复：graphicFrame 的 <p:xfrm> 直接含 <a:off>/<a:ext>（不能复用 spPr 的 xfrm()，
+  // 其嵌套 <a:xfrm> 属非法结构——PowerPoint 打开时静默丢弃整帧，HTML 预览不受影响，极具迷惑性）。
   return '<p:graphicFrame><p:nvGraphicFramePr><p:cNvPr id="' + id + '" name="' + xm(el.id) + '"/><p:cNvGraphicFramePr/><p:nvPr/></p:nvGraphicFramePr>'
-    + '<p:xfrm>' + xfrm(el.bounds.x, el.bounds.y, el.bounds.w, el.bounds.h) + '</p:xfrm>'
+    + '<p:xfrm><a:off x="' + emu(el.bounds.x) + '" y="' + emu(el.bounds.y) + '"/><a:ext cx="' + emu(el.bounds.w) + '" cy="' + emu(el.bounds.h) + '"/></p:xfrm>'
     + '<a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/table">'
-    + '<a:tbl><a:tblPr firstRow="' + (header ? 1 : 0) + '" bandRow="0"/>' + grid + trs + '</a:tbl>'
+    + '<a:tbl><a:tblPr firstRow="' + (header ? 1 : 0) + '" bandRow="0"><a:tableStyleId>' + TABLE_STYLE_ID + '</a:tableStyleId></a:tblPr>'
+    + grid + trs + '</a:tbl>'
     + '</a:graphicData></a:graphic></p:graphicFrame>'
 }
 
