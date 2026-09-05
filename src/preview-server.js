@@ -81,14 +81,34 @@ async function resolveToken(token) {
   return null
 }
 
+/**
+ * 装配双源（注入器 registry 恢复 + agent preset 行挂载）可能同时挂载本插件——
+ * 「duplicate /ppt-preview」崩溃的根因（时序竞态）。路由注册幂等化：
+ * refcount 语义，注册态挂 globalThis（跨模块实例绝对共享——双源经 junction/真实
+ * 路径加载可能是两个 ESM 实例，模块级变量不可靠）——
+ * 首个注册者真正注册路由，最后卸载者真正卸载；多余挂载/清理零副作用。
+ */
+const ROUTE_REG = globalThis.__pptRouteReg ?? { count: 0, unregister: null }
+globalThis.__pptRouteReg = ROUTE_REG
+function releaseRouteIfZero() {
+  if (ROUTE_REG.count === 0 && ROUTE_REG.unregister) {
+    try { ROUTE_REG.unregister() } catch { /* 幂等 */ }
+    ROUTE_REG.unregister = null
+  }
+}
+
 /** 注册预览路由（返回 disposer；无 webServer 环境返回 null）。 */
 export function registerPreviewRoute(ctx) {
   const ws = ctx.get('webServer')
   if (!ws) return null
-  return ctx.effect(() => {
-    const unregister = []
-    // ① 预览根静态服务（/ppt-preview）
-    unregister.push(ws.register({
+  if (ROUTE_REG.count > 0) {
+    // 幂等分支（双装配源）：只计数，不重复注册
+    ROUTE_REG.count++
+    return ctx.effect(() => { ROUTE_REG.count--; releaseRouteIfZero() }, 'ppt-studio: preview + gallery routes (ref)')
+  }
+  const unregister = []
+  // ① 预览根静态服务（/ppt-preview）
+  unregister.push(ws.register({
       kind: 'prefix',
       path: '/ppt-preview', // prefix 语义：path 不带尾斜杠（实测：带斜杠不命中）
       async handler(req, res) {
@@ -134,8 +154,9 @@ export function registerPreviewRoute(ctx) {
         }
       },
     }))
-    return () => { for (const u of unregister) if (typeof u === 'function') { try { u() } catch { /* 幂等 */ } } }
-  }, 'ppt-studio: preview + gallery routes')
+    ROUTE_REG.unregister = () => { for (const u of unregister) if (typeof u === 'function') { try { u() } catch { /* 幂等 */ } } }
+    ROUTE_REG.count++
+    return ctx.effect(() => { ROUTE_REG.count--; releaseRouteIfZero() }, 'ppt-studio: preview + gallery routes')
 }
 
 function notFound(res) {

@@ -953,6 +953,21 @@ const aBad3 = await validateTemplateAsset('简约商务', 'media/xxx.png')
 ok('v0.14：模板资源白名单（合法放行 + 路径穿越/未知 id/非法文件拒绝）',
   aOk !== null && aBad1 === null && aBad2 === null && aBad3 === null,
   `ok=${!!aOk} traversal=${aBad1 === null} unknown=${aBad2 === null} illegal=${aBad3 === null}`)
+// 幂等断言（v0.14.2：双装配源 duplicate 路由修复——refcount/globalThis）
+const { registerPreviewRoute: rpr } = await import('../lib/preview-server.js')
+const routeCalls = []
+const fakeWs = { register: (r) => { routeCalls.push(r.path); return () => {} } }
+// ctx.effect 真实语义：参数 = 清理回调（注册，非立即执行）；返回 disposer（调用时执行清理一次）
+const fakeCtx = { get: () => fakeWs, effect: (cb) => { let active = true; return () => { if (active) { active = false; cb() } } } }
+const d1 = rpr(fakeCtx)
+const d2 = rpr(fakeCtx) // 双源第二实例：应幂等（0 新注册）
+ok('v0.14.2：路由幂等——双实例只注册一次（2 条路由，无 duplicate）',
+  routeCalls.length === 2 && routeCalls[0] === '/ppt-preview' && routeCalls[1] === '/ppt-template-assets',
+  `calls=${routeCalls.join(',')}`)
+d1()
+ok('v0.14.2：单一 dispose 不卸载（refcount 仍 >0）', routeCalls.length === 2)
+d2()
+ok('v0.14.2：最后 dispose 真正卸载（count=0，无异常）', routeCalls.length === 2)
 
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)
