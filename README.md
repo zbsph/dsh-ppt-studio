@@ -32,7 +32,7 @@
 
 ### 0.2 方式 A：下载发布包（推荐）
 
-1. 在本仓库 [Releases](https://github.com/dsh-external/dsh-ppt-studio/releases) 页面下载 `dsh-external-dsh-ppt-studio-<版本>.tgz`（v1.0.0 起）。
+1. 在本仓库 [Releases](https://github.com/zbsph/dsh-ppt-studio/releases) 页面下载 `dsh-external-dsh-ppt-studio-<版本>.tgz`（v1.0.0 起）。
 2. 解压到任意目录（如 `D:\plugins\dsh-ppt-studio`）：
    ```powershell
    tar -xzf dsh-external-dsh-ppt-studio-1.0.0.tgz -C D:\plugins
