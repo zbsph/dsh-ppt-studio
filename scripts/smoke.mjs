@@ -938,21 +938,25 @@ ok('v0.13：themeRef 断言——正确引用通过', true)
 await rm(ccDeck, { recursive: true, force: true })
 await rm(refDeck, { recursive: true, force: true })
 
-// ── 29. v0.14.2：预览路由幂等（双装配源 duplicate 修复——refcount/globalThis；v0.14.3 删画廊后仅单路由）────────
+// ── 29. v0.14.2/4：预览路由幂等 + 异步注册（duplicate 修复；ws.register 是 async——必须等待 settle）────────
 const { registerPreviewRoute: rpr } = await import('../lib/preview-server.js')
 const routeCalls = []
-const fakeWs = { register: (r) => { routeCalls.push(r.path); return () => {} } }
+const fakeWs = { register: async (r) => { routeCalls.push(r.path); return () => {} } } // 真实语义：async register → Promise<disposer>
 // ctx.effect 真实语义：参数 = 清理回调（注册，非立即执行）；返回 disposer（调用时执行清理一次）
 const fakeCtx = { get: () => fakeWs, effect: (cb) => { let active = true; return () => { if (active) { active = false; cb() } } } }
+const settle = () => new Promise((r) => setTimeout(r, 50))
 const d1 = rpr(fakeCtx)
 const d2 = rpr(fakeCtx) // 双源第二实例：应幂等（0 新注册）
-ok('v0.14.2/3：路由幂等——双实例只注册一次（1 条 /ppt-preview，无 duplicate）',
+await settle()
+ok('v0.14.2/4：路由幂等——双实例只注册一次（1 条 /ppt-preview，无 duplicate）',
   routeCalls.length === 1 && routeCalls[0] === '/ppt-preview',
   `calls=${routeCalls.join(',')}`)
 d1()
-ok('v0.14.2/3：单一 dispose 不卸载（refcount 仍 >0）', routeCalls.length === 1)
+await settle()
+ok('v0.14.2/4：单一 dispose 不卸载（refcount 仍 >0，路由仍在）', routeCalls.length === 1)
 d2()
-ok('v0.14.2/3：最后 dispose 真正卸载（count=0，无异常）', routeCalls.length === 1)
+await settle()
+ok('v0.14.2/4：最后 dispose 真正卸载（count=0，unreg 已清）', routeCalls.length === 1)
 
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)
