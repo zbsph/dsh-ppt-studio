@@ -83,20 +83,23 @@ async function resolveToken(token) {
 
 /**
  * 装配双源（注入器 registry 恢复 + agent preset 行挂载）可能同时挂载本插件——
- * 「duplicate /ppt-preview」崩溃的根因（时序竞态）。路由注册幂等化：
- * refcount 语义，注册态挂 globalThis（跨模块实例绝对共享——双源经 junction/真实
- * 路径加载可能是两个 ESM 实例，模块级变量不可靠）。
- * **v0.14.4 关键修复**：ws.register 是异步的（返回 Promise<disposer>）——此前注册
- * 未 await（v0.6.3 引入即如此；smoke 只测文件生成不测 HTTP 端到端，v0.14.4 起纳入）
- * ——现在改异步初始化 + 取消标记（清理早于注册完成时标记，注册完成后自反注册）。
+ * 「duplicate /ppt-preview」崩溃的根因（时序竞态）。路由注册幂等化，**双重防线**：
+ * ① **以 webServer 前缀表为皇帝位**——注册前先查表：已有 /ppt-preview（无论谁注册的、
+ *    refcount 状态如何）→ 跳过注册（只计数）；防任何时序的双注册。
+ * ② refcount 管理（globalThis，跨模块实例共享；双源经 junction/真实路径可能是两个
+ *    ESM 实例，模块级变量不可靠）。
+ * **v0.14.5 补**：卸载器 u() 是异步的（u() 返回 Promise，未 await 会导致"卸载未完成时
+ *   新注册 → duplicate"——v0.14.4 取消路径实测复现）；卸载路径全部 await。
  */
 const ROUTE_REG = globalThis.__pptRouteReg ?? { count: 0, unreg: null }
 globalThis.__pptRouteReg = ROUTE_REG
-function releaseRouteIfZero() {
+
+/** 卸载决策：count 归零且有卸载器 → await 卸载（失败保留残留，由表判据挡住重复注册）。 */
+async function releaseRouteWhenZero() {
   if (ROUTE_REG.count === 0 && ROUTE_REG.unreg) {
     const u = ROUTE_REG.unreg
     ROUTE_REG.unreg = null
-    try { u() } catch { /* 幂等 */ }
+    try { await u() } catch { /* 幂等；残留由注册前表判据兜底 */ }
   }
 }
 
@@ -104,13 +107,13 @@ function releaseRouteIfZero() {
 export function registerPreviewRoute(ctx) {
   const ws = ctx.get('webServer')
   if (!ws) return null
-  if (ROUTE_REG.count > 0) {
-    // 幂等分支（双装配源）：只计数，不重复注册
+  const hasRoute = () => (ws.prefixes?.has?.('/ppt-preview') ?? false) === true
+  if (hasRoute() || ROUTE_REG.count > 0) {
+    // 幂等分支：表已注册（任何来源）或本组已发起注册 → 只计数，不重复注册
     ROUTE_REG.count++
-    return ctx.effect(() => { ROUTE_REG.count--; releaseRouteIfZero() }, 'ppt-studio: preview route (ref)')
+    return ctx.effect(() => { ROUTE_REG.count--; void releaseRouteWhenZero() }, 'ppt-studio: preview route (ref)')
   }
   let cancelled = false
-  // ws.register 异步：await 完成后才真正生效；cancel 标记处理"清理早于注册完成"
   const unregPromise = ws.register({
     kind: 'prefix',
     path: '/ppt-preview', // prefix 语义：path 不带尾斜杠（实测：带斜杠不命中）
@@ -135,8 +138,8 @@ export function registerPreviewRoute(ctx) {
         res.end('preview error')
       }
     },
-  }).then((u) => {
-    if (cancelled) { try { u() } catch { } ; return null }
+  }).then(async (u) => {
+    if (cancelled) { try { await u() } catch { /* 幂等 */ } ; return null }
     ROUTE_REG.unreg = u
     return u
   }).catch(() => null)
@@ -144,9 +147,9 @@ export function registerPreviewRoute(ctx) {
   return ctx.effect(() => {
     ROUTE_REG.count--
     if (cancelled) return
-    if (ROUTE_REG.unreg) { releaseRouteIfZero(); return }
+    if (ROUTE_REG.unreg) { void releaseRouteWhenZero(); return }
     cancelled = true
-    unregPromise.then(() => releaseRouteIfZero())
+    unregPromise.then(() => releaseRouteWhenZero())
   }, 'ppt-studio: preview route')
 }
 

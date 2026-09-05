@@ -938,25 +938,39 @@ ok('v0.13：themeRef 断言——正确引用通过', true)
 await rm(ccDeck, { recursive: true, force: true })
 await rm(refDeck, { recursive: true, force: true })
 
-// ── 29. v0.14.2/4：预览路由幂等 + 异步注册（duplicate 修复；ws.register 是 async——必须等待 settle）────────
+// ── 29. v0.14.2/5：预览路由双重防线（表判据 + refcount + async 注册/卸载）────────
 const { registerPreviewRoute: rpr } = await import('../lib/preview-server.js')
 const routeCalls = []
-const fakeWs = { register: async (r) => { routeCalls.push(r.path); return () => {} } } // 真实语义：async register → Promise<disposer>
-// ctx.effect 真实语义：参数 = 清理回调（注册，非立即执行）；返回 disposer（调用时执行清理一次）
+const fakePrefixes = new Map()
+const fakeWs = {
+  prefixes: fakePrefixes, // 真实语义：webServer 暴露前缀表（hasRoute 判据）
+  register: async (r) => {
+    routeCalls.push(r.path)
+    fakePrefixes.set(r.path, { kind: r.kind, path: r.path, handler: r.handler })
+    return async () => { fakePrefixes.delete(r.path) } // 卸载也是 async（真实语义）
+  },
+}
 const fakeCtx = { get: () => fakeWs, effect: (cb) => { let active = true; return () => { if (active) { active = false; cb() } } } }
 const settle = () => new Promise((r) => setTimeout(r, 50))
 const d1 = rpr(fakeCtx)
 const d2 = rpr(fakeCtx) // 双源第二实例：应幂等（0 新注册）
 await settle()
-ok('v0.14.2/4：路由幂等——双实例只注册一次（1 条 /ppt-preview，无 duplicate）',
-  routeCalls.length === 1 && routeCalls[0] === '/ppt-preview',
+ok('v0.14.2/5：路由幂等——双实例只注册一次（表 1 条，无 duplicate）',
+  routeCalls.length === 1 && fakePrefixes.has('/ppt-preview'),
   `calls=${routeCalls.join(',')}`)
 d1()
 await settle()
-ok('v0.14.2/4：单一 dispose 不卸载（refcount 仍 >0，路由仍在）', routeCalls.length === 1)
+ok('v0.14.2/5：单一 dispose 不卸载（refcount>0，路由仍在）', fakePrefixes.has('/ppt-preview'))
 d2()
 await settle()
-ok('v0.14.2/4：最后 dispose 真正卸载（count=0，unreg 已清）', routeCalls.length === 1)
+ok('v0.14.2/5：最后 dispose 真正卸载（await 卸载后表清空）', !fakePrefixes.has('/ppt-preview'))
+// 表判据兜底：模拟残留路由（早于本次实例的异步卸载未完成）→ 调用不重复注册
+fakePrefixes.set('/ppt-preview', { kind: 'prefix', path: '/ppt-preview', handler: null })
+const d3 = rpr(fakeCtx)
+await settle()
+ok('v0.14.2/5：表判据兜底——残留路由存在时不重复注册（防 duplicate 根源）', routeCalls.length === 1 && fakePrefixes.has('/ppt-preview'))
+d3()
+await settle()
 
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)
