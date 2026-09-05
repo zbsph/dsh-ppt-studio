@@ -2,8 +2,9 @@
  * PPTD → PPTX 导出器（主引擎）：生成最小可打开的 OOXML。
  * - 元素：text / shape(rect,ellipse,triangle) / line(箭头) / image / table
  *   / chart（矢量拼绘：bar=矩形、line=连接线+圆点、pie=饼形）
- * - 文本自动 fit：与 verify 同一度量与阈值（overflow > 1px 才缩），按比例缩字号，
- *   不低于 theme.minFontSize（默认 12pt，且不超过原字号）；到下限仍溢出记 floorHit。
+ * - 文本自动 fit：与 verify 同一度量与阈值（overflow > 1px 才缩），按比例缩字号；
+ *   下限语义（2026-09-06 用户拍板）：theme.minFontSize 显式 = 用户给出的字号下限（严格遵守，且不超过原字号）；
+ *   未设置 = 无强制下限（仅 60% 原字号防荒谬保底），绝不升字；到下限仍溢出记 floorHit。
  *   验证通过 ⇒ 导出不缩字（反馈 E2：双度量差已对齐）。
  * - 1px = 1pt；EMU = pt × 12700。
  */
@@ -170,8 +171,12 @@ function textSp(el, report, minFontSize) {
   const origSize = s.fontSize
   let fontSize = origSize
   const boxH = el.bounds.h
-  // 缩字下限：主题 minFontSize（默认 12），且不超过原字号（反馈 E2：绝不静默低于 12pt）
-  const floor = Math.min(origSize, typeof minFontSize === 'number' && minFontSize > 0 ? minFontSize : 12)
+  // 缩字下限语义（2026-09-06 修订，用户拍板）：下限 = 用户指令——
+  // ① 用户给出最小字号（theme.minFontSize 显式）→ 严格遵守（且不超过原字号，绝不升字）；
+  // ② 未给出 → 不设强制（仅防荒谬：60% 原字号保底、最低 6pt）；绝不高于原字号。
+  const floor = typeof minFontSize === 'number' && minFontSize > 0
+    ? Math.min(origSize, minFontSize)
+    : Math.max(6, Math.round(origSize * 0.6))
   if (s.wrap !== false && m.overflowY > FIT_TOL) {
     const fit = Math.max(1, Math.floor(fontSize * Math.min(0.95, (boxH / Math.max(1, m.textH)) * 0.95)))
     if (fit < fontSize) {

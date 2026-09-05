@@ -163,7 +163,7 @@ theme:                        # 样式只在 theme 定义元素引用 token；�
   colors: {primary: "#2563EB", ink: "#1F2937"}
   textStyles: {title: {fontSize: 32, color: "$ink", bold: true}, body: {fontSize: 16, color: "$ink"}}
   safeArea: {top: 20, bottom: 20}   # 可选：模板背景非内容区（logo/页眉页脚带）
-  minFontSize: 12             # 可选：导出 auto-fit 缩字下限（默认 12；中文最小 12pt 铁律）
+  minFontSize: 14             # 可选：用户给出字号下限时设置（如"不得小于14号"→14）；缺省无强制下限
 pages:
   - pages/01_cover.yaml
 ```
@@ -220,10 +220,11 @@ elements:
 - 超**页面边界** = 永远 ERROR，不可声明（放映不可见）。
 - 超**安全区**（模板 logo/页眉页脚带）= 声明制：`expectedOutOfSafeArea: [idA, ...]` 手工声明（id 必须存在）。
 
-### 5.3 文本度量与 12pt 铁律
+### 5.3 文本度量与"下限 = 用户指令"
 
-- 保守估算（CJK 1em·加粗 ×1.06 / Latin 数字 0.6em / 空格 0.4em），宁可误报不可漏报；渲染/校验/导出**同一度量**（溢出 > 1px 才缩字，缩字下限 `theme.minFontSize` 默认 12pt）。
-- verify 通过 ⇒ 导出不缩字；到达下限仍溢出 → 报告 ✗（修复：扩大容器/精简文案，不要接受 <12pt 缩字）。
+- 保守估算（CJK 1em·加粗 ×1.06 / Latin 数字 0.6em / 空格 0.4em），宁可误报不可漏报；渲染/校验/导出**同一度量**（溢出 > 1px 才缩字）。
+- **字号下限 = 用户指令**（2026-09-06 用户拍板）：用户给出最小字号（如"不得小于 14 号"）→ 模型写入 `theme.minFontSize` 并严格执行（导出缩字不得低于它）；**未给下限不设强制**（auto-fit 仅 60% 原字号防荒谬保底，绝不升字）。插件不预设任何默认下限。
+- verify 通过 ⇒ 导出不缩字；到达下限仍溢出 → 报告 ✗（修复：扩大容器/精简文案；下限是用户的，不是插件的）。
 - **M2 实测档**（`ppt_measure` + `ppt_verify measured=true`）：浏览器真实排版测量——实测溢出且估算没报 = 新 error（估算漏报）；估算报但实测通过 = warning（字体差异，人工确认）。实测=终审、估算=预检。
 
 ### 5.4 主题一致性（统一基础样式）

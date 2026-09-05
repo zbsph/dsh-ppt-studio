@@ -22,7 +22,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 | "怎么只改原稿第 15 页" | `ppt_import` 读真身 → 改工作区页（verify 清零）→ `ppt_splice`（替换进源，其余页 SHA256 逐字节不变）→ 可选 `ppt_slice` 单页版 → `ppt_visual pages="15"` 抽查 |
 | "为什么报重叠错误，我明明想要这样" | design-intent 声明制：把有意重叠对加入该页 `expectedOverlaps`（流式 `[{pair: [a,b]}]` 或块式 `- pair: [a,b]`，每对一行），重验即 ✓；说不清意图的对子改布局；**内容互压（文字×文字）永远不能声明** |
 | "样式没生效" | 样式键必须在 `content` 内部（元素级 fontSize/color/bold/... 无效，`ppt_check` 现在会直接报错） |
-| "字号可以 11pt 吗" | 不可（默认铁律 12pt；`theme.minFontSize` 可调但导出缩字不会低于它；到下限仍溢出会明确报 ✗） |
+| "字号可以 11pt 吗" | **可以**（下限 = 用户指令）：用户给了下限（如"不得小于14号"）→ 写入 theme.minFontSize 并严格遵守；用户没给 → 不设任何强制下限（插件无默认）。 |
 | "为什么导出会缩字" | verify 已报溢出 → 先清零（扩容器/精简文案/显式 `\n`）；verify 通过 ⇒ 导出不缩字 |
 | "预览链接 404" | 路由在 PPT 工作室会话挂载时注册——确认当前是 PPT 工作室会话（不是默认会话） |
 | "图表能画什么" | bar/line/pie（矢量拼绘）；python-pptx 兜底引擎降级表格；复杂图表用图片或 Shape 拼 |
@@ -32,7 +32,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 ## 3. DSL 快速参考（写页面时对照）
 
 - 工程：`deck.yaml` + `pages/*.yaml` + `media/`；1px=1pt，原点左上；默认 960×540。
-- `theme`：`colors {name: hex}`、`textStyles {name: {fontSize,color,bold,fontFamily,align,lineHeight,wrap}}`、`safeArea`、`minFontSize`（默认12）、`themeConformance: strict|suggest|off`。
+- `theme`：`colors {name: hex}`、`textStyles {name: {fontSize,color,bold,fontFamily,align,lineHeight,wrap}}`、`safeArea`、`minFontSize`（用户给出字号下限时设置；缺省无强制下限）、`themeConformance: strict|suggest|off`。
 - 元素通用：`elementId`（页内唯一）、`elementType: text|shape|line|image|table|chart`、`bounds: [x,y,w,h]`（line 可省，由 points 推导）、`role: background|content|decoration`。
 - text：`content: {text, style: "$name" 或内联样式键}`；**样式键必须在 content 内**。
 - shape：`kind: rect|roundRect|ellipse|triangle + prst(箭头/菱形/五边形/flowchart…) + custGeom path`；`fill #hex | {color,alpha} | {type: gradient, stops: [{pos,color,alpha}], angle}`；`line {color,width}`；`rotation`。
@@ -44,7 +44,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 
 ## 4. 质量门禁（答复"为什么还要改"的依据）
 
-- ERROR 必须清零：`overlap 未声明`（修布局或补声明）、`content-collision`（永远不可声明）、`out-of-page 超页面`（不可声明）、`out-of-safe-area 未声明`（有意则声明）、`text-overflow`（扩容器/缩字到≥12pt 或精简）。
+- ERROR 必须清零：`overlap 未声明`（修布局或补声明）、`content-collision`（永远不可声明）、`out-of-page 超页面`（不可声明）、`out-of-safe-area 未声明`（有意则声明）、`text-overflow`（扩容器/精简文案；缩字下限按用户指令，未给则 60% 保底防荒谬）。
 - 声明命中显示为 ✓ 预期重叠/✓ 预期出界（确认，不算错误）。
 - `[·]` 建议（美学/对比度/孤字/密度/near-align）永不是门禁，但逐条斟酌。
 - 三层审阅节奏：`ppt_verify`（数）→ `ppt_shot`+读图（视）→ `ppt_visual`（Office 真，有条件时）；audit 档禁 autoDeclare、导出自动回读断言 + 自动真渲染。

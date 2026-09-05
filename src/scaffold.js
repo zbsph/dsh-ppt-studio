@@ -17,7 +17,7 @@ theme:                        # 样式只在这里定义，页面元素引用 to
   colors: {primary: "#2563EB", ink: "#1F2937"}
   textStyles: {title: {fontSize: 32, color: "$ink", bold: true}, body: {fontSize: 16, color: "$ink"}}
   safeArea: {top: 20, bottom: 20}   # 可选：模板背景非内容区（logo/页眉页脚带）
-  minFontSize: 12             # 可选：导出 auto-fit 缩字下限（默认 12）
+  minFontSize: 12             # 可选：用户给出字号下限时设置（如"不得小于14号" → 14）；缺省无强制下限
 pages:
   - pages/01_cover.yaml
 \`\`\`
@@ -127,7 +127,7 @@ overlapMode: declared        # declared（默认）| lenient（草稿缓冲：�
   [·] 为审美建议（非门禁，但请斟酌）。宽 > 窄 的元素安全：加 safeArea 后安全区外 = 出界。
 - ppt_verify autoDeclare=true：把警告级未声明重叠一键写入 expectedOverlaps（内容互压仍要手工修）。
 - ppt_export 的 out 支持绝对路径（原样使用）或文件名（相对 deck 目录）。
-- 度量：预览/校验/导出共用同一保守估算；导出缩字不低于 theme.minFontSize，到下限仍溢出会明确报告。
+- 度量：预览/校验/导出共用同一保守估算；**字号下限 = 用户指令**（写入 theme.minFontSize，导出缩字同步遵守；未给下限不设强制，仅 60% 保底防荒谬）。
 - 需要完整可跑样例：ppt_new 生成示例工程；回归样例在插件 examples/smoke。
 `
 

@@ -9,7 +9,7 @@
  *     colors: {primary: '#2563EB', ...}
  *     textStyles: {title: {fontSize, color, fontFamily, bold, align, lineHeight}, ...}
  *     safeArea: {top, bottom, left, right}   # 背景模板的非内容区安全边距（verify 视其外为出界）
- *     minFontSize: 12                         # 导出 auto-fit 缩字下限（默认 12）
+ *     minFontSize: 12                         # 用户给出字号下限时设置（如"不得小于14号"→14）；缺省无强制下限
  *   pages: [pages/01_cover.yaml, ...]
  *
  * pages/<n>_<name>.yaml:
@@ -472,7 +472,9 @@ export async function resolveDeck(dir) {
     if (v.startsWith('$')) return colors[v.slice(1)] ?? v
     return v
   }
-  const minFontSize = typeof theme.minFontSize === 'number' && theme.minFontSize > 0 ? theme.minFontSize : 12
+  // 字号下限（2026-09-06 用户拍板）：仅当用户在 theme.minFontSize 显式给出时存在；
+  // 未给出 → null（无强制下限——下限来源 = 用户指令，不是插件默认值）
+  const minFontSize = typeof theme.minFontSize === 'number' && theme.minFontSize > 0 ? theme.minFontSize : null
   const safeAreaOf = (page) => {
     const t = theme.safeArea ?? {}
     const p = page.safeArea ?? {}

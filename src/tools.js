@@ -566,7 +566,7 @@ export function registerTools(ctx) {
           const fit = r.autoFit.length
             ? `\n\n⚠ auto-fit 缩放 ${r.autoFit.length} 处文本：\n${fitLines.join('\n')}`
             : ''
-          const floorNote = floorHits ? `\n\n✗ ${floorHits} 处达到字号下限（theme.minFontSize）仍溢出——建议修复后再交付，避免放映时文字溢出容器。\n  若这些溢出页是导入近似稿的存量问题（位置/换行与原件不一致）而任务只需改某页：考虑 ppt_splice（只替换目标页进原稿，其余页逐字节不动）而非整册重渲。` : ''
+          const floorNote = floorHits ? `\n\n✗ ${floorHits} 处达到缩字下限仍溢出（下限 = 用户指令 theme.minFontSize；未设置时为 60% 原字号防荒谬保底）——建议修复后再交付：扩大容器或精简文案。\n  若这些溢出页是导入近似稿的存量问题（位置/换行与原件不一致）而任务只需改某页：考虑 ppt_splice（只替换目标页进原稿，其余页逐字节不动）而非整册重渲。` : ''
           const chartNote = r.chartInfos?.length
             ? `\n\n⚠ 图表数据检查（${r.chartInfos.length} 处）：\n${r.chartInfos.map((w) => `   - ${w}`).join('\n')}`
             : ''
@@ -844,9 +844,11 @@ async function auditExportCheck(ctx, file, minFontSize) {
     const cx = Number(pres.match(/cx="(\d+)"/)?.[1] ?? 0)
     const cy = Number(pres.match(/cy="(\d+)"/)?.[1] ?? 0)
     const sizeOk = cx === ctx.size.width * 12700 && cy === ctx.size.height * 12700
-    const fontOk = minSz / 100 >= minFontSize
+    const fontText = minFontSize == null ? '—' : `${minSz / 100}pt ≥ ${minFontSize}pt`
+    const fontNote = minFontSize == null ? '（无强制下限——下限按用户指令）' : ''
+    const fontOk = minFontSize == null ? true : minSz / 100 >= minFontSize
     const lines = [
-      `audit 回读断言（产物 OOXML）：页数 ${slideCount}/${ctx.pages.length} ${slideCount === ctx.pages.length ? '✓' : '✗'}；尺寸 ${(cx / 12700).toFixed(0)}×${(cy / 12700).toFixed(0)}pt（期望 ${ctx.size.width}×${ctx.size.height}）${sizeOk ? '✓' : '✗'}；最小字号 ${minSz / 100}pt（下限 ${minFontSize}pt）${fontOk ? '✓' : '✗'}`,
+      `audit 回读断言（产物 OOXML）：页数 ${slideCount}/${ctx.pages.length} ${slideCount === ctx.pages.length ? '✓' : '✗'}；尺寸 ${(cx / 12700).toFixed(0)}×${(cy / 12700).toFixed(0)}pt（期望 ${ctx.size.width}×${ctx.size.height}）${sizeOk ? '✓' : '✗'}；最小字号 ${fontText}（下限 ${minFontSize != null ? minFontSize + 'pt' : '未设置'}）${fontOk ? '✓' : '✗'}${fontNote}`,
     ]
     return lines.join('\n')
   } catch (e) {
