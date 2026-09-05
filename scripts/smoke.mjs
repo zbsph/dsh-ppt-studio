@@ -972,5 +972,53 @@ ok('v0.14.2/5：表判据兜底——残留路由存在时不重复注册（防 
 d3()
 await settle()
 
+// ══ 30. v0.14.6：autodeclare yaml@2 回归（反馈 A：doc.get() 返回 YAMLSeq → toJS 归一）═══════════
+const { applyAutoDeclare: applyAD } = await import('../lib/autodeclare.js')
+const YAML = (await import('yaml')).default
+const autoDeck = join(root, 'examples', 'autodeclare-smoke')
+const fsp = await import('node:fs/promises')
+await rm(autoDeck, { recursive: true, force: true })
+await mkdir(join(autoDeck, 'pages'), { recursive: true })
+await fsp.writeFile(join(autoDeck, 'deck.yaml'), [
+  'version: 1', 'title: autodeclare regression', 'size: [960, 540]',
+  'theme:',
+  '  colors: {primary: "#3E4E63", accent: "#D64253", bg: "#F5F6F7", text: "#2B3440"}',
+  '  textStyles: {title: {fontSize: 24, color: "$text"}, body: {fontSize: 14, color: "$text"}}',
+  'pages:', '  - pages/01.yaml', '  - pages/02.yaml', '', ''].join('\n'))
+// 流式风格（`- {pair: [...]}`，用户 round-1 页面同款）：band×title 已声明，band2×stamp 未声明
+await fsp.writeFile(join(autoDeck, 'pages', '01.yaml'), [
+  'pageType: cover', 'background: "$bg"', 'elements:',
+  '  - elementId: band', '    elementType: shape', '    kind: rect', '    bounds: [0, 0, 960, 110]', '    fill: "$primary"',
+  '  - elementId: title', '    elementType: text', '    bounds: [40, 30, 600, 70]', '    content: {style: "$title", text: "萨尔浒之战"}',
+  '  - elementId: band2', '    elementType: shape', '    kind: rect', '    bounds: [0, 480, 960, 60]', '    fill: "$accent"',
+  '  - elementId: stamp', '    elementType: text', '    bounds: [30, 492, 300, 40]', '    content: {style: "$body", text: "内容页签"}',
+  'expectedOverlaps:', '  - {pair: [band, title]}', '', ''].join('\n'))
+// 块式风格（`- pair: [...]`）：card×card-title 已声明，bar×bar-label 未声明
+await fsp.writeFile(join(autoDeck, 'pages', '02.yaml'), [
+  'pageType: content', 'background: "$bg"', 'elements:',
+  '  - elementId: card', '    elementType: shape', '    kind: rect', '    bounds: [40, 60, 880, 140]', '    fill: "$primary"',
+  '  - elementId: card-title', '    elementType: text', '    bounds: [70, 90, 400, 60]', '    content: {style: "$title", text: "第一列"}',
+  '  - elementId: bar', '    elementType: shape', '    kind: rect', '    bounds: [40, 240, 880, 40]', '    fill: "$accent"',
+  '  - elementId: bar-label', '    elementType: text', '    bounds: [70, 246, 300, 30]', '    content: {style: "$body", text: "标注"}',
+  'expectedOverlaps:', '  - pair: [card, card-title]', '', ''].join('\n'))
+const autoCtx = await resolveDeck(autoDeck)
+const autoLayout = (await renderDeck(autoCtx, {})).layout
+let autoThrew = null
+let autoAdded = []
+try { autoAdded = await applyAD(autoCtx, autoLayout) } catch (e) { autoThrew = e }
+ok('v0.14.6: autodeclare yaml@2 不再崩溃（doc.get()=YAMLSeq → toJS 归一，原 (.map is not a function)）',
+  autoThrew === null, autoThrew ? String(autoThrew).slice(0, 120) : '')
+ok('v0.14.6: 自动声明补齐未声明对（流式页 1 对 + 块式页 1 对）',
+  autoAdded.length === 2 && autoAdded.every((a) => a.added === 1),
+  JSON.stringify(autoAdded))
+const declCount = async (n) => (YAML.parse(await fsp.readFile(join(autoDeck, 'pages', n === 1 ? '01.yaml' : '02.yaml'), 'utf8')).expectedOverlaps ?? []).length
+ok('v0.14.6: 声明已写入文件（两种写法等价，各自 2 对）', (await declCount(1)) === 2 && (await declCount(2)) === 2,
+  `01=${await declCount(1)} 02=${await declCount(2)}`)
+const reCtx = await resolveDeck(autoDeck)
+const reLayout = (await renderDeck(reCtx, {})).layout
+const reAdded = await applyAD(reCtx, reLayout)
+ok('v0.14.6: 幂等——重复运行零新增（已声明对全部跳过）', reAdded.length === 0, JSON.stringify(reAdded))
+await rm(autoDeck, { recursive: true, force: true })
+
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)

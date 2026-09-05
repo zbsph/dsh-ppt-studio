@@ -57,6 +57,30 @@ export function previewOrigin(ws) {
   return `http://${host}:${ws.port}`
 }
 
+/**
+ * 页选择解析（v0.14.6 局部校验）：'2' / '4,10' / '1,3-5' → Set<页码>（1 起）；非法输入返回 null（= 全部）。
+ * 语义：局部校验只影响本次报告范围，不写入/覆盖 layout.json（避免部分 layout 带来的静默漏检）。
+ */
+export function parsePagesArg(s, max) {
+  if (s === undefined || s === null || String(s).trim() === '') return null
+  const set = new Set()
+  let any = false
+  for (const part of String(s).split(',')) {
+    const t = part.trim()
+    if (!t) continue
+    const m = /^(\d+)(?:\s*-\s*(\d+))?$/.exec(t)
+    if (!m) return null
+    const a = Number(m[1])
+    const b = m[2] ? Number(m[2]) : a
+    if (!Number.isInteger(a) || !Number.isInteger(b) || a < 1 || b < a) return null
+    for (let i = a; i <= b; i++) set.add(i)
+    any = true
+  }
+  if (!any) return null
+  if (max) for (const p of [...set]) if (p > max) set.delete(p)
+  return set.size ? set : null
+}
+
 /** 当前质量档：项目级 state.json 优先，其次会话级（任一为 audit 即 audit）。 */
 async function qualityOf(ctx, dir) {
   try {
@@ -423,12 +447,14 @@ export function registerTools(ctx) {
       dir: dirSchema,
       autoDeclare: { type: 'boolean', description: 'true = 把未声明的警告级重叠（色块衬底/图片标注/箭头跨越等，不含内容互压）一键写入页面 expectedOverlaps 后重验（对应"设计意图声明制"的批量声明，仍会报告剩余不可声明错误）' },
       measured: { type: 'boolean', description: 'true = 交叉实测档（preview/measured.json，需先运行 ppt_measure）：实测溢出且估算未报 → 新增 error；估算报但实测通过 → warning（字体差异人工确认）' },
+      pages: { type: 'string', description: '仅审阅指定页（如 "2" / "4,10" / "1,3-5"，1 起；缺省全部）。局部校验只影响本次报告，不改写 layout.json（防部分校验静默漏检其余页）' },
     },
     output: markdownResult(),
     async execute(args) {
       const dir = args.dir
       const autoDeclare = !!args.autoDeclare
       const withMeasured = !!args.measured
+      const pagesSel = typeof args.pages === 'string' ? parsePagesArg(args.pages) : null
       try {
         if (autoDeclare) {
           const { quality } = await qualityOf(ctx, dir)
@@ -459,6 +485,12 @@ export function registerTools(ctx) {
           const r = await renderDeck(ctx0, {})
           layout = r.layout
         }
+        let localNote = ''
+        if (pagesSel) {
+          const before = (layout.pages ?? []).length
+          layout = { ...layout, pages: (layout.pages ?? []).filter((p) => pagesSel.has(p.index + 1)) }
+          localNote = `\n\n> 局部校验：仅审阅第 [${[...pagesSel].sort((a, b) => a - b).join(', ')}] 页（共 ${before} 页；其余页本次未检查）`
+        }
         const v = verifyDeck(layout)
         const errors = v.text.split('\n').filter((l) => l.includes('[✗]')).length
         // M2：实测交叉（D3：实测=终审、估算=预检）
@@ -480,7 +512,7 @@ export function registerTools(ctx) {
         }
         const gate = errors + measuredErrors
         const head = v.text
-        return `# 数字审阅\n${head}${measuredText}\n\n---\n门禁：${gate === 0 ? '✓ 通过' : `✗ ${gate} 个错误（必须清零${measuredErrors ? `，含 M2 实测 ${measuredErrors} 个` : ''}`}\n${pptxSnapshotText}`
+        return `# 数字审阅${localNote}\n${head}${measuredText}\n\n---\n门禁：${gate === 0 ? '✓ 通过' : `✗ ${gate} 个错误（必须清零${measuredErrors ? `，含 M2 实测 ${measuredErrors} 个` : ''}`}\n${pptxSnapshotText}`
       } catch (error) {
         return `✗ 验证失败：\n${errText(error)}`
       }

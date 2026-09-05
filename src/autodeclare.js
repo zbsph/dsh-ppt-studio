@@ -20,7 +20,11 @@ export async function applyAutoDeclare(ctx, layout) {
     const file = ctx.pages[pageL.index].file
     const text = await readFile(file, 'utf8')
     const doc = YAML.parseDocument(text)
-    const existing = (doc.get('expectedOverlaps') ?? []).map((p) => ({
+    // yaml@2 的 doc.get() 返回 AST 节点（YAMLSeq，无 .map）；其 toJS() 裸调用还会抛
+    // "A document argument is required"（需要 doc 上下文）→ 统一走 doc.toJS()（Document 级，纯 JS 值）
+    const data = doc.toJS() ?? {}
+    const list = Array.isArray(data.expectedOverlaps) ? data.expectedOverlaps : []
+    const existing = list.map((p) => ({
       pair: [String(p?.pair?.[0]), String(p?.pair?.[1])],
     }))
     const exSet = new Set(existing.map((p) => [p.pair[0], p.pair[1]].sort().join('×')))

@@ -494,6 +494,7 @@ export function themeConformance(page, theme) {
   const mode = theme.themeConformance ?? 'strict'
   if (mode === 'off') return out
   const fsSet = new Set(Object.values(theme?.textStyles ?? {}).map((s) => s?.fontSize).filter(Boolean))
+  const strayFont = new Map() // fontSize -> [ids]（v0.14.6 降噪：逐元素建议在 >3 处时聚合）
   for (const el of page.elements ?? []) {
     // v0.9.1：fill 为渐变对象时逐个 stop 颜色校验（不再逃过主题色门禁）
     const cs = fillColorsOf(el)
@@ -507,7 +508,21 @@ export function themeConformance(page, theme) {
       }
     }
     if (el.kind === 'text' && el.style?.fontSize && fsSet.size && !fsSet.has(el.style.fontSize)) {
-      out.push({ severity: 'suggestion', code: 'aesthetic-theme', id: el.id, message: `字号 ${el.style.fontSize}pt 不在 theme.textStyles 中，建议纳入主题样式（页面内可能漂移）` })
+      if (!strayFont.has(el.style.fontSize)) strayFont.set(el.style.fontSize, [])
+      strayFont.get(el.style.fontSize).push(el.id)
+    }
+  }
+  if (strayFont.size) {
+    const total = [...strayFont.values()].reduce((n, ids) => n + ids.length, 0)
+    const sizes = [...strayFont.keys()].sort((a, b) => a - b)
+    if (total > 3) {
+      // 降噪（反馈 F）：字号建议 >3 处 → 聚合为一条（列出档位与处数），避免淹没门禁级条目
+      out.push({ severity: 'suggestion', code: 'aesthetic-theme', id: 'fontStyle',
+        message: `字号 ${sizes.join('/')}pt 不在 theme.textStyles 中（本页 ${total} 处文本），建议将已用档位纳入主题样式（页面内可能漂移）` })
+    } else {
+      for (const [fs, ids] of strayFont) {
+        out.push({ severity: 'suggestion', code: 'aesthetic-theme', id: ids[0], message: `字号 ${fs}pt 不在 theme.textStyles 中，建议纳入主题样式（页面内可能漂移）` })
+      }
     }
   }
   return out

@@ -17,10 +17,12 @@ PPT 插件：四类任务（从头/补完/修改/总结）工作流 + 布局工�
 ## 构建与注入
 
 ```bash
-node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS）
-npm test                        # build + smoke（47 断言）
+node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
+npm test                        # build + smoke（133 断言）
 npm run test:real               # 真实资产回归（19 页 deck + WPS fixture，缺失自动跳过）
 # 注入器环境内：dev_inject_plugin <本目录>
+# 注意：本插件免编译 → dev_build_plugin 不需 DSH_CHECKOUT（其 build.sh 只跑 build.mjs）；
+#       dev_reload_package 仅命中"注入器装配"的包——本插件经 agent preset 会话装配，改码走重启。
 ```
 
 ## 工具面
@@ -62,6 +64,10 @@ ppt_verify(dir, autoDeclare=true)
 ```
 
 把页面所有未声明的警告级重叠对（色块衬底/图片标注/箭头跨越，**不含内容互压**）合并写入页面 yaml（parseDocument 保留注释），然后重渲染重验；报告剩余错误（若为 content-collision，声明制不可豁免，仍需手工改布局）。
+
+> 写法等价（v0.14.6 回归确认）：`expectedOverlaps: [{pair: [a, b]}]`（流式）与
+> `expectedOverlaps:\n  - pair: [a, b]`（块式）完全等价，解析归一，可混用。
+> 局部审阅：`ppt_verify(dir, pages="2,5-7")` 只检查指定页（不改写 layout.json，其余页不受影响）。
 
 ## 度量与导出下限（v0.3.0，反馈 D4/E2 ★★）
 

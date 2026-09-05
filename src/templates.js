@@ -117,7 +117,10 @@ export async function registerTemplate(dir, opts = {}, { targetDir = TEMPLATES_D
       const text = await readFile(file, 'utf8')
       const doc = YAML.parseDocument(text)
       const add = outer.map((e) => e.id)
-      const all = [...(doc.get('expectedOutOfSafeArea') ?? []).map(String), ...add]
+      // yaml@2：doc.get() 返回 AST 节点（toJS 裸调用抛 "A document argument is required"）→ doc.toJS() 归一
+      const data = doc.toJS() ?? {}
+      const list = Array.isArray(data.expectedOutOfSafeArea) ? data.expectedOutOfSafeArea : []
+      const all = [...list.map(String), ...add]
       doc.setIn(['expectedOutOfSafeArea'], doc.createNode([...new Set(all)]))
       await writeFile(file, String(doc))
       outSafe += add.length
