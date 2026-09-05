@@ -48,8 +48,10 @@ console.log(`② packed ${tgzOutput} (${Math.round(statSync(tgzPath).size / 1024
 // ③④ 远程 digest 比对/上传
 const remoteDigest = () => {
   try {
-    const d = run(`"${GH}" release view ${tag} --json assets --jq '.[] | select(.name | endswith(".tgz")) | .digest'`)
-    return d.replace(/^sha256:/, '')
+    // REST 输出 JSON 后本地解析（cmd.exe 下 shell 无法用单引号 jq）
+    const j = JSON.parse(run(`"${GH}" api repos/zbsph/dsh-ppt-studio/releases/tags/${tag}`))
+    const a = (j.assets ?? []).find((x) => x.name.endsWith('.tgz'))
+    return a?.digest ? a.digest.replace(/^sha256:/, '') : ''
   } catch { return '' }
 }
 let remote = remoteDigest()
