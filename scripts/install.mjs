@@ -84,7 +84,7 @@ if (!existsSync(join(pkgYaml, 'package.json'))) {
   steps.push(`yaml 已链接进包：${pkgYaml} → ${yamlSrc}`)
 } else steps.push('yaml 依赖：包内已可解析 ✓')
 
-// ── 3) agent preset（唯一装配源：preset 行挂载插件）───────────────────────
+// ── 3) agent preset（唯一装配源：preset 行挂载插件；含 preset.yml 显示元数据）──
 if (!noPreset) {
   if (!existsSync(builtinPreset)) {
     console.error('✗ 本包缺少预设模板 agent-presets/ppt/agent.cordis.yml——发布包应自带')
@@ -96,6 +96,16 @@ if (!noPreset) {
     mkdirSync(presetDir, { recursive: true })
     writeFileSync(presetFile, readFileSync(builtinPreset, 'utf8'), 'utf8')
     steps.push(`预设已写入：${presetFile}`)
+  }
+  // 显示元数据（拣选器显示名/简介）：preset.yml（name/description/order；缺省则只有目录名）
+  const metaSrc = join(root, 'agent-presets', 'ppt', 'preset.yml')
+  const metaDst = join(presetDir, 'preset.yml')
+  if (existsSync(metaSrc)) {
+    if (existsSync(metaDst) && !force) steps.push(`预设元数据已存在（幂等跳过）：${metaDst}`)
+    else {
+      writeFileSync(metaDst, readFileSync(metaSrc, 'utf8'), 'utf8')
+      steps.push(`预设元数据已写入（「PPT 工作室」+ 简介）：${metaDst}`)
+    }
   }
 }
 
