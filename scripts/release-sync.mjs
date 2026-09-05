@@ -10,7 +10,7 @@
  *
  * 用法：node scripts/release-sync.mjs [--tag v1.0.0] [--root D:\plugins] [--no-upload]
  */
-import { execFileSync } from 'node:child_process'
+import { execSync } from 'node:child_process'
 import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync, statSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { join, dirname, resolve } from 'node:path'
@@ -30,16 +30,17 @@ const deployRoot = resolve(opt('--root', 'D:\\plugins'))
 const noUpload = args.includes('--no-upload')
 
 const sha = (buf) => createHash('sha256').update(buf).digest('hex')
-const run = (cmd, a) => execFileSync(cmd, a, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim()
+const run = (cmdStr) => execSync(cmdStr, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim()
 
 // ① build
 console.log('① build ...')
-run('node', ['scripts/build.mjs']).split('\n').pop().replace(/^/g, '   ').trim() && console.log('    done')
+run('node scripts/build.mjs')
+console.log('    done')
 
 // ② pack
 const packDir = join(tmpdir(), 'pptsync-' + Date.now())
 mkdirSync(packDir, { recursive: true })
-const tgzOutput = run('npm.cmd', ['pack', '--pack-destination', packDir]).split('\n').pop()
+const tgzOutput = run(`npm pack --pack-destination "${packDir}"`).split('\n').pop()
 const tgzPath = join(packDir, tgzOutput)
 const tgzSha = sha(readFileSync(tgzPath))
 console.log(`② packed ${tgzOutput} (${Math.round(statSync(tgzPath).size / 1024 / 1024 * 10) / 10}MB)\n   local sha256=${tgzSha}`)
@@ -47,7 +48,7 @@ console.log(`② packed ${tgzOutput} (${Math.round(statSync(tgzPath).size / 1024
 // ③④ 远程 digest 比对/上传
 const remoteDigest = () => {
   try {
-    const d = run(GH, ['release', 'view', tag, '--json', 'assets', `--jq`, '.[] | select(.name | endswith(".tgz")) | .digest'])
+    const d = run(`"${GH}" release view ${tag} --json assets --jq '.[] | select(.name | endswith(".tgz")) | .digest'`)
     return d.replace(/^sha256:/, '')
   } catch { return '' }
 }
@@ -59,7 +60,7 @@ if (remote !== tgzSha) {
     process.exit(1)
   }
   console.log('④ 上传（--clobber）...')
-  run(GH, ['release', 'upload', tag, tgzPath, '--clobber'])
+  run(`"${GH}" release upload ${tag} "${tgzPath}" --clobber`)
   for (let i = 0; i < 6; i++) {
     const until = new Date(Date.now() + 4000)
     while (new Date() < until) {} // 等 CDN 生效（无 sleep 依赖）
@@ -79,9 +80,9 @@ if (remote !== tgzSha) {
 console.log(`⑤ 本机部署（${deployRoot}\\package，源=同一 tgz）...`)
 rmSync(join(deployRoot, 'package'), { recursive: true, force: true })
 mkdirSync(deployRoot, { recursive: true })
-const tar = run('tar', ['-xzf', tgzPath, '-C', deployRoot])
+run(`tar -xzf "${tgzPath}" -C "${deployRoot}"`)
 console.log('    extracted')
-const installOut = run('node', [join(deployRoot, 'package', 'scripts', 'install.mjs')])
+const installOut = run(`node "${join(deployRoot, 'package', 'scripts', 'install.mjs')}"`)
 console.log(installOut.split('\n').slice(0, 6).join('\n'))
 
 // ⑥ 终验：本机源 tgz 与远程一致 + 安装完整性
