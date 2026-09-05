@@ -85,30 +85,56 @@ async function resolveToken(token) {
 export function registerPreviewRoute(ctx) {
   const ws = ctx.get('webServer')
   if (!ws) return null
-  return ctx.effect(() => ws.register({
-    kind: 'prefix',
-    path: '/ppt-preview', // prefix 语义：path 不带尾斜杠（实测：带斜杠不命中）
-    async handler(req, res) {
-      try {
-        const u = new URL(req.url ?? '/', 'http://localhost') // 仅作为解析相对路径的基准，不用于输出
-        const m = u.pathname.match(/^\/ppt-preview\/([a-zA-Z0-9]+)\/(.*)$/)
-        if (!m) return notFound(res)
-        const root = await resolveToken(m[1])
-        const rel = normalize(m[2]).replace(/^([/\\])+/, '')
-        if (!root || rel.includes('..')) return notFound(res)
-        const file = join(root, rel)
-        if (!existsSync(file)) return notFound(res)
-        const st = await stat(file)
-        if (st.isDirectory()) return notFound(res)
-        const buf = await readFile(file)
-        res.writeHead(200, { 'Content-Type': MIME[extname(file).toLowerCase()] ?? 'application/octet-stream', 'Content-Length': buf.length, 'Cache-Control': 'no-store' })
-        res.end(buf)
-      } catch {
-        res.writeHead(500)
-        res.end('preview error')
-      }
-    },
-  }), 'ppt-studio: preview route')
+  return ctx.effect(() => {
+    const unregister = []
+    // ① 预览根静态服务（/ppt-preview）
+    unregister.push(ws.register({
+      kind: 'prefix',
+      path: '/ppt-preview', // prefix 语义：path 不带尾斜杠（实测：带斜杠不命中）
+      async handler(req, res) {
+        try {
+          const u = new URL(req.url ?? '/', 'http://localhost') // 仅作为解析相对路径的基准，不用于输出
+          const m = u.pathname.match(/^\/ppt-preview\/([a-zA-Z0-9]+)\/(.*)$/)
+          if (!m) return notFound(res)
+          const root = await resolveToken(m[1])
+          const rel = normalize(m[2]).replace(/^([/\\])+/, '')
+          if (!root || rel.includes('..')) return notFound(res)
+          const file = join(root, rel)
+          if (!existsSync(file)) return notFound(res)
+          const st = await stat(file)
+          if (st.isDirectory()) return notFound(res)
+          const buf = await readFile(file)
+          res.writeHead(200, { 'Content-Type': MIME[extname(file).toLowerCase()] ?? 'application/octet-stream', 'Content-Length': buf.length, 'Cache-Control': 'no-store' })
+          res.end(buf)
+        } catch {
+          res.writeHead(500)
+          res.end('preview error')
+        }
+      },
+    }))
+    // ② 模板画廊资源（/ppt-template-assets，v0.14）：白名单校验（id ∈ 模板库 + file 正则），零路径穿越
+    unregister.push(ws.register({
+      kind: 'prefix',
+      path: '/ppt-template-assets',
+      async handler(req, res) {
+        try {
+          const u = new URL(req.url ?? '/', 'http://localhost')
+          const m = u.pathname.match(/^\/ppt-template-assets\/([^/]+)\/(.+)$/)
+          if (!m) return notFound(res)
+          const { validateTemplateAsset } = await import('./templates.js')
+          const file = await validateTemplateAsset(decodeURIComponent(m[1]), decodeURIComponent(m[2]))
+          if (!file) return notFound(res)
+          const buf = await readFile(file)
+          res.writeHead(200, { 'Content-Type': MIME[extname(file).toLowerCase()] ?? 'application/octet-stream', 'Content-Length': buf.length, 'Cache-Control': 'private, max-age=3600' })
+          res.end(buf)
+        } catch {
+          res.writeHead(500)
+          res.end('asset error')
+        }
+      },
+    }))
+    return () => { for (const u of unregister) if (typeof u === 'function') { try { u() } catch { /* 幂等 */ } } }
+  }, 'ppt-studio: preview + gallery routes')
 }
 
 function notFound(res) {

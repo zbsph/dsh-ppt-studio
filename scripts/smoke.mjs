@@ -938,5 +938,21 @@ ok('v0.13：themeRef 断言——正确引用通过', true)
 await rm(ccDeck, { recursive: true, force: true })
 await rm(refDeck, { recursive: true, force: true })
 
+// ── 29. v0.14.0：模板画廊（可视化选择 UI + 资源白名单路由）────────
+const { buildTemplateGallery: btg, validateTemplateAsset } = await import('../lib/templates.js')
+const gal = await btg()
+ok('v0.14：模板画廊构建（8 套 + 自包含 HTML）', gal.templates >= 8 && gal.templates === tplList.length && gal.url.includes('tpl-gallery/gallery.html') && existsSync(gal.file), `templates=${gal.templates}`)
+const galHtml = await (await import('node:fs/promises')).readFile(gal.file, 'utf8')
+ok('v0.14：画廊卡片内容（模板名/真渲染引用/使用指引）',
+  galHtml.includes('简约商务') && galHtml.includes('/ppt-template-assets/') && galHtml.includes('用「') ,
+  '画廊内容缺失')
+const aOk = await validateTemplateAsset('简约商务', 'preview.png')
+const aBad1 = await validateTemplateAsset('简约商务', '../deck.yaml')
+const aBad2 = await validateTemplateAsset('不存在', 'previews/01.png')
+const aBad3 = await validateTemplateAsset('简约商务', 'media/xxx.png')
+ok('v0.14：模板资源白名单（合法放行 + 路径穿越/未知 id/非法文件拒绝）',
+  aOk !== null && aBad1 === null && aBad2 === null && aBad3 === null,
+  `ok=${!!aOk} traversal=${aBad1 === null} unknown=${aBad2 === null} illegal=${aBad3 === null}`)
+
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)
