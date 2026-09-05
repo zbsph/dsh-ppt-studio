@@ -94,7 +94,8 @@ export function registerPreviewRoute(ctx) {
       async handler(req, res) {
         try {
           const u = new URL(req.url ?? '/', 'http://localhost') // 仅作为解析相对路径的基准，不用于输出
-          const m = u.pathname.match(/^\/ppt-preview\/([a-zA-Z0-9]+)\/(.*)$/)
+          // token 允许字母/数字/连字符（hex 预览 token 与 'tpl-gallery' 固定 token 均匹配；此前 [a-zA-Z0-9]+ 不含 '-' → 画廊 404）
+          const m = u.pathname.match(/^\/ppt-preview\/([a-zA-Z0-9-]+)\/(.*)$/)
           if (!m) return notFound(res)
           const root = await resolveToken(m[1])
           const rel = normalize(m[2]).replace(/^([/\\])+/, '')
