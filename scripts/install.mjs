@@ -85,41 +85,34 @@ if (!existsSync(join(pkgYaml, 'package.json'))) {
 } else steps.push('yaml 依赖：包内已可解析 ✓')
 
 // ── 3) agent preset（唯一装配源：preset 行挂载插件；含 preset.yml 显示元数据）──
+// 同步纪律（2026-09-06 用户点出）：预设与元数据是"托管文件"、以包为准**总是刷新**——
+// 跳过策略曾导致升级后本机保留旧版（skill 12pt 过期语义事件）。
 if (!noPreset) {
   if (!existsSync(builtinPreset)) {
     console.error('✗ 本包缺少预设模板 agent-presets/ppt/agent.cordis.yml——发布包应自带')
     process.exit(1)
   }
-  if (existsSync(presetFile) && !force) {
-    steps.push(`预设已存在（幂等跳过）：${presetFile}`)
-  } else {
+  {
     mkdirSync(presetDir, { recursive: true })
     writeFileSync(presetFile, readFileSync(builtinPreset, 'utf8'), 'utf8')
-    steps.push(`预设已写入：${presetFile}`)
+    steps.push(`预设已同步（包为准）：${presetFile}`)
   }
   // 显示元数据（拣选器显示名/简介）：preset.yml（name/description/order；缺省则只有目录名）
   const metaSrc = join(root, 'agent-presets', 'ppt', 'preset.yml')
   const metaDst = join(presetDir, 'preset.yml')
   if (existsSync(metaSrc)) {
-    if (existsSync(metaDst) && !force) steps.push(`预设元数据已存在（幂等跳过）：${metaDst}`)
-    else {
-      writeFileSync(metaDst, readFileSync(metaSrc, 'utf8'), 'utf8')
-      steps.push(`预设元数据已写入（「PPT 工作室」+ 简介）：${metaDst}`)
-    }
+    writeFileSync(metaDst, readFileSync(metaSrc, 'utf8'), 'utf8')
+    steps.push(`预设元数据已同步（「PPT 工作室」+ 简介）：${metaDst}`)
   }
 }
 
-// ── 4) 内置手册 skill（README 承诺"安装后提问即用"——必须随装）──────────────────
+// ── 4) 内置手册 skill（README 承诺"安装后提问即用"——随包同步刷新，以包为准）──────
 const skillSrcDir = join(root, 'skills', 'ppt-studio-manual')
 const skillDstDir = join(prefix, 'skills', 'ppt-studio-manual')
 if (!noPreset && existsSync(skillSrcDir)) {
-  const dst = join(skillDstDir, 'SKILL.md')
-  if (existsSync(dst) && !force) steps.push(`手册 skill 已存在（幂等跳过）：${dst}`)
-  else {
-    mkdirSync(skillDstDir, { recursive: true })
-    writeFileSync(dst, readFileSync(join(skillSrcDir, 'SKILL.md'), 'utf8'), 'utf8')
-    steps.push(`手册 skill 已写入：${dst}`)
-  }
+  mkdirSync(skillDstDir, { recursive: true })
+  writeFileSync(join(skillDstDir, 'SKILL.md'), readFileSync(join(skillSrcDir, 'SKILL.md'), 'utf8'), 'utf8')
+  steps.push(`手册 skill 已同步（包为准）：${join(skillDstDir, 'SKILL.md')}`)
 } else if (!noPreset) {
   console.warn('⚠ 包内缺少 skills/ppt-studio-manual（此包打包不完整）——提问式手册不可用')
 }

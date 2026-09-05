@@ -106,7 +106,7 @@ export function aestheticSuggestions(page, size, theme) {
     }
     if (fsSet.size > 4) out.push({ severity: 'suggestion', code: 'aesthetic-fonts', id: 'hierarchy', message: `页面字号有 ${fsSet.size} 种（${[...fsSet].join('/')}），建议精简为 3-4 级层级` })
     const minFs = Math.min(...fsSet)
-    if (minFs < 12) out.push({ severity: 'suggestion', code: 'aesthetic-fonts', id: 'minimum', message: `最小字号 ${minFs}pt 低于 12pt 建议值，请检查（小字影响放映可读性）` })
+    if (minFs < 12) out.push({ severity: 'suggestion', code: 'aesthetic-fonts', id: 'minimum', message: `最小字号 ${minFs}pt 低于通读建议值 12pt——若用户给出下限按用户指令执行；未给则确认设计意图（建议级，非门禁）` })
     const stray = [...fsSet].filter((f) => !themeFontSizes.has(f))
     if (themeFontSizes.size > 0 && stray.length > 0) {
       out.push({ severity: 'suggestion', code: 'aesthetic-theme', id: 'fontStyle', message: `字号 ${stray.join('/')} 不在 theme.textStyles 中，建议纳入主题样式（页面内可能漂移）` })
