@@ -156,6 +156,10 @@ export function validateDeck(deck) {
   if (!deck || typeof deck !== 'object') return fail('deck must be a YAML object')
   if (deck.version !== 1) errors.push(`deck.version must be 1 (got ${deck.version})`)
   if (deck.title !== undefined && typeof deck.title !== 'string') errors.push('deck.title must be a string')
+  // 1.0.0 严谨性：空 pages 将静默产出 0 页 pptx（PowerPoint 打不开）——直接拦截
+  if (!Array.isArray(deck.pages) || deck.pages.length === 0) {
+    errors.push('deck.pages: at least 1 page reference（无页 deck 无法渲染/导出——请添加 pages: [pages/01.yaml, ...]）')
+  }
   const size = normalizeSize(deck.size)
   if (!size) errors.push('deck.size must be {width,height} or [w,h] > 0')
   if (deck.theme) {
@@ -269,6 +273,12 @@ export function validatePage(page, file) {
       page.expectedOverlaps.forEach((po, i) => {
         if (!po || !Array.isArray(po.pair) || po.pair.length !== 2 || po.pair.some((x) => typeof x !== 'string')) {
           errors.push(`[${file}] expectedOverlaps[${i}]: {pair: [idA, idB]} with two element ids`)
+        } else {
+          // 1.0.0 严谨性：声明 id 存在性防呆（与 expectedOutOfSafeArea/contrastExempt 同款）——
+          // 声明指向不存在的元素 = "以为声明了却仍报错"的静默失灵（疑似 typos 直接拦截）
+          for (const idX of po.pair) {
+            if (!ids.has(idX)) errors.push(`[${file}] expectedOverlaps[${i}]: "${idX}" 不是本页元素 id（防呆：声明必须指向真实元素）`)
+          }
         }
       })
     }

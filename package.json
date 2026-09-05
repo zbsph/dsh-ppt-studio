@@ -1,7 +1,7 @@
 {
   "name": "@dsh-external/dsh-ppt-studio",
-  "version": "0.15.0",
-  "description": "PPT 工作室：四类任务（从头/补完/修改/总结）工作流 + 布局工程 + PPTD 中间层工具链 + 内置模板库",
+  "version": "1.0.0",
+  "description": "PPT 工作室：四类任务（从头/补完/修改/总结）工作流 + 布局工程（元素冲突防治）+ PPTD 中间层工具链 + 内置模板库",
   "private": true,
   "type": "module",
   "main": "./lib/index.js",
@@ -15,6 +15,9 @@
     "lib",
     "vendor",
     "templates",
+    "docs",
+    "skills",
+    "scripts",
     "README.md"
   ],
   "license": "MIT",
@@ -29,6 +32,8 @@
     "build": "bash scripts/build.sh",
     "build:node": "node scripts/build.mjs",
     "test": "node scripts/build.mjs && node scripts/smoke.mjs",
-    "test:real": "node scripts/regression-real.mjs"
+    "test:real": "node scripts/regression-real.mjs",
+    "test:preflight": "node scripts/preflight-1.0.mjs",
+    "test:e2e": "node scripts/e2e-1.0.mjs"
   }
 }

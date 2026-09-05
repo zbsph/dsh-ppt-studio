@@ -1,0 +1,6 @@
+pageType: content
+elements:
+  - elementId: only
+    elementType: text
+    bounds: [60, 60, 400, 60]
+    content: {text: "唯一元素页", style: "$body"}

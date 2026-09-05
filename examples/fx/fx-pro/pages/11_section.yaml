@@ -1,0 +1,20 @@
+pageType: content
+background: "#F8FAFC"
+expectedOutOfSafeArea: [sec_band]
+elements:
+  - elementId: sec_band
+    elementType: shape
+    kind: rect
+    bounds: [0, 0, 960, 540]
+    fill: "#0F172A"
+  - elementId: sec_num
+    elementType: text
+    bounds: [80, 180, 300, 120]
+    content: {text: "03", style: "$title", color: "#F59E0B"}
+  - elementId: sec_t
+    elementType: text
+    bounds: [400, 200, 480, 80]
+    content: {text: "验证与展望", style: "$title", color: "#FFFFFF"}
+expectedOverlaps:
+  - {pair: [sec_band, sec_num]}
+  - {pair: [sec_band, sec_t]}

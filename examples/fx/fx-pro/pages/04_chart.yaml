@@ -1,0 +1,40 @@
+pageType: content
+background: "#F8FAFC"
+source: "夹具自造折线（演示）"
+elements:
+  - elementId: c_head
+    elementType: text
+    bounds: [60, 60, 400, 40]
+    content: {text: "仿真运行趋势", style: "$h1"}
+  - elementId: chart
+    elementType: chart
+    bounds: [60, 130, 480, 300]
+    chart:
+      type: line
+      data:
+        cols: [month, pass]
+        rows:
+          - ["1月", 92]
+          - ["2月", 94]
+          - ["3月", 95]
+          - ["4月", 96]
+      series:
+        - {name: 一次合格率, x: month, y: pass}
+      colors: ["$primary"]
+  - elementId: key
+    elementType: shape
+    kind: roundRect
+    bounds: [580, 130, 320, 300]
+    fill: "#FFFFFF"
+    line: {color: "#CBD5E1", width: 1}
+  - elementId: key_t
+    elementType: text
+    bounds: [610, 160, 260, 60]
+    content: {text: "关键指标", style: "$h2"}
+  - elementId: key_body
+    elementType: text
+    bounds: [610, 240, 260, 160]
+    content: {text: "一次合格率 96%（+8pt）\n综合评 45.6% 提升\n节拍 −15%", style: "$body"}
+expectedOverlaps:
+  - {pair: [key, key_t]}
+  - {pair: [key, key_body]}

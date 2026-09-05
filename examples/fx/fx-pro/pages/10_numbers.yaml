@@ -1,0 +1,25 @@
+pageType: content
+background: "#F8FAFC"
+source: "夹具自造摘要（45.6% 与 04 页跨页）"
+elements:
+  - elementId: num_card
+    elementType: shape
+    kind: roundRect
+    bounds: [60, 90, 380, 220]
+    fill: "#FFFFFF"
+    line: {color: "#CBD5E1", width: 1}
+  - elementId: num_v
+    elementType: text
+    bounds: [100, 120, 300, 80]
+    content: {text: "45.6%", style: "$title", color: "#2563EB", align: center}
+  - elementId: num_l
+    elementType: text
+    bounds: [100, 220, 300, 40]
+    content: {text: "综合效率提升（与 04 页同值）", style: "$small", align: center}
+  - elementId: num_note
+    elementType: text
+    bounds: [480, 120, 420, 160]
+    content: {text: "跨页对账演示：本页 45.6% 与第 04 页 key_body 的 45.6% 应被 ppt_crosscheck 归为一组。", style: "$body"}
+expectedOverlaps:
+  - {pair: [num_card, num_v]}
+  - {pair: [num_card, num_l]}
