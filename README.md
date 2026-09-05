@@ -9,6 +9,7 @@
 
 ## 目录
 
+0. [安装与上手（新用户：从下载到可用）](#0-安装与上手新用户从下载到可用)
 1. [快速开始](#1-快速开始)
 2. [四类任务与工作流](#2-四类任务与工作流)
 3. [工具面全表](#3-工具面全表)
@@ -19,6 +20,61 @@
 8. [常见问题 FAQ](#8-常见问题-faq)
 9. [环境与能力边界](#9-环境与能力边界)
 10. [开发与维护（给改插件的人）](#10-开发与维护给改插件的人)
+
+---
+
+## 0. 安装与上手（新用户：从下载到可用）
+
+### 0.1 前提
+
+- **DSH（DeepSeek Harness）web 实例**已在本机运行（`dsh web`）；本插件是预设+插件形态，不改变 DSH 安装。
+- 可选增强（没有也能用，自动降级）：本机 Microsoft Office（真渲染通道）、Edge/Chrome（截图与 M2 实测）、python + python-pptx（兜底引擎）。
+
+### 0.2 方式 A：下载发布包（推荐）
+
+1. 在本仓库 [Releases](https://github.com/dsh-external/dsh-ppt-studio/releases) 页面下载 `dsh-external-dsh-ppt-studio-<版本>.tgz`（v1.0.0 起）。
+2. 解压到任意目录（如 `D:\plugins\dsh-ppt-studio`）：
+   ```powershell
+   tar -xzf dsh-external-dsh-ppt-studio-1.0.0.tgz -C D:\plugins
+   # 得到 D:\plugins\package\（内含 lib/ scripts/ agent-presets/ docs/ skills/ templates/）
+   ```
+3. **一键安装**（会做三件事：链包进 profile node_modules、保证 yaml 依赖、写入 PPT 工作室预设）：
+   ```powershell
+   node D:\plugins\package\scripts\install.mjs
+   # 自定义 DSH_HOME 时：node ...\install.mjs --prefix <你的 .dsh 目录>
+   # 重装/强制：--force；只装包不写预设（配合注入器）：--no-preset
+   ```
+   安装器是幂等的——重复运行自动跳过已存在项。
+4. **重启 dsh web** → 会话左上角/预设切换器选择「**PPT 工作室**」→ 直接提需求。
+5. 验证安装成功：在 PPT 工作室里说"帮我做一个简单 PPT，用内置模板"——模型应开始走 PPT 工作流；或直接问模型"dsh-ppt-studio 怎么用"（内置 skill 手册会回答）。
+
+### 0.3 方式 B：git clone 源码（开发者/尝鲜）
+
+```powershell
+git clone https://github.com/dsh-external/dsh-ppt-studio.git
+cd dsh-ppt-studio
+npm install            # 仅需 yaml（本地开发依赖）
+node scripts/build.mjs # 免 tsc：src → lib
+node scripts/install.mjs
+# 重启 dsh web → 进入「PPT 工作室」
+```
+
+### 0.4 方式 C：已有 dsh-super-injector（生态惯例）
+
+在注入器环境内：`dev_inject_plugin <解压目录>`（或源码目录）→ 注入器负责 junction + 重启恢复；预设同上（仓库 `agent-presets/ppt/agent.cordis.yml` 复制到 `~/.dsh/.agent-presets/ppt/`，或让安装器写：`node scripts/install.mjs --prefix <DSH_HOME> --no-preset` 后手工放预设）。
+
+### 0.5 安装后的自检（三句命令）
+
+```powershell
+node scripts/smoke.mjs          # 139 断言（含全链路）
+node scripts/preflight-1.0.mjs  # 11 断言（坏输入/边界/幂等/性能）
+node scripts/e2e-1.0.mjs        # 12 断言（真浏览器测量 + 真 Office 渲染 + splice/slice 自证；约 2-3 分钟）
+```
+全部绿色 = 本机环境完整可用；无 Office/Edge 的机器 e2e 会自动降级标注（不是失败）。
+
+### 0.6 卸载
+
+删除 `~/.dsh/.agent-presets/ppt/` 与 `~/.dsh/profiles/web/node_modules/@dsh-external/dsh-ppt-studio`（junction，删链接即可），重启 dsh web。
 
 ---
 

@@ -18,6 +18,7 @@
     "docs",
     "skills",
     "scripts",
+    "agent-presets",
     "README.md"
   ],
   "license": "MIT",
