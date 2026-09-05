@@ -31,7 +31,16 @@ npm run test:real               # 真实资产回归（19 页 deck + WPS fixture
 `ppt_export` 导出（out 支持绝对路径；auto=pptd 优先，硬失败自动回退 python-pptx 并醒目标注）/ `ppt_import` 导入 / `ppt_status` 工作流状态 / `ppt_media` 图片元数据 / `ppt_state` 会话状态
 + `ppt_schema` **语法速查** / `ppt_new` **一键样例工程**（v0.3.0）
 + `ppt_patch` **手术模式**（v0.10.0，候选 B）：模板真身贴内容——只改文本/表格 <a:t>，rPr/几何/渐变/字体/图片原样保留（"看起来就是模板原样"）；未动页内容 sha256 验证。与 `ppt_export` 并存：常规导出走渲染，贴模板保真走手术
++ `ppt_splice` **替换进原稿**（v0.15.0，反馈二 A3/A9 ★★）：工作区某页替换进源 .pptx——保留源母版/布局（横幅/页脚原样）+ 备注关系 + 媒体合并；**其余页条目 SHA256 逐字节一致（自动自证）**。"编辑既有精美 PPT 的某一页"一条命令完成，免手工 zip 手术
++ `ppt_slice` **单页版**（v0.15.0）：源 .pptx 修剪出"单页 + 完整母版/布局/主题"独立文件（sldIdLst 只留 1 条）
++ `ppt_visual pages="15"` 按页 Office 真渲染（v0.15.0，反馈二 A5；页号 = 源幻灯原页号，看一页不等整册）
 + `/ppt` 命令面（on/off/**quick/normal**/free|mid|strict/fidelity/review/engine/quality/pause-after/help）。
+
+## 实现与时序速查（反馈二 C1：免源码考古）
+
+- **实现地址**（运行时 junction 指向本仓库）：`~/.dsh/profiles/web/node_modules/@dsh-external/dsh-ppt-studio/lib/`（`src/` 即产物，纯 ESM JS；改码 = `node scripts/build.mjs` + 重启 host）。
+- **度量公式**（`lib/pptd/layout.js`）：CJK/全角标点 `1em`（**加粗 ×1.06**，v0.15.0 反馈二 A6）、Latin/数字 `0.6em`（加粗 0.63）、空格 `0.4em`、其他 0.65；行高 `fontSize×lineHeight`（默认 1.2）；`minFontSize` 默认 12。保守档原则：宁可误报不可漏报。
+- **疑点速查**：样式键必须在 `content` 内（元素级无效，v0.15.0 起 ppt_check 报错）；`expectedOverlaps` 流式/块式等价（每对一行）；度量/审阅/导出共用同一估算器。
 
 ## 新手入门（v0.3.0，对应真实任务反馈 B2 ★）
 

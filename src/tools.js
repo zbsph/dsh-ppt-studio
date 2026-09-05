@@ -20,6 +20,7 @@ import { SCHEMA_REF, scaffoldProject } from './scaffold.js'
 import { applyAutoDeclare } from './autodeclare.js'
 import { listTemplates, templateWorkspace, registerTemplate, materializeTemplate } from './templates.js'
 import { surgicalPatch } from './surgical.js'
+import { spliceIntoSource, sliceSource } from './splice.js'
 import { measureLayout } from './measurement.js'
 import { crosscheckReport } from './crosscheck.js'
 import { buildPreview } from './preview-server.js'
@@ -232,10 +233,11 @@ export function registerTools(ctx) {
 
   reg({
     name: 'ppt_visual',
-    description: 'Office 真渲染通道（v0.8.0）：用本机 PowerPoint COM 把 .pptx 逐页渲染成 PNG（1920×1080）——① 理解用户原稿（参考任务先看后做）② 成品视觉审核（导出后对 pptx 审核真实观感）。无 Office 时不可用（自动降级 HTML 预览+结构断言）。渲染后请逐页 read_image 查看；视觉理解写入设计摘要/交付说明',
+    description: 'Office 真渲染通道（v0.8.0）：用本机 PowerPoint COM 把 .pptx 逐页渲染成 PNG（1920×1080）——① 理解用户原稿（参考任务先看后做）② 成品视觉审核（导出后对 pptx 审核真实观感）。pages="15" / "15,18" 只渲染指定页（保持原页号命名；A5 反馈二）——看一页不再等整册。无 Office 时不可用（自动降级 HTML 预览+结构断言）。渲染后请逐页 read_image 查看；视觉理解写入设计摘要/交付说明',
     parameters: {
       pptx: { type: 'string', required: true, description: '源/成品 .pptx 绝对路径（用户原稿或 out.pptx）' },
       out: { type: 'string', description: '输出目录（相对当前目录或绝对；缺省 <pptx 同目录>/..-rendered）' },
+      pages: { type: 'string', description: '仅渲染指定页（如 "15" / "15,18" / "1,3-5"；缺省全部；页号 = 幻灯原页号）' },
     },
     output: markdownResult(),
     async execute(args) {
@@ -243,11 +245,12 @@ export function registerTools(ctx) {
         if (!findPowerPoint()) {
           return '⚠ 本机无 Microsoft Office（PowerPoint COM 不可用）：Office 真渲染通道不可用。可继续使用 HTML 预览（ppt_preview）+ 结构断言；本步骤不影响其他工作流。'
         }
+        const pagesSel = typeof args.pages === 'string' ? parsePagesArg(args.pages) : null
         const outDir = args.out ?? join(dirname(args.pptx), 'rendered')
-        const r = await renderPptxToPng(args.pptx, outDir)
+        const r = await renderPptxToPng(args.pptx, outDir, { pages: pagesSel ? [...pagesSel] : undefined })
         if (!r.pages) throw new Error('渲染结果为空（请检查 pptx 是否可打开）')
         return [
-          `✓ Office 真渲染完成（${r.pages} 页 → ${outDir}）：`,
+          `✓ Office 真渲染完成（${r.pages} 页${pagesSel ? `，页码 [${[...pagesSel].sort((a, b) => a - b).join(', ')}]` : ''} → ${outDir}）：`,
           '',
           ...r.files.map((f) => `  - ${f}`),
           '',
@@ -563,11 +566,14 @@ export function registerTools(ctx) {
           const fit = r.autoFit.length
             ? `\n\n⚠ auto-fit 缩放 ${r.autoFit.length} 处文本：\n${fitLines.join('\n')}`
             : ''
-          const floorNote = floorHits ? `\n\n✗ ${floorHits} 处达到字号下限（theme.minFontSize）仍溢出——建议修复后再交付，避免放映时文字溢出容器。` : ''
+          const floorNote = floorHits ? `\n\n✗ ${floorHits} 处达到字号下限（theme.minFontSize）仍溢出——建议修复后再交付，避免放映时文字溢出容器。\n  若这些溢出页是导入近似稿的存量问题（位置/换行与原件不一致）而任务只需改某页：考虑 ppt_splice（只替换目标页进原稿，其余页逐字节不动）而非整册重渲。` : ''
           const chartNote = r.chartInfos?.length
             ? `\n\n⚠ 图表数据检查（${r.chartInfos.length} 处）：\n${r.chartInfos.map((w) => `   - ${w}`).join('\n')}`
             : ''
-          return `✓ 已导出（pptd 引擎，${r.slides} 页）：${r.file}${fit}${floorNote}${chartNote}${await withAudit(r.file)}`
+          const phNote = r.mediaPlaceholders?.length
+            ? `\n\n⚠ 缺失媒体 ${r.mediaPlaceholders.length} 个（${r.mediaPlaceholders.join('、')}）已用 1×1 白色占位导出——请替换真实图片或删除页面引用（可重新 ppt_import 提取或人工补图）`
+            : ''
+          return `✓ 已导出（pptd 引擎，${r.slides} 页）：${r.file}${fit}${phNote}${floorNote}${chartNote}${await withAudit(r.file)}`
         } catch (error) {
           // 自动回退链（C1 决定）：auto 且 pptd 硬失败 → 有 python-pptx 则兜底并醒目标注降级（绝不静默）
           if (eff.allowFallback) {
@@ -586,6 +592,62 @@ export function registerTools(ctx) {
         }
       } catch (error) {
         return `✗ 导出失败：\n${errText(error)}`
+      }
+    },
+  })
+
+  reg({
+    name: 'ppt_splice',
+    description: '保真交付（v0.15.0，反馈二 A3/A9 ★★）：把工作区某一页**替换进源 .pptx**——保留源母版/布局（横幅/页脚原样）、保留该页备注关系、媒体合并；**其余页条目逐字节不变（SHA256 自动自证）**。适用"编辑既有精美 PPT 的某一页"场景（整册近似重渲会伤其他页，A4）。输出 = 整册副本（仅目标页被替换）——与手工 zip 手术等价，一次命令',
+    parameters: {
+      dir: { type: 'string', required: true, description: '工作区目录（含 deck.yaml——被替换页的内容真相）' },
+      source: { type: 'string', required: true, description: '源 .pptx 绝对路径（用户原稿）' },
+      page: { type: 'number', required: true, description: 'deck 页号（1 基）——用工作区第几页替换' },
+      sourcePage: { type: 'number', description: '源 .pptx 中要被替换的页号（缺省 = page）' },
+      out: { type: 'string', description: '输出 .pptx（缺省 <源>-spliced.pptx）' },
+    },
+    output: markdownResult(),
+    async execute(args) {
+      try {
+        const r = await spliceIntoSource({
+          deckDir: args.dir, source: args.source,
+          page: Number(args.page), sourcePage: args.sourcePage !== undefined ? Number(args.sourcePage) : Number(args.page),
+          out: args.out,
+        })
+        return [
+          `✓ 已替换并写出：${r.out}`,
+          `  - 目标页：源第 ${r.replaced.sourcePage} 页 ← deck 第 ${r.replaced.deckPage} 页（${r.replaced.slide}）`,
+          `  - 其余条目：${r.unchangedCount} 个 SHA256 与源逐字节一致（${r.changed.length ? `变更：${r.changed.join('、')}` : '零非预期变更'}）`,
+          `  - 媒体：新增 ${r.mediaAdded} / 复用源同名 ${r.mediaReused}；备注关系：${r.notesKept ? '保留' : '（源该页无备注）'}`,
+          `  - 源母版/布局/主题：原样保留（横幅/页脚不动）；若需"单页独立版"→ 下一步 ppt_slice source=... page=...`,
+          '下一步：ppt_visual pages=' + r.replaced.sourcePage + '（抽查该页真渲染观感）。',
+        ].join('\n')
+      } catch (error) {
+        return `✗ 替换失败：\n${errText(error)}`
+      }
+    },
+  })
+
+  reg({
+    name: 'ppt_slice',
+    description: '保真交付（v0.15.0，反馈二 A3）：从 .pptx（建议先 ppt_splice 的产物或用户原稿）修剪出**单页 + 完整母版/布局/主题**的独立文件——sldIdLst 只留 1 条、其余页/备注/关系/Override 删除、布局母版全保留（顶部横幅/页脚随母版原样）',
+    parameters: {
+      source: { type: 'string', required: true, description: '源 .pptx 绝对路径' },
+      page: { type: 'number', required: true, description: '保留的页号（1 基）' },
+      out: { type: 'string', description: '输出 .pptx（缺省 <源>-single.pptx）' },
+    },
+    output: markdownResult(),
+    async execute(args) {
+      try {
+        const r = await sliceSource({ source: args.source, page: Number(args.page), out: args.out })
+        return [
+          `✓ 单页版已写出：${r.out}（保留第 ${r.page} 页）`,
+          `  - 母版 ${r.masters} / 布局 ${r.layouts} / 主题：全部保留（横幅/页脚原样）`,
+          `  - 条目总数（含母版体系）：${r.entries}`,
+          '下一步：ppt_visual pages=1 抽查（单页版中该页 = 第 1 页）。',
+        ].join('\n')
+      } catch (error) {
+        return `✗ 单页化失败：\n${errText(error)}`
       }
     },
   })

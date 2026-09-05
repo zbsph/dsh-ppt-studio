@@ -10,12 +10,15 @@ const CJK_RE = /[\u1100-\u11ff\u2e80-\u303f\u3040-\u30ff\u31f0-\u31ff\u3200-\u4d
 
 export function charWidth(ch, fontSize, bold = false) {
   const code = ch.codePointAt(0)
-  if (CJK_RE.test(ch)) return fontSize
+  // A6 修复（反馈二）：CJK 加粗实测 ≈1.03–1.07em（微软雅黑粗体；报告案例 12.8/12=1.066）——计入 1.06
+  // 避免"估算通过但 PowerPoint 真实排版溢出"的系统差（宁可误报不可漏报，D4 原则）。
+  const boldCJK = bold ? 1.06 : 1
+  if (CJK_RE.test(ch)) return fontSize * boldCJK
   if (code === 0x20) return fontSize * 0.4
   if (code >= 0x30 && code <= 0x39) return fontSize * 0.6
   if (code >= 0x41 && code <= 0x5a || code >= 0x61 && code <= 0x7a) return fontSize * (bold ? 0.63 : 0.6)
-  if (code >= 0x3000 && code <= 0x303f) return fontSize
-  return fontSize * 0.65
+  if (code >= 0x3000 && code <= 0x303f) return fontSize * boldCJK
+  return fontSize * (bold ? 0.69 : 0.65)
 }
 
 export function textWidth(text, style) {

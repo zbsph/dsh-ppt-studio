@@ -128,6 +128,19 @@ export async function importPptx(pptxPath, outDir) {
     const data = files.get('ppt/media/' + name)
     if (data) await writeFile(join(outDir, 'media', name), data)
   }
+  // A2 修复（反馈二）：页面引用 vs media 目录一致性自检——rels 指向包外/特殊格式的资源
+  // 此前静默引用 media/placeholder.png（未提取）→ 导出时 ENOENT 硬失败且无指引；
+  // 现在：缺失清单可行动提示 + 自动生成 1×1 白色占位图（导出立即可用，人工替换后自然清除）。
+  const referenced = new Set()
+  for (const page of pages) {
+    if (page.background?.type === 'image' && typeof page.background.src === 'string') referenced.add(basename(page.background.src))
+    for (const el of page.elements) if (el.elementType === 'image' && typeof el.src === 'string') referenced.add(basename(el.src))
+  }
+  const missingMedia = [...referenced].filter((bn) => !existsSync(join(outDir, 'media', bn)))
+  if (missingMedia.length) {
+    const tinyPng = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64')
+    for (const bn of missingMedia) await writeFile(join(outDir, 'media', bn), tinyPng)
+  }
   // P0-1：原始样式清单（改版求一致场景直接复用；渐变 stops/阴影/字体引用保留原值）
   const stylesJson = {
     source: basename(pptxPath),
@@ -143,6 +156,7 @@ export async function importPptx(pptxPath, outDir) {
     outDir, pages: pages.length, media: [...mediaNames], size: { width, height },
     reference: refPreviews?.length ? { previews: refPreviews, source: 'source.pptx' } : null,
     warnings: ['chart 降级为文本占位；未映射 prst 形状近似为矩形（import-styles.json 有记录）',
+      ...(missingMedia.length ? [`⚠ 原稿 ${missingMedia.length} 个媒体引用未提取（${missingMedia.join('、')}——rels 指向包外/特殊格式）：已在 media/ 生成 1×1 白色占位图，导出可用；建议人工替换或删除对应页面元素`] : []),
       ...(existsSync(join(outDir, 'source.pptx')) ? ['已保留原始 pptx ⊳ source.pptx（零失真真相层；参考双轨 v0.9.1）'] : []),
       ...(refPreviews?.length ? [`已生成整页真渲染 ⊳ reference/previews/（${refPreviews.length} 页，Office COM）——参考任务先看真身再动手`] : ['⚠ 未生成整页真渲染（无 Office 或渲染失败）：可用 ppt_visual 对 source.pptx 补渲；骨架层仍可用']),
       ...(styleCount ? [`已保留样式：${styleCount} 个颜色 / 字体与字号已映射（import-styles.json 含渐变/阴影原始值）`] : []),
@@ -623,12 +637,16 @@ ${pages}
 `
 }
 
-/** P0-1：样式聚合 → theme 建议（colors 高频 top7 + textStyles：标题=最大字号、正文=众数、标注=最小）。 */
+/** P0-1：样式聚合 → theme 建议（colors 高频 top7 + 全量扩展色板 + textStyles）。 */
+/** A7 修复（反馈二 ★）：全量色板并入（含低频但原稿真实使用的颜色）——否则审阅
+ *  theme-conformance 把原稿色全报"不在主题色板"，作者被迫手工补色。 */
 function themePresetOf(stats) {
-  const colorRank = Object.entries(stats.colors).sort((a, b) => b[1] - a[1]).slice(0, 7)
+  const colorRank = Object.entries(stats.colors).sort((a, b) => b[1] - a[1])
   if (!colorRank.length) return null
   const ink = colorRank[0][0]
-  const colors = colorRank.map(([c], i) => `    c${i + 1}: "${c}"${i === 0 ? '   # 最高频（建议作 ink/主色）' : ''}`).join('\n')
+  const prim = colorRank.slice(0, 7).map(([c], i) => `    c${i + 1}: "${c}"${i === 0 ? '   # 最高频（建议作 ink/主色）' : ''}`).join('\n')
+  const ext = colorRank.slice(7).map(([c], i) => `    c${i + 8}: "${c}"   # 原稿色板扩展（低频但审阅不再误报）`).join('\n')
+  const colors = prim + (ext ? '\n' + ext : '')
   const szRank = Object.entries(stats.sizes).sort((a, b) => b[1] - a[1])
   const fontRank = Object.entries(stats.fonts).sort((a, b) => b[1] - a[1])[0]?.[0]
   const maxSz = szRank.length ? Math.max(...szRank.map(([s]) => Number(s)), 12) : 18
@@ -636,6 +654,7 @@ function themePresetOf(stats) {
   const bodySz = szRank[0]?.[0] ?? 14
   return [
     `# 建议主题（P0-1 聚合自原稿样式，可调；页面字段已内联，无需引用也可渲染）`,
+    '# 色板为原稿全量（c1-c7 高频 + c8 起扩展低频色；theme-conformance 以全集为基准，不再误报原稿色）',
     'theme:',
     '  colors:',
     colors,

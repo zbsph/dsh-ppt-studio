@@ -167,21 +167,22 @@ export function aestheticSuggestions(page, size, theme) {
       if (typeof fg !== 'string' || !/^#[0-9a-fA-F]{6}$/.test(fg)) continue
       const cx = el.bounds.x + el.bounds.w / 2
       const cy = el.bounds.y + el.bounds.h / 2
-      // z-order = 数组序（后绘制者在上层）：从上层往下找第一个含文字中心的实底形状
+      // A8 修复（反馈二）：载体不再只认"字符串实色 + kind=shape"——渐变/alpha 对象与
+      // 任意承载元素（非 text/line）都计入；渐变取最接近中心的 stop 做对比色，alpha<0.85 视为不承载
       let holder = null
       for (let k = els.length - 1; k >= 0; k--) {
         const other = els[k]
-        if (other.kind !== 'shape' || typeof other.fill !== 'string' || !/^#[0-9a-fA-F]{6}$/.test(other.fill)) continue
+        if (other.kind === 'text' || other.kind === 'line') continue
         if (!contains(other.bounds, { x: cx, y: cy, w: 1, h: 1 })) continue
-        holder = other.fill
-        break
+        const c = carrierColorOf(other)
+        if (c) { holder = c; break }
       }
       const base = holder ?? bgColor
       if (!base) continue
       const ratio = contrastRatio(fg, base)
       if (ratio !== null && ratio < 3) {
         const tone = ratio < 1.8 ? '极低（接近不可读）' : '偏低'
-        out.push({ severity: 'suggestion', code: 'aesthetic-contrast', id: el.id, message: `文本 "${el.id}" 颜色 ${fg} 与${holder ? '承载色块（最上层）' : '页面背景'} ${base} 对比度 ${ratio.toFixed(2)}（${tone}），建议深字浅底或浅字深底（若已确认承载层深色，可加入本页 contrastExempt 豁免）` })
+        out.push({ severity: 'suggestion', code: 'aesthetic-contrast', id: el.id, message: `文本 "${el.id}" 颜色 ${fg} 与${holder ? '承载形状（最上层实底）' : '页面背景'} ${base} 对比度 ${ratio.toFixed(2)}（${tone}），建议深字浅底或浅字深底（若已确认承载层深色，可加入本页 contrastExempt 豁免）` })
       }
     }
   }
@@ -356,6 +357,8 @@ export function analyzePage(page, size) {
         if (vOverlap < Math.min(12, Math.min(a.h, b.h) * 0.5)) continue
         const d = Math.abs(keys[i].v - keys[j].v)
         if (d > TOL && d <= 6) {
+          // C3 降噪（反馈二）：文字在形体内（内边距 ≤6px）属设计常态——包含关系成对即视为有意内边距，不判"疑似未对齐"
+          if (contains(a, b) || contains(b, a)) continue
           findings.push({
             severity: 'warning', code: 'near-align', id: `${keys[i].el.id} × ${keys[j].el.id}`,
             message: `疑似未对齐： "${keys[i].el.id}" 与 "${keys[j].el.id}" 的${mode === 'x' ? '左缘' : mode === 'xr' ? '右缘' : '中线'}差 ${Math.round(d * 10) / 10}px`,
@@ -540,6 +543,31 @@ function fillColorsOf(el) {
   }
   if (el.kind === 'line') return [el.line?.color].filter(Boolean)
   return []
+}
+
+/**
+ * A8 修复（反馈二）：承载面颜色提取——统一三种 fill 形态：
+ * 字符串 hex → 本身；{color, alpha} → alpha≥0.85 才算承载（半透明回退背景）；渐变 → 取最接近中心的 stop。
+ * 返回 hex 字符串或 null（不承载）。
+ */
+function carrierColorOf(el) {
+  const f = el.fill
+  if (typeof f === 'string' && /^#[0-9a-fA-F]{6}$/.test(f)) return f
+  if (f && typeof f === 'object') {
+    if (typeof f.color === 'string' && /^#[0-9a-fA-F]{6}$/.test(f.color) && (f.alpha ?? 1) >= 0.85) return f.color
+    if (f.type === 'gradient' && Array.isArray(f.stops) && f.stops.length) {
+      const poss = f.stops.map((s) => Number(s.pos ?? 0))
+      const mid = Math.max(...poss) > 1 ? 50 : 0.5 // 渐变 pos：百分比（0-100）或 0-1
+      let best = null
+      let bestD = Infinity
+      for (const s of f.stops) {
+        const d = Math.abs(Number(s.pos ?? 0) - mid)
+        if (d < bestD) { bestD = d; best = s }
+      }
+      if (best && typeof best.color === 'string' && /^#[0-9a-fA-F]{6}$/.test(best.color) && (best.alpha ?? 1) >= 0.85) return best.color
+    }
+  }
+  return null
 }
 
 function fmtRect(b) { return `[${Math.round(b.x)}, ${Math.round(b.y)}, ${Math.round(b.w)}, ${Math.round(b.h)}]` }

@@ -130,7 +130,11 @@ export function runPythonScript(ctx, script) {
 
 function startPython(cmd, script) {
   const r = spawnSync(cmd, ['-c', script], { encoding: 'utf8', timeout: 120000 })
-  if (r.status !== 0) throw new Error(`python-pptx 执行失败：${(r.stderr ?? r.stdout ?? '').slice(0, 1500)}`)
+  if (r.status !== 0) {
+    // A2b 修复（反馈二）：空消息无法定位 → 带 exit code / spawn 错误 / stderr 全文
+    const detail = String(r.error?.code ?? r.error?.message ?? '').trim() || String(r.stderr ?? r.stdout ?? '').trim().slice(0, 1500)
+    throw new Error(`python-pptx 执行失败（exit ${r.status ?? 'unknown'}${r.signal ? `, signal ${r.signal}` : ''}）${detail ? `：${detail}` : '：解释器无任何输出（疑似 WindowsApps 假 python 桩或环境损坏）'}`)
+  }
   return r.stdout
 }
 

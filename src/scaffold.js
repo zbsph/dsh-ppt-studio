@@ -40,6 +40,11 @@ elements:
     text: "正文，长句在语义断点显式 \\n 换行"
     style: "$body"            # 引用 theme.textStyles；或直接写字段
     # 也可内联：fontSize: 14 / color: "$ink" / bold / align: left|center|right / lineHeight / wrap: false
+    # ⚠ 样式键必须写在 content 内部（上例）。写在元素级（elementType 同级）无效——
+    #   v0.15.0 起 ppt_check 直接报错（此前静默忽略按默认 18pt 度量，曾产生 146 条假错误）
+    # ✗ 错误示范（元素级样式键）：
+    #   elementType: text
+    #   fontSize: 14            ← 无效！应放在 content: {text: "...", fontSize: 14} 内
 \`\`\`
 
 ### shape（kind = rect|roundRect|ellipse|triangle|custGeom + 常见 prst：rightArrow/leftArrow/upArrow/downArrow/leftRightArrow/pentagon/hexagon/chevron/parallelogram/diamond/octagon/star5/flowchartProcess|Decision|Data|Terminator）

@@ -21,6 +21,9 @@ const hex = (c) => (c ?? '#000000').replace('#', '').toUpperCase().slice(0, 6).p
 let UID = 1
 const nid = () => UID++
 
+// A2 修复（反馈二）：缺失媒体兜底——1×1 白色 PNG（页面引用但 media/ 无文件时不再 ENOENT 硬失败）
+const TINY_PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64')
+
 export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}) {
   const report = { autoFit: [], warnings: [], chartInfos: [] }
   const slides = []
@@ -102,7 +105,13 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
     files[`ppt/slides/_rels/slide${n}.xml.rels`] = srels
     for (const m of s.media) {
       const bn = m.srcPath.split(/[\\/]/).pop()
-      files[`ppt/media/${bn}`] = await readFile(join(ctx.dir, m.srcPath))
+      try {
+        files[`ppt/media/${bn}`] = await readFile(join(ctx.dir, m.srcPath))
+      } catch {
+        report.mediaPlaceholders = report.mediaPlaceholders ?? []
+        report.mediaPlaceholders.push(bn)
+        files[`ppt/media/${bn}`] = TINY_PNG
+      }
     }
   }
 

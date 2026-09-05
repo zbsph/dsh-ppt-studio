@@ -243,7 +243,15 @@ export function validatePage(page, file) {
     if (el.role !== undefined && !['background', 'content', 'decoration'].includes(el.role)) {
       errors.push(`${path}.role: background|content|decoration（层叠语义：背景/内容/装饰；decoration 完全豁免重叠报告）`)
     }
-    if (type === 'text') validateText(el, path, errors)
+    if (type === 'text') {
+      validateText(el, path, errors)
+      // B1 修复（反馈二 ★）：元素级残留样式键 → 明确报错（此前静默忽略按默认 18pt 度量，
+      // 造成"写法错误 → 146 条假错误"的误导排查）
+      const topStyle = TEXT_STYLE_KEYS.filter((k) => el[k] !== undefined)
+      if (topStyle.length) {
+        errors.push(`${path}: 样式键 ${topStyle.join('/')} 写在元素级——样式必须写在 content 内部（content: {text: "...", fontSize: 14, color: "#000"}）；元素级样式会被静默忽略并按默认 18pt 度量`)
+      }
+    }
     if (type === 'shape') validateShape(el, path, errors)
     if (type === 'line') validateLine(el, path, errors)
     if (type === 'image') {
@@ -411,7 +419,13 @@ function fail(messages) { return new PptError(Array.isArray(messages) ? messages
 export async function resolveDeck(dir) {
   const deckFile = join(dir, 'deck.yaml')
   if (!existsSync(deckFile)) throw fail(`deck.yaml not found under ${dir}`)
-  const deck = YAML.parse(await readFile(deckFile, 'utf8')) ?? {}
+  let deck
+  try {
+    deck = YAML.parse(await readFile(deckFile, 'utf8')) ?? {}
+  } catch (e) {
+    // B2 修复（反馈二）：解析错误给出可行动提示（多对声明拆每对一行等）
+    throw fail(`deck.yaml 解析失败：${String(e).slice(0, 200)}\n提示：常见笔误——expectedOverlaps 把多对声明写在同一行（- {pair: ...} - {pair: ...}），需拆为每对一行`) 
+  }
   const err = validateDeck(deck)
   if (err) throw err
   const size = normalizeSize(deck.size) ?? { width: 960, height: 540 }
@@ -422,7 +436,12 @@ export async function resolveDeck(dir) {
   for (const ref of deck.pages) {
     const file = join(dir, ref)
     if (!existsSync(file)) throw fail(`page file missing: ${ref}`)
-    const page = YAML.parse(await readFile(file, 'utf8')) ?? {}
+    let page
+    try {
+      page = YAML.parse(await readFile(file, 'utf8')) ?? {}
+    } catch (e) {
+      throw fail(`[${ref}] YAML 解析失败：${String(e).slice(0, 200)}\n提示：常见笔误——expectedOverlaps 把多对声明写在同一行，需拆为每对一行`)
+    }
     const perr = validatePage(page, ref)
     if (perr) throw perr
     const terr = themeRefCheck(page, theme, ref)

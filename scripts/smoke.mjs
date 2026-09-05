@@ -12,7 +12,7 @@ import { renderDeck } from '../lib/pptd/render-html.js'
 import { exportPptx } from '../lib/pptd/export-pptx.js'
 import { importPptx } from '../lib/pptd/import-pptx.js'
 import { verifyDeck } from '../lib/verify.js'
-import { zipRead } from '../lib/zips.js'
+import { zipRead, decodeXml } from '../lib/zips.js'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const smokeDir = join(root, 'examples', 'smoke')
@@ -1019,6 +1019,84 @@ const reLayout = (await renderDeck(reCtx, {})).layout
 const reAdded = await applyAD(reCtx, reLayout)
 ok('v0.14.6: 幂等——重复运行零新增（已声明对全部跳过）', reAdded.length === 0, JSON.stringify(reAdded))
 await rm(autoDeck, { recursive: true, force: true })
+
+// ══ 31. v0.15.0：反馈二——B1 元素级样式键 / A6 加粗CJK字宽 / A8 承载面 / C3 内边距降噪 / A3 splice+slice ═══════════
+const { charWidth } = await import('../lib/pptd/layout.js')
+ok('v0.15.0 A6: CJK 加粗字宽 ×1.06（微软雅黑粗体实测 1.03-1.07）',
+  charWidth('莎', 12, true) === 12 * 1.06 && charWidth('莎', 12, false) === 12,
+  `bold=${charWidth('莎', 12, true)} plain=${charWidth('莎', 12, false)}`)
+// B1：元素级样式键 → resolveDeck 报错 + 明确指引（此前静默忽略按 18pt 度量）
+const b1Deck = join(root, 'examples', 'b1-smoke')
+await rm(b1Deck, { recursive: true, force: true })
+await mkdir(join(b1Deck, 'pages'), { recursive: true })
+await fsp.writeFile(join(b1Deck, 'deck.yaml'), ['version: 1', 'title: b1', 'size: [960, 540]', 'pages:', '  - pages/01.yaml', '', ''].join('\n'))
+await fsp.writeFile(join(b1Deck, 'pages', '01.yaml'), [
+  'pageType: content', 'elements:',
+  '  - elementId: t1', '    elementType: text', '    bounds: [60, 60, 400, 40]',
+  '    fontSize: 14', '    content: {text: "误写"}', '', ''].join('\n'))
+let b1Err = null
+try { await resolveDeck(b1Deck) } catch (e) { b1Err = e }
+ok('v0.15.0 B1: 元素级样式键 → 校验报错 + 指引（content 内部写法）',
+  b1Err !== null && b1Err.messages?.some((m) => m.includes('样式必须写在 content 内部')),
+  b1Err?.messages?.join('; ').slice(0, 160))
+await rm(b1Deck, { recursive: true, force: true })
+// A8：渐变承载面 → 对比度以中途 stop 为基（浅字深底不再误报背景）
+const a8Layout = {
+  size: { width: 960, height: 540 },
+  theme: { colors: {} },
+  pages: [{
+    index: 0, name: 'a8', id: 'a8',
+    elements: [
+      { id: 'box', kind: 'shape', bounds: { x: 40, y: 40, w: 400, h: 200 }, fill: { type: 'gradient', stops: [{ pos: 0, color: '#3E4E63' }, { pos: 100, color: '#FFFFFF' }] } },
+      { id: 'txt', kind: 'text', bounds: { x: 60, y: 60, w: 300, h: 60 }, text: '白字', style: { fontSize: 14, color: '#FFFFFF' } },
+    ],
+    expectedOverlaps: [{ pair: ['box', 'txt'] }],
+  }],
+}
+const vA8 = verifyDeck(a8Layout).text
+ok('v0.15.0 A8: 渐变承载面被识别（白字 vs 深浅渐变中心 → 无对比度误报）',
+  !vA8.includes('aesthetic-contrast'),
+  vA8.split('\n').filter((l) => l.includes('aesthetic-contrast')).join('; ').slice(0, 120))
+// C3：文字在形体内（内边距 ≤6px）→ 不再报 near-align
+const c3Layout = {
+  size: { width: 960, height: 540 },
+  theme: { colors: {} },
+  pages: [{
+    index: 0, name: 'c3', id: 'c3',
+    elements: [
+      { id: 'card', kind: 'shape', bounds: { x: 100, y: 100, w: 500, h: 200 }, fill: '#F5F6F7' },
+      { id: 'lab', kind: 'text', bounds: { x: 104, y: 104, w: 492, h: 192 }, text: '内边距 4px', style: { fontSize: 14, color: '#333333' } },
+    ],
+    expectedOverlaps: [{ pair: ['card', 'lab'] }],
+  }],
+}
+const vC3 = verifyDeck(c3Layout).text
+ok('v0.15.0 C3: 内边距类 near-align 豁免（包含关系成对 = 有意内边距）',
+  !vC3.includes('near-align') && vC3.includes('预期重叠'), (vC3.match(/near-align/g) ?? []).length + ' hits')
+// A3：splice/slice zip 级回归（seed = smoke 导出 3 页；splice 页2 → 仅 2 条目变化；slice → 1 页）
+const { spliceIntoSource, sliceSource, zipDigests } = await import('../lib/splice.js')
+const seedCtx = await resolveDeck(smokeDir)
+const seedOut = join(smokeDir, 'out-splice-smoke.pptx')
+await (await import('node:fs/promises')).rm(seedOut, { force: true })
+await exportPptx(seedCtx, { out: seedOut, engine: 'pptd' })
+const spl = await spliceIntoSource({ deckDir: smokeDir, source: seedOut, page: 1, sourcePage: 2, out: join(smokeDir, 'out-splice-smoke-spliced.pptx') })
+const seedBuf = await (await import('node:fs/promises')).readFile(seedOut)
+const splBuf = await (await import('node:fs/promises')).readFile(spl.out)
+const seedD = zipDigests(seedBuf)
+const splD = zipDigests(splBuf)
+const delta = [...seedD.keys()].filter((k) => seedD.get(k) !== splD.get(k))
+ok('v0.15.0 A3: splice 只改变目标页 2 条目（其余 SHA256 不变）',
+  delta.length === 2 && delta.every((k) => k.startsWith('ppt/slides/slide2') || k.startsWith('ppt/slides/_rels/slide2')), JSON.stringify(delta))
+const sl = await sliceSource({ source: spl.out, page: 2, out: join(smokeDir, 'out-splice-smoke-single.pptx') })
+const zS = zipRead(await (await import('node:fs/promises')).readFile(sl.out))
+const slideEntries = [...zS.keys()].filter((k) => /^ppt\/slides\/slide\d+\.xml$/.test(k))
+const sldLst = decodeXml(zS.get('ppt/presentation.xml')).match(/<p:sldIdLst>[\s\S]*?<\/p:sldIdLst>/)?.[0] ?? ''
+ok('v0.15.0 A3: slice 单页化（1 张 slide + sldIdLst 单条且闭合）',
+  slideEntries.length === 1 && (sldLst.match(/<p:sldId\b[^>]*\/?>/g) ?? []).length === 1,
+  sldLst.slice(0, 120))
+await (await import('node:fs/promises')).rm(seedOut, { force: true })
+await (await import('node:fs/promises')).rm(spl.out, { force: true })
+await (await import('node:fs/promises')).rm(sl.out, { force: true })
 
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)

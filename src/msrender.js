@@ -16,7 +16,8 @@ const PS1 = `param(
   [string]$Pptx,
   [string]$Out,
   [int]$W = 1920,
-  [int]$H = 1080
+  [int]$H = 1080,
+  [int[]]$Pages = @()
 )
 $ErrorActionPreference = 'Stop'
 $pp = $null
@@ -26,11 +27,12 @@ try {
   $pres = $pp.Presentations.Open($Pptx, -1, 0, 0)
   $n = $pres.Slides.Count
   New-Item -ItemType Directory -Force -Path $Out | Out-Null
-  for ($i = 1; $i -le $n; $i++) {
+  $list = if ($Pages.Length -gt 0) { $Pages | Sort-Object -Unique } else { 1..$n }
+  foreach ($i in $list) {
     $pres.Slides.Item($i).Export((Join-Path $Out ('{0:D2}.png' -f $i)), 'PNG', $W, $H)
   }
   $pres.Close()
-  Write-Output ("OK:$n")
+  Write-Output ("OK:" + $list.Count)
 } finally {
   if ($pp) { try { $pp.Quit() } catch { } }
 }
@@ -61,15 +63,18 @@ export function findPowerPoint() {
  * 渲染 pptx → 逐页 PNG。
  * @returns { pages, outDir, files }；COM 不可用/渲染失败抛错（调用方负责降级）。
  */
-export async function renderPptxToPng(pptx, outDir, { width = 1920, height = 1080, timeoutMs = 240000 } = {}) {
+export async function renderPptxToPng(pptx, outDir, { width = 1920, height = 1080, timeoutMs = 240000, pages } = {}) {
   if (!existsSync(pptx)) throw new Error(`pptx 不存在：${pptx}`)
   await mkdir(outDir, { recursive: true })
   const ps1 = join(tmpdir(), `dsh-ppt-render-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.ps1`)
   await writeFile(ps1, '\ufeff' + PS1, 'utf8') // BOM：Windows PowerShell 5.1 按 GBK 读无 BOM 文件 → 中文路径乱码
   try {
+    const args = ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', ps1,
+      '-Pptx', pptx, '-Out', outDir, '-W', String(width), '-H', String(height)]
+    // A5 修复（反馈二）：按页渲染（COM 整册 20 页看一页 → 只渲染指定页，编号保持原页号）
+    if (pages && pages.length) args.push('-Pages', pages.join(','))
     const stdout = await new Promise((resolve, reject) => {
-      const child = spawn('powershell.exe', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', ps1,
-        '-Pptx', pptx, '-Out', outDir, '-W', String(width), '-H', String(height)], { windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] })
+      const child = spawn('powershell.exe', args, { windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] })
       let out = ''
       let err = ''
       child.stdout.on('data', (d) => { out += d })
@@ -84,7 +89,9 @@ export async function renderPptxToPng(pptx, outDir, { width = 1920, height = 108
     const m = stdout.match(/OK:(\d+)/)
     const files = []
     if (m) {
-      for (let i = 1; i <= Number(m[1]); i++) {
+      // 文件名 = 原页号（两位数补零）；按参数/全量存在者收集
+      const find = pages && pages.length ? pages : Array.from({ length: Number(m[1]) }, (_, i) => i + 1)
+      for (const i of find) {
         const f = join(outDir, `${String(i).padStart(2, '0')}.png`)
         if (existsSync(f)) files.push(f)
       }
