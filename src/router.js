@@ -4,15 +4,76 @@
  * /ppt on|off 命令强制（命令>语义）；工作流是"语境"而非能力切换。
  */
 
-const PPT_INTENT_RE = [
-  /(做|制作|生成|创建|撰写|编写|设计|搞|来|整)\s*(一?份|一个|张|套)?\s*(ppt|pptx|幻灯片|演示文稿|deck|slides|slide)/i,
-  /(ppt|pptx|slides|slide|deck|演示文稿|幻灯片|汇报文稿)\s*(的)?\s*(制作|生成|修改|调整|美化|优化|补|添加|新增|追加|总结|提炼|梳理|复刻|转换)/i,
-  /(改|修|调|补|美化|优化|统一|整理)\s*(一下|一页|几页|这份)?\s*(ppt|pptx|slides|deck|演示文稿|幻灯片)/i,
-  /(总结|提炼|梳理|复盘|汇报)(一下|一份)?\s*(这份|这个|该)?\s*(ppt|pptx|slides|deck|演示文稿|幻灯片)/i,
-  /(演示文稿|幻灯片|ppt|pptx|deck|slides)\s*(建议|大纲|脚本|备注|讲稿)/i,
-]
+/**
+ * PPT 意图判据（本轮修正）：
+ * 旧实现是"动词紧邻名词"的固定式正则（`做\s*(一个)?\s*ppt`），只能命中"做个 PPT"这类最短句式；
+ * 真实说法「帮我做一个 5 页的产品介绍 PPT」因为中间有修饰语而**判为无意向**——工作流提示词从不注入
+ * （0.1.5-rc.2 适配期实测：28 次 system-prompt/assemble 全部无 ppt-workflow 段）。
+ * 现改为"名词 + 任务动词在邻近窗口内共现"，两个方向都算：
+ *   - 仍要求**显式任务动词**（保持"弱信号不切"：只提一句 PPT 不激活）；
+ *   - 允许中间夹修饰语（页数/主题/定语），窗口 32 字符；
+ *   - 附件是 .pptx/.ppt 时直接视为强意图（用户把原稿递过来了）。
+ */
+const PPT_NOUN_RE = /(?:ppt|pptx|powerpoint|幻灯片|演示文稿|演示文档|汇报文稿|deck|slides?)/i
+const PPT_VERB_RE = /(?:做|制作|生成|创建|撰写|编写|设计|搞|整|改|修改|调整|调|补|补充|补完|添加|新增|追加|增页|加页|加几页|插入|美化|优化|统一|整理|替换|重做|换|总结|提炼|梳理|复盘|概述|浓缩|汇报|转换|复刻|导出|排版|配图|配色)/
+/** 名词与动词之间允许的最大间隔（修饰语长度）。 */
+const PPT_INTENT_WINDOW = 32
 
-const PPT_OFF_RE = /(这和|这事|与ppt|跟ppt|不是.*ppt|别管ppt|无关)/
+export function isPptIntent(text, attachments) {
+  const t = text ?? ''
+  if (!t && !attachments?.length) return false
+  // 附件是 ppt/pptx：强意图（用户把原稿/模板递过来了）
+  if (attachments?.some((a) => /\.pptx?$/i.test(a.name ?? a.path ?? a.filename ?? ''))) return true
+  if (!t) return false
+  return nearCooccur(t, PPT_NOUN_RE, PPT_VERB_RE, PPT_INTENT_WINDOW)
+}
+
+/** 两个模式是否在 text 中以 ≤ window 字符的间隔共现（与先后顺序无关）。 */
+function nearCooccur(text, aRe, bRe, window) {
+  const a = allMatches(text, aRe)
+  if (a.length === 0) return false
+  const b = allMatches(text, bRe)
+  if (b.length === 0) return false
+  for (const x of a) {
+    for (const y of b) {
+      const gap = x.index <= y.index ? y.index - (x.index + x[0].length) : x.index - (y.index + y[0].length)
+      if (gap <= window) return true
+    }
+  }
+  return false
+}
+
+function allMatches(text, re) {
+  const out = []
+  const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : `${re.flags}g`)
+  let m
+  while ((m = g.exec(text)) !== null) {
+    out.push(m)
+    if (m.index === g.lastIndex) g.lastIndex++
+    if (out.length > 64) break
+  }
+  return out
+}
+
+/** 判断用户消息是否"明确无关"（触发工作流退出）。仅在工作流已激活时生效。 */
+const PPT_OFF_RE = new RegExp(
+  [
+    // 否定/停止 + 名词：「不用做 PPT 了」「先不做幻灯片」
+    String.raw`(?:别|不用|不需要|不要|取消|停止|退出|不做|不搞|不写|先不|别再|放弃).{0,8}(?:ppt|pptx|幻灯片|演示文稿|演示文档|deck|slides?)`,
+    // 名词 + 收尾语：「PPT 不做了」「演示文稿先放一放」
+    String.raw`(?:ppt|pptx|幻灯片|演示文稿|演示文档|deck|slides?).{0,8}(?:不做了|不弄了|不用了|先不做|先放一放|暂停|算了|到此为止)`,
+    // 明确划清界限：「这跟 PPT 无关」「不是幻灯片」
+    String.raw`(?:这|此|那|该)?(?:和|跟|与)?.{0,6}(?:ppt|pptx|幻灯片|演示文稿).{0,6}(?:无关|没关系|不是|无关紧要)`,
+    String.raw`(?:无关|不是|不属于).{0,6}(?:ppt|pptx|幻灯片|演示文稿)`,
+    String.raw`(?:ppt|pptx|幻灯片|演示文稿).{0,6}(?:无关|之外|以外)`,
+  ].join('|'),
+  'i',
+)
+
+export function isPptOff(text) {
+  if (!text) return false
+  return PPT_OFF_RE.test(text)
+}
 
 const TASK_RULES = [
   { task: 'summarize', re: /(总结|提炼|梳理|复盘|概述|浓缩)/ },
@@ -25,21 +86,6 @@ export function detectTaskType(text) {
     if (rule.re.test(text)) return rule.task
   }
   return 'from-scratch'
-}
-
-export function isPptIntent(text, attachments) {
-  if (!text && !attachments?.length) return false
-  if (attachments?.some((a) => /\.pptx?$/i.test(a.name ?? a.path ?? a.filename ?? ''))) {
-    if (!text || PPT_INTENT_RE.some((re) => re.test(text))) return true
-    if (text && !PPT_OFF_RE.test(text)) return true
-  }
-  return PPT_INTENT_RE.some((re) => re.test(text ?? ''))
-}
-
-/** 判断用户消息是否"明确无关"（触发工作流退出）。 */
-export function isPptOff(text) {
-  if (!text) return false
-  return PPT_OFF_RE.test(text)
 }
 
 /** 快速生成（Quick Mode）语义：quick 词 + ppt 语境（进入时需 ppt 意图；工作流内自动成立）。 */

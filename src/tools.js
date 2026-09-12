@@ -82,11 +82,15 @@ export function parsePagesArg(s, max) {
   return set.size ? set : null
 }
 
-/** 当前质量档：项目级 state.json 优先，其次会话级（任一为 audit 即 audit）。 */
-async function qualityOf(ctx, dir) {
+/**
+ * 当前质量档：项目级 state.json 优先，其次会话级（任一为 audit 即 audit）。
+ * 会话 id 取自**工具执行的 agent**（DSH 的 `execute(args, exec)` 第二参数，exec.agent.session.id）。
+ * 历史坑：曾用 `ctx.get('agent')`，但 DSH 只提供 `agents` 服务、从无 `agent` 服务——
+ * 恒为 undefined，会话级质量档/模板等设置被静默忽略（0.1.5-rc.2 适配修正）。
+ */
+async function qualityOf(agent, dir) {
   try {
-    const agent = ctx.get('agent')
-    const sid = agent?.session?.id
+    const sid = agent?.session?.id ?? agent?.id
     const session = sid ? await loadSession(sid) : null
     const proj = await loadProject(dir)
     const q = proj?.quality === 'audit' || session?.quality === 'audit' ? 'audit' : (proj?.quality ?? session?.quality ?? 'standard')
@@ -453,14 +457,14 @@ export function registerTools(ctx) {
       pages: { type: 'string', description: '仅审阅指定页（如 "2" / "4,10" / "1,3-5"，1 起；缺省全部）。局部校验只影响本次报告，不改写 layout.json（防部分校验静默漏检其余页）' },
     },
     output: markdownResult(),
-    async execute(args) {
+    async execute(args, exec) {
       const dir = args.dir
       const autoDeclare = !!args.autoDeclare
       const withMeasured = !!args.measured
       const pagesSel = typeof args.pages === 'string' ? parsePagesArg(args.pages) : null
       try {
         if (autoDeclare) {
-          const { quality } = await qualityOf(ctx, dir)
+          const { quality } = await qualityOf(exec?.agent, dir)
           if (blockedByAudit(quality)) {
             return '✗ audit 质量档禁用 autoDeclare（防一键声明掩盖真实问题，C2 决定）：请切回 standard/quick 档，或逐对手工声明后重验。'
           }
@@ -531,12 +535,12 @@ export function registerTools(ctx) {
       out: { type: 'string', description: '输出文件名（相对 deck 目录）或绝对路径，缺省 out.pptx' },
     },
     output: markdownResult(),
-    async execute({ dir, engine, out }) {
+    async execute({ dir, engine, out }, exec) {
       try {
         const ctx0 = await loadCtx(dir)
         const outName = out ?? 'out.pptx'
         const eff = resolveEngine(engine) // auto/缺省 = pptd（主引擎），pptd 硬失败时允许回退 python-pptx（C1 决定）
-        const { quality } = await qualityOf(ctx, dir)
+        const { quality } = await qualityOf(exec?.agent, dir)
         const audit = blockedByAudit(quality)
         const withAudit = async (file, extra = '') => {
           let note = extra

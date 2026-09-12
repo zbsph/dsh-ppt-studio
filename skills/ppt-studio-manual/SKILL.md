@@ -17,7 +17,8 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 
 | 用户问 | 答 |
 |---|---|
-| "先帮我做个 PPT" | 问一句主题+页数即可（工作流自动进入）；建议先 `ppt_new` 立骨架或选模板 |
+| "先帮我做个 PPT" | 问一句主题+页数即可（工作流自动进入；"帮我做一个 5 页的产品介绍 PPT"这类带修饰语的说法也认得）；建议先 `ppt_new` 立骨架或选模板 |
+| "工作流怎么没自动进入 / 手册哪儿来的" | 进入靠语义判据（名词+任务动词邻近共现；只提一句 PPT 不激活），也可 `/ppt on` 强制；本手册由插件**内嵌注册**（跟着插件走，PPT 会话内即时生效），安装器另把它镜像到 `<dshHome>/skills/` 供非 PPT 会话查阅——让模型调 `ppt_state`，看 `manualSkill.visible` 即知当前通道 |
 | "你想看模板吗" | `ppt_templates` 展示；用户模板文件 > 内置模板 > 从零定调 |
 | "怎么只改原稿第 15 页" | `ppt_import` 读真身 → 改工作区页（verify 清零）→ `ppt_splice`（替换进源，其余页 SHA256 逐字节不变）→ 可选 `ppt_slice` 单页版 → `ppt_visual pages="15"` 抽查 |
 | "为什么报重叠错误，我明明想要这样" | design-intent 声明制：把有意重叠对加入该页 `expectedOverlaps`（流式 `[{pair: [a,b]}]` 或块式 `- pair: [a,b]`，每对一行），重验即 ✓；说不清意图的对子改布局；**内容互压（文字×文字）永远不能声明** |
@@ -80,7 +81,8 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 
 ## 7. 开发维护（仅改插件时用）
 
-- 改码：`src/` → `node scripts/build.mjs` → **重启 host**（插件经 agent preset 会话装配；`dev_reload_package` 只覆盖注入器装配包）。
-- 回归：`node scripts/smoke.mjs`（139 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
+- 改码：`src/` → `node scripts/build.mjs` → **重启 host**（插件经 agent preset 会话装配；`dev_reload_package` 只覆盖注入器装配包，且注入器 junction 已存在时会指向旧安装根）。
+- 回归：`node scripts/smoke.mjs`（156 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
 - 文档链：改需求/决策 → docs/01；改机制 → docs/02；每次 → docs/03；验收 → docs/04；发布前 → docs/06。
 - 装配：preset 行是唯一装配源；junction 保留（preset 解析包名用）。
+- 宿主升级（DSH 换版本）：本手册 §开发维护 与 docs/05「宿主升级纪律」——契约逐项 Inspect 核对 + headless 覆盖层真进程验证，别只看单测。

@@ -28,8 +28,14 @@
     "yaml": "^2.8.0"
   },
   "peerDependencies": {
-    "@deepseek-ai/dsh-tools": ">=0.0.1-rc <2",
-    "cordis": ">=4.0.0-rc <5"
+    "@deepseek-ai/cordis": ">=4.0.2 <5",
+    "@deepseek-ai/dsh-skill": ">=0.1.5-rc.2 <2",
+    "@deepseek-ai/dsh-tools": ">=0.1.5-rc.2 <2"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/cordis": { "optional": true },
+    "@deepseek-ai/dsh-skill": { "optional": true },
+    "@deepseek-ai/dsh-tools": { "optional": true }
   },
   "scripts": {
     "build": "bash scripts/build.sh",

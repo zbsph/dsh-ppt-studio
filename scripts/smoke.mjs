@@ -1149,5 +1149,48 @@ ok('v1.0.0-修订 P6: 真跨越仍报错（diag×hit unexpected-overlap）',
 ok('v1.0.0-修订 P6: collectDeclarable 与判据一致（只建议 diag×hit）',
   decP6.length === 1 && decP6[0].join(' × ') === keyOf('diag', 'hit'), JSON.stringify(decP6))
 
+// ── 33. v1.0.0-适配 DSH 0.1.5-rc.2：会话身份取用 + 内嵌手册 skill + 语义路由判据 ──
+// 背景（真实进程实测）：0.1.5-rc.2 只提供 `agents` 服务、**没有** `agent` 服务——旧代码 `ctx.get('agent')`
+// 恒为 undefined（会话级设置被静默忽略、ppt_state 落到 'default'）。官方通道是 execute(args, exec).agent。
+// 另一处：旧意图判据要求"动词紧邻名词"，真实说法「帮我做一个 5 页的产品介绍 PPT」判为无意向 →
+// 工作流提示词从不注入（装配探针实测：28 次 system-prompt/assemble 全部没有 ppt-workflow 段）。
+const { isPptIntent: rIntent, isPptOff: rOff } = await import('../lib/router.js')
+const { parseManual, MANUAL_FILE, MANUAL_NAME } = await import('../lib/skill.js')
+const { readFileSync } = await import('node:fs')
+
+ok('适配·意图判据：修饰语夹在动宾之间也算 PPT 任务（旧实现对漏报）',
+  rIntent('帮我做一个 5 页的产品介绍 PPT。', []) && rIntent('帮我做一个包含市场分析与财务预测的产品介绍 PPT', []) &&
+  rIntent('先帮我做个 PPT', []), '')
+ok('适配·意图判据：名词在前 / 编辑 / 总结 / 英文 deck 均命中',
+  rIntent('这份 PPT 帮我改改', []) && rIntent('把这个演示文稿统一一下配色', []) &&
+  rIntent('把这份幻灯片总结成 3 页', []) && rIntent('deck 里第 4 页重做一下', []), '')
+ok('适配·意图判据：弱信号不切（只提一句 PPT 不激活）',
+  !rIntent('PPT 是什么', []) && !rIntent('今天开会讨论了这个项目', []) && !rIntent('帮我写一段 Python 脚本', []), '')
+ok('适配·意图判据：附件是 .pptx 直接视为强意图',
+  rIntent('', [{ name: 'orig.pptx' }]) && rIntent('改一下', [{ name: 'x.pptx' }]), '')
+ok('适配·退出判据：否定/停止/无关（旧实现漏"退出 PPT"/"不用做 PPT 了"）',
+  rOff('不用做 PPT 了') && rOff('退出 PPT') && rOff('这跟 PPT 无关') && rOff('PPT 不做了'), '')
+const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '')
+ok("适配·会话身份：代码里不再使用 DSH 不存在的 ctx.get('agent')（注释里的历史说明不算）",
+  !/ctx\.get\('agent'\)/.test(stripComments(readFileSync(join(root, 'src', 'index.js'), 'utf8'))) &&
+  !/ctx\.get\('agent'\)/.test(stripComments(readFileSync(join(root, 'src', 'tools.js'), 'utf8'))), '')
+ok('适配·会话身份：走 execute(args, exec) 的 exec.agent（状态工具 + qualityOf 两处）',
+  /exec\?\.agent/.test(readFileSync(join(root, 'src', 'index.js'), 'utf8')) &&
+  (readFileSync(join(root, 'src', 'tools.js'), 'utf8').match(/qualityOf\(exec\?\.agent, dir\)/g) ?? []).length === 2, '')
+
+const skillSrc = readFileSync(join(root, 'src', 'skill.js'), 'utf8')
+ok('适配·内嵌手册：经 ctx.skills.register 注册为运行时 skill（落调用 ctx 所在层）',
+  /skills\.register\(/.test(skillSrc) && /source: 'runtime'/.test(skillSrc) && /ppt-studio: embedded skill/.test(skillSrc), '')
+const parsedManual = parseManual(readFileSync(MANUAL_FILE, 'utf8'))
+ok('内嵌手册：frontmatter 解析（name/description/whenToUse）',
+  parsedManual?.name === MANUAL_NAME && (parsedManual?.description ?? '').length > 20 && typeof parsedManual?.whenToUse === 'string',
+  `name=${parsedManual?.name ?? '(null)'}`)
+ok('内嵌手册：content = 去 frontmatter 正文（与 dsh-skill-filesystem 同语义 body.trim）',
+  (parsedManual?.content ?? '').startsWith('#') && !(parsedManual?.content ?? '').includes('name: ppt-studio-manual') &&
+  (parsedManual?.content ?? '').length > 1000, `len=${parsedManual?.content?.length ?? 0}`)
+ok('内嵌手册：坏 frontmatter 返回 null（不阻断插件装配）；未声明时不产出 invocation',
+  parseManual('---\nname: Bad Name\n---\nbody') === null && parseManual('no frontmatter here') === null &&
+  parseManual('---\nname: ok-name\n---\nbody')?.invocation === undefined, '')
+
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)

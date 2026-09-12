@@ -1,6 +1,6 @@
 /**
  * @dsh-external/dsh-ppt-studio —— PPT 工作室插件（host）。
- * 装配：/ppt 命令面 + ppt_* 工具 + 语义路由（session/event + system-prompt/assemble）。
+ * 装配：/ppt 命令面 + ppt_* 工具 + 内置手册 skill（内嵌注册）+ 语义路由（session/event + system-prompt/assemble）。
  * 所有注册挂 ctx.effect / ctx.on（卸载即净）。
  */
 import { registerTools, defineTool } from './tools.js'
@@ -8,8 +8,10 @@ import { registerCommands } from './commands.js'
 import { loadSession, saveSession } from './state.js'
 import { isPptIntent, isPptOff, isQuickIntent, detectTaskType, workflowSection } from './router.js'
 import { registerPreviewRoute } from './preview-server.js'
+import { registerManualSkill, manualSkillStatus, MANUAL_NAME } from './skill.js'
 
 export const name = '@dsh-external/dsh-ppt-studio'
+// skills 为可选依赖（ctx.get('skills')）：极简装配缺 dsh-skill 时插件仍完整可用
 export const inject = ['tools', 'commands', 'systemPrompt']
 
 export function apply(ctx, config = {}) {
@@ -17,6 +19,7 @@ export function apply(ctx, config = {}) {
   registerCommands(ctx)
   statusToolFor(ctx)
   registerPreviewRoute(ctx) // 需求 A：对话内预览服务（/ppt-preview/ 路由；无 webServer 环境自动跳过）
+  registerManualSkill(ctx) // 内置提问式手册：内嵌运行时 skill（无 skills 服务/手册缺失时静默跳过）
 
   const armed = new Map() // 快速内存缓存：session id -> state
 
@@ -84,9 +87,11 @@ export function statusToolFor(ctx) {
       set: { type: 'string', description: '可选 key=value（如 mode=strict workflowActive=true）' },
     },
     output: { schema: { type: 'string' }, render: (_a, v) => [{ type: 'text', text: String(v) }] },
-    async execute(args) {
-      const agent = ctx.get('agent')
-      const sid = agent?.session?.id ?? 'default'
+    async execute(args, exec) {
+      // 会话 id 取自工具执行的 agent（DSH 的 execute(args, exec) 第二参数）；
+      // 历史坑：ctx.get('agent') 恒为 undefined（DSH 只有 agents 服务），会误落到 'default' 会话文件。
+      const agent = exec?.agent
+      const sid = agent?.session?.id ?? agent?.id ?? 'default'
       const state = await loadSession(sid)
       if (args.set) {
         for (const kv of String(args.set).split(/\s+/)) {
@@ -96,7 +101,19 @@ export function statusToolFor(ctx) {
         }
         await saveSession(sid, state)
       }
-      return JSON.stringify(state, null, 2)
+      // 交付通道自检：内嵌手册 skill 在技能注册表里是否可见（自包含诊断，不依赖外部工具）
+      const delivery = manualSkillStatus()
+      try {
+        const skills = ctx.get('skills')
+        if (skills === undefined) delivery.visible = 'skills 服务缺失'
+        else {
+          const one = await skills.get(MANUAL_NAME)
+          delivery.visible = one === undefined ? 'MISSING' : `${String(one.provider)}/${String(one.source)}/len=${String(one.content).length}`
+        }
+      } catch (error) {
+        delivery.visible = `查询失败：${error?.message ?? error}`
+      }
+      return JSON.stringify({ session: sid, state, manualSkill: delivery }, null, 2)
     },
   })), 'ppt-studio: ppt_state')
 }

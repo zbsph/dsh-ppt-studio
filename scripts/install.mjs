@@ -106,13 +106,16 @@ if (!noPreset) {
   }
 }
 
-// ── 4) 内置手册 skill（README 承诺"安装后提问即用"——随包同步刷新，以包为准）──────
+// ── 4) 内置手册 skill 文件镜像（README 承诺"安装后提问即用"——随包同步刷新，以包为准）──────
+// 0.1.5-rc.2 起手册的**主通道**是插件内嵌注册（lib/skill.js → ctx.skills.register，落 preset 层）；
+// 这里写 <dshHome>/skills/ 是"非 PPT 会话也能问到手册"的镜像：同一份字节、同一次安装同步；
+// 同名跨层由技能注册表"就近层优先"裁决 → PPT 会话内永远命中包内嵌的那份。
 const skillSrcDir = join(root, 'skills', 'ppt-studio-manual')
 const skillDstDir = join(prefix, 'skills', 'ppt-studio-manual')
 if (!noPreset && existsSync(skillSrcDir)) {
   mkdirSync(skillDstDir, { recursive: true })
   writeFileSync(join(skillDstDir, 'SKILL.md'), readFileSync(join(skillSrcDir, 'SKILL.md'), 'utf8'), 'utf8')
-  steps.push(`手册 skill 已同步（包为准）：${join(skillDstDir, 'SKILL.md')}`)
+  steps.push(`手册 skill 镜像已同步（包为准；PPT 会话内用插件内嵌版）：${join(skillDstDir, 'SKILL.md')}`)
 } else if (!noPreset) {
   console.warn('⚠ 包内缺少 skills/ppt-studio-manual（此包打包不完整）——提问式手册不可用')
 }

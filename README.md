@@ -28,6 +28,7 @@
 ### 0.1 前提
 
 - **DSH（DeepSeek Harness）web 实例**已在本机运行（`dsh web`）；本插件是预设+插件形态，不改变 DSH 安装。
+- **宿主版本基线：DSH `0.1.5-rc.2`**（2026-09 实测适配：`tools` / `commands` / `systemPrompt` / `webServer` / `skills` / `session/event` / `system-prompt/assemble` 契约逐项核对，并在真实进程里跑过挂载、内嵌技能注册与工作流提示注入）。更早的 0.1.x 未逐一验证；`skills` 服务缺失（极简装配）时插件仍完整可用，只是手册不以技能形式出现。
 - 可选增强（没有也能用，自动降级）：本机 Microsoft Office（真渲染通道）、Edge/Chrome（截图与 M2 实测）、python + python-pptx（兜底引擎）。
 
 ### 0.2 方式 A：下载发布包（推荐）
@@ -46,7 +47,8 @@
    ```
    安装器是幂等的——重复运行自动跳过已存在项。
 4. **重启 dsh web** → 会话左上角/预设切换器选择「**PPT 工作室**」→ 直接提需求。
-5. 验证安装成功：在 PPT 工作室里说"帮我做一个简单 PPT，用内置模板"——模型应开始走 PPT 工作流；或直接问模型"dsh-ppt-studio 怎么用"（内置 skill 手册会回答）。
+5. 验证安装成功：在 PPT 工作室里说"帮我做一个简单 PPT，用内置模板"——模型应开始走 PPT 工作流（工作流提示词自动注入）；或直接问模型"dsh-ppt-studio 怎么用"（内置 skill 手册会回答）。
+   > 手册 skill 由**插件自己内嵌提供**（`ctx.skills.register`，落 PPT 工作室预设层，随插件同生共死、升级即新）；安装器另外把它镜像到 `<dshHome>/skills/`，让不在 PPT 预设里的会话也能问到手册。想确认通道生效：让模型调一次 `ppt_state`，输出里的 `manualSkill` 会给出 `registered/visible`。
 
 ### 0.3 方式 B：git clone 源码（开发者/尝鲜）
 
@@ -66,7 +68,7 @@ node scripts/install.mjs
 ### 0.5 安装后的自检（三句命令）
 
 ```powershell
-node scripts/smoke.mjs          # 139 断言（含全链路）
+node scripts/smoke.mjs          # 156 断言（含全链路）
 node scripts/preflight-1.0.mjs  # 11 断言（坏输入/边界/幂等/性能）
 node scripts/e2e-1.0.mjs        # 12 断言（真浏览器测量 + 真 Office 渲染 + splice/slice 自证；约 2-3 分钟）
 ```
@@ -333,7 +335,9 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 
 ## 9. 环境与能力边界
 
-**环境**：DSH web（Windows 主机）。Office/Edge 为**可选增强**（探测失败自动降级）；python-pptx 为**可选兜底**。路径/中间层一律 UTF-8；已兼容 WPS 导出的 UTF-16 文件。
+**环境**：DSH web `0.1.5-rc.2`（Windows 主机；宿主服务/事件契约已逐项核对）。Office/Edge 为**可选增强**（探测失败自动降级）；python-pptx 为**可选兜底**。路径/中间层一律 UTF-8；已兼容 WPS 导出的 UTF-16 文件。
+
+**插件对外交付的三样东西**（都挂在插件 fiber 上，停用/卸载即净）：`ppt_*` 模型工具面 + `/ppt` 命令面；工作流提示词段（`system-prompt/assemble` 注入 `ppt-workflow`）；内置手册 skill（`ctx.skills.register` 内嵌注册）。自检入口：`ppt_state` 会一并报告手册 skill 的注册与可见状态。
 
 **支持矩阵（PPTD v1 视觉子集）**：
 
@@ -358,7 +362,7 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + smoke（139 断言）
+npm test                        # build + smoke（156 断言）
 npm run test:real               # 真实资产回归（WPS fixture；19 页 deck 缺失自动跳过）
 node scripts/preflight-1.0.mjs  # 发布前预检（坏输入/边界/幂等/性能/媒体 splice——11 断言）
 ```
@@ -366,6 +370,6 @@ node scripts/preflight-1.0.mjs  # 发布前预检（坏输入/边界/幂等/性�
 - **装配**：agent preset `C:\Users\11867\.dsh\.agent-presets\ppt\agent.cordis.yml` 插件行（**唯一装配源**）；`profiles/web/node_modules/@dsh-external/dsh-ppt-studio` 是 junction → 本仓库。改码 = build + **重启 host**（`dev_reload_package` 只覆盖注入器装配的包——本插件走 preset 行，重启是唯一可靠生效路径）。
 - **文档链（每次改动必同步）**：`docs/01-需求与目标.md`（需求/决策/冲突）· `docs/02-技术报告.md`（实现级）· `docs/03-更新日志.md`（版本记录）· `docs/04-路线图与里程碑.md`（验收）· `docs/05-迭代流程.md`(检查单) · `docs/06-评审与测试.md`（发布前评审/测试矩阵）。
 - **git 约定**：一个功能/修复一个 commit；message `vX.Y.Z: <一句话目的>（反馈编号）`；lib/ 不提交（build 产物）。
-- **既有的自动化验证**：smoke（139 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
+- **既有的自动化验证**：smoke（156 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
 
 **版本规则**：semver。`major` 破坏中间层/接口兼容；`minor` 新特性；`patch` 修复/文档。v1.0.0 = 三轮真实端到端测试通过后的稳定基线。
