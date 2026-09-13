@@ -13,6 +13,8 @@ whenToUse: 用户处于 PPT 工作室且询问用法、语法、报错原因、�
 
 DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字门禁 + 视觉审阅 + 真渲染复核」三轨保证质量 → 交付可编辑 .pptx + 中间层工程。核心不变量：**元素区块冲突（重叠/出界/溢出）必须被机器防住；设计意图用声明制表达。**
 
+**同级还有三本制作手册**（同样按需加载，都不改门禁与铁律）：`ppt-studio-craft`（叙事与版式：页序、结论式标题、按内容量选构图）、`ppt-studio-data`（图表与数据：选型、成品标签补齐、口径与来源）、`ppt-studio-copy`（中文文案：标题/要点写法、成组 AI 味信号、before→after）。本手册管"这个插件怎么用"，那三本管"怎么做好"。
+
 ## 2. 用户常见问题速查
 
 | 用户问 | 答 |
@@ -84,7 +86,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 ## 7. 开发维护（仅改插件时用）
 
 - 改码：`src/` → `node scripts/build.mjs` → **重启 host**（插件经 agent preset 会话装配；`dev_reload_package` 只覆盖注入器装配包，且注入器 junction 已存在时会指向旧安装根）。
-- 回归：`node scripts/smoke.mjs`（169 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
+- 回归：`node scripts/smoke.mjs`（177 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
 - 跨层验证纪律：**预览层与成品层必须互相验证**——`ppt_render`+`ppt_verify` 只管 HTML/估算层，OOXML 层靠 `ppt_export` 的 parity 自证（表/图/线方向）+ `ppt_visual` 真渲染抽检；只跑单层会漏掉"预览对、成品错"（2026-09-14 连线方向事故）。
 - 文档链：改需求/决策 → docs/01；改机制 → docs/02；每次 → docs/03；验收 → docs/04；发布前 → docs/06。
 - 装配：preset 行是唯一装配源；junction 保留（preset 解析包名用）。

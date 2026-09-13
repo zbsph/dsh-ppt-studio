@@ -8,7 +8,7 @@ import { registerCommands } from './commands.js'
 import { loadSession, saveSession } from './state.js'
 import { isPptIntent, isPptOff, isQuickIntent, detectTaskType, workflowSection } from './router.js'
 import { registerPreviewRoute } from './preview-server.js'
-import { registerManualSkill, manualSkillStatus, MANUAL_NAME } from './skill.js'
+import { registerManualSkill, manualSkillStatus } from './skill.js'
 
 export const name = '@dsh-external/dsh-ppt-studio'
 // skills 为可选依赖（ctx.get('skills')）：极简装配缺 dsh-skill 时插件仍完整可用
@@ -19,7 +19,7 @@ export function apply(ctx, config = {}) {
   registerCommands(ctx)
   statusToolFor(ctx)
   registerPreviewRoute(ctx) // 需求 A：对话内预览服务（/ppt-preview/ 路由；无 webServer 环境自动跳过）
-  registerManualSkill(ctx) // 内置提问式手册：内嵌运行时 skill（无 skills 服务/手册缺失时静默跳过）
+  registerManualSkill(ctx) // 内置技能包（提问式手册 + 制作能力手册）：内嵌注册，无 skills 服务时静默跳过
 
   const armed = new Map() // 快速内存缓存：session id -> state
 
@@ -101,14 +101,19 @@ export function statusToolFor(ctx) {
         }
         await saveSession(sid, state)
       }
-      // 交付通道自检：内嵌手册 skill 在技能注册表里是否可见（自包含诊断，不依赖外部工具）
+      // 交付通道自检：内嵌技能在技能注册表里是否可见（自包含诊断，不依赖外部工具）
       const delivery = manualSkillStatus()
       try {
         const skills = ctx.get('skills')
         if (skills === undefined) delivery.visible = 'skills 服务缺失'
         else {
-          const one = await skills.get(MANUAL_NAME)
-          delivery.visible = one === undefined ? 'MISSING' : `${String(one.provider)}/${String(one.source)}/len=${String(one.content).length}`
+          // 逐个技能查可见性（手册 + 制作能力手册）；只取标量，不持有活对象
+          const rows = []
+          for (const s of delivery.skills) {
+            const one = await skills.get(s.name)
+            rows.push(`${s.name}=${one === undefined ? 'MISSING' : `${String(one.provider)}/${String(one.source)}/len=${String(one.content).length}`}`)
+          }
+          delivery.visible = rows.length ? rows.join(' · ') : 'MISSING'
         }
       } catch (error) {
         delivery.visible = `查询失败：${error?.message ?? error}`

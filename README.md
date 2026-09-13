@@ -68,7 +68,7 @@ node scripts/install.mjs
 ### 0.5 安装后的自检（四句命令）
 
 ```powershell
-node scripts/smoke.mjs          # 169 断言（含全链路）
+node scripts/smoke.mjs          # 177 断言（含全链路）
 node scripts/preflight-1.0.mjs  # 11 断言（坏输入/边界/幂等/性能）
 node scripts/check-preset.mjs   # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
 node scripts/e2e-1.0.mjs        # 13 断言（真浏览器测量 + 真 Office 渲染 + splice/slice 自证；约 2-3 分钟）
@@ -102,6 +102,25 @@ node scripts/e2e-1.0.mjs        # 13 断言（真浏览器测量 + 真 Office �
 ppt_new(dir=D:\demo)                 # 一键生成可跑通全链路的示例工程（3 页，含全部范本）
 ppt_render(D:\demo) → ppt_verify(D:\demo) → ppt_export(D:\demo)
 ```
+
+### 1.4 内置技能包（提问式手册 + 制作手册）
+
+插件自带 4 本技能，**随插件同生共死**（内嵌注册 `ctx.skills.register`，落 PPT 工作室预设层；升级即新、卸载即净）：
+
+| 技能 | 何时加载 | 内容 |
+|---|---|---|
+| `ppt-studio-manual` | 问"这个插件怎么用 / XX 怎么写 / 为什么报错" | 提问式使用手册（四类任务、DSL 速查、声明制、splice 与贴模板、报错处置） |
+| `ppt-studio-craft` | 定纲/定版式；"这页怎么排 / 太挤 / 太像模板了" | 叙事 spine、一页一论点、结论式标题、按内容量选构图、反模板自检 |
+| `ppt-studio-data` | 页面要放数字或图表 | 图表选型、**成品里图表只有几何**（标签要自己补）、口径与来源标注、跨页数字一致 |
+| `ppt-studio-copy` | 写标题与要点；"太 AI 了 / 像机器写的" | 页面三类角色的写法、成组 AI 味信号清单、before → after 对照 |
+
+**三条承诺**：
+
+1. **纯增量**：技能只给启发式与反例——**不改任何铁律、不定义任何门禁数值**；工作流提示词只在标准档新增了一行"何时加载"的指引，且由机器断言保证**旧行一行未改/未删**（`npm test` 里的两条"★老用户不受影响"）。
+2. **不加载也照常工作**：部署里没有 `dsh-skill`（无 `skills` 服务）或技能文件缺失时，插件功能完整，只是技能不以目录形式出现。
+3. **不与用户自装技能打架**：技能注册表跨层重名按"就近层优先"裁决——PPT 会话内命中插件内嵌版，用户自装那份在其它会话照旧可见。想整体退掉：删掉本机的 `~/.dsh/skills/ppt-studio-*` 镜像即可（内嵌版仍在 PPT 会话内生效，反之亦然）。
+
+想确认通道是否生效：让模型调一次 `ppt_state`，输出里的 `manualSkill.skills` 会逐个给出注册与可见状态。
 
 ---
 
@@ -373,7 +392,7 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + smoke（169 断言）
+npm test                        # build + smoke（177 断言）
 npm run test:real               # 真实资产回归（WPS fixture；19 页 deck 缺失自动跳过）
 node scripts/preflight-1.0.mjs  # 发布前预检（坏输入/边界/幂等/性能/媒体 splice——11 断言）
 npm run test:preset             # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
@@ -382,6 +401,6 @@ npm run test:preset             # 预设自检：本预设 vs 随包 standard �
 - **装配**：agent preset `C:\Users\11867\.dsh\.agent-presets\ppt\agent.cordis.yml` 插件行（**唯一装配源**）；`profiles/web/node_modules/@dsh-external/dsh-ppt-studio` 是 junction → 本仓库。改码 = build + **重启 host**（`dev_reload_package` 只覆盖注入器装配的包——本插件走 preset 行，重启是唯一可靠生效路径）。
 - **文档链（每次改动必同步）**：`docs/01-需求与目标.md`（需求/决策/冲突）· `docs/02-技术报告.md`（实现级）· `docs/03-更新日志.md`（版本记录）· `docs/04-路线图与里程碑.md`（验收）· `docs/05-迭代流程.md`(检查单) · `docs/06-评审与测试.md`（发布前评审/测试矩阵）。
 - **git 约定**：一个功能/修复一个 commit；message `vX.Y.Z: <一句话目的>（反馈编号）`；lib/ 不提交（build 产物）。
-- **既有的自动化验证**：smoke（169 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
+- **既有的自动化验证**：smoke（177 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
 
 **版本规则**：semver。`major` 破坏中间层/接口兼容；`minor` 新特性；`patch` 修复/文档。v1.0.0 = 三轮真实端到端测试通过后的稳定基线。

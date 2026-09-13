@@ -13,7 +13,7 @@
  *   node scripts/install.mjs --force            # 重建
  *   node scripts/install.mjs --no-preset        # 只链包，不装 preset（注入器通道用户）
  */
-import { existsSync, symlinkSync, mkdirSync, renameSync, rmSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, symlinkSync, mkdirSync, renameSync, rmSync, readFileSync, writeFileSync, readdirSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { homedir } from 'node:os'
 import { join, dirname, resolve } from 'node:path'
@@ -106,18 +106,29 @@ if (!noPreset) {
   }
 }
 
-// ── 4) 内置手册 skill 文件镜像（README 承诺"安装后提问即用"——随包同步刷新，以包为准）──────
-// 0.1.5-rc.2 起手册的**主通道**是插件内嵌注册（lib/skill.js → ctx.skills.register，落 preset 层）；
-// 这里写 <dshHome>/skills/ 是"非 PPT 会话也能问到手册"的镜像：同一份字节、同一次安装同步；
-// 同名跨层由技能注册表"就近层优先"裁决 → PPT 会话内永远命中包内嵌的那份。
-const skillSrcDir = join(root, 'skills', 'ppt-studio-manual')
-const skillDstDir = join(prefix, 'skills', 'ppt-studio-manual')
-if (!noPreset && existsSync(skillSrcDir)) {
-  mkdirSync(skillDstDir, { recursive: true })
-  writeFileSync(join(skillDstDir, 'SKILL.md'), readFileSync(join(skillSrcDir, 'SKILL.md'), 'utf8'), 'utf8')
-  steps.push(`手册 skill 镜像已同步（包为准；PPT 会话内用插件内嵌版）：${join(skillDstDir, 'SKILL.md')}`)
-} else if (!noPreset) {
-  console.warn('⚠ 包内缺少 skills/ppt-studio-manual（此包打包不完整）——提问式手册不可用')
+// ── 4) 内置 skill 文件镜像（README 承诺"安装后提问即用"——随包同步刷新，以包为准）──────
+// 0.1.5-rc.2 起技能包的**主通道**是插件内嵌注册（lib/skill.js → ctx.skills.register，落 preset 层）；
+// 这里把 skills/*/SKILL.md 逐个镜像到 <dshHome>/skills/ 是"非 PPT 会话也能查到"的兜底与互通：
+// 同一份字节、同一次安装同步；同名跨层由技能注册表"就近层优先"裁决 → PPT 会话内永远命中包内嵌那份。
+const skillsRoot = join(root, 'skills')
+if (!noPreset) {
+  if (!existsSync(skillsRoot)) {
+    console.warn('⚠ 包内缺少 skills/（此包打包不完整）——内置技能不可用')
+  } else {
+    const dirs = readdirSync(skillsRoot, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name)
+    const names = []
+    for (const name of dirs) {
+      const src = join(skillsRoot, name, 'SKILL.md')
+      if (!existsSync(src)) continue
+      const dstDir = join(prefix, 'skills', name)
+      mkdirSync(dstDir, { recursive: true })
+      writeFileSync(join(dstDir, 'SKILL.md'), readFileSync(src, 'utf8'), 'utf8')
+      names.push(name)
+    }
+    steps.push(names.length
+      ? `内置技能镜像已同步（包为准，共 ${names.length} 本；PPT 会话内用插件内嵌版）：${names.join('、')}`
+      : '⚠ 包内 skills/ 下没有可用技能')
+  }
 }
 
 console.log(`dsh-ppt-studio v${pkg.version} 安装/校验完成（${prefix} / profile=${profile}）\n- ` + steps.join('\n- ') + '\n\n下一步：重启 dsh web → 会话切换「PPT 工作室」→ 直接提需求。')

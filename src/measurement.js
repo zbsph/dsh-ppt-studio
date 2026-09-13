@@ -12,7 +12,7 @@
  * 诚实声明：测量 = Chromium 排版真值（系统字库）——仍非 PowerPoint 引擎；
  * 与 ppt_shot 同一渲染链（HTML 预览），因此字体/尺寸差异同源。
  */
-import { readFile, writeFile, mkdir, rm, cp } from 'node:fs/promises'
+import { readFile, writeFile, mkdir, rm, cp, readdir } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { spawn } from 'node:child_process'
@@ -108,8 +108,11 @@ export async function measureLayout(dir, { edge } = {}) {
     notes.push('⚠ 未检测到 Edge/Chrome：实测档不可用（降级估算 + 标注"未实测"）——请用 ppt_verify 保持估算门禁')
     return { measured: null, outDir: r.outDir, browser: null, pages: 0, notes }
   }
-  const tmp = join(dir, 'preview', '_measure-tmp')
-  await rm(tmp, { recursive: true, force: true })
+  // 每次运行用**唯一**临时目录：上一轮 Edge 退出慢会短暂锁住 profile（EBUSY），
+  // 用固定目录名会让"连续两次 ppt_measure"直接崩（2026-09-14 自检实测）。
+  const tmp = join(dir, 'preview', `_measure-tmp-${process.pid}-${Date.now().toString(36)}`)
+  // 先清理历史遗留（跳过本次目录，尽力而为：锁住就留到下次），再建自己的目录
+  await sweepStaleMeasureTmp(join(dir, 'preview'), tmp)
   await mkdir(tmp, { recursive: true })
   const pages = []
   const t0 = Date.now()
@@ -157,7 +160,8 @@ export async function measureLayout(dir, { edge } = {}) {
       else if (errors[i]) notes.push(`⚠ ${errors[i]}；该页无实测数据`)
     }
   } finally {
-    await rm(tmp, { recursive: true, force: true }).catch(() => {})
+    // 尽力而为 + 短重试：Edge 句柄释放有延迟，EBUSY/EPERM 不该让测量失败
+    await rmWithRetry(tmp)
   }
   const measured = {
     browser: 'Edge/Chrome headless',
@@ -167,4 +171,35 @@ export async function measureLayout(dir, { edge } = {}) {
   }
   await writeFile(join(r.outDir, 'measured.json'), JSON.stringify(measured, null, 2))
   return { measured, outDir: r.outDir, browser, pages: pages.length, notes, elapsedMs: Date.now() - t0 }
+
+/**
+ * 删除目录：对 EBUSY/EPERM 做短重试后放弃（临时目录清理不该让主流程失败）。
+ * Edge 退出后句柄释放有延迟，Windows 上尤其明显。
+ */
+async function rmWithRetry(target, attempts = 5) {
+  for (let i = 0; i < attempts; i++) {
+    try {
+      await rm(target, { recursive: true, force: true })
+      return true
+    } catch (error) {
+      const code = error?.code
+      if (code !== 'EBUSY' && code !== 'EPERM' && code !== 'ENOTEMPTY') return false
+      await new Promise((r) => setTimeout(r, 120 * (i + 1)))
+    }
+  }
+  return false
+}
+
+/** 清理历史遗留的 `_measure-tmp*`（跳过 keep＝本次目录；被锁住就留到下次）。 */
+async function sweepStaleMeasureTmp(previewDir, keep) {
+  try {
+    const entries = await readdir(previewDir, { withFileTypes: true })
+    for (const e of entries) {
+      if (!e.isDirectory() || !e.name.startsWith('_measure-tmp')) continue
+      const full = join(previewDir, e.name)
+      if (keep !== undefined && full === keep) continue
+      await rmWithRetry(full, 2)
+    }
+  } catch { /* 目录不存在或不给读：忽略 */ }
+}
 }

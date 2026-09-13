@@ -1204,6 +1204,66 @@ ok('内嵌手册：坏 frontmatter 返回 null（不阻断插件装配）；未�
   parseManual('---\nname: Bad Name\n---\nbody') === null && parseManual('no frontmatter here') === null &&
   parseManual('---\nname: ok-name\n---\nbody')?.invocation === undefined, '')
 
+// ── 35. 内置技能包（2026-09-14）：制作能力手册 —— 纯增量、可断言、不被固化的数值污染 ──────
+// 用户硬约束：技能是"锦上添花"，绝不能影响既有工作流；老用户更新后用法零变化。
+// 于是把约束变成机器断言：① 工作流段逐行超集（只增不改不删）② 技能自身不得写死门禁数值。
+const { listBundledSkills, bundledSkillNames } = await import('../lib/skill.js')
+const bundled = listBundledSkills()
+const bundledNames = bundledSkillNames()
+ok('内置技能包：随包技能全部可解析（name == 目录名，kebab-case）',
+  bundled.length >= 4 && bundled.every((b) => b.parsed.name === b.file.replace(/\\/g, '/').split('/').slice(-2)[0]),
+  `共 ${bundled.length} 本：${bundledNames.join('、')}`)
+ok('内置技能包：制作能力三本齐备（craft / data / copy）',
+  ['ppt-studio-craft', 'ppt-studio-data', 'ppt-studio-copy', 'ppt-studio-manual'].every((n) => bundledNames.includes(n)),
+  bundledNames.join('、'))
+ok('内置技能：描述只写触发、长度合规（>20 且 ≤500 字符）',
+  bundled.every((b) => b.parsed.description.length > 20 && b.parsed.description.length <= 500),
+  bundled.map((b) => `${b.parsed.name}=${b.parsed.description.length}`).join(' '))
+ok('内置技能：正文自包含且短（每本 ≤ 8000 字符，按需加载成本可控）',
+  bundled.every((b) => b.parsed.content.length > 800 && b.parsed.content.length <= 8000),
+  bundled.map((b) => `${b.parsed.name}=${b.parsed.content.length}`).join(' '))
+ok('内置技能：每本都声明优先级边界（用户指令 > 手册 > 工具默认）',
+  bundled.filter((b) => b.parsed.name !== 'ppt-studio-manual')
+    .every((b) => /用户指令/.test(b.parsed.content) && /ppt_verify|工具输出|门禁/.test(b.parsed.content)),
+  '')
+// 反污染扫描：技能正文不得把数值写成"规范性默认"。规则集经校准：
+// 8 条植入违规全抓、8 条合法表述零误报、现有技能零命中（见 docs/03 记录）。
+// 说明：只抓"规范性措辞 + 数值"这一历史事故形状；描述性数字（经验值/文档引用）不在此列。
+const BANNED = [
+  { id: '默认+数值', re: /默认[^。\n]{0,10}\d+\s*(?:pt|号|磅|页|字)/u },
+  { id: '必须/一律+阈值', re: /(?:必须|一律|统一|强制)[^。\n]{0,10}(?:不小于|至少|≥|>=|不超过|至多|≤|<=|小于)\s*\d+/u },
+  { id: '字号下限=数值', re: /字号下限\s*(?:=|为|是)\s*\d+/u },
+  { id: '字号固定/写死', re: /字号[^。\n]{0,6}(?:固定|写死)\s*\d+/u },
+  { id: '每页/每块预算', re: /每(?:页|块)[^。\n]{0,6}(?:≤|<=|不超过|至多|最多|至少|不小于)\s*\d+/u },
+]
+const polluted = []
+for (const b of bundled) {
+  for (const line of b.parsed.content.split('\n')) {
+    for (const rule of BANNED) if (rule.re.test(line)) polluted.push(`${b.parsed.name}[${rule.id}]`)
+  }
+}
+ok('内置技能：不含写死的门禁数值（最小字号/页数/字数上限等）——历史事故的机器防线',
+  polluted.length === 0, polluted.join('、') || '0 处命中')
+
+// 工作流段超集断言：新段必须包含基线每一行（只允许新增，不允许改写/删除）
+const baseline = JSON.parse(readFileSync(join(root, 'scripts', 'fixtures', 'workflow-baseline.json'), 'utf8'))
+const baseCfg = { mode: 'auto', fidelity: 'auto', review: 'points', quality: 'standard', engine: 'auto', template: null, pauseAfter: [], workflowActive: true }
+const brokenVariants = []
+let addedLines = 0
+for (const v of baseline.variants) {
+  const now = routerMod.workflowSection(v.taskType, { ...baseCfg, quick: v.quick }).text.split('\n')
+  const missing = v.lines.filter((l) => !now.includes(l))
+  addedLines += now.filter((l) => !v.lines.includes(l)).length
+  if (missing.length) brokenVariants.push(`${v.quick ? 'quick' : 'std'}/${v.taskType}(-${missing.length})`)
+}
+ok('★老用户不受影响：工作流提示词逐行超集（只增不改不删；基线 scripts/fixtures/workflow-baseline.json）',
+  brokenVariants.length === 0, brokenVariants.length ? `被破坏：${brokenVariants.join(' ')}` : `10 变体全部保持，新增 ${addedLines} 行`)
+ok('★老用户不受影响：新增内容只出现在标准档（quick 档逐字节不变）',
+  baseline.variants.filter((v) => v.quick).every((v) => {
+    const now = routerMod.workflowSection(v.taskType, { ...baseCfg, quick: true }).text
+    return now === v.lines.join('\n')
+  }), '')
+
 // ── 34. 连线方向（2026-09-14 真实反馈：网页预览对、PowerPoint 里线镜像 / × 少一笔）──────
 // 根因：straightConnector1 只画包围盒左上→右下，真实走向必须靠 flipH/flipV；
 // 漏写 → 反向斜率镜像（Δx>0,Δy<0 的线画反），两条交叉线还会重合成一条（× 变 /）。
