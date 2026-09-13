@@ -396,6 +396,7 @@ npm test                        # build + smoke（177 断言）
 npm run test:real               # 真实资产回归（WPS fixture；19 页 deck 缺失自动跳过）
 node scripts/preflight-1.0.mjs  # 发布前预检（坏输入/边界/幂等/性能/媒体 splice——11 断言）
 npm run test:preset             # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
+npm run eval:skills -- --a <deckA> --b <deckB>   # 技能效果对照打分（纯本地；两个 arm 各跑一次后复算口径，见 docs/06 §7）
 ```
 
 - **装配**：agent preset `C:\Users\11867\.dsh\.agent-presets\ppt\agent.cordis.yml` 插件行（**唯一装配源**）；`profiles/web/node_modules/@dsh-external/dsh-ppt-studio` 是 junction → 本仓库。改码 = build + **重启 host**（`dev_reload_package` 只覆盖注入器装配的包——本插件走 preset 行，重启是唯一可靠生效路径）。
