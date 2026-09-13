@@ -1192,5 +1192,84 @@ ok('内嵌手册：坏 frontmatter 返回 null（不阻断插件装配）；未�
   parseManual('---\nname: Bad Name\n---\nbody') === null && parseManual('no frontmatter here') === null &&
   parseManual('---\nname: ok-name\n---\nbody')?.invocation === undefined, '')
 
+// ── 34. 连线方向（2026-09-14 真实反馈：网页预览对、PowerPoint 里线镜像 / × 少一笔）──────
+// 根因：straightConnector1 只画包围盒左上→右下，真实走向必须靠 flipH/flipV；
+// 漏写 → 反向斜率镜像（Δx>0,Δy<0 的线画反），两条交叉线还会重合成一条（× 变 /）。
+const { connectorEndsFromXml } = await import('../lib/pptd/export-pptx.js')
+const lineDir = join(root, 'examples', 'smoke', '.tmp-line-dir')
+await rm(lineDir, { recursive: true, force: true })
+await mkdir(join(lineDir, 'pages'), { recursive: true })
+const { writeFile } = await import('node:fs/promises')
+await writeFile(join(lineDir, 'deck.yaml'), [
+  'version: 1',
+  'title: "连线方向夹具"',
+  'size: [960, 540]',
+  'theme:',
+  '  colors: {ink: "#111111", wu: "#B03A2E", jin: "#B7791F", line: "#94A3B8"}',
+  '  textStyles:',
+  '    body: {fontSize: 14, color: "$ink"}',
+  'pages:',
+  '  - pages/01.yaml',
+  '',
+].join('\n'), 'utf8')
+// 四个方向 + 箭头 + 一组交叉线（×）：覆盖 flipH / flipV / 双 flip / 无 flip
+await writeFile(join(lineDir, 'pages', '01.yaml'), [
+  'pageType: content',
+  'elements:',
+  '  - elementId: dr',
+  '    elementType: line',
+  '    points: [[100, 100], [200, 160]]',
+  '    line: {color: "$ink", width: 2}',
+  '  - elementId: dl',
+  '    elementType: line',
+  '    points: [[300, 100], [200, 160]]',
+  '    line: {color: "$ink", width: 2}',
+  '  - elementId: ur',
+  '    elementType: line',
+  '    points: [[400, 200], [500, 140]]',
+  '    arrow: true',
+  '    line: {color: "$jin", width: 2}',
+  '  - elementId: ul',
+  '    elementType: line',
+  '    points: [[600, 200], [500, 140]]',
+  '    line: {color: "$jin", width: 2}',
+  '  - elementId: cross1',
+  '    elementType: line',
+  '    points: [[700, 300], [714, 314]]',
+  '    line: {color: "$wu", width: 2.5}',
+  '  - elementId: cross2',
+  '    elementType: line',
+  '    points: [[714, 300], [700, 314]]',
+  '    line: {color: "$wu", width: 2.5}',
+  '',
+].join('\n'), 'utf8')
+const lineCtx = await resolveDeck(lineDir)
+const lineExp = await exportPptx(lineCtx, { out: 'out-line.pptx', engine: 'pptd' })
+const lineZip = zipRead(await (await import('node:fs/promises')).readFile(lineExp.file))
+const lineXml = lineZip.get('ppt/slides/slide1.xml').toString('utf8')
+const conns = (lineXml.match(/<p:cxnSp>[\s\S]*?<\/p:cxnSp>/g) ?? []).map((c) => ({
+  id: (c.match(/name="([^"]+)"/) ?? [])[1],
+  xml: c,
+  ends: connectorEndsFromXml(c),
+  flipH: /flipH="1"/.test(c),
+  flipV: /flipV="1"/.test(c),
+  arrow: /<a:tailEnd/.test(c),
+}))
+const byId = new Map(conns.map((c) => [c.id, c]))
+const near = (a, b, t = 0.01) => Math.abs(a - b) < t
+const endsMatch = (c, p1, p2) => c?.ends && near(c.ends[0][0], p1[0]) && near(c.ends[0][1], p1[1]) && near(c.ends[1][0], p2[0]) && near(c.ends[1][1], p2[1])
+ok('连线：全部 6 条 cxnSp 已导出', conns.length === 6, conns.map((c) => c.id).join(','))
+ok('连线：右下（无 flip）端点还原一致', endsMatch(byId.get('dr'), [100, 100], [200, 160]) && !byId.get('dr').flipH && !byId.get('dr').flipV)
+ok('连线：左下（需 flipH）端点还原一致——旧实现会镜像成右下', endsMatch(byId.get('dl'), [300, 100], [200, 160]) && byId.get('dl').flipH && !byId.get('dl').flipV)
+ok('连线：右上（需 flipV）端点还原一致 + 箭头在 p2 端', endsMatch(byId.get('ur'), [400, 200], [500, 140]) && !byId.get('ur').flipH && byId.get('ur').flipV && byId.get('ur').arrow)
+ok('连线：左上（需 flipH+flipV）端点还原一致', endsMatch(byId.get('ul'), [600, 200], [500, 140]) && byId.get('ul').flipH && byId.get('ul').flipV)
+ok('连线：× 两笔方向相反（旧实现缺 flipH 会重合成一条 /）',
+  byId.get('cross1').flipH === false && byId.get('cross2').flipH === true &&
+  endsMatch(byId.get('cross1'), [700, 300], [714, 314]) && endsMatch(byId.get('cross2'), [714, 300], [700, 314]))
+ok('连线：导出 parity 自证（线方向逐条从 OOXML 反推，0 条错）',
+  lineExp.parity?.ok === true && lineExp.parity.linesExp === 6 && lineExp.parity.linesOut === 6 && lineExp.parity.linesWrong === 0,
+  JSON.stringify(lineExp.parity))
+await rm(lineDir, { recursive: true, force: true })
+
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)

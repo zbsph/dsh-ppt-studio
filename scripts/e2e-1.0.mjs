@@ -73,6 +73,10 @@ const z = zipRead(await readFile(exp.file))
 const slides = [...z.keys()].filter((k) => /^ppt\/slides\/slide\d+\.xml$/.test(k))
 const chartParts = [...z.keys()].filter((k) => k.startsWith('ppt/charts/'))
 ok('⑤ export = 12 张 slide + 无 chart 部件（矢量拼绘）', slides.length === seedPages && chartParts.length === 0, `${slides.length} slides`)
+// 连线方向自证（2026-09-14 真实反馈：预览对、PowerPoint 里线镜像/× 掉一笔）
+ok('⑤ export parity 自证：表/图/线方向全绿（线逐条从 OOXML 反推端点）',
+  exp.parity?.ok === true && exp.parity.linesExp > 0 && exp.parity.linesExp === exp.parity.linesOut && exp.parity.linesWrong === 0,
+  JSON.stringify(exp.parity))
 
 // ⑥ splice / slice（自产 seed：12 页同源工程）
 const spl = await spliceIntoSource({ deckDir: pro, source: seed, page: 6, sourcePage: 3, out: join(fx, 'spliced.pptx') })

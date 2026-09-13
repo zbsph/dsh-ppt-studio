@@ -29,6 +29,8 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 | "图表能画什么" | bar/line/pie（矢量拼绘）；python-pptx 兜底引擎降级表格；复杂图表用图片或 Shape 拼 |
 | "用别人的模板做" | `ppt_import`（带参考层：source.pptx + 真渲染整页 + 全量色板）→ 先 read_image 看 `reference/previews/*.png` 真身再动手 |
 | "要 100% 像模板" | `ppt_patch`（手术模式：只换文字/表格内容，XML 原样） |
+| "网页预览对，打开 pptx 线条不对" | 旧引擎丢连线方向（斜线镜像 / × 少一笔），**已修复**——看 `ppt_export` 报告的"线方向 N/N"自证；修复前导出的产物重新 `ppt_export` |
+| "表格在 PowerPoint 里空白" | 旧引擎 graphicFrame 结构 bug，**已修复**；parity 回读（表 N/N）自证；旧产物重导 |
 
 ## 3. DSL 快速参考（写页面时对照）
 
@@ -82,7 +84,8 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 ## 7. 开发维护（仅改插件时用）
 
 - 改码：`src/` → `node scripts/build.mjs` → **重启 host**（插件经 agent preset 会话装配；`dev_reload_package` 只覆盖注入器装配包，且注入器 junction 已存在时会指向旧安装根）。
-- 回归：`node scripts/smoke.mjs`（156 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
+- 回归：`node scripts/smoke.mjs`（163 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
+- 跨层验证纪律：**预览层与成品层必须互相验证**——`ppt_render`+`ppt_verify` 只管 HTML/估算层，OOXML 层靠 `ppt_export` 的 parity 自证（表/图/线方向）+ `ppt_visual` 真渲染抽检；只跑单层会漏掉"预览对、成品错"（2026-09-14 连线方向事故）。
 - 文档链：改需求/决策 → docs/01；改机制 → docs/02；每次 → docs/03；验收 → docs/04；发布前 → docs/06。
 - 装配：preset 行是唯一装配源；junction 保留（preset 解析包名用）。
 - 宿主升级（DSH 换版本）：本手册 §开发维护 与 docs/05「宿主升级纪律」——契约逐项 Inspect 核对 + headless 覆盖层真进程验证，别只看单测。

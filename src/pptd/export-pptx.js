@@ -28,6 +28,10 @@ const TINY_PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADU
 export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}) {
   const report = { autoFit: [], warnings: [], chartInfos: [] }
   const slides = []
+  // 连线自证（2026-09-14 真实反馈：预览对、PowerPoint 里线条镜像/×掉一条）：
+  // straightConnector1 在 OOXML 里**只按包围盒的左上→右下**绘制，方向必须靠 flipH/flipV 表达；
+  // 漏写 → 反向斜率/镜像（cross1×cross2 会重合成一条线）。这里逐条从写出的 XML 反推端点自证。
+  const lineProof = { exp: 0, out: 0, wrong: [] }
   UID = 1000
 
   for (const page of ctx.pages) {
@@ -48,7 +52,11 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
       switch (el.type) {
         case 'text': shapes.push(textSp(el, report, ctx.minFontSize)); break
         case 'shape': shapes.push(shapeSp(el)); break
-        case 'line': shapes.push(connectorSp(el)); break
+        case 'line': {
+          lineProof.exp++
+          shapes.push(connectorSp(el, lineProof))
+          break
+        }
         case 'image': {
           counts.image++
           const rId = addMedia(el.src)
@@ -135,7 +143,9 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
   }
   report.parity = {
     tablesExp, tablesOut, imagesExp, imagesOut, illegalFrames: illegal,
-    ok: tablesExp === tablesOut && imagesExp === imagesOut && illegal === 0,
+    linesExp: lineProof.exp, linesOut: lineProof.out, linesWrong: lineProof.wrong.length,
+    ok: tablesExp === tablesOut && imagesExp === imagesOut && illegal === 0 &&
+      lineProof.exp === lineProof.out && lineProof.wrong.length === 0,
   }
 
   // out：绝对路径原样使用；相对路径相对 deck 目录（反馈 E1 ★）
@@ -151,9 +161,9 @@ function spTreeHeader() {
   return '<p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>'
 }
 
-function xfrm(x, y, w, h, rot = 0) {
+function xfrm(x, y, w, h, rot = 0, flips = '') {
   const r = rot ? ` rot="${Math.round(rot * 60000)}"` : ''
-  return '<a:xfrm' + r + '><a:off x="' + emu(x) + '" y="' + emu(y) + '"/><a:ext cx="' + emu(w) + '" cy="' + emu(h) + '"/></a:xfrm>'
+  return '<a:xfrm' + flips + r + '><a:off x="' + emu(x) + '" y="' + emu(y) + '"/><a:ext cx="' + emu(w) + '" cy="' + emu(h) + '"/></a:xfrm>'
 }
 
 function lineSpPr(line) {
@@ -266,7 +276,14 @@ function srgbClrXml(color, alpha) {
 }
 
 // ── line / connector ──────────────────────────────────────────────────────
-function connectorSp(el) {
+/**
+ * 连线导出（2026-09-14 修复方向丢失）：
+ * `straightConnector1` 只画包围盒的**左上→右下**，线的真实走向必须由 `flipH`/`flipV` 表达：
+ *   p2 在 p1 左侧 → flipH；p2 在 p1 上方 → flipV。
+ * 漏写会镜像斜率；两条交叉线（如 × 的两笔）还会重叠成一条 —— 预览对、PowerPoint 里不对的根源。
+ * `tailEnd`（箭头）始终落在画出的"终点"＝ p2，所以定点翻转后箭头方向自动正确。
+ */
+function connectorSp(el, proof) {
   const id = nid()
   const p1 = el.points[0]
   const p2 = el.points[1]
@@ -278,10 +295,40 @@ function connectorSp(el) {
   const minY = Math.min(y1, y2)
   const wdt = Math.max(1, Math.abs(x2 - x1))
   const hgt = Math.max(1, Math.abs(y2 - y1))
+  const flips = (x2 < x1 ? ' flipH="1"' : '') + (y2 < y1 ? ' flipV="1"' : '')
   const tail = el.arrow ? '<a:tailEnd type="triangle" w="med" len="med"/>' : ''
-  return '<p:cxnSp><p:nvCxnSpPr><p:cNvPr id="' + id + '" name="' + xm(el.id) + '"/><p:cNvCxnSpPr/><p:nvPr/></p:nvCxnSpPr>'
-    + '<p:spPr>' + xfrm(minX, minY, wdt, hgt) + '<a:prstGeom prst="straightConnector1"><a:avLst/></a:prstGeom>'
+  const xml = '<p:cxnSp><p:nvCxnSpPr><p:cNvPr id="' + id + '" name="' + xm(el.id) + '"/><p:cNvCxnSpPr/><p:nvPr/></p:nvCxnSpPr>'
+    + '<p:spPr>' + xfrm(minX, minY, wdt, hgt, 0, flips) + '<a:prstGeom prst="straightConnector1"><a:avLst/></a:prstGeom>'
     + lineSpPr(el.line) + tail + '</p:spPr></p:cxnSp>'
+  if (proof !== undefined && proof !== null) {
+    proof.out++
+    // 从写出的 XML 反推线段两端（OOXML 语义：本地 (0,0)→(w,h) 经 flip 映射回页面），必须与源 points 一致。
+    // 容差：退化轴（Δ=0）会被包围盒下限 max(1,…) 抬到 1pt，该轴放行 ≤1.01pt；其余轴要求 ≤0.01pt。
+    const back = connectorEndsFromXml(xml)
+    const tolX = Math.abs(x2 - x1) < 0.001 ? 1.01 : 0.01
+    const tolY = Math.abs(y2 - y1) < 0.001 ? 1.01 : 0.01
+    const same = back !== null &&
+      Math.abs(back[0][0] - x1) < tolX && Math.abs(back[1][0] - x2) < tolX &&
+      Math.abs(back[0][1] - y1) < tolY && Math.abs(back[1][1] - y2) < tolY
+    if (!same) proof.wrong.push(`${el.id}: 源 [[${x1},${y1}],[${x2},${y2}]] → OOXML 还原 ${back === null ? '解析失败' : JSON.stringify(back.map((p) => p.map((v) => Math.round(v * 100) / 100)))}`)
+  }
+  return xml
+}
+
+/** 从 connector XML 反推页面坐标端点（导出自证用；也供测试复用）。 */
+export function connectorEndsFromXml(xml) {
+  const off = xml.match(/<a:off x="(-?\d+)" y="(-?\d+)"\/>/)
+  const ext = xml.match(/<a:ext cx="(\d+)" cy="(\d+)"\/>/)
+  if (!off || !ext) return null
+  const x = Number(off[1]) / EMU
+  const y = Number(off[2]) / EMU
+  const w = Number(ext[1]) / EMU
+  const h = Number(ext[2]) / EMU
+  const flipH = /flipH="1"/.test(xml)
+  const flipV = /flipV="1"/.test(xml)
+  const start = [x + (flipH ? w : 0), y + (flipV ? h : 0)]
+  const end = [x + (flipH ? 0 : w), y + (flipV ? 0 : h)]
+  return [start, end]
 }
 
 // ── image ─────────────────────────────────────────────────────────────────
