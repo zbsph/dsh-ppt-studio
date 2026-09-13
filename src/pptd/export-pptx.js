@@ -166,9 +166,15 @@ function xfrm(x, y, w, h, rot = 0, flips = '') {
   return '<a:xfrm' + flips + r + '><a:off x="' + emu(x) + '" y="' + emu(y) + '"/><a:ext cx="' + emu(w) + '" cy="' + emu(h) + '"/></a:xfrm>'
 }
 
-function lineSpPr(line) {
+/**
+ * 描边属性。`arrow` 的 `<a:tailEnd>` **必须写在 `<a:ln>` 内部**（2026-09-14 修复）——
+ * 旧实现把它拼在 `</a:ln>` 之后，PowerPoint 直接忽略 ⇒ 箭头全部消失（预览有、成品没有）。
+ * OOXML 子元素顺序：fill → prstDash → join → headEnd → tailEnd。
+ */
+function lineSpPr(line, arrow = false) {
   const w = Math.round((line?.width ?? 1) * EMU)
-  return '<a:ln w="' + w + '"><a:solidFill><a:srgbClr val="' + hex(line?.color ?? '#000000') + '"/></a:solidFill></a:ln>'
+  const tail = arrow ? '<a:tailEnd type="triangle" w="med" len="med"/>' : ''
+  return '<a:ln w="' + w + '"><a:solidFill><a:srgbClr val="' + hex(line?.color ?? '#000000') + '"/></a:solidFill>' + tail + '</a:ln>'
 }
 
 // ── text ─────────────────────────────────────────────────────────────────
@@ -293,24 +299,28 @@ function connectorSp(el, proof) {
   const y2 = p2[1]
   const minX = Math.min(x1, x2)
   const minY = Math.min(y1, y2)
-  const wdt = Math.max(1, Math.abs(x2 - x1))
-  const hgt = Math.max(1, Math.abs(y2 - y1))
+  // 包围盒必须**精确**等于线段跨度（2026-09-14 第二修：不再 max(1,…) 兜底）——
+  // straightConnector1 是"包围盒对角"，水平线给 cy=1 会被画成 1pt/12pt 的**假斜线**
+  // （预览平、PowerPoint 斜的根源）。cy=0 / cx=0 是合法表达（Office 自己也这么写）。
+  let wdt = Math.abs(x2 - x1)
+  let hgt = Math.abs(y2 - y1)
+  if (wdt === 0 && hgt === 0) { wdt = 1; hgt = 1 } // 零长线（退化点）：给 1×1 以免被消费端丢弃
   const flips = (x2 < x1 ? ' flipH="1"' : '') + (y2 < y1 ? ' flipV="1"' : '')
-  const tail = el.arrow ? '<a:tailEnd type="triangle" w="med" len="med"/>' : ''
   const xml = '<p:cxnSp><p:nvCxnSpPr><p:cNvPr id="' + id + '" name="' + xm(el.id) + '"/><p:cNvCxnSpPr/><p:nvPr/></p:nvCxnSpPr>'
     + '<p:spPr>' + xfrm(minX, minY, wdt, hgt, 0, flips) + '<a:prstGeom prst="straightConnector1"><a:avLst/></a:prstGeom>'
-    + lineSpPr(el.line) + tail + '</p:spPr></p:cxnSp>'
+    + lineSpPr(el.line, el.arrow === true) + '</p:spPr></p:cxnSp>'
   if (proof !== undefined && proof !== null) {
     proof.out++
     // 从写出的 XML 反推线段两端（OOXML 语义：本地 (0,0)→(w,h) 经 flip 映射回页面），必须与源 points 一致。
-    // 容差：退化轴（Δ=0）会被包围盒下限 max(1,…) 抬到 1pt，该轴放行 ≤1.01pt；其余轴要求 ≤0.01pt。
     const back = connectorEndsFromXml(xml)
-    const tolX = Math.abs(x2 - x1) < 0.001 ? 1.01 : 0.01
-    const tolY = Math.abs(y2 - y1) < 0.001 ? 1.01 : 0.01
     const same = back !== null &&
-      Math.abs(back[0][0] - x1) < tolX && Math.abs(back[1][0] - x2) < tolX &&
-      Math.abs(back[0][1] - y1) < tolY && Math.abs(back[1][1] - y2) < tolY
+      Math.abs(back[0][0] - x1) < 0.01 && Math.abs(back[1][0] - x2) < 0.01 &&
+      Math.abs(back[0][1] - y1) < 0.01 && Math.abs(back[1][1] - y2) < 0.01
     if (!same) proof.wrong.push(`${el.id}: 源 [[${x1},${y1}],[${x2},${y2}]] → OOXML 还原 ${back === null ? '解析失败' : JSON.stringify(back.map((p) => p.map((v) => Math.round(v * 100) / 100)))}`)
+    // 箭头必须在 <a:ln> 内部（写在外面 PowerPoint 直接忽略）
+    if (el.arrow === true && !/<a:ln\b[^>]*>(?:(?!<\/a:ln>)[\s\S])*<a:tailEnd/.test(xml)) {
+      proof.wrong.push(`${el.id}: arrow=true 但 <a:tailEnd> 不在 <a:ln> 内（PowerPoint 会忽略箭头）`)
+    }
   }
   return xml
 }

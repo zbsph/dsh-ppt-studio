@@ -68,7 +68,7 @@ node scripts/install.mjs
 ### 0.5 安装后的自检（四句命令）
 
 ```powershell
-node scripts/smoke.mjs          # 163 断言（含全链路）
+node scripts/smoke.mjs          # 169 断言（含全链路）
 node scripts/preflight-1.0.mjs  # 11 断言（坏输入/边界/幂等/性能）
 node scripts/check-preset.mjs   # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
 node scripts/e2e-1.0.mjs        # 13 断言（真浏览器测量 + 真 Office 渲染 + splice/slice 自证；约 2-3 分钟）
@@ -321,6 +321,9 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 **Q：网页预览看着对，打开导出的 pptx 却发现斜线方向反了 / × 少一笔 / 阶梯竖线不见了？**
 → v1.0.0-修订前旧引擎**丢连线方向**：`straightConnector1` 在 OOXML 里只画包围盒左上→右下，真实走向必须靠 `flipH`/`flipV` 表达——漏写会镜像斜率，两条交叉线还会重合成一条。**已修复**；导出 parity 行现在打印"线方向 N/N（逐条从 OOXML 反推端点自证）"。**修复前导出的产物请重新 `ppt_export`**。
 
+**Q：箭头在预览里有、到 PowerPoint 里没了？水平连接线在预览里是平的、到 PowerPoint 里变斜了？**
+→ 同一族的两个导出编码 bug，**均已修复**：① `<a:tailEnd>`（箭头）之前被写在了 `<a:ln>` **外面**，PowerPoint 直接忽略；② 连线包围盒之前有 `max(1,…)` 兜底，水平线被抬成 1pt 高 → `straightConnector1` 画对角线就成了"假斜线"。现在箭头写在 `<a:ln>` 内，包围盒精确等于线段跨度（水平线 `cy=0`）。同样**旧产物请重新 `ppt_export`**。
+
 **Q：为什么线画并没穿过标签，verify 还报重叠？**
 → 已修复（P6）：线元素按**真实几何**判定（线段×矩形 / 线段×线段），AABB 假阳性不再报、也不进声明队列；真跨越仍按"连线/箭头"声明制处理。
 
@@ -370,7 +373,7 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + smoke（163 断言）
+npm test                        # build + smoke（169 断言）
 npm run test:real               # 真实资产回归（WPS fixture；19 页 deck 缺失自动跳过）
 node scripts/preflight-1.0.mjs  # 发布前预检（坏输入/边界/幂等/性能/媒体 splice——11 断言）
 npm run test:preset             # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
@@ -379,6 +382,6 @@ npm run test:preset             # 预设自检：本预设 vs 随包 standard �
 - **装配**：agent preset `C:\Users\11867\.dsh\.agent-presets\ppt\agent.cordis.yml` 插件行（**唯一装配源**）；`profiles/web/node_modules/@dsh-external/dsh-ppt-studio` 是 junction → 本仓库。改码 = build + **重启 host**（`dev_reload_package` 只覆盖注入器装配的包——本插件走 preset 行，重启是唯一可靠生效路径）。
 - **文档链（每次改动必同步）**：`docs/01-需求与目标.md`（需求/决策/冲突）· `docs/02-技术报告.md`（实现级）· `docs/03-更新日志.md`（版本记录）· `docs/04-路线图与里程碑.md`（验收）· `docs/05-迭代流程.md`(检查单) · `docs/06-评审与测试.md`（发布前评审/测试矩阵）。
 - **git 约定**：一个功能/修复一个 commit；message `vX.Y.Z: <一句话目的>（反馈编号）`；lib/ 不提交（build 产物）。
-- **既有的自动化验证**：smoke（163 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
+- **既有的自动化验证**：smoke（169 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
 
 **版本规则**：semver。`major` 破坏中间层/接口兼容；`minor` 新特性；`patch` 修复/文档。v1.0.0 = 三轮真实端到端测试通过后的稳定基线。
