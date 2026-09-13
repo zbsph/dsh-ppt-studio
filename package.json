@@ -43,6 +43,7 @@
     "test": "node scripts/build.mjs && node scripts/smoke.mjs",
     "test:real": "node scripts/regression-real.mjs",
     "test:preflight": "node scripts/preflight-1.0.mjs",
+    "test:preset": "node scripts/check-preset.mjs",
     "test:e2e": "node scripts/e2e-1.0.mjs"
   }
 }

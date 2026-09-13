@@ -65,14 +65,16 @@ node scripts/install.mjs
 
 在注入器环境内：`dev_inject_plugin <解压目录>`（或源码目录）→ 注入器负责 junction + 重启恢复；预设同上（仓库 `agent-presets/ppt/agent.cordis.yml` 复制到 `~/.dsh/.agent-presets/ppt/`，或让安装器写：`node scripts/install.mjs --prefix <DSH_HOME> --no-preset` 后手工放预设）。
 
-### 0.5 安装后的自检（三句命令）
+### 0.5 安装后的自检（四句命令）
 
 ```powershell
 node scripts/smoke.mjs          # 156 断言（含全链路）
 node scripts/preflight-1.0.mjs  # 11 断言（坏输入/边界/幂等/性能）
+node scripts/check-preset.mjs   # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
 node scripts/e2e-1.0.mjs        # 12 断言（真浏览器测量 + 真 Office 渲染 + splice/slice 自证；约 2-3 分钟）
 ```
 全部绿色 = 本机环境完整可用；无 Office/Edge 的机器 e2e 会自动降级标注（不是失败）。
+`check-preset` 找不到 DSH 安装时跳过（不阻断）。
 
 ### 0.6 卸载
 
@@ -331,6 +333,9 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 **Q：网页/百科内容查不到？**
 → `web_fetch` 受本机网络/DNS 限制（非公网 IP 拦截）；`ppt_crosscheck` 数据核查表为"页面 source 自证"机制，交付说明已如实标注（P2，环境侧）。
 
+**Q：点进「PPT 工作室」弹出 `failed to apply loader entry persona … $.prefix missing required value`？**
+→ DSH 升级改了**预设行配置**：0.1.5-rc.2 的 `@deepseek-ai/dsh-persona` 由 `text` 改为 `prefix`(必填) + `suffix`。本预设是随包 standard 预设的副本，旧副本带着旧形状就会在切换时被校验拦下。**重跑一次安装即可修好**（`node scripts/install.mjs` —— 预设以包为准总是刷新）；想先自查：`node scripts/check-preset.mjs`（逐行比对本预设与随包 standard，报漂移/缺行）。自建预设也可能中招，同样的改法：把 `config.text` 拆成 `prefix` + `suffix`。
+
 ---
 
 ## 9. 环境与能力边界
@@ -365,11 +370,12 @@ node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，�
 npm test                        # build + smoke（156 断言）
 npm run test:real               # 真实资产回归（WPS fixture；19 页 deck 缺失自动跳过）
 node scripts/preflight-1.0.mjs  # 发布前预检（坏输入/边界/幂等/性能/媒体 splice——11 断言）
+npm run test:preset             # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
 ```
 
 - **装配**：agent preset `C:\Users\11867\.dsh\.agent-presets\ppt\agent.cordis.yml` 插件行（**唯一装配源**）；`profiles/web/node_modules/@dsh-external/dsh-ppt-studio` 是 junction → 本仓库。改码 = build + **重启 host**（`dev_reload_package` 只覆盖注入器装配的包——本插件走 preset 行，重启是唯一可靠生效路径）。
 - **文档链（每次改动必同步）**：`docs/01-需求与目标.md`（需求/决策/冲突）· `docs/02-技术报告.md`（实现级）· `docs/03-更新日志.md`（版本记录）· `docs/04-路线图与里程碑.md`（验收）· `docs/05-迭代流程.md`(检查单) · `docs/06-评审与测试.md`（发布前评审/测试矩阵）。
 - **git 约定**：一个功能/修复一个 commit；message `vX.Y.Z: <一句话目的>（反馈编号）`；lib/ 不提交（build 产物）。
-- **既有的自动化验证**：smoke（156 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
+- **既有的自动化验证**：smoke（156 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
 
 **版本规则**：semver。`major` 破坏中间层/接口兼容；`minor` 新特性；`patch` 修复/文档。v1.0.0 = 三轮真实端到端测试通过后的稳定基线。

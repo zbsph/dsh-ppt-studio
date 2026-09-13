@@ -21,11 +21,14 @@
 
 # The preset's own persona, shadowing the deployment default for this agent.
 # `{{model}}` and `{{cwd}}` resolve from the agent's own route and workspace.
+# 0.1.5-rc.2: dsh-persona 的配置从单一 `text` 改为 `prefix`（required）+ `suffix`——
+# 旧写法 `text:` 会在切换预设时直接报 `$.prefix missing required value`。
 - id: persona
   name: '@deepseek-ai/dsh-persona'
   config:
-    text: >-
-      You are a coding agent powered by the {{model}} model. Your working directory is {{cwd}}.
+    suffix: Your working directory is {{cwd}}.
+    prefix: >-
+      You are a coding agent powered by the {{model}} model.
 
 - id: agent-instructions
   name: '@deepseek-ai/dsh-agent-instructions'
@@ -249,6 +252,11 @@
   config:
     fetch: true
     searchTimeoutMs: 60000
+
+# 显式交付（`present` 工具）：标准预设自某版起含此行，本预设按"standard 全量 + 插件行"补齐，
+# 否则 PPT 会话交付文件时没有可点开的交付卡片。
+- id: present
+  name: '@deepseek-ai/dsh-tool-present'
 
 # ── PPT 工作流（dsh-ppt-studio）────────────────────────────────────────────
 # 插件提供：/ppt 斜杠命令面 + ppt_* 工具（check/render/shot/verify/export/import/status/media/state）
