@@ -28,7 +28,7 @@ elements:
   - elementId: 页内唯一字符串   # 必须
     elementType: text|shape|line|image|table|chart
     bounds: [x, y, w, h]       # 必须（line 可省略：由 points 的 AABB 自动推导）
-    role: content|background|decoration   # 可选：层叠语义；decoration 完全豁免重叠与出界（可合法落在模板页眉页脚带）
+    role: content|background|decoration   # 可选：层叠语义；decoration 完全豁免"重叠报告"（**不豁免出界**——要落在页眉页脚带仍须 expectedOutOfSafeArea 声明）
 \`\`\`
 
 ### text

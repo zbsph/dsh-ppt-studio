@@ -1431,5 +1431,152 @@ ok('文档结构：每条更新日志都有"验证"或"影响"段（可追溯）
   (changelog.match(/^## \[/gm) ?? []).length <= (changelog.match(/^### (验证|影响|影响\/后续)/gm) ?? []).length + 4,
   `条目 ${(changelog.match(/^## \[/gm) ?? []).length} / 验证或影响段 ${(changelog.match(/^### (验证|影响|影响\/后续)/gm) ?? []).length}`)
 
+// ── 37. 手册 vs 源码：事实一致性（2026-09-14 用户要求"充分自检"后加的防线）─────────
+// 事故形状：手册是模型的行为依据，一句错的事实 = 一次错的动作。本轮自检抓到 6 类：
+//   ① manual §3 把 chart 的 data 写成 `[{label, value}]`，而 schema 只认 `data: {cols, rows}` → 照着写必被拒；
+//   ② 三本手册把 warning 的标记写成 `[⚠]`，而 ppt_verify 主清单用的是 `[~]`（`[⚠]` 只属 M2 实测段）；
+//   ③ 把 density / near-align 归到 `[·]` 建议，实际是 `[~]` 警告；④ 手册 §4 漏了 theme-conformance 这个
+//      默认开的门禁错误码；⑤ "预览里图表带分类名"对 pie 不成立（pie 连分类名都不画）；
+//   ⑥ 文档里 6 处 "smoke 181 断言" 全靠人工同步。
+// 于是把"手册不许说错事实"也做成机器断言——四类：名字存在 / 错误码覆盖 / 标记与分级 / 引用数值一致。
+// 说明：断言的是"手册与源码不矛盾"，不评判文风；文风与语义偏移仍靠 docs/06 §7.4 的独立评审。
+const skillTexts = bundled.map((b) => ({ name: b.parsed.name, content: b.parsed.content }))
+const allSkillText = skillTexts.map((s) => s.content).join('\n')
+const manualText = skillTexts.find((s) => s.name === 'ppt-studio-manual').content
+const readLib = (rel) => readFileSync(join(root, 'lib', rel), 'utf8')
+
+// 37.1 手册提到的 ppt_* 必须是真注册的工具（工具改名 / 手册留旧名 = 模型调用不存在的工具）
+const registeredTools = new Set()
+for (const f of ['tools.js', 'index.js']) {
+  for (const m of readLib(f).matchAll(/name: '(ppt_[a-z_]+)'/g)) registeredTools.add(m[1])
+}
+const mentionedTools = new Set([...allSkillText.matchAll(/\b(ppt_[a-z_]+)\b/g)].map((m) => m[1]))
+const ghostTools = [...mentionedTools].filter((t) => !registeredTools.has(t))
+ok('手册 vs 源码：技能里提到的 ppt_* 都是已注册工具（防工具改名后手册留旧名）',
+  ghostTools.length === 0 && registeredTools.size >= 15,
+  ghostTools.length ? `不存在的工具：${ghostTools.join('、')}` : `${mentionedTools.size} 个工具名全部存在（注册表 ${registeredTools.size} 个）`)
+
+// 37.2 门禁错误码：源码清单 == 期望清单，且每个都写进了手册（新增错误码而手册没跟 = 模型不知道会被拦）
+const verifySrc = readLib('verify.js')
+const verifyLines = verifySrc.split(/\r?\n/)
+const errorCodes = new Set()
+verifyLines.forEach((line, i) => {
+  // `let code = 'overlap'` 是**初值**（后续分支必然改写；overlap 只会以 warning 出现），不是一条 finding → 排除声明式赋值
+  if (/\b(?:let|const|var)\s+code\s*=/.test(line)) return
+  for (const m of line.matchAll(/code\s*[:=]\s*'([a-z-]+)'/g)) {
+    // 判定该 code 是否 error 级：本行或上 3 行里出现 'error'（覆盖 severity: 'error' / severity = 'error' /
+    // `mode === 'strict' ? 'error' : 'warning'` 三种写法；confirmed / warning / suggestion 不会被误收）
+    const window = verifyLines.slice(Math.max(0, i - 3), i + 1).join('\n')
+    if (/'error'/.test(window)) errorCodes.add(m[1])
+  }
+})
+const EXPECTED_ERROR_CODES = ['theme-conformance', 'out-of-page', 'text-overflow', 'content-collision', 'unexpected-overlap', 'measured-overflow']
+const sameSet = (a, b) => a.size === b.length && b.every((x) => a.has(x))
+ok('手册 vs 源码：门禁错误码清单与 verify.js 一致（错误码增删会被当场抓到）',
+  sameSet(errorCodes, EXPECTED_ERROR_CODES),
+  `源码=${[...errorCodes].sort().join('/')} 期望=${[...EXPECTED_ERROR_CODES].sort().join('/')}`)
+const undocumented = EXPECTED_ERROR_CODES.filter((c) => !manualText.includes(c))
+ok('手册 vs 源码：每个门禁错误码都写进了手册 §4（模型必须知道什么会被拦）',
+  undocumented.length === 0, undocumented.length ? `未写进手册：${undocumented.join('、')}` : `${EXPECTED_ERROR_CODES.length} 个错误码全部在手册`)
+
+// 37.3 严重度标记与分级：主清单的警告标记是 `[~]`（不是 `[⚠]`）；density/near-align/hotspot 是警告不是建议
+const markerViolations = []
+const severityViolations = []
+for (const s of skillTexts) {
+  for (const line of s.content.split('\n')) {
+    if (/\[⚠\][^\n]{0,6}(警告|warning)|(警告|warning)[^\n]{0,4}\[⚠\]/.test(line)) markerViolations.push(`${s.name}: ${line.trim().slice(0, 48)}`)
+    const touchesWarnCode = /(density|near-align|hotspot|密度|近对齐)/.test(line)
+    if (touchesWarnCode && /\[·\]/.test(line) && !/\[~\]/.test(line)) severityViolations.push(`${s.name}: ${line.trim().slice(0, 48)}`)
+  }
+}
+ok('手册 vs 源码：警告标记写对（主清单是 [~]；[⚠] 只属 M2 实测段，不能当主清单图例）',
+  markerViolations.length === 0, markerViolations.join(' | ') || '0 处命中')
+ok('手册 vs 源码：density/near-align/hotspot 不得归到 [·] 建议（源码里是 warning）',
+  severityViolations.length === 0, severityViolations.join(' | ') || '0 处命中')
+
+// 37.4 chart 的 data 形状必须按 schema 写（`data: {cols, rows}`；`data: [{label, value}]` 会被直接拒绝）
+const chartShapeBad = []
+for (const s of skillTexts) {
+  for (const line of s.content.split('\n')) {
+    // 允许"反面教材"：同一行带否定/拒绝语义时，引用错误形状是为了告诉模型别这么写
+    if (/data:\s*\[\s*[\{'"]/.test(line) && !/(拒绝|不要|不是|错误|✗|禁止)/.test(line)) chartShapeBad.push(`${s.name}: ${line.trim().slice(0, 48)}`)
+  }
+}
+const chartDocLine = manualText.split('\n').find((l) => /^-\s*chart[:：]/.test(l.trim())) ?? ''
+ok('手册 vs 源码：chart 语法按 schema 写（data 是 {cols, rows} + series，不是 [{label,value}]）',
+  chartShapeBad.length === 0 && /cols/.test(chartDocLine) && /rows/.test(chartDocLine) && /series/.test(chartDocLine),
+  chartShapeBad.length ? chartShapeBad.join(' | ') : `手册 chart 行：${chartDocLine.trim().slice(0, 70)}…`)
+
+// 37.5 预览图表标签的截断阈值必须与 svgCharts.js 一致（改动阈值不许手册沉默漂移）
+const truncNum = Number((readLib(join('pptd', 'svgCharts.js')).match(/c\.length\s*>\s*(\d+)/) ?? [])[1])
+const claimedTrunc = [...allSkillText.matchAll(/超过\s*(\d+)\s*字截断/g)].map((m) => Number(m[1]))
+ok('手册 vs 源码：预览图表分类名的截断阈值与 svgCharts.js 一致',
+  truncNum > 0 && claimedTrunc.length > 0 && claimedTrunc.every((n) => n === truncNum),
+  `源码=${truncNum} 手册声称=${claimedTrunc.join(',') || '未声称'}`)
+
+// 37.6 手册提到的 /ppt 子命令必须真实存在
+const realCmds = new Set([...readLib('commands.js').matchAll(/cmd === '([a-z-]+)'/g)].map((m) => m[1]))
+const mentionedCmds = new Set([...allSkillText.matchAll(/\/ppt\s+([a-z-]+)/g)].map((m) => m[1]))
+const ghostCmds = [...mentionedCmds].filter((c) => !realCmds.has(c))
+ok('手册 vs 源码：技能里提到的 /ppt 子命令都存在',
+  ghostCmds.length === 0 && realCmds.size >= 5,
+  ghostCmds.length ? `不存在的子命令：${ghostCmds.join('、')}` : `${[...mentionedCmds].join('/')} 全部存在（命令面 ${realCmds.size} 个）`)
+
+// 37.7 手册门禁清单里写的 code 名必须真实存在（A 类事实：旧手册写过 `out-of-safe-area` 这种源码里根本没有的名字）
+const gateLine = manualText.split('\n').find((l) => l.includes('ERROR 必须清零')) ?? ''
+const gateTokens = [...gateLine.matchAll(/`([a-z][a-z-]*)`/g)].map((m) => m[1])
+const ghostCodes = gateTokens.filter((t) => !errorCodes.has(t))
+ok('手册 vs 源码：手册门禁清单里的 code 名都真实存在（防写出源码里没有的错误码）',
+  gateTokens.length > 0 && ghostCodes.length === 0,
+  ghostCodes.length ? `源码里没有：${ghostCodes.join('、')}` : `清单含 ${[...new Set(gateTokens)].join('、')}`)
+
+// 37.8 讲稿/备注类内容必须写明"插件不导出备注"（导出器只写 <p:notesSz/>，没有任何 notesSlide 生成通道；
+// 实现一旦真加了备注导出，这条会失败并强制同步手册）
+const exportSrc = readLib(join('pptd', 'export-pptx.js'))
+const copySkill = skillTexts.find((s) => s.name === 'ppt-studio-copy').content
+const mentionsNotes = /讲稿|备注/.test(copySkill)
+const notesHonest = /(不生成备注|不导出备注|没有 notesSlide|不进 pptx)/.test(copySkill)
+ok('手册 vs 源码：讲稿章节写明"插件不把它写进 pptx"（讲稿只能落交付说明/单独文件）',
+  !/notesSlide/.test(exportSrc) && (!mentionsNotes || notesHonest),
+  mentionsNotes ? (notesHonest ? '已写明不导出' : '提到讲稿/备注但没说它不进 pptx') : '未提及讲稿')
+
+// 37.9 缩字下限的常量必须与导出器一致（手册写死了 6pt / 60%，代码改了要能被抓到）
+const floorM = exportSrc.match(/Math\.max\((\d+),\s*Math\.round\(origSize \*\s*([\d.]+)\)\)/)
+const floorPt = floorM ? Number(floorM[1]) : 0
+const floorPct = floorM ? Math.round(Number(floorM[2]) * 100) : 0
+const floorClaimed = floorPt > 0 && new RegExp(`max\\(${floorPt}pt, ${floorPct}% 原字号\\)`).test(manualText)
+ok('手册 vs 源码：缩字下限常量与 export-pptx 一致（未给 minFontSize 时的保底值）',
+  floorPt > 0 && floorPct > 0 && floorClaimed,
+  `源码 = max(${floorPt}pt, ${floorPct}% 原字号)，手册${floorClaimed ? '一致' : '不一致/未写'}`)
+
+// ── 38. SCHEMA_REF（ppt_schema 权威通道）自洽 ─────────────────────────────────────
+// 事故形状：scaffold.js 顶部速查写"decoration 完全豁免重叠与出界（可合法落在模板页眉页脚带）"，
+// 而同一份 SCHEMA_REF 后文写"只豁免重叠、不豁免出界"，verify.js 对出界也根本不看 role
+// （docs/01 C3 早已回滚"decoration 豁免出界"）——权威通道自相矛盾，模型照哪句都可能错。
+const schemaRef = scaffoldMod.SCHEMA_REF
+const refLines = schemaRef.split('\n')
+const refBad = refLines.find((l) => /decoration/.test(l) && /豁免/.test(l) && /出界/.test(l) && !/不豁免出界/.test(l))
+ok('SCHEMA_REF 自洽：不得声称 decoration 豁免出界（verify 对出界不看 role；C3 已回滚该语义）',
+  refBad === undefined && refLines.some((l) => /不豁免出界/.test(l)),
+  refBad ? `仍写着：${refBad.trim().slice(0, 60)}` : '口径一致（只豁免重叠、不豁免出界）')
+
+// 37.10 【必须是最后一条断言】引用计数自证：文档里 "smoke … N 断言" 必须等于本次真实断言总数。
+// 历史形状：加断言后 README×3 + docs/02 + docs/06×2 + 手册 全靠人工同步，迟早漏一处。
+// 只扫"当前状态"文档（README / 技术报告 / 评审测试矩阵 / 使用手册）；docs/01/03/04 里的历史数字是记录，不动。
+// 覆盖边界（故意）：只认"N 断言"与"N/N"两种<b>套件规模</b>写法。docs/06 §一 是历史快照，那里写的是
+// 裸的 "smoke 181"（无"断言"二字），由 §一 上方的"计数说明"解释；当前规模只认 §2.1 与 §六。
+const liveTotal = pass + fail + 1 // 含本条自身
+const countFiles = ['README.md', join('docs', '02-技术报告.md'), join('docs', '06-评审与测试.md'), join('skills', 'ppt-studio-manual', 'SKILL.md')]
+const staleCounts = []
+for (const rel of countFiles) {
+  readFileSync(join(root, rel), 'utf8').split(/\r?\n/).forEach((line, i) => {
+    if (!/smoke/i.test(line)) return
+    for (const m of line.matchAll(/(\d+)\s*断言/g)) if (Number(m[1]) !== liveTotal) staleCounts.push(`${rel}:${i + 1}=${m[1]}`)
+    for (const m of line.matchAll(/(\d+)\/(\d+)\s*\|/g)) if (Number(m[1]) !== liveTotal || Number(m[2]) !== liveTotal) staleCounts.push(`${rel}:${i + 1}=${m[1]}/${m[2]}`)
+  })
+}
+ok('文档计数自证：所有"smoke … N 断言 / N/N"都等于本次真实断言数（加断言必须同步 6 处引用）',
+  staleCounts.length === 0, staleCounts.length ? `过期引用：${staleCounts.join('、')}` : `全部 = ${liveTotal}`)
+
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)

@@ -31,7 +31,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 | "图表能画什么" | bar/line/pie（矢量拼绘）；python-pptx 兜底引擎降级表格；复杂图表用图片或 Shape 拼 |
 | "用别人的模板做" | `ppt_import`（带参考层：source.pptx + 真渲染整页 + 全量色板）→ 先 read_image 看 `reference/previews/*.png` 真身再动手 |
 | "要 100% 像模板" | `ppt_patch`（手术模式：只换文字/表格内容，XML 原样） |
-| "网页预览对，打开 pptx 线条不对" | 旧引擎三个连线编码 bug（斜线镜像 / × 少一笔 / 箭头消失 / 水平线变斜），**均已修复**——看 `ppt_export` 报告的"线方向 N/N"自证；修复前导出的产物重新 `ppt_export` |
+| "网页预览对，打开 pptx 线条不对" | 旧引擎三个连线编码 bug（四个症状：斜线镜像 / × 少一笔 / 箭头消失 / 水平线变斜），**均已修复**——看 `ppt_export` 报告的"线方向 N/N"自证；修复前导出的产物重新 `ppt_export` |
 | "表格在 PowerPoint 里空白" | 旧引擎 graphicFrame 结构 bug，**已修复**；parity 回读（表 N/N）自证；旧产物重导 |
 
 ## 3. DSL 快速参考（写页面时对照）
@@ -41,17 +41,20 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 - 元素通用：`elementId`（页内唯一）、`elementType: text|shape|line|image|table|chart`、`bounds: [x,y,w,h]`（line 可省，由 points 推导）、`role: background|content|decoration`。
 - text：`content: {text, style: "$name" 或内联样式键}`；**样式键必须在 content 内**。
 - shape：`kind: rect|roundRect|ellipse|triangle + prst(箭头/菱形/五边形/flowchart…) + custGeom path`；`fill #hex | {color,alpha} | {type: gradient, stops: [{pos,color,alpha}], angle}`；`line {color,width}`；`rotation`。
-- line：`points: [[x1,y1],[x2,y2]]`；`arrow: true`。
+- line：`points: [[x1,y1],[x2,y2]]`（**每条只有两点**，多点折线不支持——时间轴/折线拆成首尾相接的多条 line）；`arrow: true`（箭头在第二个点那一端）。
 - image：`src: "media/xx.png"`；`fit: cover|contain|fill`。
 - table：`cols: [列名...]`、`rows: [[..]]`、`header: true|false`。
-- chart：`type: bar|line|pie`、`data: [{label, value...}]`、`cols`（宽表）、`colors`（可选 $ref 数组）。
+- chart：`chart: {type: bar|line|pie, data: {cols: [列名…], rows: [[…]]}, series: [{name,x,y}]（多系列时显式写）, colors}`。
+  **`data` 只认 `cols` + `rows` 两件**（写成 `data: [{label, value}]` 会被 schema 直接拒绝）；单列 pairs 兼容（`cols: [分类]` + `rows: [[类, 值]]` 自动补"值"列），**推荐宽表** `cols: [分类, 值]`。
+  chart 里**没有**分类名/数值/单位/图例字段——那些要自己用 `text` 元素补（见 `ppt-studio-data` §2）。
 - 声明：`expectedOverlaps: [{pair: [a,b]}]`；出界：`expectedOutOfSafeArea: [idA]`；对比度豁免：`contrastExempt: [id]`；`source: "依据标注"`（数据核查表）；`overlapMode: declared|lenient`。
 
 ## 4. 质量门禁（答复"为什么还要改"的依据）
 
-- ERROR 必须清零：`overlap 未声明`（修布局或补声明）、`content-collision`（永远不可声明）、`out-of-page 超页面`（不可声明）、`out-of-safe-area 未声明`（有意则声明）、`text-overflow`（扩容器/精简文案；缩字下限按用户指令，未给则 60% 保底防荒谬）。
+- ERROR 必须清零：`unexpected-overlap`（未声明重叠：修布局或补声明）、`content-collision`（文字/表格/图表互压，永远不可声明）、`out-of-page`（超**页面边界**不可声明；超**安全区**可声明——同一个 code，message 里写的是"超出页面安全区"）、`text-overflow`（扩容器/精简文案；缩字下限按用户指令，未给则 max(6pt, 60% 原字号) 保底防荒谬）、`theme-conformance`（strict 档默认开：元素颜色必须 ∈ `theme.colors` 或中性灰）、`measured-overflow`（M2 实测交叉：实测=终审，估算漏报也会报错）。
 - 声明命中显示为 ✓ 预期重叠/✓ 预期出界（确认，不算错误）。
-- `[·]` 建议（美学/对比度/孤字/密度/near-align）永不是门禁，但逐条斟酌。
+- 报告里的标记：`[✗]` 错误（进 `门禁：N 个错误` 计数）、`[~]` 警告（进页头"N 警告"，不入门禁）、`[·]` 建议（美学层）。`[⚠]` 不是主清单的警告标记——它只出现在 M2 实测交叉段和其它提示行。
+- `[·]` 建议（美学/对比度/孤字/长句/网格/贴边）**永不是门禁**，但逐条斟酌；`density`/`hotspot`/`near-align` 是 `[~]` 警告（同样不入门禁计数，但先看它们）。
 - 三层审阅节奏：`ppt_verify`（数）→ `ppt_shot`+读图（视）→ `ppt_visual`（Office 真，有条件时）；audit 档禁 autoDeclare、导出自动回读断言 + 自动真渲染。
 - 一键声明：`ppt_verify autoDeclare=true`——只处理警告级；写入后必须附"声明清单 + 每对一句意图"（说不清意图的对子改布局）。
 
@@ -60,7 +63,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 | 场景 | 路径 |
 |---|---|
 | 从头做 | 模板/定调 → 逐页 → export（缺省 pptd）→ 交付说明 |
-| 快速交付 | `/ppt quick`：≤8 页、≤40 字/块、跳视觉审阅（交付标注"未经视觉审阅"） |
+| 快速交付 | `/ppt quick`：≤8 页（用户指定除外）、文本 ≤40 字/块（用户要求可放宽）、跳视觉审阅（交付标注"未经视觉审阅"） |
 | 改整个原稿 | import 全稿 → 逐页改 → export（注意：近似稿整册重渲会伤其余页——若非全部重做，用下一行） |
 | 只改原稿某页 | import → 改该页 → `ppt_splice`（只替换这页进源）→ 可选 `ppt_slice` |
 | 贴模板 | `ppt_patch`（模板为底版，文本/表格槽替换） |
@@ -86,7 +89,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 ## 7. 开发维护（仅改插件时用）
 
 - 改码：`src/` → `node scripts/build.mjs` → **重启 host**（插件经 agent preset 会话装配；`dev_reload_package` 只覆盖注入器装配包，且注入器 junction 已存在时会指向旧安装根）。
-- 回归：`node scripts/smoke.mjs`（181 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
+- 回归：`node scripts/smoke.mjs`（194 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
 - 跨层验证纪律：**预览层与成品层必须互相验证**——`ppt_render`+`ppt_verify` 只管 HTML/估算层，OOXML 层靠 `ppt_export` 的 parity 自证（表/图/线方向）+ `ppt_visual` 真渲染抽检；只跑单层会漏掉"预览对、成品错"（2026-09-14 连线方向事故）。
 - 文档链：改需求/决策 → docs/01；改机制 → docs/02；每次 → docs/03；验收 → docs/04；发布前 → docs/06。
 - 装配：preset 行是唯一装配源；junction 保留（preset 解析包名用）。

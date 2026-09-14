@@ -7,8 +7,10 @@
  *  - ERROR overlap        AABB 相交（容差 1px；排除 id 前缀同源组）
  *  - ERROR text-overflow  文本估算高度/宽度超出容器（wrap=false 时宽度计入）
  *  - WARN  near-align     疑似未对齐：同缘差 ∈ (1, 6]px
- *  - WARN  hotspot        元素密集区（网格聚类，供重点审阅）
- *  - WARN  density        单页元素数 ≥ 15（信息密度警示）
+ *  - WARN  hotspot        网格聚类密集区（单个网格 ≥ 5 个元素）
+ *  - WARN  density        单页内容元素（text/table/chart）≥ 12（信息密度警示）
+ *  - ERROR theme-conformance  元素颜色不在 theme.colors 且非中性灰（themeConformance: strict 默认 / suggest 降为 warning / off 跳过）
+ *  - ERROR measured-overflow  M2 实测档：实测溢出而估算漏报（实测=终审）；估算也报 = warning
  */
 
 const TOL = 1 // px

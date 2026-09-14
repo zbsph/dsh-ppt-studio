@@ -19,7 +19,7 @@
  *   expectedOverlaps: [{pair: [idA, idB]}, ...]   # 设计阶段声明的有意重叠（审阅与声明对照）
  *   expectedOutOfSafeArea: [idA, ...]         # 有意落在模板页眉页脚带/安全区外的元素（出界分级声明制）
  *   overlapMode: declared | lenient
- *   notes: str
+ *   notes: str                                # 工程内记录；当前版本不写入 pptx（无 notesSlide 通道），不导出、不校验
  *   elements:
  *     - elementId: str              # 页内唯一
  *       elementType: text|shape|line|image|table|chart
