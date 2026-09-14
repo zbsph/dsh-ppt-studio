@@ -8,7 +8,10 @@
  *   ③ `dsh --profile web --dump-config` 的组合树里能看到我们的插件行（id: ppt-studio）。
  *
  * 依赖 `dsh` 与 pnpm 在 PATH 上；缺失则跳过（打印警告，退出码 0，避免把它变成脆弱门禁）。
- * 用法：`node scripts/verify-bundle-install.mjs [<tgz 路径>]`（缺省自己 npm pack）。
+ * 用法：
+ *   node scripts/verify-bundle-install.mjs                 # 自己 npm pack（本地 tgz）
+ *   node scripts/verify-bundle-install.mjs <tgz 路径>       # 用指定 tgz
+ *   node scripts/verify-bundle-install.mjs <https://…tgz>   # **验"用户会敲的那条命令"**（GitHub 资产 URL）
  */
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -46,9 +49,12 @@ const home = join(work, 'home')
 mkdirSync(home, { recursive: true })
 
 try {
-  // 1) 打包（若未给 tgz）
+  // 1) 安装规格：http(s) URL = 用户会敲的那条命令；路径 = 本地 tgz；都不给就自己打包
   let tgz = process.argv[2]
-  if (!tgz) {
+  const isUrl = typeof tgz === 'string' && /^https?:\/\//.test(tgz)
+  if (isUrl) {
+    check('使用远端 URL 规格（等价于用户实际执行的命令）', true, tgz)
+  } else if (!tgz) {
     const pack = run('npm', ['pack', '--pack-destination', work], { cwd: root })
     const name = (pack.stdout ?? '').trim().split(/\r?\n/).filter(Boolean).pop()
     tgz = join(work, name)

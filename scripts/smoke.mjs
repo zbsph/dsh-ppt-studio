@@ -1710,9 +1710,9 @@ const insertRow = Array.isArray(patchDoc) ? (patchDoc.flatMap((l) => l?.insert ?
 ok('bundle：patch 的 insert 行名字与包名一致（改名必须两处同改——防"装了不生效"的静默失败）',
   Boolean(insertRow) && insertRow.name === rootPkg.name && typeof insertRow.id === 'string',
   `patch name=${insertRow?.name ?? '(缺)'}｜package name=${rootPkg.name}｜id=${insertRow?.id ?? '(缺)'}`)
-ok('bundle：非 private 且 publishConfig.access=public（`npm publish` 的前置条件）',
-  rootPkg.private !== true && rootPkg.publishConfig?.access === 'public',
-  `private=${rootPkg.private ?? 'undefined'} access=${rootPkg.publishConfig?.access ?? '(缺)'}`)
+ok('bundle：未发布到 npm（保持 private），一键安装走 GitHub Release 的 tgz URL——发布才需要 npm 账号',
+  rootPkg.private === true,
+  `private=${rootPkg.private ?? 'undefined'}（发布需删掉它 + 加 publishConfig.access=public，见 README §10）`)
 
 // 包名是**单一事实源**：改名（例如为发布改 scope）时必须同步 cordis.patch.yml 与预设插件行，
 // 漏一处 = "装了不生效"或"预设挂不上"，两边都是静默失败 —— 这里把三处钉在一起。

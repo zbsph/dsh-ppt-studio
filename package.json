@@ -2,7 +2,8 @@
   "name": "@dsh-external/dsh-ppt-studio",
   "version": "1.0.0",
   "description": "PPT 工作室：四类任务（从头/补完/修改/总结）工作流 + 布局工程（元素冲突防治）+ PPTD 中间层工具链 + 内置模板库",
-  "//private": "2026-09-14 移除 private：本包要能以 `dsh plugin add`/npm 安装（private 只挡发布，不挡 tarball 安装；但没有它才允许 npm publish）。",
+  "//private": "保持 private：不发布到 npm registry（用户已决定）。一键安装走 GitHub Release 的 tgz URL——不需要 npm 账号；若要发布：删掉本行 + 加 publishConfig.access=public + npm login && npm publish。",
+  "private": true,
   "type": "module",
   "main": "./lib/index.js",
   "//dsh": "profile bundle 声明（2026-09-14）：让 `dsh plugin --profile <p> add <本包>` 装完即挂载——launcher 在 profile 里跑完 pnpm 后核对 dsh.profile.bundles，声明了 dsh.bundle 的依赖自动入栈。",
@@ -10,10 +11,6 @@
     "bundle": {
       "patch": "./cordis.patch.yml"
     }
-  },
-  "//publishConfig": "发布到 npm 时作用域包默认 restricted；本插件是公开可用的，显式 public。",
-  "publishConfig": {
-    "access": "public"
   },
   "exports": {
     ".": {
@@ -58,8 +55,7 @@
     "test:e2e": "node scripts/e2e-1.0.mjs",
     "test:bundle": "node scripts/verify-bundle-install.mjs",
     "audit:facts": "node scripts/audit-manual-facts.mjs",
-    "eval:skills": "node scripts/eval-skills-score.mjs",
-    "//prepublishOnly": "发布门禁：构建 + 全量冒烟（201 断言）不过就不允许 npm publish。",
-    "prepublishOnly": "node scripts/build.mjs && node scripts/smoke.mjs"
+    "probe:effect": "node scripts/probe-effect-semantics.mjs",
+    "eval:skills": "node scripts/eval-skills-score.mjs"
   }
 }

@@ -31,26 +31,25 @@
 - **宿主版本基线：DSH `0.1.5-rc.2`**（2026-09 实测适配：`tools` / `commands` / `systemPrompt` / `webServer` / `skills` / `session/event` / `system-prompt/assemble` 契约逐项核对，并在真实进程里跑过挂载、内嵌技能注册与工作流提示注入）。更早的 0.1.x 未逐一验证；`skills` 服务缺失（极简装配）时插件仍完整可用，只是手册不以技能形式出现。
 - 可选增强（没有也能用，自动降级）：本机 Microsoft Office（真渲染通道）、Edge/Chrome（截图与 M2 实测）、python + python-pptx（兜底引擎）。
 
-### 0.2 方式 A：`dsh plugin add`（标准姿势，推荐）
+### 0.2 方式 A：`dsh plugin add`（标准姿势 · **一条命令**，推荐）
 
-本插件声明了 `dsh.bundle.patch`（见仓库根 `cordis.patch.yml`），所以**装完即挂载**——不需要手工建 junction、不需要跑安装器：
+本插件声明了 `dsh.bundle.patch`（见仓库根 `cordis.patch.yml`），所以**装完即挂载**——不需要手工建 junction、不需要跑安装器、**不需要 npm 账号**：
 
 ```powershell
-# ① 从 npm registry 安装（v1.0.0 起提供）
-dsh plugin --profile web add <包名>
-
-# ② 或直接从 GitHub Release 资产安装（**无需 npm 账号**）
 dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio/releases/download/v1.0.0/dsh-external-dsh-ppt-studio-1.0.0.tgz
 
-# 升级：把上面任一命令换成新的版本/新的 URL 再跑一次（同一命令幂等）
-# 卸载：dsh plugin --profile web remove <包名>
+# 升级：把 URL 里的版本/文件名换成新的再跑一次（同一命令幂等）
+# 卸载：dsh plugin --profile web remove @dsh-external/dsh-ppt-studio
+# 装完 **重启 dsh web** 生效
 ```
 
 `dsh plugin` 是**薄 pnpm 转发器**：在 `<DSH_HOME>/profiles/web/` 里跑 pnpm，然后按**已安装状态**核对
-`dsh.profile.bundles`——声明了 `dsh.bundle` 的依赖会**自动进入层栈**（你不需要手改任何配置）。装完 **重启 dsh web** 即可。
+`dsh.profile.bundles`——声明了 `dsh.bundle` 的依赖会**自动进入层栈**（你不需要手改任何配置）。
 
-> 装完怎么确认生效：`dsh --profile web --dump-config` 里应出现 `ppt-studio` 插件行。
-> 仓库自带这条路径的**真机自证**：`npm run test:bundle`（隔离 `DSH_HOME` + 真 `dsh plugin add` + dump-config 断言，不碰你的 profiles）。
+> **装完怎么确认生效**：`dsh --profile web --dump-config` 里应出现 `ppt-studio` 插件行。
+> 仓库自带这条路径的**真机自证**：`npm run test:bundle`（隔离 `DSH_HOME` + 真 `dsh plugin add` + dump-config 断言，**不碰你的 profiles**）。
+> 本包**未发布到 npm registry**（保持 `private: true`），所以上面的 URL 就是当前唯一的"一条命令"装法；
+> 不想装 pnpm / 要离线时用方式 B（下载 tgz + `install.mjs`）。
 
 ### 0.3 方式 B：下载发布包（离线/无 pnpm 时）
 
@@ -481,14 +480,11 @@ node scripts/eval-skills-blind.mjs <deckA> <deckB>   # 生成匿名+随机的盲
 node scripts/audit-manual-facts.mjs  # 手册事实审计：逐条把"手册 vs 源码"验一遍并打印源码锚点（37 条）
 ```
 
-**发布到 npm**（`prepublishOnly` 会自动跑 build + 全量冒烟，不过不发）：
-
-```powershell
-npm login      # 需要 npm 账号（本机当前未登录）
-npm publish    # publishConfig.access=public 已写进 package.json（作用域包默认 restricted）
-# 包名是单一事实源：改名时必须同步 cordis.patch.yml 与 agent-presets/ppt/agent.cordis.yml 的插件行，
-# 漏一处就是"装了不生效/预设挂不上"——smoke 有一条断言把三处钉在一起。
-```
+**关于发布到 npm**：本包**当前不发布**（`private: true`），一键安装走上面的 GitHub Release tgz URL（不需要 npm 账号）。
+将来若要发布：删掉 `package.json` 的 `private`、加 `"publishConfig": { "access": "public" }`（作用域包默认 restricted），再 `npm login && npm publish`；
+发布前建议先跑 `npm test` 与 `npm run test:bundle`。
+**包名是单一事实源**：改名时必须同步 `cordis.patch.yml` 与 `agent-presets/ppt/agent.cordis.yml` 的插件行——
+漏一处就是"装了不生效/预设挂不上"，smoke 有断言把三处钉在一起。
 
 - **装配（两条互斥路径，见 §0.7）**：① profile bundle 行（`cordis.patch.yml`，`dsh plugin add` 走这条，**profile 级**）；
   ② agent preset 插件行（`C:\Users\11867\.dsh\.agent-presets\ppt\agent.cordis.yml`，**会话级**；本仓库开发时用的就是这条，`profiles/web/node_modules/@dsh-external/dsh-ppt-studio` 是 junction → 本仓库）。
