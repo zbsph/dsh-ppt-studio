@@ -93,7 +93,9 @@ export async function importPptx(pptxPath, outDir) {
     const slideBg = bgOfSlide(slide, slideRels, mediaNames)
     // 背景优先级：原生 slide bg > 满页图 > 布局 bg > 无
     const bg = slideBg ?? parsed.bg ?? layoutBg ?? null
-    pages.push({ index: i, elements: parsed.elements, background: bg })
+    // 讲稿（备注页）：slide rels → notesSlide → 段落文本（2026-09-14 与导出的备注通道对称）
+    const notes = notesOfSlide(files, part, slideRels)
+    pages.push({ index: i, elements: parsed.elements, background: bg, notes })
   }
 
   // 写项目
@@ -730,7 +732,43 @@ function pageYaml(page, name) {
   }).join('\n')
   return `# 导入自原 pptx（几何仅供参考，可由 layout 编辑器重排；样式已保留；v0.9.1 prst 形状/渐变直通）
 pageType: content
-${page.background ? `background: ${JSON.stringify(page.background)}\n` : ''}elements:
+${notesYaml(page.notes)}${page.background ? `background: ${JSON.stringify(page.background)}\n` : ''}elements:
 ${els}
 `
+}
+
+/** 讲稿 → 页面 yaml 的 notes 行：单行走引号，多行走 YAML 块标量（与导出侧对称）。 */
+function notesYaml(notes) {
+  const s = typeof notes === 'string' ? notes.replace(/\s+$/, '') : ''
+  if (!s) return ''
+  if (!s.includes('\n')) return `notes: ${JSON.stringify(s)}\n`
+  return `notes: |\n${s.split(/\r?\n/).map((l) => '  ' + l).join('\n')}\n`
+}
+
+/** slide rels 里的 notesSlide → 讲稿文本（段落还原成 \n）。无关系 / 部件缺失 → null。 */
+function notesOfSlide(files, slidePart, slideRels) {
+  const target = [...slideRels.values()].find((t) => /notesSlides\//.test(String(t)))
+  if (!target) return null
+  const raw = files.get(resolveRelPath(slidePart, String(target)))
+  if (!raw) return null
+  const tree = parseXml(decodeXml(raw))
+  const paras = []
+  const visit = (n) => {
+    if (n.tag === 'p') { paras.push(allText(n).trim()); return }
+    for (const c of n.children) visit(c)
+  }
+  visit(tree)
+  const out = paras.join('\n').trim()
+  return out || null
+}
+
+/** 把 slide 内部的相对 Target（../notesSlides/x.xml）解析成包内绝对路径。 */
+function resolveRelPath(basePart, target) {
+  const segs = [...basePart.split('/').slice(0, -1), ...target.split('/')]
+  const out = []
+  for (const s of segs) {
+    if (s === '..') out.pop()
+    else if (s !== '.' && s !== '') out.push(s)
+  }
+  return out.join('/')
 }

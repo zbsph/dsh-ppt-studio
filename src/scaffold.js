@@ -98,12 +98,18 @@ elements:
 \`\`\`  # chart.type: bar|line|pie；数据格式 = 宽表（cols: [分类, 值1, ...]；多系列用 series 映射）。
 # 单列 pairs 格式（cols 只写类别列、每行 [类别, 值]）自动兼容（v0.6.1），但**建议用宽表**；
 # 图表数据解析为全零时 render/export 会给出显式警告（不再静默）。
+# 配色：colors: ["$primary", "$accent"]（$ref 在预览与成品两层都解析）；不写则用内置调色板（**不在 theme.colors 里**，
+#   显式写了主题外颜色会出 [·] aesthetic-theme 建议——建议级，不是门禁）。chart 本身不含分类名/数值/图例，需自己用 text 补。
 
 ## 页面级字段
 \`\`\`yaml
 pageType: cover|content
 background: "#FFFFFF"        # 或 "$themeRef" / {type: solid, color} / {type: image, src, fit}
 safeArea: {top: 20}          # 可选：覆盖主题安全区
+notes: |                     # 可选：讲稿 → 导出成 pptx 备注页（notesSlide+notesMaster）；单行也可 notes: "…"
+  开场先给结论。
+  第二行：再给证据。
+  没有 notes 的页不产生任何备注部件（产物与旧版一致）。
 expectedOverlaps:            # 设计阶段声明"有意"重叠（审阅与声明对照）
   - {pair: [card, t1]}       # 色块衬底/图片标注等；内容互压 text×text 不可声明，永远错误
 expectedOutOfSafeArea:       # 有意落在"安全区外/模板页眉页脚带"的元素（logo/角标/水印）

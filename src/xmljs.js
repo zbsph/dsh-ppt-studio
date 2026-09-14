@@ -45,8 +45,24 @@ export function parseXml(xml) {
   return root
 }
 
+// 实体解码（2026-09-14 修）：此前只做转义（导出侧）、没有解码（导入侧），
+// 于是导入含 & < > 的文本会拿到字面 "&amp;"/"&lt;"（"R&D" → "R&amp;D"）。
+// 只在**文本节点**解码：属性值保持原样，避免 splice/surgical 的结构性属性往返被改写。
+const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" }
+export function decodeEntities(s) {
+  return String(s).replace(/&(#[0-9]+|#x[0-9a-fA-F]+|[a-zA-Z]+);/g, (m, body) => {
+    if (body[0] === '#') {
+      const hex = body[1] === 'x' || body[1] === 'X'
+      const code = hex ? parseInt(body.slice(2), 16) : parseInt(body.slice(1), 10)
+      if (!Number.isFinite(code) || code <= 0 || code > 0x10ffff || (code >= 0xd800 && code <= 0xdfff)) return m
+      return String.fromCodePoint(code)
+    }
+    return ENTITIES[body] ?? m
+  })
+}
+
 function appendText(node, s) {
-  if (s) node.text += s
+  if (s) node.text += decodeEntities(s)
 }
 
 function unquote(v) {

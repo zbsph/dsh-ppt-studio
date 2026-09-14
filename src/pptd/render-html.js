@@ -153,7 +153,9 @@ function elementHtml(el, ctx, debug) {
     }
     case 'chart': {
       const svg = chartSvg(el.chart, w, h)
-      return { html: `<div class="el" id="${esc(el.id)}" data-kind="chart" style="${pos}">${svg}</div>`, snap: snap({ chartType: el.chart.type }) }
+      // colors 进快照（2026-09-14）：verify 的"图表显式配色 vs theme.colors"建议必须能看到它，
+      // 否则 layout.json 里只有 chartType，那条建议永远不会触发。
+      return { html: `<div class="el" id="${esc(el.id)}" data-kind="chart" style="${pos}">${svg}</div>`, snap: snap({ chartType: el.chart.type, ...(el.chart.colors ? { colors: el.chart.colors } : {}) }) }
     }
     default:
       return { html: `<div class="el" id="${esc(el.id)}" data-kind="unknown" style="${pos};border:1px solid #f00">${el.type}</div>`, snap: snap({}) }

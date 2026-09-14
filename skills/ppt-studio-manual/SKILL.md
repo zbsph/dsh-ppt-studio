@@ -47,6 +47,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 - chart：`chart: {type: bar|line|pie, data: {cols: [列名…], rows: [[…]]}, series: [{name,x,y}]（多系列时显式写）, colors}`。
   **`data` 只认 `cols` + `rows` 两件**（写成 `data: [{label, value}]` 会被 schema 直接拒绝）；单列 pairs 兼容（`cols: [分类]` + `rows: [[类, 值]]` 自动补"值"列），**推荐宽表** `cols: [分类, 值]`。
   chart 里**没有**分类名/数值/单位/图例字段——那些要自己用 `text` 元素补（见 `ppt-studio-data` §2）。
+- 页面级：`pageType`、`background`、`safeArea`（页面级覆盖主题）、`notes`（讲稿文本 → **导出为 pptx 备注页**；多行用 `notes: |` 块标量；没有 `notes` 的页不产生任何备注部件）。
 - 声明：`expectedOverlaps: [{pair: [a,b]}]`；出界：`expectedOutOfSafeArea: [idA]`；对比度豁免：`contrastExempt: [id]`；`source: "依据标注"`（数据核查表）；`overlapMode: declared|lenient`。
 
 ## 4. 质量门禁（答复"为什么还要改"的依据）
@@ -89,7 +90,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 ## 7. 开发维护（仅改插件时用）
 
 - 改码：`src/` → `node scripts/build.mjs` → **重启 host**（插件经 agent preset 会话装配；`dev_reload_package` 只覆盖注入器装配包，且注入器 junction 已存在时会指向旧安装根）。
-- 回归：`node scripts/smoke.mjs`（194 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
+- 回归：`node scripts/smoke.mjs`（201 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
 - 跨层验证纪律：**预览层与成品层必须互相验证**——`ppt_render`+`ppt_verify` 只管 HTML/估算层，OOXML 层靠 `ppt_export` 的 parity 自证（表/图/线方向）+ `ppt_visual` 真渲染抽检；只跑单层会漏掉"预览对、成品错"（2026-09-14 连线方向事故）。
 - 文档链：改需求/决策 → docs/01；改机制 → docs/02；每次 → docs/03；验收 → docs/04；发布前 → docs/06。
 - 装配：preset 行是唯一装配源；junction 保留（preset 解析包名用）。

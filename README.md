@@ -68,7 +68,7 @@ node scripts/install.mjs
 ### 0.5 安装后的自检（四句命令）
 
 ```powershell
-node scripts/smoke.mjs          # 194 断言（含全链路）
+node scripts/smoke.mjs          # 201 断言（含全链路）
 node scripts/preflight-1.0.mjs  # 11 断言（坏输入/边界/幂等/性能）
 node scripts/check-preset.mjs   # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
 node scripts/e2e-1.0.mjs        # 13 断言（真浏览器测量 + 真 Office 渲染 + splice/slice 自证；约 2-3 分钟）
@@ -160,7 +160,7 @@ ppt_render(D:\demo) → ppt_verify(D:\demo) → ppt_export(D:\demo)
 
 | 工具 | 用途 |
 |---|---|
-| `ppt_import` | 任意 .pptx → deck 工程（内容保真 + 参考层：`source.pptx` 真相 + Office 真渲染整页 + theme 聚合） |
+| `ppt_import` | 任意 .pptx → deck 工程（内容保真 + 参考层：`source.pptx` 真相 + Office 真渲染整页 + theme 聚合；备注读回 `notes:`） |
 | `ppt_visual` | Office PPT COM 真渲染 → 逐页 PNG；`pages="15"` 只渲指定页（页号=源原页号） |
 | `ppt_media` | 图片元数据（尺寸/格式，估算 media 用量） |
 
@@ -168,7 +168,7 @@ ppt_render(D:\demo) → ppt_verify(D:\demo) → ppt_export(D:\demo)
 
 | 工具 | 用途 |
 |---|---|
-| `ppt_export` | 导出 .pptx（`auto`=pptd 主引擎，硬失败自动回退 python-pptx 并醒目标注；`out` 支持绝对路径） |
+| `ppt_export` | 导出 .pptx（`auto`=pptd 主引擎，硬失败自动回退 python-pptx 并醒目标注；`out` 支持绝对路径；有 `notes:` 的页生成备注页，parity 自证） |
 | `ppt_patch` | **手术模式**：以模板 .pptx 为底版贴内容（只改文本/表格 `<a:t>`，样式/几何/图片原样保留；未动页 sha256 验证） |
 | `ppt_splice` | **替换进原稿**：工作区某页替换进源 .pptx（保留母版横幅/页脚/备注/媒体；其余页条目 SHA256 逐字节一致——自动自证） |
 | `ppt_slice` | **单页版**：从 .pptx 修剪出"单页 + 完整母版/布局/主题"独立文件 |
@@ -198,10 +198,21 @@ pages:
 ```yaml
 pageType: cover
 background: "#F5F6F7"         # hex / $themeRef / {type: solid,color} / {type: image,src,fit}
+notes: |                      # 可选：讲稿 → 导出为 **pptx 备注页**（PowerPoint"备注"区可见/可编辑）
+  开场先给结论。
+  第二行：再给证据。            # 单行也可写 notes: "一句话讲稿"
 elements:
   - elementId: 页内唯一字符串   # 必须
     elementType: text|shape|line|image|table|chart
     bounds: [x, y, w, h]       # 必须（line 可省略：由 points 的 AABB 自动推导）
+  # chart：
+  - elementId: bar
+    elementType: chart
+    bounds: [60, 300, 400, 200]
+    chart:
+      type: bar                # bar|line|pie
+      data: {cols: [分类, 值], rows: [[甲, 10], [乙, 20]]}   # 只认 {cols, rows}；多系列加 series: [{name,x,y}]
+      colors: ["$primary"]     # 可选：$themeRef 在预览与成品两层都会解析；不写则用内置调色板（不在 theme.colors 里）
   # text：
   - elementId: t1
     elementType: text
@@ -224,6 +235,9 @@ elements:
 
 - **样式键必须在 `content` 内部**（元素级 `fontSize/color/…` 无效——v1.0.0 起 `ppt_check` 直接报错）。
 - `expectedOverlaps` 流式/块式**等价**：`[{pair: [a,b]}]` 与 `- pair: [a,b]`，每对一行。
+- **讲稿（`notes:`）**：写进页面，`ppt_export` 为这些页生成标准备注页（notesSlide + notesMaster，`ppt_export` 报告的 parity 里 `notesExp/notesOut` 自证）；
+  `ppt_import` 会把原稿备注读回 `notes:`；**没有 `notes:` 的页不产生任何备注部件**（不写讲稿的工程产物与旧版逐字节一致）。
+  没有翻页/计时字段（放映设置不在本插件范围）。
 - 完整速查永远可以问模型（`ppt_schema`）或直接看 `examples/smoke` 样例工程。
 
 ---
@@ -257,6 +271,9 @@ elements:
 
 - `theme-conformance` strict（默认）：页面颜色必须 ∈ `theme.colors` 或中性灰，出板 = ERROR；新增颜色先加进 theme。
 - 字号/字体为建议级（[·]），单页多处时聚合出一条。
+- **图表配色是建议级**（2026-09-14）：图表的默认调色板是内置的一套（**不在 `theme.colors` 里**，属既有行为、不报错也不提示）；
+  你若**显式**写了 `chart.colors` 且其中有主题外颜色，会出一条 `[·] aesthetic-theme` 建议（可用 `$ref` 改成主题色）。
+  刻意**不**把图表配色纳入门禁：那会给既有工程/模板凭空新增错误。
 - 导入工程自动带**原稿全量色板**（c1-c7 高频 + 扩展），不再误报原稿色。
 
 ### 5.5 审阅节奏（三层校验）
@@ -322,6 +339,15 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 
 **Q：图表支持哪些？**
 → bar/line/pie（矢量拼绘，可编辑）；python-pptx 兜底引擎下降级为表格（报告醒目标注）；复杂图表建议作为图片或直接用 Shape 拼。
+
+**Q：讲稿/备注能进 pptx 吗？**
+→ 能（2026-09-14 起）：页面写 `notes:`（多行用 `|` 块标量），导出即成 PowerPoint 备注页；`ppt_import` 会读回 `notes:`，可编辑。
+没有 `notes:` 的页不产生备注部件（老工程产物不变）。翻页/计时（放映设置）不在插件范围。
+`ppt_splice` 替换某页时保留**源文件该页既有**的备注关系（不会把 deck 里新写的 notes 塞进被替换的源页）。
+
+**Q：从原稿导入后文字里的 `&amp;` / `&lt;` 是正常的吗？**
+→ 不该出现（2026-09-14 修）：导入侧此前不做 XML 实体解码，会把 `R&D` 读成 `R&amp;D`。现在文本节点会正确解码（`&amp;/&lt;/&gt;/&quot;/&apos;` 与数字实体）。
+如果你的导入工程是旧版本产物，重新 `ppt_import` 一次即可。
 
 **Q：如何只改原稿第 15 页？** → `ppt_splice`（第 6 节）。**如何导出单页版？** → `ppt_slice`。
 
@@ -395,17 +421,20 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + smoke（194 断言）
+npm test                        # build + smoke（201 断言）
 npm run test:real               # 真实资产回归（WPS fixture；19 页 deck 缺失自动跳过）
 node scripts/preflight-1.0.mjs  # 发布前预检（坏输入/边界/幂等/性能/媒体 splice——11 断言）
 npm run test:preset             # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
 npm run eval:skills -- --a <deckA> --b <deckB>   # 技能效果对照打分（纯本地；两个 arm 各跑一次后复算口径，见 docs/06 §7）
 node scripts/eval-skills-blind.mjs <deckA> <deckB>   # 生成匿名+随机的盲评材料（结构化盲评协议，见 docs/06 §7.6）
+node scripts/audit-manual-facts.mjs  # 手册事实审计：逐条把"手册 vs 源码"验一遍并打印源码锚点（37 条）
 ```
 
 - **装配**：agent preset `C:\Users\11867\.dsh\.agent-presets\ppt\agent.cordis.yml` 插件行（**唯一装配源**）；`profiles/web/node_modules/@dsh-external/dsh-ppt-studio` 是 junction → 本仓库。改码 = build + **重启 host**（`dev_reload_package` 只覆盖注入器装配的包——本插件走 preset 行，重启是唯一可靠生效路径）。
 - **文档链（每次改动必同步）**：`docs/01-需求与目标.md`（需求/决策/冲突）· `docs/02-技术报告.md`（实现级）· `docs/03-更新日志.md`（版本记录）· `docs/04-路线图与里程碑.md`（验收）· `docs/05-迭代流程.md`(检查单) · `docs/06-评审与测试.md`（发布前评审/测试矩阵）。
 - **git 约定**：一个功能/修复一个 commit；message `vX.Y.Z: <一句话目的>（反馈编号）`；lib/ 不提交（build 产物）。
-- **既有的自动化验证**：smoke（194 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
+- **既有的自动化验证**：smoke（201 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 手册事实审计（`audit-manual-facts.mjs`）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
+- **OOXML 产物必须用真消费者验**（2026-09-14 教训）：加备注页时先写的 `notesMasterIdLst`，python-pptx 照读不误，**真 PowerPoint 却报"文件或目录损坏"**——
+  第三方库通过 ≠ 能打开。凡改导出编码，至少走一次真 PowerPoint（`ppt_visual`）/真浏览器，别只信自证断言。
 
 **版本规则**：semver。`major` 破坏中间层/接口兼容；`minor` 新特性；`patch` 修复/文档。v1.0.0 = 三轮真实端到端测试通过后的稳定基线。

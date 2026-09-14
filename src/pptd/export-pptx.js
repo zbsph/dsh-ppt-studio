@@ -7,6 +7,8 @@
  *   未设置 = 无强制下限（仅 60% 原字号防荒谬保底），绝不升字；到下限仍溢出记 floorHit。
  *   验证通过 ⇒ 导出不缩字（反馈 E2：双度量差已对齐）。
  * - 1px = 1pt；EMU = pt × 12700。
+ * - 讲稿（2026-09-14 新增）：页面 `notes:` 文本 → 标准 pptx 备注页（notesSlide + notesMaster）。
+ *   无 `notes:` 的工程**不产出任何备注部件**（产物与旧实现一致 ⇒ 老工程零变化）；parity 里 notesExp/notesOut 自证。
  */
 import { writeFile, readFile } from 'node:fs/promises'
 import { join, isAbsolute } from 'node:path'
@@ -86,10 +88,16 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
       shapes,
       media,
       counts,
+      // 讲稿：只有非空字符串才产备注页（空/未写 = 与旧行为完全一致，不生成部件）
+      notes: typeof page.page.notes === 'string' && page.page.notes.trim() ? page.page.notes.trim() : null,
+      notesNo: 0,
       spTree: `<p:spTree>${spTreeHeader()}${shapes.join('')}</p:spTree>`,
       bg,
     })
   }
+  // 备注页编号：只为有讲稿的页分配（notesSlide1..N；无讲稿的页没有关系，也没有部件）
+  let notesCount = 0
+  for (const s of slides) if (s.notes) s.notesNo = ++notesCount
 
   const files = {}
   files['[Content_Types].xml'] = contentTypes(slides)
@@ -103,16 +111,33 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
   files['ppt/slideLayouts/slideLayout1.xml'] = slideLayoutXml()
   files['ppt/slideLayouts/_rels/slideLayout1.xml.rels'] = slideLayoutRels()
   files['ppt/theme/theme1.xml'] = themeXml()
+  if (notesCount > 0) {
+    files['ppt/notesMasters/notesMaster1.xml'] = notesMasterXml()
+    files['ppt/notesMasters/_rels/notesMaster1.xml.rels'] = notesMasterRels()
+  }
 
   for (let i = 0; i < slides.length; i++) {
     const s = slides[i]
     const n = i + 1
     files[`ppt/slides/slide${n}.xml`] = slideXml(s)
+    // 备注页关系：rId 取媒体之后的下一个空闲号（媒体用 rId2..rId(1+media)）
+    const notesRel = s.notes ? `<Relationship Id="rId${s.media.length + 2}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/notesSlide" Target="../notesSlides/notesSlide${s.notesNo}.xml"/>` : ''
+    if (s.notes) {
+      files[`ppt/notesSlides/notesSlide${s.notesNo}.xml`] = notesSlideXml(s.notes)
+      // 关键：notesSlide **必须自带 rels**（→ notesMaster + 回指本页幻灯）。
+      // 2026-09-14 实测：缺这个 rels 时 python-pptx 能读，**PowerPoint 直接报"文件或目录损坏"**——
+      // 参照 python-pptx 默认模板（PowerPoint 原生产物）的结构：rId1=notesMaster、rId2=slide。
+      files[`ppt/notesSlides/_rels/notesSlide${s.notesNo}.xml.rels`] = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+        + '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/notesMaster" Target="../notesMasters/notesMaster1.xml"/>'
+        + `<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="../slides/slide${n}.xml"/>`
+        + '</Relationships>'
+    }
     const srels = [
       '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>',
       '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">',
       '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout" Target="../slideLayouts/slideLayout1.xml"/>',
       ...s.media.map((m) => `<Relationship Id="${m.rId}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="../media/${m.srcPath.split(/[\\/]/).pop()}"/>`),
+      notesRel,
       '</Relationships>',
     ].join('')
     files[`ppt/slides/_rels/slide${n}.xml.rels`] = srels
@@ -141,11 +166,18 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
     imagesOut += (txt.match(/<p:pic>/g) ?? []).length
     if (txt.includes('<p:xfrm><a:xfrm>')) illegal++
   }
+  // 备注 parity：页里有 notes 的页数 == 包里的 notesSlide 部件数；且每张 notesSlide 都被对应幻灯 rels 引用
+  const notesExp = slides.filter((s) => s.notes).length
+  const notesParts = Object.keys(files).filter((k) => /^ppt\/notesSlides\/notesSlide\d+\.xml$/.test(k))
+  const notesOut = notesParts.length
+  const notesRelOk = slides.filter((s) => s.notes).every((s) => String(files[`ppt/slides/_rels/slide${slides.indexOf(s) + 1}.xml.rels`]).includes(`notesSlide${s.notesNo}.xml`))
   report.parity = {
     tablesExp, tablesOut, imagesExp, imagesOut, illegalFrames: illegal,
     linesExp: lineProof.exp, linesOut: lineProof.out, linesWrong: lineProof.wrong.length,
+    notesExp, notesOut,
     ok: tablesExp === tablesOut && imagesExp === imagesOut && illegal === 0 &&
-      lineProof.exp === lineProof.out && lineProof.wrong.length === 0,
+      lineProof.exp === lineProof.out && lineProof.wrong.length === 0 &&
+      notesExp === notesOut && notesRelOk,
   }
 
   // out：绝对路径原样使用；相对路径相对 deck 目录（反馈 E1 ★）
@@ -456,6 +488,7 @@ function chartSp(el) {
 
 // ── package parts ─────────────────────────────────────────────────────────
 function contentTypes(slides) {
+  const notes = slides.filter((s) => s.notes)
   const overrides = [
     '<Override PartName="/ppt/presentation.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml"/>',
     '<Override PartName="/ppt/slideMasters/slideMaster1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slideMaster+xml"/>',
@@ -463,7 +496,9 @@ function contentTypes(slides) {
     '<Override PartName="/ppt/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/>',
     '<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>',
     '<Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/>',
+    ...(notes.length ? ['<Override PartName="/ppt/notesMasters/notesMaster1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.notesMaster+xml"/>'] : []),
     ...slides.map((_, i) => '<Override PartName="/ppt/slides/slide' + (i + 1) + '.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>'),
+    ...notes.map((s) => '<Override PartName="/ppt/notesSlides/notesSlide' + s.notesNo + '.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.notesSlide+xml"/>'),
   ]
   return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
     + '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
@@ -498,6 +533,9 @@ function appProps(ctx) {
 
 function presentationXml(ctx, slides) {
   const sldIdLst = slides.map((_, i) => '<p:sldId id="' + (256 + i) + '" r:id="rId' + (i + 2) + '"/>').join('')
+  // 注意：**不写 <p:notesMasterIdLst>**。备注母版只通过 presentation.xml.rels 里的 notesMaster 关系挂载
+  //（与 PowerPoint 原生模板 / python-pptx 产物同构）。2026-09-14 实测：多写这个元素，PowerPoint 直接报
+  // "文件或目录损坏"（0x80070570）——python-pptx 却照读不误。减量二分定位：撤掉它即恢复正常。
   return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:presentation xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">'
     + '<p:sldMasterIdLst><p:sldMasterId id="2147483648" r:id="rId1"/></p:sldMasterIdLst>'
     + '<p:sldIdLst>' + sldIdLst + '</p:sldIdLst>'
@@ -508,9 +546,10 @@ function presentationXml(ctx, slides) {
 
 function presentationRels(slides) {
   const r = slides.map((_, i) => '<Relationship Id="rId' + (i + 2) + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide' + (i + 1) + '.xml"/>').join('')
+  const notesMaster = slides.some((s) => s.notes) ? `<Relationship Id="rId${slides.length + 2}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/notesMaster" Target="notesMasters/notesMaster1.xml"/>` : ''
   return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
     + '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster" Target="slideMasters/slideMaster1.xml"/>'
-    + r + '</Relationships>'
+    + r + notesMaster + '</Relationships>'
 }
 
 function slideMasterXml() {
@@ -545,6 +584,60 @@ function slideXml(s) {
   const bg = s.bg ? ['<p:bg>', s.bg.xml, '</p:bg>'].join('') : ''
   return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">'
     + '<p:cSld>' + bg + s.spTree + '</p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>'
+}
+
+// ── 备注页（讲稿）：2026-09-14 新增 ────────────────────────────────────────────
+// 结构对齐 PowerPoint/python-pptx 的实际产物：presentation → notesMasterIdLst + rels → notesMaster（含 theme rel），
+// slide → rels（notesSlide）→ notesSlide（body 占位符 + 段落文本）。缺 notesMaster 时 PowerPoint 会在打开时自行补，
+// 但产物就不是"标准包"了——所以宁可多两个小部件，保持与真实 pptx 同构。
+const P_NS = 'xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"'
+
+/** 讲稿文本 → notesSlide。
+ *  结构照 python-pptx 默认模板（PowerPoint 原生产物）复核过：
+ *  ① notesSlide 的占位符 **必须能在 notesMaster 里找到对应项**（body 用 idx="3"、幻灯图 sldImg idx="2"）；
+ *  ② notesSlide 必须自带 rels（→ notesMaster + 回指本页幻灯），见调用处。
+ *  2026-09-14 实测教训：占位符 idx 对不上 / 缺 rels 时 python-pptx 能读，**PowerPoint 报"文件或目录损坏"**。 */
+function notesSlideXml(notes) {
+  const paras = String(notes).split(/\r?\n/)
+    .map((line) => '<a:p><a:r><a:rPr lang="zh-CN" dirty="0"/><a:t>' + xm(line) + '</a:t></a:r></a:p>')
+    .join('')
+  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:notes ' + P_NS + '>'
+    + '<p:cSld><p:spTree>' + spTreeHeader()
+    + '<p:sp><p:nvSpPr><p:cNvPr id="2" name="Slide Image Placeholder 1"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="sldImg" idx="2"/></p:nvPr></p:nvSpPr><p:spPr/></p:sp>'
+    + '<p:sp><p:nvSpPr><p:cNvPr id="3" name="Notes Placeholder 2"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="body" sz="quarter" idx="3"/></p:nvPr></p:nvSpPr>'
+    + '<p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/>' + paras + '</p:txBody></p:sp>'
+    + '</p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:notes>'
+}
+
+/** 备注母版的占位符表（几何取自 PowerPoint 原生 notesMaster：notesSz = 6858000×9144000 EMU）。 */
+const NOTES_PH = [
+  { id: 2, name: 'Header Placeholder 1', ph: '<p:ph type="hdr" sz="quarter"/>', off: [0, 0], ext: [2971800, 457200], algn: 'l' },
+  { id: 3, name: 'Date Placeholder 2', ph: '<p:ph type="dt" idx="1"/>', off: [3884613, 0], ext: [2971800, 457200], algn: 'r' },
+  { id: 4, name: 'Slide Image Placeholder 3', ph: '<p:ph type="sldImg" idx="2"/>', off: [1143000, 685800], ext: [4572000, 3429000] },
+  { id: 5, name: 'Notes Placeholder 4', ph: '<p:ph type="body" sz="quarter" idx="3"/>', off: [685800, 4343400], ext: [5486400, 4114800] },
+  { id: 6, name: 'Footer Placeholder 5', ph: '<p:ph type="ftr" sz="quarter" idx="4"/>', off: [0, 8685213], ext: [2971800, 457200], algn: 'l' },
+  { id: 7, name: 'Slide Number Placeholder 6', ph: '<p:ph type="sldNum" sz="quarter" idx="5"/>', off: [3884613, 8685213], ext: [2971800, 457200], algn: 'r' },
+]
+
+/** 最小但**完整**的 notesMaster（CT_NotesMaster 顺序：cSld → clrMap → notesStyle）。
+ *  占位符不能省：notesSlide 里的 ph 必须在此有对应项，否则 PowerPoint 判包损坏。 */
+function notesMasterXml() {
+  const sp = (p) => '<p:sp><p:nvSpPr><p:cNvPr id="' + p.id + '" name="' + p.name + '"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr>' + p.ph + '</p:nvPr></p:nvSpPr>'
+    + '<p:spPr><a:xfrm><a:off x="' + p.off[0] + '" y="' + p.off[1] + '"/><a:ext cx="' + p.ext[0] + '" cy="' + p.ext[1] + '"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr>'
+    + '<p:txBody><a:bodyPr vert="horz" lIns="91440" tIns="45720" rIns="91440" bIns="45720" rtlCol="0"/><a:lstStyle>'
+    + (p.algn ? '<a:lvl1pPr algn="' + p.algn + '"><a:defRPr sz="1200"/></a:lvl1pPr>' : '')
+    + '</a:lstStyle><a:p><a:endParaRPr lang="zh-CN"/></a:p></p:txBody></p:sp>'
+  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:notesMaster ' + P_NS + '>'
+    + '<p:cSld><p:spTree>' + spTreeHeader() + NOTES_PH.map(sp).join('') + '</p:spTree></p:cSld>'
+    + '<p:clrMap bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/>'
+    + '<p:notesStyle><a:lvl1pPr algn="l"><a:defRPr sz="1200"/></a:lvl1pPr></p:notesStyle>'
+    + '</p:notesMaster>'
+}
+
+function notesMasterRels() {
+  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+    + '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="../theme/theme1.xml"/>'
+    + '</Relationships>'
 }
 
 /** 页面背景 → 导出结构：{ kind:'solid', xml } | { kind:'image', src, rId, xml } | null */

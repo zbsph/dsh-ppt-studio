@@ -118,13 +118,29 @@ export function aestheticSuggestions(page, size, theme) {
   // 7. 主题颜色一致性
   {
     const stray = []
+    let fromChart = false
     for (const el of els) {
+      // 图表**显式**配色（2026-09-14）：此前 fillColorsOf/这里都不看 chart，
+      // 导致"成品带主题外颜色"既无门禁也无提示。语义边界（刻意）：
+      //   · 不写 colors → 用内置调色板（既有行为，不打扰、不新增噪声）；
+      //   · 写了非主题色 → 作者主动选择，值得一条 [·] 建议。
+      // 仍是**建议级**：把图表配色门禁化会给既有工程/模板凭空新增错误（= 让老用户变差），不做。
+      // 注意：必须放在下面的 `continue` 之前——chart 没有 fill，会先被 continue 掉。
+      if (el.kind === 'chart' && Array.isArray(el.colors)) {
+        for (const cc of el.colors) {
+          if (typeof cc !== 'string' || isNeutral(cc) || !themeColors || themeColors.size === 0) continue
+          if (!themeColors.has(cc)) {
+            fromChart = true
+            if (!stray.includes(cc)) stray.push(cc)
+          }
+        }
+      }
       const c = el.kind === 'text' ? el.style?.color : el.fill
       if (!c || typeof c !== 'string' || isNeutral(c)) continue
       if (themeColors && themeColors.size > 0 && !themeColors.has(c) && !stray.includes(c)) stray.push(c)
     }
     if (stray.length > 0) {
-      out.push({ severity: 'suggestion', code: 'aesthetic-theme', id: 'color', message: `颜色 ${stray.join(' ')} 不在 theme.colors 中，建议改为主题色（风格统一）` })
+      out.push({ severity: 'suggestion', code: 'aesthetic-theme', id: 'color', message: `颜色 ${stray.join(' ')} 不在 theme.colors 中，建议改为主题色（风格统一）${fromChart ? '——含图表显式配色（chart.colors），可用 $ref 引用主题色' : ''}` })
     }
   }
 

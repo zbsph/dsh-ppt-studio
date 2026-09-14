@@ -1530,15 +1530,15 @@ ok('手册 vs 源码：手册门禁清单里的 code 名都真实存在（防写
   gateTokens.length > 0 && ghostCodes.length === 0,
   ghostCodes.length ? `源码里没有：${ghostCodes.join('、')}` : `清单含 ${[...new Set(gateTokens)].join('、')}`)
 
-// 37.8 讲稿/备注类内容必须写明"插件不导出备注"（导出器只写 <p:notesSz/>，没有任何 notesSlide 生成通道；
-// 实现一旦真加了备注导出，这条会失败并强制同步手册）
+// 37.8 讲稿通道口径必须与导出器实现**双向一致**（手册说"不导出"而代码在导出 = 最坏的一种事实错误）
 const exportSrc = readLib(join('pptd', 'export-pptx.js'))
 const copySkill = skillTexts.find((s) => s.name === 'ppt-studio-copy').content
-const mentionsNotes = /讲稿|备注/.test(copySkill)
-const notesHonest = /(不生成备注|不导出备注|没有 notesSlide|不进 pptx)/.test(copySkill)
-ok('手册 vs 源码：讲稿章节写明"插件不把它写进 pptx"（讲稿只能落交付说明/单独文件）',
-  !/notesSlide/.test(exportSrc) && (!mentionsNotes || notesHonest),
-  mentionsNotes ? (notesHonest ? '已写明不导出' : '提到讲稿/备注但没说它不进 pptx') : '未提及讲稿')
+const implExportsNotes = /ppt\/notesSlides\//.test(exportSrc)
+const docSaysExports = /备注页/.test(copySkill) && /(导出|写进|随导出)/.test(copySkill)
+const docSaysNoExport = /(不生成备注|不导出备注|没有 notesSlide|不进 pptx)/.test(copySkill)
+ok('手册 vs 源码：讲稿通道口径与导出器**双向一致**（实现会导出→手册必须说会导出；反之必须说不导出）',
+  implExportsNotes ? (docSaysExports && !docSaysNoExport) : (!docSaysExports && docSaysNoExport),
+  `实现${implExportsNotes ? '会' : '不会'}导出备注；手册${docSaysExports ? '说会' : '未说会'}${docSaysNoExport ? '、且仍写着不导出' : ''}`)
 
 // 37.9 缩字下限的常量必须与导出器一致（手册写死了 6pt / 60%，代码改了要能被抓到）
 const floorM = exportSrc.match(/Math\.max\((\d+),\s*Math\.round\(origSize \*\s*([\d.]+)\)\)/)
@@ -1559,6 +1559,132 @@ const refBad = refLines.find((l) => /decoration/.test(l) && /豁免/.test(l) && 
 ok('SCHEMA_REF 自洽：不得声称 decoration 豁免出界（verify 对出界不看 role；C3 已回滚该语义）',
   refBad === undefined && refLines.some((l) => /不豁免出界/.test(l)),
   refBad ? `仍写着：${refBad.trim().slice(0, 60)}` : '口径一致（只豁免重叠、不豁免出界）')
+
+// ── 39. 讲稿（备注）通道 + 实体解码 + 图表配色建议（2026-09-14 用户要求处理的三件事）──────
+// 备注的真实性标准是"**PowerPoint 能打开并读出**"：开发中先写了 notesMasterIdLst，python-pptx 照读不误，
+// 真 PowerPoint 却报"文件或目录损坏"（减量二分定位到该元素）。教训：OOXML 产物必须用真消费者验。
+const rf = (await import('node:fs/promises')).readFile
+const notesDir = join(root, 'examples', 'smoke', '.tmp-notes-smoke')
+await rm(notesDir, { recursive: true, force: true })
+await mkdir(join(notesDir, 'pages'), { recursive: true })
+await writeFile(join(notesDir, 'deck.yaml'), [
+  'version: 1', 'title: "讲稿夹具"', 'size: [960, 540]', 'theme:',
+  '  colors: {ink: "#111111", brand: "#2563EB"}',
+  '  textStyles:', '    body: {fontSize: 16, color: "$ink"}',
+  'pages:', '  - pages/01.yaml', '  - pages/02.yaml', '  - pages/03.yaml', '',
+].join('\n'), 'utf8')
+const nEl = (id, t) => [`  - elementId: ${id}`, '    elementType: text', '    bounds: [60, 40, 600, 40]', `    content: {text: ${JSON.stringify(t)}, style: "$body"}`]
+await writeFile(join(notesDir, 'pages', '01.yaml'), ['pageType: cover', 'notes: |', '  开场：先说结论。', '  第二行：再给证据。', 'elements:', ...nEl('t1', '封面')].join('\n'), 'utf8')
+await writeFile(join(notesDir, 'pages', '02.yaml'), ['pageType: content', 'elements:', ...nEl('t2', '无讲稿页')].join('\n'), 'utf8')
+await writeFile(join(notesDir, 'pages', '03.yaml'), ['pageType: content', 'notes: "单行讲稿带 <特殊> & 符号"', 'elements:', ...nEl('t3', '第三页')].join('\n'), 'utf8')
+const nCtx = await resolveDeck(notesDir)
+const nExp = await exportPptx(nCtx, { out: 'notes-smoke.pptx', engine: 'pptd' })
+const nZip = zipRead(await rf(nExp.file))
+const nNames = [...nZip.keys()]
+const nSlides = nNames.filter((k) => /^ppt\/notesSlides\/notesSlide\d+\.xml$/.test(k))
+const nRels = nNames.filter((k) => /^ppt\/notesSlides\/_rels\/notesSlide\d+\.xml\.rels$/.test(k))
+const nRelsOk = nRels.every((k) => {
+  const t = decodeXml(nZip.get(k))
+  return /notesMaster/.test(t) && /Type="[^"]*\/slide"/.test(t)
+})
+const nSlideRels = [1, 3].every((p) => /notesSlide\d+\.xml/.test(decodeXml(nZip.get(`ppt/slides/_rels/slide${p}.xml.rels`))))
+const nCt = decodeXml(nZip.get('[Content_Types].xml'))
+const nCtOk = /notesMaster\+xml/.test(nCt) && (nCt.match(/notesSlide\+xml/g) ?? []).length === 2
+const nNoIdLst = !/notesMasterIdLst/.test(decodeXml(nZip.get('ppt/presentation.xml')))
+ok('讲稿：notes → 标准备注页（2 个 notesSlide + notesMaster + 各自 rels + Content_Types），parity 自证',
+  nSlides.length === 2 && nRels.length === 2 && nRelsOk && nSlideRels && nCtOk &&
+  nExp.parity.notesExp === 2 && nExp.parity.notesOut === 2 && nExp.parity.ok === true,
+  `slides=${nSlides.length} rels=${nRels.length} relsOk=${nRelsOk} ct=${nCtOk} parity=${JSON.stringify(nExp.parity)}`)
+ok('讲稿：presentation.xml **不含** notesMasterIdLst（真 PowerPoint 会因此报"文件损坏"，实测二分定位）',
+  nNoIdLst && /notesMasters\/notesMaster1\.xml/.test(decodeXml(nZip.get('ppt/_rels/presentation.xml.rels'))),
+  nNoIdLst ? '无该元素，备注母版只经 presentation.xml.rels 挂载' : '仍写着 notesMasterIdLst')
+
+// 老工程零变化：没有 notes 的工程不得凭空多出任何备注部件
+const noNotesDir = join(notesDir, '..', '.tmp-notes-none')
+await rm(noNotesDir, { recursive: true, force: true })
+await mkdir(join(noNotesDir, 'pages'), { recursive: true })
+await writeFile(join(noNotesDir, 'deck.yaml'), ['version: 1', 'title: "无讲稿"', 'size: [960, 540]', 'theme:', '  colors: {ink: "#111111"}', '  textStyles:', '    body: {fontSize: 16, color: "$ink"}', 'pages:', '  - pages/01.yaml', ''].join('\n'), 'utf8')
+await writeFile(join(noNotesDir, 'pages', '01.yaml'), ['pageType: content', 'elements:', ...nEl('t1', '无讲稿')].join('\n'), 'utf8')
+const nnExp = await exportPptx(await resolveDeck(noNotesDir), { out: 'no-notes.pptx', engine: 'pptd' })
+const nnNames = [...zipRead(await rf(nnExp.file)).keys()]
+ok('讲稿：无 notes 的工程不产生任何备注部件（老工程产物零变化）',
+  nnNames.every((k) => !/notes/.test(k)) && nnExp.parity.notesExp === 0 && nnExp.parity.notesOut === 0,
+  `备注相关部件 ${nnNames.filter((k) => /notes/.test(k)).length} 个；parity.notesExp=${nnExp.parity.notesExp}`)
+
+// 实体解码（2026-09-14 修）：导入侧此前不做 XML 实体解码 → "R&D" 变成 "R&amp;D"
+const reDir = join(notesDir, 'reimport')
+await rm(reDir, { recursive: true, force: true })
+await importPptx(nExp.file, reDir)
+const reYaml3 = readFileSync(join(reDir, 'pages', 'slide_03.yaml'), 'utf8')
+const reYaml1 = readFileSync(join(reDir, 'pages', 'slide_01.yaml'), 'utf8')
+ok('讲稿：导出 → 导入 回环（多行块标量 + 单行引号），且 XML 实体已解码（不再出现 &lt;/&amp; 字面量）',
+  /notes: \|/.test(reYaml1) && /第二行：再给证据。/.test(reYaml1) &&
+  /notes: "单行讲稿带 <特殊> & 符号"/.test(reYaml3) && !/&lt;|&amp;/.test(reYaml3),
+  reYaml3.match(/^notes:.*$/m)?.[0]?.slice(0, 60) ?? '(未找到 notes 行)')
+
+// 图表配色：显式主题外颜色 → [·] 建议（非门禁）；主题内 $ref → 不打扰
+const chartDir = join(notesDir, '..', '.tmp-chart-color')
+await rm(chartDir, { recursive: true, force: true })
+await mkdir(join(chartDir, 'pages'), { recursive: true })
+await writeFile(join(chartDir, 'deck.yaml'), ['version: 1', 'title: "配色"', 'size: [960, 540]', 'theme:', '  colors: {ink: "#111111", brand: "#2563EB"}', '  textStyles:', '    body: {fontSize: 16, color: "$ink"}', 'pages:', '  - pages/01.yaml', '  - pages/02.yaml', ''].join('\n'), 'utf8')
+const chartPage = (colors) => [
+  'pageType: content',
+  'elements:',
+  '  - elementId: c',
+  '    elementType: chart',
+  '    bounds: [60, 60, 400, 240]',
+  '    chart:',
+  '      type: bar',
+  ...(colors ? [`      colors: ${colors}`] : []),
+  '      data:',
+  '        cols: [分类, 值]',
+  '        rows: [[甲, 1], [乙, 2]]',
+  // 第二元素：美学建议层对单元素页直接返回（els.length < 2），必须 ≥2 个元素才谈得上"建议"
+  '  - elementId: t1',
+  '    elementType: text',
+  '    bounds: [60, 320, 600, 40]',
+  '    content: {text: "图页", style: "$body"}',
+  '',
+].join('\n')
+await writeFile(join(chartDir, 'pages', '01.yaml'), chartPage('["#FF00FF"]'), 'utf8')
+await writeFile(join(chartDir, 'pages', '02.yaml'), chartPage('["$brand"]'), 'utf8')
+const cCtx = await resolveDeck(chartDir)
+const cLayout = (await renderDeck(cCtx, {})).layout
+const v1 = verifyDeck({ ...cLayout, pages: [cLayout.pages[0]] })
+const v2 = verifyDeck({ ...cLayout, pages: [cLayout.pages[1]] })
+ok('图表配色：显式主题外颜色 → [·] aesthetic-theme 建议，且**不新增门禁错误**（建议级，不门禁化）',
+  /aesthetic-theme[^\n]*#FF00FF/.test(v1.text) && v1.text.split('\n').filter((l) => l.includes('[✗]')).length === 0,
+  `命中：${(v1.text.match(/aesthetic-theme[^\n]*/) ?? [''])[0].slice(0, 80)}`)
+ok('图表配色：$ref 引用主题色 → 不出配色建议（不打扰），且预览与成品两层都解析为 hex',
+  !/aesthetic-theme[^\n]*颜色/.test(v2.text),
+  `v2 建议行：${(v2.text.match(/aesthetic-theme[^\n]*/) ?? ['（无）'])[0].slice(0, 60)}`)
+
+// 独立读取器交叉（可选，第三方库 ≠ 真 PowerPoint，但能挡住结构性错误）
+let pyRead = 'python-pptx 不可用 → 跳过（不影响门禁）'
+try {
+  const { execFileSync } = await import('node:child_process')
+  const pyFile = join(notesDir, 'readback.py')
+  await writeFile(pyFile, [
+    'import json, sys',
+    'try:',
+    "    sys.stdout.reconfigure(encoding='utf-8')",
+    'except Exception:',
+    '    pass',
+    'from pptx import Presentation',
+    'prs = Presentation(sys.argv[1])',
+    'print(json.dumps([s.notes_slide.notes_text_frame.text if s.has_notes_slide else None for s in prs.slides], ensure_ascii=False))',
+  ].join('\n'), 'utf8')
+  const out = execFileSync('python', [pyFile, nExp.file], { encoding: 'utf8', timeout: 120000, env: { ...process.env, PYTHONIOENCODING: 'utf-8' } })
+  const got = JSON.parse(out.trim())
+  ok('讲稿：第三方读取器（python-pptx）独立读回讲稿文本（多行/单行/无备注页三种都对）',
+    got.length === 3 && got[0] === '开场：先说结论。\n第二行：再给证据。' && got[1] === null && got[2] === '单行讲稿带 <特殊> & 符号',
+    JSON.stringify(got))
+} catch (e) {
+  ok('讲稿：第三方读取器（python-pptx）独立读回讲稿文本（多行/单行/无备注页三种都对）', true, pyRead = `⚠ ${String(e.message).slice(0, 80)}`)
+}
+await rm(notesDir, { recursive: true, force: true })
+await rm(noNotesDir, { recursive: true, force: true })
+await rm(chartDir, { recursive: true, force: true })
 
 // 37.10 【必须是最后一条断言】引用计数自证：文档里 "smoke … N 断言" 必须等于本次真实断言总数。
 // 历史形状：加断言后 README×3 + docs/02 + docs/06×2 + 手册 全靠人工同步，迟早漏一处。

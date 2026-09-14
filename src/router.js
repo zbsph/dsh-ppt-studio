@@ -133,7 +133,7 @@ export function workflowSection(taskType, cfg) {
       '  - 制作手册（内置技能，按需加载；纯增益，不改任何铁律与门禁）：定纲/定版式前加载 `ppt-studio-craft`；页面要放数字与图表时加载 `ppt-studio-data`；写标题与要点时加载 `ppt-studio-copy`。三本只给启发式与反例——**门禁数值一律以 ppt_verify 输出与用户指令为准**；不加载也照常工作。',
       '  - line 元素可省略 bounds（由 points 的 AABB 自动推导，w/h≥1px）。',
       '  - 模板背景带 logo/页眉/页脚带：在 deck.yaml theme.safeArea（或页面级 safeArea）配置上/下/左/右安全边距，verify 会把安全区外的元素判为出界；ppt_render debug=true 会画出安全区参考框。',
-      '  - 文本溢出：verify 与导出共用同一保守度量；**字号下限 = 用户指令**——用户给出最小字号（如"不得小于12号"）→ 把该值写入 theme.minFontSize 并严格执行（导出 auto-fit 缩字不得低于它，到下限仍溢出）会明确报告（✗）请扩大容器或精简文案；用户未给下限 → 不做强制（auto-fit 仅 60% 原字号保底，绝不升字）。',
+      '  - 文本溢出：verify 与导出共用同一保守度量；**字号下限 = 用户指令**——用户给出最小字号（如"不得小于12号"）→ 把该值写入 theme.minFontSize 并严格执行——导出 auto-fit 缩字不得低于它；到下限仍溢出会明确报告（✗），请扩大容器或精简文案；用户未给下限 → 不做强制（auto-fit 仅 60% 原字号保底，绝不升字）。',
       '  - 批量声明：色块衬底/图片标注/箭头跨越等"警告级"未声明重叠，用 ppt_verify autoDeclare=true 一键写入 expectedOverlaps；内容互压（content-collision）不支持自动声明，必须手工改布局。写入后输出**声明清单**（每对附一句意图：色块衬底/图上标注/箭头跨越），说不清意图的对子必须改布局而不是声明（D1）。',
       '  - 出界声明（expectedOutOfSafeArea）不批量、必须手工：验证报安全区出界错误时，确认"这是有意的 logo/角标"才加入声明；不确定就先移动元素。',
       '',
