@@ -50,8 +50,23 @@ if (!existsSync(join(root, 'lib', 'index.js'))) {
 
 const steps = []
 
+// ── 0) 装配路径检测（2026-09-14）：两条路径**互斥**，装成 bundle 时不要再用预设行挂载 ──────
+// 背景：`dsh plugin --profile <p> add <本包>` 会把本包装成 **profile bundle**（profile 的 package.json
+// 依赖 + 自动进 dsh.profile.bundles），此时插件在该 profile 的所有会话都可用；预设行再挂一次
+// 就是同进程双挂载（插件内有装配防重兜底，但纪律是二选一）。
+// 所以：检测到 bundle 安装 → ① 不建 junction（那个路径归 pnpm 管，--force 也不能动）
+//        ② 写预设时**删掉插件行块**（标记见 agent-presets/ppt/agent.cordis.yml）。
+const profilePkgFile = join(profileDir, 'package.json')
+let profilePkg = {}
+// 去 BOM 再解析：Windows 上被 PowerShell/记事本编辑过的 JSON 可能带 UTF-8 BOM，JSON.parse 会直接抛
+try { profilePkg = JSON.parse(readFileSync(profilePkgFile, 'utf8').replace(/^\uFEFF/, '')) } catch { /* 无/坏 → 视为非 bundle */ }
+const bundleInstalled = Boolean(profilePkg.dependencies?.[pkg.name]) || (profilePkg.dsh?.profile?.bundles ?? []).includes(pkg.name)
+const PRESET_ROW_RE = /^# >>> dsh-ppt-studio plugin row[\s\S]*?^# <<< dsh-ppt-studio plugin row\r?\n?/m
+
 // ── 1) 包链接（junction/符号链接；Windows junction 不要求提权）────────────
-if (existsSync(pkgDir)) {
+if (bundleInstalled) {
+  steps.push(`检测到本包已作为 profile bundle 安装（${profilePkg.dependencies?.[pkg.name] ?? 'dsh.profile.bundles'}）→ **跳过 junction**（该路径归 pnpm 管，避免破坏 pnpm 安装）`)
+} else if (existsSync(pkgDir)) {
   if (!force) steps.push(`包已存在（幂等跳过）：${pkgDir}`)
   else {
     rmSync(pkgDir, { recursive: true, force: true })
@@ -60,7 +75,7 @@ if (existsSync(pkgDir)) {
     steps.push(`旧包已重命名备份：${bak}`)
   }
 }
-if (!existsSync(pkgDir)) {
+if (!bundleInstalled && !existsSync(pkgDir)) {
   mkdirSync(dirname(pkgDir), { recursive: true })
   symlinkSync(root, pkgDir, 'junction')
   steps.push(`包已链接：${pkgDir} → ${root}`)
@@ -68,8 +83,11 @@ if (!existsSync(pkgDir)) {
 
 // ── 2) yaml 运行时依赖（关键：ESM 按 realpath 解析——yaml 必须挂在**包自身** node_modules，
 //        profile 级解析救不了 junction 抽取目录；此处幂等保证 <root>/node_modules/yaml 存在）──
+// bundle 模式下包由 pnpm 管理（依赖已装好），**不要**往 pnpm 管理的目录里塞 junction。
 const pkgYaml = join(root, 'node_modules', 'yaml')
-if (!existsSync(join(pkgYaml, 'package.json'))) {
+if (bundleInstalled) {
+  steps.push('yaml 依赖：bundle 模式由 pnpm 解析（不动包目录）')
+} else if (!existsSync(join(pkgYaml, 'package.json'))) {
   let yamlSrc = null
   try {
     yamlSrc = dirname(createRequire(join(profileDir, 'package.json')).resolve('yaml/package.json'))
@@ -84,9 +102,11 @@ if (!existsSync(join(pkgYaml, 'package.json'))) {
   steps.push(`yaml 已链接进包：${pkgYaml} → ${yamlSrc}`)
 } else steps.push('yaml 依赖：包内已可解析 ✓')
 
-// ── 3) agent preset（唯一装配源：preset 行挂载插件；含 preset.yml 显示元数据）──
+// ── 3) agent preset（预设 = 会话人格与显示元数据；**插件行按装配路径二选一**）──
 // 同步纪律（2026-09-06 用户点出）：预设与元数据是"托管文件"、以包为准**总是刷新**——
 // 跳过策略曾导致升级后本机保留旧版（skill 12pt 过期语义事件）。
+// 2026-09-14 补充：bundle 模式下**必须删掉插件行块**，否则「dsh plugin 装 + 预设行再挂」= 同进程双挂载
+//（插件内有装配防重兜底，但纪律是二选一）；这也是"只手工删一行会被下次同步装回来"的解。
 if (!noPreset) {
   if (!existsSync(builtinPreset)) {
     console.error('✗ 本包缺少预设模板 agent-presets/ppt/agent.cordis.yml——发布包应自带')
@@ -94,8 +114,17 @@ if (!noPreset) {
   }
   {
     mkdirSync(presetDir, { recursive: true })
-    writeFileSync(presetFile, readFileSync(builtinPreset, 'utf8'), 'utf8')
-    steps.push(`预设已同步（包为准）：${presetFile}`)
+    let presetText = readFileSync(builtinPreset, 'utf8')
+    if (bundleInstalled) {
+      const before = presetText.length
+      presetText = presetText.replace(PRESET_ROW_RE, '')
+      steps.push(presetText.length < before
+        ? '预设已同步（包为准，**已按 bundle 安装删掉插件行块**——插件由 profile 提供，两条路径不并用）'
+        : '⚠ 预设已同步，但未找到插件行标记块（agent-presets/ppt/agent.cordis.yml 的 >>> / <<< 标记被改动？）')
+    } else {
+      steps.push('预设已同步（包为准，含插件行——preset 行挂载插件）')
+    }
+    writeFileSync(presetFile, presetText, 'utf8')
   }
   // 显示元数据（拣选器显示名/简介）：preset.yml（name/description/order；缺省则只有目录名）
   const metaSrc = join(root, 'agent-presets', 'ppt', 'preset.yml')

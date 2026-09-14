@@ -1744,6 +1744,43 @@ ok('bundle：未发布到 npm（保持 private），一键安装走 GitHub Relea
     `首次 tools=${first.tools} cmds=${first.cmds} listeners=${first.listeners}；二次挂载后 tools=${tools} cmds=${cmds} listeners=${listeners}`)
 }
 
+// ── 41. 装配路径互斥（install.mjs 行为，2026-09-14）────────────────────────────
+// 为什么必须机器守住：手工把预设里的插件行删掉，**下次 `install.mjs`/release-sync 会把它装回来**
+//（预设是"以包为准总是刷新"的托管文件），于是又变成 bundle + preset 双挂载。所以互斥逻辑必须在安装器里。
+{
+  const { spawnSync } = await import('node:child_process')
+  const base = join(root, 'examples', 'smoke', '.tmp-install-mode')
+  await rm(base, { recursive: true, force: true })
+  const mkPrefix = async (name, withDep) => {
+    const dir = join(base, name)
+    await mkdir(join(dir, 'profiles', 'web'), { recursive: true })
+    await writeFile(join(dir, 'profiles', 'web', 'package.json'),
+      JSON.stringify({ name: 'p', dependencies: withDep ? { [rootPkg.name]: 'file:x' } : {} }, null, 2), 'utf8')
+    return dir
+  }
+  const pfxA = await mkPrefix('a', false) // 未按 bundle 安装
+  const pfxB = await mkPrefix('b', true) // 已按 bundle 安装
+  const runInstall = (prefix) => spawnSync(process.execPath, [join(root, 'scripts', 'install.mjs'), '--prefix', prefix], { encoding: 'utf8' })
+  const resA = runInstall(pfxA)
+  const resB = runInstall(pfxB)
+  const presetA = readFileSync(join(pfxA, '.agent-presets', 'ppt', 'agent.cordis.yml'), 'utf8')
+  const presetB = readFileSync(join(pfxB, '.agent-presets', 'ppt', 'agent.cordis.yml'), 'utf8')
+  const hasRow = (t) => /^-\s*id: ppt-studio$/m.test(t)
+  ok('装配路径互斥：install.mjs 非 bundle 环境写含插件行的预设、bundle 环境**删掉插件行块**（防同进程双挂载）',
+    resA.status === 0 && resB.status === 0 && hasRow(presetA) && !hasRow(presetB),
+    `非bundle含行=${hasRow(presetA)}｜bundle含行=${hasRow(presetB)}｜exit=${resA.status}/${resB.status}`)
+  const junction = (prefix) => join(prefix, 'profiles', 'web', 'node_modules', '@dsh-external', 'dsh-ppt-studio')
+  ok('装配路径互斥：bundle 模式不建 junction（那个路径归 pnpm 管，建了会破坏 pnpm 安装）',
+    existsSync(junction(pfxA)) && !existsSync(junction(pfxB)),
+    `非bundle建了=${existsSync(junction(pfxA))}｜bundle建了=${existsSync(junction(pfxB))}`)
+  // 清理：junction 必须用 rmdir/rmdir 删（**绝不**让递归删除跟随重解析点——2026-09-14 事故教训）
+  try { spawnSync(process.platform === 'win32' ? 'cmd' : 'rm', process.platform === 'win32' ? ['/c', 'rmdir', junction(pfxA)] : ['-f', junction(pfxA)], { encoding: 'utf8' }) } catch { /* 已无 */ }
+  await rm(base, { recursive: true, force: true })
+  ok('装配路径互斥：临时夹具清理干净且**没有碰仓库本体**（junction 删除不得跟随重解析点）',
+    !existsSync(base) && existsSync(join(root, 'scripts', 'install.mjs')) && existsSync(join(root, 'package.json')),
+    '仓库根文件仍在 ✓')
+}
+
 // 37.10 【必须是最后一条断言】引用计数自证：文档里 "smoke … N 断言" 必须等于本次真实断言总数。
 // 历史形状：加断言后 README×3 + docs/02 + docs/06×2 + 手册 全靠人工同步，迟早漏一处。
 // 只扫"当前状态"文档（README / 技术报告 / 评审测试矩阵 / 使用手册）；docs/01/03/04 里的历史数字是记录，不动。
