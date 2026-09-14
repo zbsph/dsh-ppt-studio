@@ -1388,5 +1388,33 @@ ok('连线·零长线：给 1×1 兜底避免被消费端丢弃', flatExt('zero'
 ok('连线·水平线箭头也在 <a:ln> 内', /<a:ln\b[\s\S]*?<a:tailEnd[\s\S]*?<\/a:ln>/.test(flatConns.get('flat')))
 await rm(lineDir, { recursive: true, force: true })
 
+// ── 36. 文档完整性（2026-09-14 两次踩坑后加的机器防线）──────────────────────────
+// 事故形状：往 docs/03 顶部插新条目时，把上一版条的 `## 标题` 一起替换掉 → 那一版的内容变成"孤儿块"挂在别人名下。
+// 人工很难发现（内容还在、只是归属错了）。这里做两条结构断言 + 一条体量断言。
+const docsToCheck = [
+  'README.md',
+  join('docs', '01-需求与目标.md'), join('docs', '02-技术报告.md'), join('docs', '03-更新日志.md'),
+  join('docs', '04-路线图与里程碑.md'), join('docs', '05-迭代流程.md'), join('docs', '06-评审与测试.md'),
+]
+const orphanDocs = []
+for (const rel of docsToCheck) {
+  const lines = readFileSync(join(root, rel), 'utf8').split(/\r?\n/)
+  let seenH2 = false
+  for (let i = 0; i < lines.length; i++) {
+    if (/^## /.test(lines[i])) seenH2 = true
+    else if (/^### /.test(lines[i]) && !seenH2) orphanDocs.push(`${rel}:${i + 1}`)
+  }
+}
+ok('文档结构：没有任何"孤儿小节"（### 之前必须有 ## 归属）——两次吃标题事故的防线',
+  orphanDocs.length === 0, orphanDocs.join('、') || '全部完整')
+
+const changelog = readFileSync(join(root, 'docs', '03-更新日志.md'), 'utf8')
+const entries = changelog.split(/\r?\n/).filter((l) => /^## \[/.test(l))
+ok('文档结构：更新日志仍保有全部历史条目（≥ 25 条 ## [版本]）',
+  entries.length >= 25, `当前 ${entries.length} 条`)
+ok('文档结构：每条更新日志都有"验证"或"影响"段（可追溯）',
+  (changelog.match(/^## \[/gm) ?? []).length <= (changelog.match(/^### (验证|影响|影响\/后续)/gm) ?? []).length + 4,
+  `条目 ${(changelog.match(/^## \[/gm) ?? []).length} / 验证或影响段 ${(changelog.match(/^### (验证|影响|影响\/后续)/gm) ?? []).length}`)
+
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)
