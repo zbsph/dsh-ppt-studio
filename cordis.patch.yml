@@ -1,0 +1,17 @@
+# DSH profile bundle patch —— 「PPT 工作室」插件行
+#
+# 作用：让标准安装姿势生效
+#     dsh plugin --profile web add <本包>            # 从 npm registry
+#     dsh plugin --profile web add <tgz 的 URL>      # 从 GitHub Release 资产（无需 npm 账号）
+# `dsh plugin` 会在 profile 目录里跑 pnpm，然后核对 package.json 的 dsh.profile.bundles：
+# **声明了 dsh.bundle.patch 的依赖自动入栈**（本文件即由 package.json 的 dsh.bundle.patch 指向）。
+#
+# 与"agent preset 插件行"的关系（重要）：
+#   · 本文件 = **profile 级**挂载：该 profile 的所有会话都具备 PPT 能力（工作流仍按意图触发，不会误激活）；
+#   · agent preset 行（install.mjs 写 `~/.dsh/.agent-presets/ppt/agent.cordis.yml`）= **会话级**挂载：
+#     只有选择"PPT 工作室"预设的会话才有，且带预设人格与预设层技能。
+#   两者是**替代关系**：同一个包在同进程被挂两次会被插件的装配防重拦下（首个生效 + 明确告警），
+#   但请二选一（详见 README §0.7 与 docs/05 装配纪律）。
+- insert:
+    - id: ppt-studio
+      name: '@dsh-external/dsh-ppt-studio'

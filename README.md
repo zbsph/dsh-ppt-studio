@@ -31,7 +31,28 @@
 - **宿主版本基线：DSH `0.1.5-rc.2`**（2026-09 实测适配：`tools` / `commands` / `systemPrompt` / `webServer` / `skills` / `session/event` / `system-prompt/assemble` 契约逐项核对，并在真实进程里跑过挂载、内嵌技能注册与工作流提示注入）。更早的 0.1.x 未逐一验证；`skills` 服务缺失（极简装配）时插件仍完整可用，只是手册不以技能形式出现。
 - 可选增强（没有也能用，自动降级）：本机 Microsoft Office（真渲染通道）、Edge/Chrome（截图与 M2 实测）、python + python-pptx（兜底引擎）。
 
-### 0.2 方式 A：下载发布包（推荐）
+### 0.2 方式 A：`dsh plugin add`（标准姿势，推荐）
+
+本插件声明了 `dsh.bundle.patch`（见仓库根 `cordis.patch.yml`），所以**装完即挂载**——不需要手工建 junction、不需要跑安装器：
+
+```powershell
+# ① 从 npm registry 安装（v1.0.0 起提供）
+dsh plugin --profile web add <包名>
+
+# ② 或直接从 GitHub Release 资产安装（**无需 npm 账号**）
+dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio/releases/download/v1.0.0/dsh-external-dsh-ppt-studio-1.0.0.tgz
+
+# 升级：把上面任一命令换成新的版本/新的 URL 再跑一次（同一命令幂等）
+# 卸载：dsh plugin --profile web remove <包名>
+```
+
+`dsh plugin` 是**薄 pnpm 转发器**：在 `<DSH_HOME>/profiles/web/` 里跑 pnpm，然后按**已安装状态**核对
+`dsh.profile.bundles`——声明了 `dsh.bundle` 的依赖会**自动进入层栈**（你不需要手改任何配置）。装完 **重启 dsh web** 即可。
+
+> 装完怎么确认生效：`dsh --profile web --dump-config` 里应出现 `ppt-studio` 插件行。
+> 仓库自带这条路径的**真机自证**：`npm run test:bundle`（隔离 `DSH_HOME` + 真 `dsh plugin add` + dump-config 断言，不碰你的 profiles）。
+
+### 0.3 方式 B：下载发布包（离线/无 pnpm 时）
 
 1. 在本仓库 [Releases](https://github.com/zbsph/dsh-ppt-studio/releases) 页面下载 `dsh-external-dsh-ppt-studio-<版本>.tgz`（v1.0.0 起）。
 2. 解压到任意目录（如 `D:\plugins\dsh-ppt-studio`）：
@@ -50,10 +71,10 @@
 5. 验证安装成功：在 PPT 工作室里说"帮我做一个简单 PPT，用内置模板"——模型应开始走 PPT 工作流（工作流提示词自动注入）；或直接问模型"dsh-ppt-studio 怎么用"（内置 skill 手册会回答）。
    > 手册 skill 由**插件自己内嵌提供**（`ctx.skills.register`，落 PPT 工作室预设层，随插件同生共死、升级即新）；安装器另外把它镜像到 `<dshHome>/skills/`，让不在 PPT 预设里的会话也能问到手册。想确认通道生效：让模型调一次 `ppt_state`，输出里的 `manualSkill` 会给出 `registered/visible`。
 
-### 0.3 方式 B：git clone 源码（开发者/尝鲜）
+### 0.4 方式 C：git clone 源码（开发者/尝鲜）
 
 ```powershell
-git clone https://github.com/dsh-external/dsh-ppt-studio.git
+git clone https://github.com/zbsph/dsh-ppt-studio.git
 cd dsh-ppt-studio
 npm install            # 仅需 yaml（本地开发依赖）
 node scripts/build.mjs # 免 tsc：src → lib
@@ -61,14 +82,14 @@ node scripts/install.mjs
 # 重启 dsh web → 进入「PPT 工作室」
 ```
 
-### 0.4 方式 C：已有 dsh-super-injector（生态惯例）
+### 0.5 方式 D：已有 dsh-super-injector（生态惯例）
 
 在注入器环境内：`dev_inject_plugin <解压目录>`（或源码目录）→ 注入器负责 junction + 重启恢复；预设同上（仓库 `agent-presets/ppt/agent.cordis.yml` 复制到 `~/.dsh/.agent-presets/ppt/`，或让安装器写：`node scripts/install.mjs --prefix <DSH_HOME> --no-preset` 后手工放预设）。
 
-### 0.5 安装后的自检（四句命令）
+### 0.6 安装后的自检（四句命令）
 
 ```powershell
-node scripts/smoke.mjs          # 201 断言（含全链路）
+node scripts/smoke.mjs          # 206 断言（含全链路）
 node scripts/preflight-1.0.mjs  # 11 断言（坏输入/边界/幂等/性能）
 node scripts/check-preset.mjs   # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
 node scripts/e2e-1.0.mjs        # 13 断言（真浏览器测量 + 真 Office 渲染 + splice/slice 自证；约 2-3 分钟）
@@ -76,9 +97,23 @@ node scripts/e2e-1.0.mjs        # 13 断言（真浏览器测量 + 真 Office �
 全部绿色 = 本机环境完整可用；无 Office/Edge 的机器 e2e 会自动降级标注（不是失败）。
 `check-preset` 找不到 DSH 安装时跳过（不阻断）。
 
-### 0.6 卸载
+### 0.7 装法与冲突：bundle 行 vs 预设行（**二选一**）
+
+本插件有两条**都合法但互斥**的挂载路径：
+
+| 路径 | 由谁装 | 生效范围 | 附带 |
+|---|---|---|---|
+| **profile bundle 行**（`cordis.patch.yml`） | `dsh plugin --profile web add <包>` | 该 profile 的**所有会话**（工作流仍按意图触发，不会误激活） | 不含预设人格 |
+| **agent preset 行** | `node scripts/install.mjs`（写 `~/.dsh/.agent-presets/ppt/agent.cordis.yml`） | 仅**「PPT 工作室」预设会话** | 含预设人格 + 预设层技能镜像 |
+
+**两者都装会让同一个包在同进程被挂两次**：插件里有装配防重（首个生效 + 明确告警，见 `src/index.js`），
+所以**不会崩**，但请二选一——已经用 `dsh plugin` 装了，就跑一次
+`dsh plugin --profile web remove <包>` **或**删掉预设里的插件行。
+
+### 0.8 卸载
 
 删除 `~/.dsh/.agent-presets/ppt/` 与 `~/.dsh/profiles/web/node_modules/@dsh-external/dsh-ppt-studio`（junction，删链接即可），重启 dsh web。
+若用 `dsh plugin` 装的：`dsh plugin --profile web remove <包名>`（会同时从 `dsh.profile.bundles` 层栈里退出）。
 
 ---
 
@@ -351,6 +386,21 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 
 **Q：如何只改原稿第 15 页？** → `ppt_splice`（第 6 节）。**如何导出单页版？** → `ppt_slice`。
 
+**Q：`dsh plugin add` 装了，但插件好像没生效？**
+→ 三步查：① `dsh plugin --profile web list` 看包装上没（装不上会直接报错）；
+② `dsh --profile web --dump-config` 看组合树里有没有 `ppt-studio` 插件行（有 = `dsh.bundle` 声明生效、已进层栈）；
+③ **重启 dsh web**。
+若第 ② 步看不到，多半是版本太老（v1.0.0 之前没有 `dsh.bundle` 声明——那时 `dsh plugin` 只会打一行
+"declares no dsh.bundle … not a profile layer" 的警告，装了不挂载）→ 升到 v1.0.0+ 再装一次。
+
+**Q：可以用 `dsh plugin` 和 `install.mjs` 同时装吗？**
+→ 能装，但没必要，而且是**替代关系**（§0.7）。同时装会让同一个包在同进程挂两次——插件里有装配防重（首个生效 + 告警），
+所以不会崩，但请二选一：`dsh plugin --profile web remove <包>` 或移除预设里的插件行。
+
+**Q：怎么升级？**
+→ `dsh plugin` 装的：把 `add` 换成新版本/新 URL 再跑一次（同一命令幂等）；`install.mjs` 装的：重新解压新包跑 `node scripts/install.mjs`。
+两种方式都**重启 dsh web** 后生效。
+
 **Q：模板页脚带被 logo 占着，内容放哪？**
 → deck.yaml `theme.safeArea` 声明安全区 → verify 把关；logo 类有意元素加 `expectedOutOfSafeArea`。
 
@@ -421,19 +471,31 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + smoke（201 断言）
+npm test                        # build + smoke（206 断言）
 npm run test:real               # 真实资产回归（WPS fixture；19 页 deck 缺失自动跳过）
 node scripts/preflight-1.0.mjs  # 发布前预检（坏输入/边界/幂等/性能/媒体 splice——11 断言）
 npm run test:preset             # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
+npm run test:bundle             # 安装路径自证：隔离 DSH_HOME + 真 `dsh plugin add` + dump-config 断言（不碰你的 profiles）
 npm run eval:skills -- --a <deckA> --b <deckB>   # 技能效果对照打分（纯本地；两个 arm 各跑一次后复算口径，见 docs/06 §7）
 node scripts/eval-skills-blind.mjs <deckA> <deckB>   # 生成匿名+随机的盲评材料（结构化盲评协议，见 docs/06 §7.6）
 node scripts/audit-manual-facts.mjs  # 手册事实审计：逐条把"手册 vs 源码"验一遍并打印源码锚点（37 条）
 ```
 
-- **装配**：agent preset `C:\Users\11867\.dsh\.agent-presets\ppt\agent.cordis.yml` 插件行（**唯一装配源**）；`profiles/web/node_modules/@dsh-external/dsh-ppt-studio` 是 junction → 本仓库。改码 = build + **重启 host**（`dev_reload_package` 只覆盖注入器装配的包——本插件走 preset 行，重启是唯一可靠生效路径）。
+**发布到 npm**（`prepublishOnly` 会自动跑 build + 全量冒烟，不过不发）：
+
+```powershell
+npm login      # 需要 npm 账号（本机当前未登录）
+npm publish    # publishConfig.access=public 已写进 package.json（作用域包默认 restricted）
+# 包名是单一事实源：改名时必须同步 cordis.patch.yml 与 agent-presets/ppt/agent.cordis.yml 的插件行，
+# 漏一处就是"装了不生效/预设挂不上"——smoke 有一条断言把三处钉在一起。
+```
+
+- **装配（两条互斥路径，见 §0.7）**：① profile bundle 行（`cordis.patch.yml`，`dsh plugin add` 走这条，**profile 级**）；
+  ② agent preset 插件行（`C:\Users\11867\.dsh\.agent-presets\ppt\agent.cordis.yml`，**会话级**；本仓库开发时用的就是这条，`profiles/web/node_modules/@dsh-external/dsh-ppt-studio` 是 junction → 本仓库）。
+  改码 = build + **重启 host**（`dev_reload_package` 只覆盖注入器装配的包，本站两条路径都不在其域内）。
 - **文档链（每次改动必同步）**：`docs/01-需求与目标.md`（需求/决策/冲突）· `docs/02-技术报告.md`（实现级）· `docs/03-更新日志.md`（版本记录）· `docs/04-路线图与里程碑.md`（验收）· `docs/05-迭代流程.md`(检查单) · `docs/06-评审与测试.md`（发布前评审/测试矩阵）。
 - **git 约定**：一个功能/修复一个 commit；message `vX.Y.Z: <一句话目的>（反馈编号）`；lib/ 不提交（build 产物）。
-- **既有的自动化验证**：smoke（201 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 手册事实审计（`audit-manual-facts.mjs`）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
+- **既有的自动化验证**：smoke（206 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 手册事实审计（`audit-manual-facts.mjs`）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
 - **OOXML 产物必须用真消费者验**（2026-09-14 教训）：加备注页时先写的 `notesMasterIdLst`，python-pptx 照读不误，**真 PowerPoint 却报"文件或目录损坏"**——
   第三方库通过 ≠ 能打开。凡改导出编码，至少走一次真 PowerPoint（`ppt_visual`）/真浏览器，别只信自证断言。
 

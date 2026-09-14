@@ -962,7 +962,11 @@ const fakeWs = {
     return async () => { fakePrefixes.delete(r.path) } // 卸载也是 async（真实语义）
   },
 }
-const fakeCtx = { get: () => fakeWs, effect: (cb) => { let active = true; return () => { if (active) { active = false; cb() } } } }
+// Cordis 语义（2026-09-14 用真库探针实测，见 docs/02 §2.12）：`ctx.effect(cb)` **立即执行 cb**，
+// 并把 **cb 的返回值**当作 disposer（不是把 cb 当清理函数）。旧假 ctx 写反了这条契约，
+// 于是"清理逻辑写在 cb 体里"的 preview-server 在这个假环境里看起来是对的、在真宿主里却是
+// "注册当刻就把路由取消掉"——假契约掩盖了真 bug。这里按真语义重建假 ctx。
+const fakeCtx = { get: () => fakeWs, effect: (cb) => { const cleanup = cb(); return () => { if (typeof cleanup === 'function') cleanup() } } }
 const settle = () => new Promise((r) => setTimeout(r, 50))
 const d1 = rpr(fakeCtx)
 const d2 = rpr(fakeCtx) // 双源第二实例：应幂等（0 新注册）
@@ -1685,6 +1689,60 @@ try {
 await rm(notesDir, { recursive: true, force: true })
 await rm(noNotesDir, { recursive: true, force: true })
 await rm(chartDir, { recursive: true, force: true })
+
+// ── 40. profile bundle 安装路径（2026-09-14："dsh plugin add 能不能装"）────────────────
+// 机制：`dsh plugin --profile <p> <args>` = 在 profile 目录跑 pnpm，然后按**已安装状态**核对
+// dsh.profile.bundles——声明了 dsh.bundle.patch 的依赖自动入栈。真机端到端自证在
+// `scripts/verify-bundle-install.mjs`（隔离 DSH_HOME + 真 `dsh plugin add` + dump-config）；
+// 这里守的是**不变量**（清单声明/文件/名字一致 + 防重行为），因为它们是改名/重构时最容易漏、
+// 且漏了以后表现为"装了不生效"的静默失败。
+const rootPkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
+const patchRel = rootPkg.dsh?.bundle?.patch
+const patchPath = patchRel ? join(root, String(patchRel).replace(/^\.\//, '')) : null
+const patchExists = patchPath ? existsSync(patchPath) : false
+ok('bundle：package.json 声明 dsh.bundle.patch，且文件存在并纳入发行物（files）',
+  Boolean(patchRel) && patchExists && rootPkg.files.includes(String(patchRel).replace(/^\.\//, '')),
+  `dsh.bundle.patch=${patchRel ?? '(未声明)'} 文件存在=${patchExists} 在 files 里=${rootPkg.files.includes(String(patchRel).replace(/^\.\//, ''))}`)
+
+let patchDoc = null
+try { patchDoc = (await import('yaml')).default.parse(readFileSync(patchPath, 'utf8')) } catch { /* 解析失败由下条断言报出 */ }
+const insertRow = Array.isArray(patchDoc) ? (patchDoc.flatMap((l) => l?.insert ?? [])[0] ?? null) : null
+ok('bundle：patch 的 insert 行名字与包名一致（改名必须两处同改——防"装了不生效"的静默失败）',
+  Boolean(insertRow) && insertRow.name === rootPkg.name && typeof insertRow.id === 'string',
+  `patch name=${insertRow?.name ?? '(缺)'}｜package name=${rootPkg.name}｜id=${insertRow?.id ?? '(缺)'}`)
+ok('bundle：非 private 且 publishConfig.access=public（`npm publish` 的前置条件）',
+  rootPkg.private !== true && rootPkg.publishConfig?.access === 'public',
+  `private=${rootPkg.private ?? 'undefined'} access=${rootPkg.publishConfig?.access ?? '(缺)'}`)
+
+// 包名是**单一事实源**：改名（例如为发布改 scope）时必须同步 cordis.patch.yml 与预设插件行，
+// 漏一处 = "装了不生效"或"预设挂不上"，两边都是静默失败 —— 这里把三处钉在一起。
+{
+  const presetText = readFileSync(join(root, 'agent-presets', 'ppt', 'agent.cordis.yml'), 'utf8')
+  const presetHasRow = presetText.includes(`name: '${rootPkg.name}'`) || presetText.includes(`name: "${rootPkg.name}"`)
+  ok('bundle：包名三处一致（package.json / cordis.patch.yml / 预设插件行）——改名防漂移',
+    presetHasRow && insertRow?.name === rootPkg.name,
+    `package=${rootPkg.name}｜patch=${insertRow?.name ?? '(缺)'}｜预设含该行=${presetHasRow}`)
+}
+
+// 装配防重（**行为**断言）：同进程第二次 apply 必须不重复注册——bundle 行 + preset 行共存时的保护
+{
+  const indexMod = await import('../lib/index.js')
+  let tools = 0, cmds = 0, listeners = 0
+  const fakeCtx = () => ({
+    tools: { register: () => { tools++ } },
+    commands: { register: () => { cmds++ } },
+    get: () => undefined,
+    on: () => { listeners++ },
+    effect: (fn) => { fn(); return () => {} },
+    logger: () => ({ warn: () => {} }),
+  })
+  indexMod.apply(fakeCtx(), {})
+  const first = { tools, cmds, listeners }
+  indexMod.apply(fakeCtx(), {}) // 第二次挂载（模拟 profile bundle 行 + agent preset 行）
+  ok('装配防重：同进程第二次挂载不重复注册工具/命令/监听器（bundle 行 + preset 行共存时的保护）',
+    first.tools > 10 && first.cmds >= 1 && tools === first.tools && cmds === first.cmds && listeners === first.listeners,
+    `首次 tools=${first.tools} cmds=${first.cmds} listeners=${first.listeners}；二次挂载后 tools=${tools} cmds=${cmds} listeners=${listeners}`)
+}
 
 // 37.10 【必须是最后一条断言】引用计数自证：文档里 "smoke … N 断言" 必须等于本次真实断言总数。
 // 历史形状：加断言后 README×3 + docs/02 + docs/06×2 + 手册 全靠人工同步，迟早漏一处。

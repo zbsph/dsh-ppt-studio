@@ -111,7 +111,11 @@ export function registerPreviewRoute(ctx) {
   if (hasRoute() || ROUTE_REG.count > 0) {
     // 幂等分支：表已注册（任何来源）或本组已发起注册 → 只计数，不重复注册
     ROUTE_REG.count++
-    return ctx.effect(() => { ROUTE_REG.count--; void releaseRouteWhenZero() }, 'ppt-studio: preview route (ref)')
+    // Cordis 语义：`ctx.effect(cb)` 立即执行 cb、用其**返回值**当 disposer。
+    // 这里必须"返回一个函数"——原实现把 `count--` 写在 cb 体里，等于注册当刻就递减，
+    // 于是本文档承诺的"首个注册者真注册、最后卸载者真卸载"实际不成立（路由永不释放）。
+    // 2026-09-14 修正（与 index.js 的装配防重同一处语义错误）。
+    return ctx.effect(() => () => { ROUTE_REG.count--; void releaseRouteWhenZero() }, 'ppt-studio: preview route (ref)')
   }
   let cancelled = false
   const unregPromise = ws.register({
@@ -144,7 +148,8 @@ export function registerPreviewRoute(ctx) {
     return u
   }).catch(() => null)
   ROUTE_REG.count++
-  return ctx.effect(() => {
+  // 同上：cb 立即执行、返回值是 disposer —— 清理逻辑必须包在**返回的函数**里。
+  return ctx.effect(() => () => {
     ROUTE_REG.count--
     if (cancelled) return
     if (ROUTE_REG.unreg) { void releaseRouteWhenZero(); return }

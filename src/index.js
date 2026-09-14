@@ -15,6 +15,32 @@ export const name = '@dsh-external/dsh-ppt-studio'
 export const inject = ['tools', 'commands', 'systemPrompt']
 
 export function apply(ctx, config = {}) {
+  // ── 装配防重（2026-09-14 新增 profile bundle 安装路径后必需）────────────────────────
+  // 同一个包可能在**同一进程**里被挂两次：
+  //   ① profile bundle 行（包的 cordis.patch.yml，`dsh plugin add` 装完即挂）；
+  //   ② agent preset 插件行（install.mjs 写的 `~/.dsh/.agent-presets/ppt/agent.cordis.yml`）。
+  // tools/commands/skills 都是"按名字注册"的服务，重复注册会撞名（历史事故：双源重复注册曾导致路由崩溃）。
+  // 用 globalThis refcount——模块级变量在 junction/真实路径双加载下不可靠（与 preview-server 的 ROUTE_REG 同款）。
+  // **首个挂载真正注册，后续只计数**：防的是"重复注册"，不做生命周期托管（注册仍归各自 ctx.effect 所有，
+  // owner ctx 被卸载时服务随之释放，这与 Cordis 的语义一致）。
+  const CORE = globalThis.__pptCoreReg ?? { count: 0 }
+  globalThis.__pptCoreReg = CORE
+  if (CORE.count > 0) {
+    CORE.count++
+    try {
+      const log = typeof ctx.logger === 'function' ? ctx.logger('ppt-studio') : ctx.logger
+      log?.warn?.('[ppt-studio] 本包在同一进程被挂载了两次（profile bundle 行 + agent preset 行？）——'
+        + '已按"首个生效"跳过本次注册。两者是替代关系，建议二选一：`dsh plugin --profile <p> remove <包>` 或移除预设里的插件行（见 README §0.7）。')
+    } catch { /* 无 logger 时静默 */ }
+    ctx.effect(() => () => { CORE.count-- }, 'ppt-studio: duplicate mount (ref)')
+    return
+  }
+  CORE.count++
+  // 注意 Cordis 语义：`ctx.effect(cb)` **立即执行 cb**，并用 cb 的**返回值**当 disposer。
+  // 所以计数递减必须写成"返回一个函数"（写成 `() => { count-- }` 会当场递减，等于没防重——
+  // 这个错误由 smoke §40 的行为断言当场抓到）。
+  ctx.effect(() => () => { CORE.count-- }, 'ppt-studio: core mount (ref)')
+
   registerTools(ctx)
   registerCommands(ctx)
   statusToolFor(ctx)
