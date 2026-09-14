@@ -81,6 +81,13 @@ try {
     bundles.length ? `bundles = ${bundles.join(', ')}` : '(bundles 为空)')
   check('包已物化到 profile 的 node_modules', existsSync(join(home, 'profiles', 'web', 'node_modules', NAME, 'cordis.patch.yml')),
     join('node_modules', NAME, 'cordis.patch.yml'))
+  // 新鲜度：装到的必须是**当前仓库这一版**（防 pnpm/pnpm store 命中旧缓存，让"验证"变成假通过）
+  const installedPkg = join(home, 'profiles', 'web', 'node_modules', NAME, 'package.json')
+  const installedHasProbe = existsSync(join(home, 'profiles', 'web', 'node_modules', NAME, 'scripts', 'probe-effect-semantics.mjs'))
+  const installedVer = existsSync(installedPkg) ? JSON.parse(readFileSync(installedPkg, 'utf8')).version : null
+  check('装到的是当前版本（不是缓存里的旧包：新增的 probe 脚本在位）',
+    installedVer === pkg.version && installedHasProbe,
+    `安装版本=${installedVer ?? '(缺)'}｜仓库版本=${pkg.version}｜probe 脚本=${installedHasProbe}`)
 
   // 4) 组合树里能看到我们的行
   const dump = run('dsh', ['--profile', 'web', '--dump-config'], { env, cwd: work })
