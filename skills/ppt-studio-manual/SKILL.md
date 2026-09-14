@@ -22,7 +22,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 | "先帮我做个 PPT" | 问一句主题+页数即可（工作流自动进入；"帮我做一个 5 页的产品介绍 PPT"这类带修饰语的说法也认得）；建议先 `ppt_new` 立骨架或选模板 |
 | "工作流怎么没自动进入 / 手册哪儿来的" | 进入靠语义判据（名词+任务动词邻近共现；只提一句 PPT 不激活），也可 `/ppt on` 强制；本手册由插件**内嵌注册**（跟着插件走，PPT 会话内即时生效），安装器另把它镜像到 `<dshHome>/skills/` 供非 PPT 会话查阅——让模型调 `ppt_state`，看 `manualSkill.visible` 即知当前通道 |
 | "你想看模板吗" | `ppt_templates` 展示；用户模板文件 > 内置模板 > 从零定调 |
-| "怎么装/怎么升级这个插件" | 两条**互斥**路径：① 标准姿势 `dsh plugin --profile web add <包|tgz URL>`（profile 级，装完即挂载，重启生效）；② `node scripts/install.mjs` + 预设行（会话级，带"PPT 工作室"预设）。**别同时用**：会挂两次（插件有防重、不会崩，但按纪律二选一）。升级 = 换成新版本/新 URL 再跑一次。排查顺序：`dsh plugin list` → `dsh --profile web --dump-config` 找 `ppt-studio` 行 → 重启 |
+| "怎么装/怎么升级这个插件" | **一键（推荐）**：`dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio/releases/download/v1.0.0/dsh-external-dsh-ppt-studio-1.0.0.tgz`（profile 级，装完即挂载，**不需要 npm 账号**；装完重启 dsh web）。备选：`node scripts/install.mjs` + 预设行（会话级，带"PPT 工作室"预设）。**别同时用**：会挂两次（插件有防重、不会崩，但按纪律二选一）。升级 = 把 URL 里的版本换成新的再跑一次。排查：`dsh plugin --profile web list` → `dsh --profile web --dump-config` 找 `ppt-studio` 行 → 重启 |
 | "怎么只改原稿第 15 页" | `ppt_import` 读真身 → 改工作区页（verify 清零）→ `ppt_splice`（替换进源，其余页 SHA256 逐字节不变）→ 可选 `ppt_slice` 单页版 → `ppt_visual pages="15"` 抽查 |
 | "为什么报重叠错误，我明明想要这样" | design-intent 声明制：把有意重叠对加入该页 `expectedOverlaps`（流式 `[{pair: [a,b]}]` 或块式 `- pair: [a,b]`，每对一行），重验即 ✓；说不清意图的对子改布局；**内容互压（文字×文字）永远不能声明** |
 | "样式没生效" | 样式键必须在 `content` 内部（元素级 fontSize/color/bold/... 无效，`ppt_check` 现在会直接报错） |
