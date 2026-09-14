@@ -1245,6 +1245,21 @@ for (const b of bundled) {
 ok('内置技能：不含写死的门禁数值（最小字号/页数/字数上限等）——历史事故的机器防线',
   polluted.length === 0, polluted.join('、') || '0 处命中')
 
+// 反"为了变化而破坏主题一致性"扫描（2026-09-14 用户抓到的失误：从外部 skill 抄了一条
+// "同一明暗基调连续 3 页以上就该换"，与我方 theme-conformance / 模板统一基调直接冲突）。
+// 规则：出现"底色/背景色/主色/色调/明暗基调/深底/浅底 + 换/交替/变化"且**同一行没有否定或统一口径** → 违规。
+// 校准：5 条植入违规全抓、6 条合法表述零误报、现有技能零命中。
+const VARY_DECKWIDE = /(?:(?:底色|背景色|主色|色调|明暗基调|明暗|深底|浅底|亮底|暗底)[^。\n]{0,12}(?:换|交替|变化))|(?:(?:换|交替)[^。\n]{0,8}(?:底色|背景色|主色|色调|明暗基调|深底|浅底|亮底|暗底))/
+const THEME_CONSISTENT = /(?:不要|不该|不靠|禁止|别|而非|不是|统一|一致)/
+const themeViolations = []
+for (const b of bundled) {
+  for (const line of b.parsed.content.split('\n')) {
+    if (VARY_DECKWIDE.test(line) && !THEME_CONSISTENT.test(line)) themeViolations.push(`${b.parsed.name}: ${line.trim().slice(0, 60)}`)
+  }
+}
+ok('内置技能：不劝人"为了变化改全册底色/主色"（主题一致性优先于节奏）——用户抓到的失误防线',
+  themeViolations.length === 0, themeViolations.join(' | ') || '0 处命中')
+
 // 工作流段超集断言：新段必须包含基线每一行（只允许新增，不允许改写/删除）
 const baseline = JSON.parse(readFileSync(join(root, 'scripts', 'fixtures', 'workflow-baseline.json'), 'utf8'))
 const baseCfg = { mode: 'auto', fidelity: 'auto', review: 'points', quality: 'standard', engine: 'auto', template: null, pauseAfter: [], workflowActive: true }
