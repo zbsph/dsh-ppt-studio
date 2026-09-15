@@ -56,6 +56,7 @@
     "test:bundle": "node scripts/verify-bundle-install.mjs",
     "audit:facts": "node scripts/audit-manual-facts.mjs",
     "probe:effect": "node scripts/probe-effect-semantics.mjs",
+    "probe:reparse": "node scripts/probe-reparse-safety.mjs",
     "eval:skills": "node scripts/eval-skills-score.mjs"
   }
 }

@@ -17,13 +17,20 @@ import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { homedir } from 'node:os'
-import { execFileSync } from 'node:child_process'
+import { execSync } from 'node:child_process'
 
 const candidates = []
-try {
-  const globalRoot = execFileSync('npm', ['root', '-g'], { encoding: 'utf8' }).trim()
-  candidates.push(join(globalRoot, '@deepseek-ai', 'dsh', 'node_modules', '@deepseek-ai', 'cordis', 'lib', 'index.js'))
-} catch { /* npm 不可用 */ }
+// 候选路径（不依赖能 spawn npm：Windows 上 npm 是 npm.cmd，execFileSync 不带 shell 会 ENOENT）
+const relCordis = join('@deepseek-ai', 'dsh', 'node_modules', '@deepseek-ai', 'cordis', 'lib', 'index.js')
+if (process.env.APPDATA) candidates.push(join(process.env.APPDATA, 'npm', 'node_modules', relCordis))
+for (const cmd of ['npm', 'npm.cmd']) {
+  try {
+    // 用字符串命令（shell 执行）——避免 execFileSync(args)+shell 的 DEP0190 警告
+    const globalRoot = execSync(`${cmd} root -g`, { encoding: 'utf8' }).trim()
+    if (globalRoot) candidates.push(join(globalRoot, relCordis))
+    break
+  } catch { /* 该写法不可用，试下一个 */ }
+}
 const dshHome = process.env.DSH_HOME ?? join(homedir(), '.dsh')
 candidates.push(join(dshHome, 'profiles', 'web', 'node_modules', '@deepseek-ai', 'cordis', 'lib', 'index.js'))
 
