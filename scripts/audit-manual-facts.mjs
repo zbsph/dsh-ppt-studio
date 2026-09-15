@@ -40,7 +40,7 @@ const src = {
   crosscheck: read(join('src', 'crosscheck.js')),
   scaffold: read(join('src', 'scaffold.js')),
 }
-const skills = listBundledSkills().map((b) => ({ name: b.parsed.name, text: b.parsed.content }))
+const skills = listBundledSkills().map((b) => ({ name: b.parsed.name, text: b.parsed.content, desc: b.parsed.description, when: b.parsed.whenToUse ?? '' }))
 const bySkill = Object.fromEntries(skills.map((s) => [s.name, s.text]))
 const all = skills.map((s) => s.text).join('\n')
 const manual = bySkill['ppt-studio-manual'] ?? ''
@@ -253,6 +253,23 @@ check('copy §7 与导出器一致：讲稿会写进 pptx 备注页（双向断�
 
 const presetDrift = existsSync(join(root, 'agent-presets', 'ppt', 'agent.cordis.yml'))
 check('预设副本仍在（check-preset.mjs 负责逐行比对）', presetDrift, 'agent-presets/ppt/agent.cordis.yml 存在，`npm run test:preset` 比对随包 standard')
+
+// 触发纪律（2026-09-15 用户反馈）：答疑手册曾被"开工时"加载——因为它的 description/whenToUse
+// 把"如何开始 / 模型不确定某一 DSL 写法"写成了触发条件（对正在做 PPT 的人是恒真条件）。
+// 事实判定：答疑触发面只认"用户提问"，制作三本不把读者引向答疑手册，工作流提示段显式分行。
+const manParsed = skills.find((s) => s.name === 'ppt-studio-manual') ?? { desc: '', when: '' }
+const qaDesc = /用户问|提问/.test(manParsed.desc)
+const qaWhen = /提问|用户问/.test(manParsed.when)
+const negated = /不要加载/.test(manParsed.desc) && /不要加载/.test(manParsed.when)
+const selfTrigger = /模型不确定/.test(manParsed.desc + manParsed.when) || /不确定某一/.test(manParsed.desc + manParsed.when)
+check('答疑手册触发纪律：只由"用户提问"触发（description/whenToUse 双处声明 + "制作中不要加载"否定句）',
+  qaDesc && qaWhen && negated && !selfTrigger,
+  `提问触发=${qaDesc}/${qaWhen}｜否定句=${negated}｜恒真自触发措辞残留=${selfTrigger}`)
+
+const crossPtr = ['ppt-studio-craft', 'ppt-studio-data', 'ppt-studio-copy'].filter((n) => (bySkill[n] ?? '').includes('ppt-studio-manual'))
+const wfSplit = /答疑手册/.test(src.router) && /不要加载/.test(src.router)
+check('答疑手册分层落地：工作流提示段显式分行（答疑手册 vs 制作手册），制作三本正文零指向答疑手册',
+  wfSplit && crossPtr.length === 0, `工作流含分行=${wfSplit}；三本指向=${crossPtr.join('、') || '无'}`)
 
 await rm(tmp, { recursive: true, force: true })
 

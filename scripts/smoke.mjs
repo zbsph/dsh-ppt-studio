@@ -1781,6 +1781,38 @@ ok('bundle：未发布到 npm（保持 private），一键安装走 GitHub Relea
     '仓库根文件仍在 ✓')
 }
 
+// ── 42. 答疑手册 vs 制作手册的触发纪律（2026-09-15 真实反馈）────────────────────
+// 事故形状：模型在 PPT 任务**开工时**先加载 `ppt-studio-manual`（提问式手册）——因为它的
+// description/whenToUse 写着"如何开始 / DSL 语法速查 / 或模型不确定某一 DSL 写法时加载"，
+// 这对"正在做 PPT 的人"是恒真的自触发条件。后果是每轮任务白付一次几千字符的正文成本，
+// 而它讲的是"怎么回答用户提问"，不是"怎么做 PPT"。
+// 修法：答疑手册只保留"用户提问"触发 + 明确否定句；工作流提示段显式区分两类手册；
+// 制作三本正文不得把读者引向答疑手册（工作期读到那句 = 又被引去加载）。
+// 这三条**不是**文风审查，而是可判定的触发面事实：
+const manualSkill = bundled.find((b) => b.parsed.name === 'ppt-studio-manual')
+const manDesc = manualSkill?.parsed.description ?? ''
+const manWhen = manualSkill?.parsed.whenToUse ?? ''
+const manQaTrigger = /用户问|提问/.test(manDesc) && /提问|用户问/.test(manWhen)
+const manNoSelfTrigger = !/模型不确定/.test(manDesc + manWhen) && !/不确定某一/.test(manDesc + manWhen)
+const manNegated = /不要加载/.test(manDesc) && /不要加载/.test(manWhen)
+ok('答疑手册触发面：`ppt-studio-manual` 只由"用户提问"触发，且写明"制作中不要加载"（去掉恒真的自触发措辞）',
+  manQaTrigger && manNoSelfTrigger && manNegated,
+  `问答触发=${manQaTrigger}｜无自触发=${manNoSelfTrigger}｜否定句=${manNegated}`)
+
+const manBodyHead = (manualText ?? '').slice(0, 400)
+const manBodyBanner = /只服务/.test(manBodyHead) && /不要读/.test(manBodyHead)
+const stdWorkflow = routerMod.workflowSection('from-scratch', { ...baseCfg, quick: false }).text
+const workflowSplits = stdWorkflow.includes('ppt-studio-manual') && /不要加载/.test(stdWorkflow) && /答疑手册/.test(stdWorkflow)
+ok('答疑手册兜底：正文开头自带"只服务提问 / 制作中不要读"横幅，且工作流提示段显式区分答疑手册与制作手册',
+  manBodyBanner && workflowSplits,
+  `正文横幅=${manBodyBanner}｜工作流分行=${workflowSplits}`)
+
+const crossBookPointers = ['ppt-studio-craft', 'ppt-studio-data', 'ppt-studio-copy']
+  .filter((n) => (bundled.find((b) => b.parsed.name === n)?.parsed.content ?? '').includes('ppt-studio-manual'))
+ok('制作手册零指向答疑手册：craft/data/copy 正文不出现 `ppt-studio-manual`（工作期读到会被引去加载答疑手册）',
+  crossBookPointers.length === 0,
+  crossBookPointers.length ? `仍指向：${crossBookPointers.join('、')}` : '三本均无指向')
+
 // 37.10 【必须是最后一条断言】引用计数自证：文档里 "smoke … N 断言" 必须等于本次真实断言总数。
 // 历史形状：加断言后 README×3 + docs/02 + docs/06×2 + 手册 全靠人工同步，迟早漏一处。
 // 只扫"当前状态"文档（README / 技术报告 / 评审测试矩阵 / 使用手册）；docs/01/03/04 里的历史数字是记录，不动。

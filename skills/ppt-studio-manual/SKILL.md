@@ -1,11 +1,15 @@
 ---
 name: ppt-studio-manual
-description: PPT 工作室（dsh-ppt-studio）使用手册——按问题查阅：如何开始/四类任务/DSL 语法速查/重叠声明与门禁/只改原稿某一页（splice）/单页版/贴模板/常见报错处理。用户问"这个 PPT 插件怎么用/XX 怎么写/为什么报错"时加载。
-whenToUse: 用户处于 PPT 工作室且询问用法、语法、报错原因、最佳实践；或模型不确定某一 DSL 写法/工具语义/交付路径时。
+description: PPT 工作室（dsh-ppt-studio）答疑手册——**只在用户提问时加载**：用户问"这个插件怎么用/XX 怎么写/为什么报错/怎么只改一页/有没有单页版"时，在这里找条款回答。**制作任务进行中不要加载本手册**（正在做 PPT 而只是自己不确定写法时，`ppt_schema` / `ppt_check` / `ppt_verify` 的输出才是权威）。
+whenToUse: 用户消息里出现用法、语法、报错、最佳实践一类的**提问**（或用户说"报错了/不生效/怎么用"需要定位原因）时加载。反之——正在定纲、写页面、审阅、导出，只是自己拿不准某个 DSL 写法或工具语义时，**不要加载**，改调 `ppt_schema`（DSL 速查）/ `ppt_check` / `ppt_verify`。
 ---
 
 # PPT 工作室 · 提问式手册
 
+> **本手册只服务"用户提问"**：用户问怎么用 / 怎么写 / 为什么报错时读它。
+> **制作任务进行中不要读它**——正在做 PPT 而只是自己不确定写法时，直接调
+> `ppt_schema`（DSL 权威速查）/ `ppt_check` / `ppt_verify`，它们的输出比本手册更准（本手册可能落后于源码）。
+>
 > 本手册是对应 README 的"问答版"。回答用户问题前先在这里找到对应条款；
 > 拿不准细节（字段枚举、报错措辞）时，让用户/调用 `ppt_schema` 或 `ppt_check` 获得权威输出。
 
@@ -91,8 +95,8 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 ## 7. 开发维护（仅改插件时用）
 
 - 改码：`src/` → `node scripts/build.mjs` → **重启 host**（插件经 agent preset 会话装配；`dev_reload_package` 只覆盖注入器装配包，且注入器 junction 已存在时会指向旧安装根）。
-- 回归：`node scripts/smoke.mjs`（209 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
+- 回归：`node scripts/smoke.mjs`（212 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
 - 跨层验证纪律：**预览层与成品层必须互相验证**——`ppt_render`+`ppt_verify` 只管 HTML/估算层，OOXML 层靠 `ppt_export` 的 parity 自证（表/图/线方向）+ `ppt_visual` 真渲染抽检；只跑单层会漏掉"预览对、成品错"（2026-09-14 连线方向事故）。
 - 文档链：改需求/决策 → docs/01；改机制 → docs/02；每次 → docs/03；验收 → docs/04；发布前 → docs/06。
-- 装配：preset 行是唯一装配源；junction 保留（preset 解析包名用）。
+- 装配：**标准装法是 profile bundle 行**（`dsh plugin --profile <p> add <Releases 资产 URL>`，profile 级、随 profile 启动装配）；preset 插件行只用于"离线 junction / 不想动 profile"场景，且与前者**互斥**（`scripts/install.mjs` 按环境二选一，检测到 bundle 安装会主动删掉 preset 行——手工删行会被下次同步装回来，所以互斥逻辑在安装器里）。排查：`dsh plugin --profile web list` → `dsh --profile web --dump-config` 找 `ppt-studio` 行 → 重启 `dsh web`。
 - 宿主升级（DSH 换版本）：本手册 §开发维护 与 docs/05「宿主升级纪律」——契约逐项 Inspect 核对 + headless 覆盖层真进程验证，别只看单测。

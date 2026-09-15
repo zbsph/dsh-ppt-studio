@@ -94,7 +94,7 @@ node scripts/install.mjs
 ### 0.6 安装后的自检（四句命令）
 
 ```powershell
-node scripts/smoke.mjs          # 209 断言（含全链路）
+node scripts/smoke.mjs          # 212 断言（含全链路）
 node scripts/preflight-1.0.mjs  # 11 断言（坏输入/边界/幂等/性能）
 node scripts/check-preset.mjs   # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
 node scripts/e2e-1.0.mjs        # 13 断言（真浏览器测量 + 真 Office 渲染 + splice/slice 自证；约 2-3 分钟）
@@ -149,7 +149,7 @@ ppt_render(D:\demo) → ppt_verify(D:\demo) → ppt_export(D:\demo)
 
 | 技能 | 何时加载 | 内容 |
 |---|---|---|
-| `ppt-studio-manual` | 问"这个插件怎么用 / XX 怎么写 / 为什么报错" | 提问式使用手册（四类任务、DSL 速查、声明制、splice 与贴模板、报错处置） |
+| `ppt-studio-manual` | **只在用户提问时**（"这个插件怎么用 / XX 怎么写 / 为什么报错"）；制作任务进行中**不加载** | 提问式使用手册（四类任务、DSL 速查、声明制、splice 与贴模板、报错处置） |
 | `ppt-studio-craft` | 定纲/定版式；"这页怎么排 / 太挤 / 太像模板了" | 叙事 spine、一页一论点、结论式标题、按内容量选构图、反模板自检 |
 | `ppt-studio-data` | 页面要放数字或图表 | 图表选型、**成品里图表只有几何**（标签要自己补）、口径与来源标注、跨页数字一致 |
 | `ppt-studio-copy` | 写标题与要点；"太 AI 了 / 像机器写的" | 页面三类角色的写法、成组 AI 味信号清单、before → after 对照 |
@@ -162,6 +162,7 @@ ppt_render(D:\demo) → ppt_verify(D:\demo) → ppt_export(D:\demo)
    讲稿是否写明了"不导出备注"、缩字下限常量、`SCHEMA_REF` 自洽，以及**文档里的"smoke N 断言"必须等于真实断言数**（加断言忘同步文档会当场红）。
 2. **不加载也照常工作**：部署里没有 `dsh-skill`（无 `skills` 服务）或技能文件缺失时，插件功能完整，只是技能不以目录形式出现。
 3. **不与用户自装技能打架**：技能注册表跨层重名按"就近层优先"裁决——PPT 会话内命中插件内嵌版，用户自装那份在其它会话照旧可见。想整体退掉：删掉本机的 `~/.dsh/skills/ppt-studio-*` 镜像即可（内嵌版仍在 PPT 会话内生效，反之亦然）。
+4. **答疑手册不打扰制作**（2026-09-15 反馈修正）：`ppt-studio-manual` 讲的是"怎么回答用户提问"，不是"怎么做 PPT"——所以它**只由用户提问触发**，"制作任务进行中不要加载"这句写进了技能描述、技能正文横幅与工作流提示段三处；制作中拿不准某个写法时，权威来源是 `ppt_schema` / `ppt_check` / `ppt_verify` 的**输出**（手册可能落后于源码）。`npm test` §42 三条断言把这条纪律钉住（技能描述与 whenToUse、正文横幅与工作流分行、制作三本正文零指向答疑手册）。
 
 想确认通道是否生效：让模型调一次 `ppt_state`，输出里的 `manualSkill.skills` 会逐个给出注册与可见状态。
 
@@ -480,14 +481,14 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + smoke（209 断言）
+npm test                        # build + smoke（212 断言）
 npm run test:real               # 真实资产回归（WPS fixture；19 页 deck 缺失自动跳过）
 node scripts/preflight-1.0.mjs  # 发布前预检（坏输入/边界/幂等/性能/媒体 splice——11 断言）
 npm run test:preset             # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
 npm run test:bundle             # 安装路径自证：隔离 DSH_HOME + 真 `dsh plugin add` + dump-config 断言（不碰你的 profiles）
 npm run eval:skills -- --a <deckA> --b <deckB>   # 技能效果对照打分（纯本地；两个 arm 各跑一次后复算口径，见 docs/06 §7）
 node scripts/eval-skills-blind.mjs <deckA> <deckB>   # 生成匿名+随机的盲评材料（结构化盲评协议，见 docs/06 §7.6）
-node scripts/audit-manual-facts.mjs  # 手册事实审计：逐条把"手册 vs 源码"验一遍并打印源码锚点（37 条）
+node scripts/audit-manual-facts.mjs  # 手册事实审计：逐条把"手册 vs 源码"验一遍并打印源码锚点（39 条）
 ```
 
 **关于发布到 npm**：本包**当前不发布**（`private: true`），一键安装走上面的 GitHub Release tgz URL（不需要 npm 账号）。
@@ -496,12 +497,12 @@ node scripts/audit-manual-facts.mjs  # 手册事实审计：逐条把"手册 vs 
 **包名是单一事实源**：改名时必须同步 `cordis.patch.yml` 与 `agent-presets/ppt/agent.cordis.yml` 的插件行——
 漏一处就是"装了不生效/预设挂不上"，smoke 有断言把三处钉在一起。
 
-- **装配（两条互斥路径，见 §0.7）**：① profile bundle 行（`cordis.patch.yml`，`dsh plugin add` 走这条，**profile 级**）；
-  ② agent preset 插件行（`C:\Users\11867\.dsh\.agent-presets\ppt\agent.cordis.yml`，**会话级**；本仓库开发时用的就是这条，`profiles/web/node_modules/@dsh-external/dsh-ppt-studio` 是 junction → 本仓库）。
+- **装配（两条互斥路径，见 §0.7）**：① profile bundle 行（`cordis.patch.yml`，`dsh plugin add` 走这条，**profile 级**——本仓库自己的安装也走这条）；
+  ② agent preset 插件行（`<dshHome>/.agent-presets/ppt/agent.cordis.yml`，**会话级**；仅用于"不想动 profile / 离线 junction"场景，脚本 `install.mjs` 会按环境二选一并在 bundle 模式下**删掉插件行**）。
   改码 = build + **重启 host**（`dev_reload_package` 只覆盖注入器装配的包，本站两条路径都不在其域内）。
 - **文档链（每次改动必同步）**：`docs/01-需求与目标.md`（需求/决策/冲突）· `docs/02-技术报告.md`（实现级）· `docs/03-更新日志.md`（版本记录）· `docs/04-路线图与里程碑.md`（验收）· `docs/05-迭代流程.md`(检查单) · `docs/06-评审与测试.md`（发布前评审/测试矩阵）。
 - **git 约定**：一个功能/修复一个 commit；message `vX.Y.Z: <一句话目的>（反馈编号）`；lib/ 不提交（build 产物）。
-- **既有的自动化验证**：smoke（209 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 手册事实审计（`audit-manual-facts.mjs`）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
+- **既有的自动化验证**：smoke（212 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 手册事实审计（`audit-manual-facts.mjs`）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
 - **OOXML 产物必须用真消费者验**（2026-09-14 教训）：加备注页时先写的 `notesMasterIdLst`，python-pptx 照读不误，**真 PowerPoint 却报"文件或目录损坏"**——
   第三方库通过 ≠ 能打开。凡改导出编码，至少走一次真 PowerPoint（`ppt_visual`）/真浏览器，别只信自证断言。
 

@@ -131,6 +131,7 @@ export function workflowSection(taskType, cfg) {
       '【入门（减少试错，反馈整合）】',
       '  - 语法速查：先调 ppt_schema（deck.yaml/元素/主题 token/声明/安全区速查）；要完整可跑样例：ppt_new 生成示例工程（含 expectedOverlaps 与 safeArea 范本）；回归样例在插件 examples/smoke。',
       '  - 制作手册（内置技能，按需加载；纯增益，不改任何铁律与门禁）：定纲/定版式前加载 `ppt-studio-craft`；页面要放数字与图表时加载 `ppt-studio-data`；写标题与要点时加载 `ppt-studio-copy`。三本只给启发式与反例——**门禁数值一律以 ppt_verify 输出与用户指令为准**；不加载也照常工作。',
+      '  - 答疑手册 `ppt-studio-manual`（内置技能）：**只在用户提问时加载**（问用法/写法/报错/交付路径）——**制作开工时不要加载**。制作中只是自己拿不准某个写法/工具语义 → 调 ppt_schema（DSL 权威速查）/ ppt_check / ppt_verify 拿输出，不要靠读手册。',
       '  - line 元素可省略 bounds（由 points 的 AABB 自动推导，w/h≥1px）。',
       '  - 模板背景带 logo/页眉/页脚带：在 deck.yaml theme.safeArea（或页面级 safeArea）配置上/下/左/右安全边距，verify 会把安全区外的元素判为出界；ppt_render debug=true 会画出安全区参考框。',
       '  - 文本溢出：verify 与导出共用同一保守度量；**字号下限 = 用户指令**——用户给出最小字号（如"不得小于12号"）→ 把该值写入 theme.minFontSize 并严格执行——导出 auto-fit 缩字不得低于它；到下限仍溢出会明确报告（✗），请扩大容器或精简文案；用户未给下限 → 不做强制（auto-fit 仅 60% 原字号保底，绝不升字）。',
