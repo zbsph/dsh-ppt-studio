@@ -36,10 +36,12 @@
 本插件声明了 `dsh.bundle.patch`（见仓库根 `cordis.patch.yml`），所以**装完即挂载**——不需要手工建 junction、不需要跑安装器、**不需要 npm 账号**：
 
 ```powershell
-# 资产 URL 从 Releases 页面复制（文件名带构建戳，原因见下方"为什么带戳"）
-dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio/releases/download/v1.0.0/dsh-external-dsh-ppt-studio-1.0.0-<构建戳>.tgz
+# 资产 URL 从 Releases 页面复制：文件名 = 版本-构建时间-构建戳（取**时间最新**的那条，原因见下方"为什么带戳"）
+dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio/releases/download/v1.0.0/dsh-external-dsh-ppt-studio-1.0.0-<YYYYMMDD-HHmm>-<构建戳>.tgz
 
-# 升级：用 Releases 页面上**新的**资产 URL 再跑一次（URL 必变，见下）
+# 升级：用**更新的**资产 URL 再跑一次（**不需要先卸载**，URL 必变，见下）
+# 懒得翻页面就用这行拿当前 URL（按文件名排序取最后一条）：
+#   gh release view v1.0.0 --json assets --jq '.assets[].name' | sort | tail -1
 # 卸载：dsh plugin --profile web remove @dsh-external/dsh-ppt-studio
 # 装完 **重启 dsh web** 生效
 ```
@@ -50,7 +52,12 @@ dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio/releases/do
 > **为什么文件名带构建戳（2026-09-15 实测）**：同一个 URL 用 `--clobber` 覆盖内容后，
 > **`dsh plugin add <同一 URL>` 不会重新下载**（pnpm 按 URL 规格复用旧副本，`--force` 也没绕过；
 > 独立 GET 该 URL 证明 URL 本身已是新字节 ⇒ 是包管理器侧的复用）。所以资产名若固定，用户重跑同一条命令
-> "升级"会拿到旧版本。改成把构建产物的 sha256 前 8 位写进文件名 ⇒ URL 必变 ⇒ 必然重取。
+> "升级"会拿到旧版本。改成把构建产物的 sha256 前 8 位写进文件名 ⇒ URL 必变 ⇒ 必然重取；
+> 反向也已实测（`npm run test:bundle` 的升级自证）：**同版本号、内容不同的新规格 → 装到的就是新字节，且
+> `dsh.profile.bundles` 与 `--dump-config` 都不丢**。
+> **为什么还带构建时间**：Release 页面**有意保留历次构建**（老 URL 留给已装用户重装，删掉会让他们的
+> `pnpm install` 失败），于是页面上会并排出现多个长得像的名字——sha 段看不出新旧，所以再加
+> `<YYYYMMDD-HHmm>`：**取时间最新那条即当前版本**。
 > 代价：URL 每次构建都不同，请从 Releases 页面复制当前那条（或 `gh release view v1.0.0 --json assets`）。
 
 > **装完怎么确认生效**：`dsh --profile web --dump-config` 里应出现 `ppt-studio` 插件行。

@@ -38,21 +38,27 @@ console.log('① build ...')
 run('node scripts/build.mjs')
 console.log('    done')
 
-// ② pack（**每次构建带构建戳文件名**）
+// ② pack（**每次构建带构建戳 + 构建时间**）
 // 为什么必须换名：2026-09-15 实测——同 tag 同 URL 用 --clobber 覆盖内容后，
 //   `dsh plugin add <同一 URL>` **不会重新下载**（pnpm 按 URL 规格复用旧副本，--force 也没绕过；
 //   同时用独立探针 GET 该 URL 证明 URL 本身已提供新字节 → 是包管理器侧的复用）。
 // 后果：用户重跑同一条命令"升级"会拿到旧版本。改法：文件名带本题 tgz 的 sha256 前 8 位 ⇒ URL 变化 ⇒ 必然重取。
+// 为什么还要带**构建时间**：Release 页面会同时挂着历次构建的资产（有意不删——老 URL 得留给已装用户重装），
+//   而 sha 前 8 位看不出新旧，用户"从页面复制那条 URL"时无从判断哪条是当前版本（实测踩到：页面上 4 条）。
+//   加上日期时间后，肉眼/字典序取最新即当前版本；sha 段仍负责"内容变了 URL 必变"。
+const now = new Date()
+const pad = (n) => String(n).padStart(2, '0')
+const buildStamp = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`
 const packDir = join(tmpdir(), 'pptsync-' + Date.now())
 mkdirSync(packDir, { recursive: true })
 const tgzOutput = run(`npm pack --pack-destination "${packDir}"`).split('\n').pop()
 const tgzPath = join(packDir, tgzOutput)
 const tgzSha = sha(readFileSync(tgzPath))
-const stampedName = tgzOutput.replace(/\.tgz$/, `-${tgzSha.slice(0, 8)}.tgz`)
+const stampedName = tgzOutput.replace(/\.tgz$/, `-${buildStamp}-${tgzSha.slice(0, 8)}.tgz`)
 const stampedPath = join(packDir, stampedName)
 copyFileSync(tgzPath, stampedPath)
 console.log(`② packed ${tgzOutput} (${Math.round(statSync(tgzPath).size / 1024 / 1024 * 10) / 10}MB)`)
-console.log(`   上传用资产名（构建戳防"同 URL 不重取"）：${stampedName}\n   local sha256=${tgzSha}`)
+console.log(`   上传用资产名（构建时间 + 构建戳：取最新一条即当前版本，且内容变了 URL 必变）：${stampedName}\n   local sha256=${tgzSha}`)
 
 // ③④ 远程 digest 比对/上传
 const remoteDigest = () => {
