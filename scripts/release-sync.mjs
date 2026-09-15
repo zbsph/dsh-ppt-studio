@@ -11,7 +11,7 @@
  * 用法：node scripts/release-sync.mjs [--tag v1.0.0] [--root D:\plugins] [--no-upload]
  */
 import { execSync } from 'node:child_process'
-import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync, statSync } from 'node:fs'
+import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync, statSync, copyFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { join, dirname, resolve } from 'node:path'
 import { homedir } from 'node:os'
@@ -38,20 +38,28 @@ console.log('① build ...')
 run('node scripts/build.mjs')
 console.log('    done')
 
-// ② pack
+// ② pack（**每次构建带构建戳文件名**）
+// 为什么必须换名：2026-09-15 实测——同 tag 同 URL 用 --clobber 覆盖内容后，
+//   `dsh plugin add <同一 URL>` **不会重新下载**（pnpm 按 URL 规格复用旧副本，--force 也没绕过；
+//   同时用独立探针 GET 该 URL 证明 URL 本身已提供新字节 → 是包管理器侧的复用）。
+// 后果：用户重跑同一条命令"升级"会拿到旧版本。改法：文件名带本题 tgz 的 sha256 前 8 位 ⇒ URL 变化 ⇒ 必然重取。
 const packDir = join(tmpdir(), 'pptsync-' + Date.now())
 mkdirSync(packDir, { recursive: true })
 const tgzOutput = run(`npm pack --pack-destination "${packDir}"`).split('\n').pop()
 const tgzPath = join(packDir, tgzOutput)
 const tgzSha = sha(readFileSync(tgzPath))
-console.log(`② packed ${tgzOutput} (${Math.round(statSync(tgzPath).size / 1024 / 1024 * 10) / 10}MB)\n   local sha256=${tgzSha}`)
+const stampedName = tgzOutput.replace(/\.tgz$/, `-${tgzSha.slice(0, 8)}.tgz`)
+const stampedPath = join(packDir, stampedName)
+copyFileSync(tgzPath, stampedPath)
+console.log(`② packed ${tgzOutput} (${Math.round(statSync(tgzPath).size / 1024 / 1024 * 10) / 10}MB)`)
+console.log(`   上传用资产名（构建戳防"同 URL 不重取"）：${stampedName}\n   local sha256=${tgzSha}`)
 
 // ③④ 远程 digest 比对/上传
 const remoteDigest = () => {
   try {
     // REST 输出 JSON 后本地解析（cmd.exe 下 shell 无法用单引号 jq）
     const j = JSON.parse(run(`"${GH}" api repos/zbsph/dsh-ppt-studio/releases/tags/${tag}`))
-    const a = (j.assets ?? []).find((x) => x.name.endsWith('.tgz'))
+    const a = (j.assets ?? []).find((x) => x.name === stampedName)
     return a?.digest ? a.digest.replace(/^sha256:/, '') : ''
   } catch { return '' }
 }
@@ -62,8 +70,8 @@ if (remote !== tgzSha) {
     console.error(`✗ 本地与远程不一致且 --no-upload：本地 ${tgzSha} ≠ 远程 ${remote || '无'}——请先上传`)
     process.exit(1)
   }
-  console.log('④ 上传（--clobber）...')
-  run(`"${GH}" release upload ${tag} "${tgzPath}" --clobber`)
+  console.log(`④ 上传（${stampedName}）...`)
+  run(`"${GH}" release upload ${tag} "${stampedPath}" --clobber`)
   for (let i = 0; i < 6; i++) {
     const until = new Date(Date.now() + 4000)
     while (new Date() < until) {} // 等 CDN 生效（无 sleep 依赖）
@@ -103,10 +111,10 @@ let assetUrl = null
 let mountMatch = null
 if (bundleMode) {
   const repoUrl = run('git remote get-url origin').trim().replace(/\.git$/, '').replace(/^git@github\.com:/, 'https://github.com/')
-  assetUrl = `${repoUrl}/releases/download/${tag}/${tgzOutput}`
+  assetUrl = `${repoUrl}/releases/download/${tag}/${stampedName}`
   const installedPkgDir = join(dshHome, 'profiles', profileName, 'node_modules', ...pkg.name.split('/'))
-  // 同一 URL 覆盖内容时 pnpm 可能判定"已满足"而不重新下载 → 用 --force 强制重取；
-  // 然后**用内容比对自证**（部署副本 vs 挂载副本），不一致就报警并给出手工命令。
+  // 构建戳文件名 ⇒ URL 每次都不同 ⇒ 包管理器必然重新下载（不必再赌 --force）；
+  // 仍然**用内容比对自证**（部署副本 vs 挂载副本），不一致就改走 remove+add，最后报警并给手工命令。
   const fileSha = (p) => (existsSync(p) ? sha(readFileSync(p)) : null)
   const probeRels = [join('lib', 'index.js'), join('package.json'), 'cordis.patch.yml']
   const contentMatch = () => probeRels.every((rel) => {
@@ -118,8 +126,9 @@ if (bundleMode) {
   try {
     run(`dsh plugin --profile ${profileName} add "${assetUrl}"`)
     if (!contentMatch()) {
-      console.log('    内容与部署副本不一致（同 URL 覆盖内容时 pnpm 会走缓存）→ --force 重取...')
-      run(`dsh plugin --profile ${profileName} add "${assetUrl}" --force`)
+      console.log('    内容与部署副本不一致 → remove + add 强制重取...')
+      try { run(`dsh plugin --profile ${profileName} remove ${pkg.name}`) } catch { /* 可能本就不在 */ }
+      run(`dsh plugin --profile ${profileName} add "${assetUrl}"`)
     }
     mountMatch = contentMatch()
     console.log(mountMatch

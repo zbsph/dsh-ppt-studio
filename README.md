@@ -36,9 +36,10 @@
 本插件声明了 `dsh.bundle.patch`（见仓库根 `cordis.patch.yml`），所以**装完即挂载**——不需要手工建 junction、不需要跑安装器、**不需要 npm 账号**：
 
 ```powershell
-dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio/releases/download/v1.0.0/dsh-external-dsh-ppt-studio-1.0.0.tgz
+# 资产 URL 从 Releases 页面复制（文件名带构建戳，原因见下方"为什么带戳"）
+dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio/releases/download/v1.0.0/dsh-external-dsh-ppt-studio-1.0.0-<构建戳>.tgz
 
-# 升级：把 URL 里的版本/文件名换成新的再跑一次（同一命令幂等）
+# 升级：用 Releases 页面上**新的**资产 URL 再跑一次（URL 必变，见下）
 # 卸载：dsh plugin --profile web remove @dsh-external/dsh-ppt-studio
 # 装完 **重启 dsh web** 生效
 ```
@@ -46,10 +47,15 @@ dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio/releases/do
 `dsh plugin` 是**薄 pnpm 转发器**：在 `<DSH_HOME>/profiles/web/` 里跑 pnpm，然后按**已安装状态**核对
 `dsh.profile.bundles`——声明了 `dsh.bundle` 的依赖会**自动进入层栈**（你不需要手改任何配置）。
 
+> **为什么文件名带构建戳（2026-09-15 实测）**：同一个 URL 用 `--clobber` 覆盖内容后，
+> **`dsh plugin add <同一 URL>` 不会重新下载**（pnpm 按 URL 规格复用旧副本，`--force` 也没绕过；
+> 独立 GET 该 URL 证明 URL 本身已是新字节 ⇒ 是包管理器侧的复用）。所以资产名若固定，用户重跑同一条命令
+> "升级"会拿到旧版本。改成把构建产物的 sha256 前 8 位写进文件名 ⇒ URL 必变 ⇒ 必然重取。
+> 代价：URL 每次构建都不同，请从 Releases 页面复制当前那条（或 `gh release view v1.0.0 --json assets`）。
+
 > **装完怎么确认生效**：`dsh --profile web --dump-config` 里应出现 `ppt-studio` 插件行。
 > 仓库自带这条路径的**真机自证**：`npm run test:bundle`（隔离 `DSH_HOME` + 真 `dsh plugin add` + dump-config 断言，**不碰你的 profiles**）。
-> 本包**未发布到 npm registry**（保持 `private: true`），所以上面的 URL 就是当前唯一的"一条命令"装法；
-> 不想装 pnpm / 要离线时用方式 B（下载 tgz + `install.mjs`）。
+> 本包**未发布到 npm registry**（保持 `private: true`）；不想装 pnpm / 要离线时用方式 B（下载 tgz + `install.mjs`）。
 
 ### 0.3 方式 B：下载发布包（离线/无 pnpm 时）
 
@@ -397,8 +403,12 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 所以不会崩，但请二选一：`dsh plugin --profile web remove <包>` 或移除预设里的插件行。
 
 **Q：怎么升级？**
-→ `dsh plugin` 装的：把 `add` 换成新版本/新 URL 再跑一次（同一命令幂等）；`install.mjs` 装的：重新解压新包跑 `node scripts/install.mjs`。
-两种方式都**重启 dsh web** 后生效。
+→ `dsh plugin` 装的：用 **Releases 页面上的新资产 URL** 再跑一次 `add`（**必须换 URL**——同 URL 覆盖内容时 pnpm 不会重取，见 §0.2）；
+`install.mjs` 装的：重新解压新包跑 `node scripts/install.mjs`。两种方式都**重启 dsh web** 后生效。
+
+**Q：装的时候下载总超时/失败？**
+→ 资产约 33MB、走 GitHub 直连；网络抖动时可在 `~/.dsh/profiles/web/.npmrc` 加：`fetch-timeout=600000`、`fetch-retries=5`、
+`fetch-retry-maxtimeout=120000`，然后重跑 `add`（**失败不会破坏已有安装**，直接重试即可）。
 
 **Q：模板页脚带被 logo 占着，内容放哪？**
 → deck.yaml `theme.safeArea` 声明安全区 → verify 把关；logo 类有意元素加 `expectedOutOfSafeArea`。

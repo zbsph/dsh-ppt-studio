@@ -57,6 +57,7 @@
     "audit:facts": "node scripts/audit-manual-facts.mjs",
     "probe:effect": "node scripts/probe-effect-semantics.mjs",
     "probe:reparse": "node scripts/probe-reparse-safety.mjs",
+    "probe:asset": "node scripts/probe-asset-freshness.mjs",
     "eval:skills": "node scripts/eval-skills-score.mjs"
   }
 }
