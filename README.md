@@ -40,8 +40,9 @@
 dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio/releases/download/v1.0.0/dsh-external-dsh-ppt-studio-1.0.0-<YYYYMMDD-HHmm>-<构建戳>.tgz
 
 # 升级：用**更新的**资产 URL 再跑一次（**不需要先卸载**，URL 必变，见下）
-# 懒得翻页面就用这行拿当前 URL（按文件名排序取最后一条）：
-#   gh release view v1.0.0 --json assets --jq '.assets[].name' | sort | tail -1
+# 懒得翻页面就用这行拿"当前版本"的资产名（按上传时间取最新，实测可用）：
+#   gh release view v1.0.0 --json assets --jq '.assets | sort_by(.createdAt) | last | .name'
+#   → 拼进上面的 URL 尾巴即可。**别用 `sort | tail -1`**：早期没有时间戳的资产名会排到后面，取到的是旧版本（实测踩到）。
 # 卸载：dsh plugin --profile web remove @dsh-external/dsh-ppt-studio
 # 装完 **重启 dsh web** 生效
 ```
@@ -59,6 +60,7 @@ dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio/releases/do
 > `pnpm install` 失败），于是页面上会并排出现多个长得像的名字——sha 段看不出新旧，所以再加
 > `<YYYYMMDD-HHmm>`：**取时间最新那条即当前版本**。
 > 代价：URL 每次构建都不同，请从 Releases 页面复制当前那条（或 `gh release view v1.0.0 --json assets`）。
+> **怎么认"当前那条"**：资产名 = `版本-构建时间-构建戳`，按**上传时间**取最新——`gh release view v1.0.0 --json assets --jq '.assets | sort_by(.createdAt) | last | .name'`。
 
 > **装完怎么确认生效**：`dsh --profile web --dump-config` 里应出现 `ppt-studio` 插件行。
 > 仓库自带这条路径的**真机自证**：`npm run test:bundle`（隔离 `DSH_HOME` + 真 `dsh plugin add` + dump-config 断言，**不碰你的 profiles**）。
