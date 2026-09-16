@@ -2,10 +2,11 @@
   "name": "@dsh-external/dsh-ppt-studio",
   "version": "1.0.0",
   "description": "PPT 工作室：四类任务（从头/补完/修改/总结）工作流 + 布局工程（元素冲突防治）+ PPTD 中间层工具链 + 内置模板库",
-  "//private": "保持 private：不发布到 npm registry（用户已决定）。一键安装走 GitHub Release 的 tgz URL——不需要 npm 账号；若要发布：删掉本行 + 加 publishConfig.access=public + npm login && npm publish。",
+  "//private": "保持 private：不发布到 npm registry（用户已决定）。一键安装走 GitHub Release 的 tgz URL 或 `dsh plugin --profile web add <本仓库 git URL>`——都不需要 npm 账号；若要发布：删掉本行 + 加 publishConfig.access=public + npm login && npm publish。",
   "private": true,
   "type": "module",
   "main": "./lib/index.js",
+  "//lib": "lib/ 是**提交**的构建产物（src 的纯拷贝）：商店（创意工坊）对无 npm 包的条目生成的命令是 `dsh plugin add <repo URL>`，git 安装只拿得到已提交内容，lib 不入库则插件挂不上。守卫：npm run check:lib + smoke 断言。",
   "//dsh": "profile bundle 声明（2026-09-14）：让 `dsh plugin --profile <p> add <本包>` 装完即挂载——launcher 在 profile 里跑完 pnpm 后核对 dsh.profile.bundles，声明了 dsh.bundle 的依赖自动入栈。",
   "dsh": {
     "bundle": {
@@ -54,6 +55,7 @@
     "test:preset": "node scripts/check-preset.mjs",
     "test:e2e": "node scripts/e2e-1.0.mjs",
     "test:bundle": "node scripts/verify-bundle-install.mjs",
+    "check:lib": "node scripts/check-lib-freshness.mjs",
     "audit:facts": "node scripts/audit-manual-facts.mjs",
     "probe:effect": "node scripts/probe-effect-semantics.mjs",
     "probe:reparse": "node scripts/probe-reparse-safety.mjs",

@@ -1,5 +1,10 @@
 node_modules/
-lib/
+# lib/ 是**提交**的构建产物（src 的纯拷贝，26 个文件 / 0.36MB）：
+# 为什么提交：`dsh plugin --profile web add <本仓库 git URL>` 只拿得到 git 里已提交的内容，
+# 而 package.json 的 exports 指向 ./lib/index.js——lib/ 不提交时，git 安装出来的包缺入口文件，
+# 插件挂不上（2026-09-16 实测：装到的包没有 lib/）。提交后 git 安装与 tgz 安装产物一致。
+# 守卫：`npm run check:lib` 与 smoke 断言（committed lib 必须逐字节等于 src）。
+# 但生成物/临时目录仍在忽略之列：
 *.tsbuildinfo
 *.tgz
 .sync-state.json

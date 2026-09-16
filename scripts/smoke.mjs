@@ -1714,6 +1714,45 @@ ok('bundle：未发布到 npm（保持 private），一键安装走 GitHub Relea
   rootPkg.private === true,
   `private=${rootPkg.private ?? 'undefined'}（发布需删掉它 + 加 publishConfig.access=public，见 README §10）`)
 
+// lib/ 必须**提交**且与 src/ 逐字节一致（2026-09-16）：
+// 商店（dsh-web 创意工坊）对没有 npm 包的条目生成的安装命令是 `dsh plugin --profile web add <repo URL>`
+// （见对方仓库 market/src/app.js），而 git 安装只拿得到**已提交**内容——lib/ 不入库时装出来的包缺
+// ./lib/index.js（exports 指向它），插件挂不上（本机隔离 DSH_HOME 实测：装到的包没有 lib/）。
+// 反过来，lib 入库后"改了 src 忘了 build + commit"会静默发出旧代码，所以这条同时守住"入库 + 一致"。
+{
+  const { readdirSync: rd } = await import('node:fs')
+  const { relative: rel } = await import('node:path')
+  const { spawnSync } = await import('node:child_process')
+  const walk = (dir) => {
+    const out = []
+    const stack = [dir]
+    while (stack.length) {
+      const cur = stack.pop()
+      for (const e of rd(cur, { withFileTypes: true })) {
+        const p = join(cur, e.name)
+        if (e.isDirectory()) stack.push(p)
+        else if (e.isFile()) out.push(rel(dir, p).split('\\').join('/'))
+      }
+    }
+    return out.sort()
+  }
+  const libDir = join(root, 'lib')
+  const srcDir = join(root, 'src')
+  const libFiles = walk(libDir)
+  const libSet = new Set(libFiles)
+  const srcFiles = walk(srcDir)
+  const libMissing = srcFiles.filter((f) => !libSet.has(f))
+  const libStale = srcFiles.filter((f) => libSet.has(f) && !readFileSync(join(srcDir, f)).equals(readFileSync(join(libDir, f))))
+  const ignored = /^lib\/\s*$/m.test(readFileSync(join(root, '.gitignore'), 'utf8'))
+  let tracked = null
+  if (existsSync(join(root, '.git'))) {
+    tracked = (spawnSync('git', ['ls-files', 'lib'], { cwd: root, encoding: 'utf8' }).stdout ?? '').trim().split('\n').filter(Boolean).length
+  }
+  ok('bundle：lib/ 已提交且与 src/ 逐字节一致（git 安装只拿已提交内容——缺 lib 则插件挂不上）',
+    libMissing.length === 0 && libStale.length === 0 && !ignored && (tracked === null || tracked >= libFiles.length),
+    `lib=${libFiles.length} 文件｜src=${srcFiles.length}｜缺失=${libMissing.length}｜不一致=${libStale.length}｜.gitignore 忽略=${ignored}｜git 跟踪=${tracked ?? '无 .git 跳过'}`)
+}
+
 // 包名是**单一事实源**：改名（例如为发布改 scope）时必须同步 cordis.patch.yml 与预设插件行，
 // 漏一处 = "装了不生效"或"预设挂不上"，两边都是静默失败 —— 这里把三处钉在一起。
 {
