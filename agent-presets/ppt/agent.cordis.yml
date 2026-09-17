@@ -21,8 +21,6 @@
 
 # The preset's own persona, shadowing the deployment default for this agent.
 # `{{model}}` and `{{cwd}}` resolve from the agent's own route and workspace.
-# 0.1.5-rc.2: dsh-persona 的配置从单一 `text` 改为 `prefix`（required）+ `suffix`——
-# 旧写法 `text:` 会在切换预设时直接报 `$.prefix missing required value`。
 - id: persona
   name: '@deepseek-ai/dsh-persona'
   config:
@@ -221,16 +219,23 @@
         backgroundMode: one-shot
         maxDepth: provider-managed
 
-    - id: workflow-worker-thread
-      name: '@deepseek-ai/dsh-workflow-worker-thread'
+    - id: workflow-ptc
+      name: '@deepseek-ai/dsh-workflow-ptc'
       config:
         provider: spawn
 
     - id: tool-workflow
       name: '@deepseek-ai/dsh-tool-workflow'
 
+    # Off by default with the base row it mirrors: the tool description
+    # restricts `ralph` to runs the human explicitly asked for, and completion
+    # is a worker self-report, not an independent evaluation. Preset files take
+    # no patches, so a session that wants it duplicates this preset under a new
+    # id and drops `disabled`; the shipped root shadows a copy that reuses this
+    # id.
     - id: tool-ralph
       name: '@deepseek-ai/dsh-tool-ralph'
+      disabled: true
       config:
         subagentProvider: spawn
         maxRounds: 64
@@ -253,10 +258,12 @@
     fetch: true
     searchTimeoutMs: 60000
 
-# 显式交付（`present` 工具）：标准预设自某版起含此行，本预设按"standard 全量 + 插件行"补齐，
-# 否则 PPT 会话交付文件时没有可点开的交付卡片。
 - id: present
   name: '@deepseek-ai/dsh-tool-present'
+
+- id: tool-plugin-manager
+  name: '@deepseek-ai/dsh-plugin-manager/tools'
+  disabled: true
 
 # >>> dsh-ppt-studio plugin row（安装器会按"装配路径二选一"决定是否保留本块，勿手改标记）
 # ── PPT 工作流（dsh-ppt-studio）────────────────────────────────────────────

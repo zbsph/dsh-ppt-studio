@@ -8,6 +8,9 @@
  *   ③ `dsh --profile web --dump-config` 的组合树里能看到我们的插件行（id: ppt-studio）；
  *   ④ **升级路径**（2026-09-15 加）：同版本号、内容不同的第二个 tgz 再 add 一次 → 必须真换成新字节，
  *      且依赖规格改指新包、bundles 不丢、dump-config 仍见本行——"以后更新还顺不顺"的可复跑证据。
+ *   ⑤ **--local 迭代模式**（2026-09-18 加）：同一个隔离 DSH_HOME 里跑 `release-sync --local` →
+ *      断言全程无上传、状态文件 mode=local、profile 规格变成指向本地稳定构件的 `file:`，
+ *      且**挂载副本的 lib/index.js 与仓库刚构建的逐字节相同**——"日常迭代不发版，但本机跑的就是最新"的证据。
  *
  * 依赖 `dsh` 与 pnpm 在 PATH 上；缺失则跳过（打印警告，退出码 0，避免把它变成脆弱门禁）。
  * 用法：
@@ -17,7 +20,7 @@
  */
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { readFileSync, existsSync, mkdirSync, rmSync, cpSync, appendFileSync } from 'node:fs'
+import { readFileSync, existsSync, mkdirSync, rmSync, cpSync, appendFileSync, readdirSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { tmpdir } from 'node:os'
@@ -132,6 +135,36 @@ try {
   check('升级后装配不丢：依赖规格已改指新 tgz + bundles 仍含本包 + dump-config 仍见 ppt-studio 行',
     spec2.includes('tgz') && bundles2.includes(NAME) && /ppt-studio/.test(`${dump2.stdout ?? ''}${dump2.stderr ?? ''}`),
     `spec=${spec2}｜bundles含=${bundles2.includes(NAME)}｜dump=${/ppt-studio/.test(`${dump2.stdout ?? ''}${dump2.stderr ?? ''}`)}`)
+
+  // 6) **--local 迭代模式自证**（2026-09-18）：日常迭代不发 GitHub，但本机跑的必须就是刚构建的字节。
+  //    形状：复用同一个隔离 DSH_HOME（此刻 profile 已是 bundle 模式）→ 跑 `release-sync --local`
+  //    → 断言五件事：退出码 0 / 全程没有上传动作 / 状态文件 mode=local + mountMatch + ok
+  //    / profile 规格变成指向**本地稳定构件**的 file: / **挂载副本的 lib/index.js 与仓库刚构建的逐字节相同**。
+  //    最后一条才是"本机跑的就是最新"的判据——前四条都可能在"装的其实是旧字节"时仍然为真。
+  const syncRoot = join(work, 'sync-root')
+  const syncState = join(work, 'sync-state.json')
+  const rel = run('node', ['scripts/release-sync.mjs', '--local', '--root', syncRoot, '--state', syncState], { env, cwd: root })
+  const relOut = `${rel.stdout ?? ''}\n${rel.stderr ?? ''}`
+  check('--local：`release-sync --local` 退出码 0', rel.status === 0, relOut.trim().split(/\r?\n/).slice(-4).join(' | ').slice(0, 240))
+  check('--local：全程**没有**上传动作（本地迭代不发 GitHub）', !/release upload/.test(relOut),
+    /release upload/.test(relOut) ? '出现了 release upload！' : '未上传 ✓')
+  const st = existsSync(syncState) ? JSON.parse(readFileSync(syncState, 'utf8')) : {}
+  check('--local：状态文件 mode=local + mount=bundle-local + mountMatch + ok',
+    st.mode === 'local' && st.mount === 'bundle-local' && st.mountMatch === true && st.ok === true,
+    JSON.stringify({ mode: st.mode, mount: st.mount, mountMatch: st.mountMatch, ok: st.ok }))
+  const prof3 = existsSync(profPkg) ? JSON.parse(readFileSync(profPkg, 'utf8')) : {}
+  const spec3 = String(prof3.dependencies?.[NAME] ?? '')
+  check('--local：profile 依赖规格变成指向**本地稳定构件**的 file: 规格',
+    spec3.startsWith('file:') && spec3.includes('_artifacts'), spec3)
+  // 构件必须落在稳定目录：若还在 tmpdir，下次系统清理临时目录后该 profile 的 pnpm install 会直接失败。
+  let artifactFiles = []
+  try { artifactFiles = readdirSync(join(syncRoot, '_artifacts')).filter((f) => f.endsWith('.tgz')) } catch { /* 目录缺失即失败 */ }
+  check('--local：本地构件落在稳定目录 `_artifacts/`（不是 tmpdir），且恰好保留当前那一个',
+    artifactFiles.length === 1, `${join(syncRoot, '_artifacts')} → ${artifactFiles.join(', ') || '(空)'}`)
+  const repoSha12 = sha(join(root, 'lib', 'index.js'))
+  const mountSha12 = sha(join(installedDir, 'lib', 'index.js'))
+  check('--local：**挂载副本 == 仓库刚构建的 lib/index.js**（这才是"本机跑的就是最新"的判据）',
+    repoSha12 === mountSha12, `repo=${repoSha12}｜mount=${mountSha12}`)
 } finally {
   rmSync(work, { recursive: true, force: true })
 }

@@ -28,7 +28,8 @@
 ### 0.1 前提
 
 - **DSH（DeepSeek Harness）web 实例**已在本机运行（`dsh web`）；本插件是预设+插件形态，不改变 DSH 安装。
-- **宿主版本基线：DSH `0.1.5-rc.2`**（2026-09 实测适配：`tools` / `commands` / `systemPrompt` / `webServer` / `skills` / `session/event` / `system-prompt/assemble` 契约逐项核对，并在真实进程里跑过挂载、内嵌技能注册与工作流提示注入）。更早的 0.1.x 未逐一验证；`skills` 服务缺失（极简装配）时插件仍完整可用，只是手册不以技能形式出现。
+- **宿主版本基线：DSH `0.1.6-alpha.2`**（2026-09-18 实测适配；上一基线 `0.1.5-rc.2` 亦已验证）。`tools` / `commands` / `systemPrompt` / `webServer` / `skills` / `session/event` / `system-prompt/assemble` 契约逐项核对，并在真实进程里跑过挂载、内嵌技能注册与工作流提示注入。更早的 0.1.x 未逐一验证；`skills` 服务缺失（极简装配）时插件仍完整可用，只是手册不以技能形式出现。
+  > **升级 DSH 后请先跑 `npm test`**（自 2026-09-18 起含预设漂移自检）：本插件的「PPT 工作室」预设是**随包 standard 预设的全量副本 + 插件行**，上游改预设行（改包名、改 config、加/停用行）而副本没跟，会话就会挂不上——插件代码本身却完全正常，极易误判成"插件坏了"。
 - 可选增强（没有也能用，自动降级）：本机 Microsoft Office（真渲染通道）、Edge/Chrome（截图与 M2 实测）、python + python-pptx（兜底引擎）。
 
 ### 0.2 方式 A：`dsh plugin add`（标准姿势 · **一条命令**，推荐）
@@ -462,14 +463,20 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 **Q：网页/百科内容查不到？**
 → `web_fetch` 受本机网络/DNS 限制（非公网 IP 拦截）；`ppt_crosscheck` 数据核查表为"页面 source 自证"机制，交付说明已如实标注（P2，环境侧）。
 
-**Q：点进「PPT 工作室」弹出 `failed to apply loader entry persona … $.prefix missing required value`？**
-→ DSH 升级改了**预设行配置**：0.1.5-rc.2 的 `@deepseek-ai/dsh-persona` 由 `text` 改为 `prefix`(必填) + `suffix`。本预设是随包 standard 预设的副本，旧副本带着旧形状就会在切换时被校验拦下。**重跑一次安装即可修好**（`node scripts/install.mjs` —— 预设以包为准总是刷新）；想先自查：`node scripts/check-preset.mjs`（逐行比对本预设与随包 standard，报漂移/缺行）。自建预设也可能中招，同样的改法：把 `config.text` 拆成 `prefix` + `suffix`。
+**Q：升级 DSH 之后「PPT 工作室」选不出来／切过去就报错（如 `$.prefix missing required value`、或某插件行 `Cannot find module`）？**
+→ 这是**预设 composition 跟着上游漂移**，不是插件坏了——插件代码与其宿主契约在 0.1.5-rc.2 / 0.1.6-alpha.2 上都已逐项核对通过。
+本预设是随包 standard 预设的**全量副本 + 插件行**，上游一改预设行（改 config / 改包名 / 加行 / 停用行），副本没跟就会被校验或解析拦下。已发生的两次：
+① `0.1.5-rc.2` 把 `@deepseek-ai/dsh-persona` 由 `text` 改为 `prefix`(必填) + `suffix`；
+② `0.1.6-alpha.2` **删掉了 `@deepseek-ai/dsh-workflow-worker-thread`**（换成 `@deepseek-ai/dsh-workflow-ptc`）、把 `tool-ralph` 改为默认停用、新增 `tool-plugin-manager`。
+**修法**：拿到修好的版本后重跑安装即可（`node scripts/install.mjs` —— 预设以包为准总是刷新）。
+**自查**：`npm test`（自 2026-09-18 起含预设自检）或单独 `node scripts/check-preset.mjs`；它逐行比对本预设与随包 standard，报漂移/缺行。
+自建预设同样会中招，改法是**重新以随包 standard 为底生成 + 保留自己的插件行块**（别手工维护那两百多行）。
 
 ---
 
 ## 9. 环境与能力边界
 
-**环境**：DSH web `0.1.5-rc.2`（Windows 主机；宿主服务/事件契约已逐项核对）。Office/Edge 为**可选增强**（探测失败自动降级）；python-pptx 为**可选兜底**。路径/中间层一律 UTF-8；已兼容 WPS 导出的 UTF-16 文件。
+**环境**：DSH web `0.1.6-alpha.2`（Windows 主机；宿主服务/事件契约已逐项核对）。Office/Edge 为**可选增强**（探测失败自动降级）；python-pptx 为**可选兜底**。路径/中间层一律 UTF-8；已兼容 WPS 导出的 UTF-16 文件。
 
 **插件对外交付的三样东西**（都挂在插件 fiber 上，停用/卸载即净）：`ppt_*` 模型工具面 + `/ppt` 命令面；工作流提示词段（`system-prompt/assemble` 注入 `ppt-workflow`）；内置手册 skill（`ctx.skills.register` 内嵌注册）。自检入口：`ppt_state` 会一并报告手册 skill 的注册与可见状态。
 
@@ -496,16 +503,27 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + smoke（213 断言）
+npm test                        # build + smoke（213 断言）+ 预设漂移自检（DSH 升级后必跑）
 npm run test:real               # 真实资产回归（WPS fixture；19 页 deck 缺失自动跳过）
 node scripts/preflight-1.0.mjs  # 发布前预检（坏输入/边界/幂等/性能/媒体 splice——11 断言）
 npm run test:preset             # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
-npm run test:bundle             # 安装路径自证：隔离 DSH_HOME + 真 `dsh plugin add` + dump-config 断言（不碰你的 profiles）
+npm run test:bundle             # 安装路径自证（20 断言）：隔离 DSH_HOME + 真 `dsh plugin add` + dump-config + `--local` 迭代模式（不碰你的 profiles）
 npm run check:lib               # lib/ 新鲜度：提交的构建产物必须逐字节等于 src/（smoke 里有同义断言）
 npm run eval:skills -- --a <deckA> --b <deckB>   # 技能效果对照打分（纯本地；两个 arm 各跑一次后复算口径，见 docs/06 §7）
 node scripts/eval-skills-blind.mjs <deckA> <deckB>   # 生成匿名+随机的盲评材料（结构化盲评协议，见 docs/06 §7.6）
 node scripts/audit-manual-facts.mjs  # 手册事实审计：逐条把"手册 vs 源码"验一遍并打印源码锚点（39 条）
 ```
+
+**改完代码怎么让本机跑上新版**（两种模式，都**必须重启 `dsh web`**——profile bundle 挂载不热更）：
+
+```bash
+npm run sync -- --local   # 日常迭代：不发 GitHub，本机跑的=你刚构建的字节（构件落在 D:\plugins\_artifacts\）
+npm run sync              # 发版：上传 GitHub 资产 + 把本机与 GitHub 拉回字节级同源
+```
+
+- `--local` 会先 `git fetch` 检查本地是否落后于 `origin/<分支>`，**落后就直接失败**（怕"以为在最新版上迭代、其实不是"——这种偏差没有任何症状，直到发版才发现分叉）。离线时明确标注"未能确认"并继续。
+- 两种模式都只有**一条挂载路径**（profile bundle 行），差别只在"从哪取字节"；`--local` 用本地 tgz 的 `file:` 规格，**不要**为了图快切回 junction/预设行装法——那会多出一条路径，"我改的是哪份代码"就有两种答案，而且答错不报错。
+- 想退回 GitHub 版本：`dsh plugin --profile web add <Releases 页面上的资产 URL>`。
 
 **关于发布到 npm**：本包**当前不发布**（`private: true`），一键安装走上面的 GitHub Release tgz URL（不需要 npm 账号）。
 将来若要发布：删掉 `package.json` 的 `private`、加 `"publishConfig": { "access": "public" }`（作用域包默认 restricted），再 `npm login && npm publish`；

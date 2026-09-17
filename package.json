@@ -49,7 +49,8 @@
   "scripts": {
     "build": "bash scripts/build.sh",
     "build:node": "node scripts/build.mjs",
-    "test": "node scripts/build.mjs && node scripts/smoke.mjs",
+    "sync": "node scripts/release-sync.mjs",
+    "test": "node scripts/build.mjs && node scripts/smoke.mjs && node scripts/check-preset.mjs",
     "test:real": "node scripts/regression-real.mjs",
     "test:preflight": "node scripts/preflight-1.0.mjs",
     "test:preset": "node scripts/check-preset.mjs",
