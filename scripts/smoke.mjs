@@ -1821,6 +1821,39 @@ if (pyEnv.has) {
 }
 await rm(pyDeck, { recursive: true, force: true })
 
+// ── 44. 表格字号：audit 档的最小字号断言不得被表格自己架空（2026-09-18 新增）──────────────
+// 背景（真 bug · 自相矛盾）：export-pptx 的表格 cell 硬编码 `sz="1100"`（11pt），而 audit 回读断言
+//   扫**全 slide XML** 取全局最小 sz 与 `theme.minFontSize` 比 ⇒ 只要工程里有一张表、且用户声明了
+//   下限 ≥ 12，audit 档就**永远 ✗**，而 DSL 里**没有任何手段**能修好它（table 元素没有字号字段）。
+//   这是"把用户逼到无法满足的门禁"。同一处还有跨层不一致：预览层硬编码 12px、成品层 11pt。
+// 判据：三层同源（normalizePage 算一次 fontPt → 快照 / 预览 / 成品都用它），且成品最小 sz ≥ 用户下限。
+const tfDeck = join(root, 'examples', 'tablefont-smoke')
+await rm(tfDeck, { recursive: true, force: true })
+await mkdir(join(tfDeck, 'pages'), { recursive: true })
+await writeFile(join(tfDeck, 'deck.yaml'), 'version: 1\ntitle: tf\nsize: [960, 540]\ntheme: {colors: {ink: "#1F2937"}, textStyles: {body: {fontSize: 18, color: "$ink"}}, minFontSize: 14}\npages:\n  - pages/01.yaml\n')
+await writeFile(join(tfDeck, 'pages', '01.yaml'), [
+  'pageType: content', 'elements:',
+  '  - elementId: tb', '    elementType: table', '    bounds: [60, 60, 800, 200]',
+  '    cols: [指标, 数值]', '    rows: [["甲", "1"], ["乙", "2"]]', '', ''].join('\n'))
+const tfCtx = await resolveDeck(tfDeck)
+const tfR = await renderDeck(tfCtx, {})
+const tfSnap = tfR.layout.pages[0].elements.find((e) => e.kind === 'table')
+const tfHtml = readFileSync(join(tfR.outDir, tfR.htmlFiles[0]), 'utf8')
+const tfExp = await exportPptx(tfCtx, { out: 'out-tablefont.pptx', engine: 'pptd' })
+const tfZip = zipRead(readFileSync(tfExp.file))
+let tfMin = Infinity
+for (let i = 1; tfZip.has(`ppt/slides/slide${i}.xml`); i++) {
+  for (const m of tfZip.get(`ppt/slides/slide${i}.xml`).toString('utf8').matchAll(/sz="(\d+)"/g)) {
+    tfMin = Math.min(tfMin, Number(m[1]))
+  }
+}
+ok('表格字号：三层同源（快照 fontPt = 预览 cell px = 成品 sz = 用户下限 14pt，不再 12px vs 11pt）',
+  tfSnap?.fontPt === 14 && tfHtml.includes('font-size:14px') && tfMin / 100 === 14,
+  `快照 fontPt=${tfSnap?.fontPt}｜预览含 14px=${tfHtml.includes('font-size:14px')}｜成品最小 ${tfMin / 100}pt`)
+ok('表格字号：成品全局最小 sz ≥ theme.minFontSize（audit 档不再被表格自相矛盾架空）',
+  tfMin / 100 >= 14, `最小 ${tfMin / 100}pt / 用户下限 14pt`)
+await rm(tfDeck, { recursive: true, force: true })
+
 // ── 40. profile bundle 安装路径（2026-09-14："dsh plugin add 能不能装"）────────────────
 // 机制：`dsh plugin --profile <p> <args>` = 在 profile 目录跑 pnpm，然后按**已安装状态**核对
 // dsh.profile.bundles——声明了 dsh.bundle.patch 的依赖自动入栈。真机端到端自证在
