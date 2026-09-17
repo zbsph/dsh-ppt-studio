@@ -850,16 +850,26 @@ const inj = injectMeasureScript('<html><head></head><body><div class="el" id="a"
 ok('v0.12：测量脚本注入（raw text 不转义 <）——script 原样嵌入且可提取',
   inj.includes('__ppt_measured') && inj.includes('for(var i=0;i<els.length') && JSON.stringify(extractMeasured(`<html><head><script id="__ppt_measured" type="application/json">${JSON.stringify([{ id: 'a', lines: 2 }])}</script></head></html>`)) === JSON.stringify([{ id: 'a', lines: 2 }]))
 // 27.2 实测交叉三态（估算漏报 → error；复现 → warning；估算过报 → relief warning）
-const xLayout = { pages: [{ index: 1, elements: [
+// 【2026-09-18 修】夹具必须复刻**真契约**。此前这里两侧都写 `index: 1`，于是掩盖了一个真 bug：
+//   真生产者底基不同（layout.json 由 render-html 取 schema 的 pages.length ⇒ 0 基；measured.json 由
+//   measurement 取 i+1 ⇒ 1 基），而 measuredCrossCheck 用 `index` 相等配对 ⇒ **永不配对、恒返空结果**，
+//   整条 M2 通道在"报通过"（绿灯），且"实测无溢出"与"通道失效"在输出上不可区分。
+//   现在跨档配对键是**两侧都写、都是 1 基**的 `pageNo`；`index` 退回"各自文件的内部数组下标"（都 0 基）。
+//   下面这条夹具自证就是防"有人把夹具改回那个掩盖 bug 的形状"。
+const xLayout = { pages: [{ pageNo: 1, index: 0, elements: [
   { id: 't1', kind: 'text', bounds: { x: 0, y: 0, w: 100, h: 50 }, metrics: { overflowY: 0, lines: 2 } },
   { id: 't2', kind: 'text', bounds: { x: 0, y: 0, w: 100, h: 50 }, metrics: { overflowY: 5, lines: 2 } },
   { id: 't3', kind: 'text', bounds: { x: 0, y: 0, w: 100, h: 50 }, metrics: { overflowY: 8, lines: 2 } },
 ] }] }
-const xMeasured = { pages: [{ index: 1, elements: [
+const xMeasured = { pages: [{ pageNo: 1, index: 0, elements: [
   { id: 't1', kind: 'text', overflowY: 6, lines: 3 },     // 估算 0 / 实测 6 → 漏报 error
   { id: 't2', kind: 'text', overflowY: 4, lines: 2 },     // 估算 5 / 实测 4 → 复现 warning
   { id: 't3', kind: 'text', overflowY: 0.5, lines: 2 },   // 估算 8 / 实测 0.5 → relief warning
 ] }] }
+ok('v0.12：实测交叉夹具复刻真契约（两侧都带 1 基 pageNo 配对键，index 只是内部下标）',
+  xLayout.pages.every((p, i) => p.pageNo === i + 1) && xMeasured.pages.every((p, i) => p.pageNo === i + 1)
+  && xLayout.pages.length === xMeasured.pages.length,
+  `L.pageNo=${xLayout.pages.map((p) => p.pageNo)}｜M.pageNo=${xMeasured.pages.map((p) => p.pageNo)}`)
 const xR = mcc(xLayout, xMeasured)
 ok('v0.12：实测交叉——估算漏报 → error（M2 核心捕获）', xR.some((f) => f.code === 'measured-overflow' && f.severity === 'error' && f.id === 't1'), JSON.stringify(xR))
 ok('v0.12：实测交叉——估算过报 → relief warning（三态判据：漏报 1/复现 1/relief 1）',
@@ -881,16 +891,61 @@ await (await import('node:fs/promises')).writeFile(join(m2Deck, 'pages', '02.yam
   '    content: {text: "这是一段测试文本用于实测档验证", fontSize: 18, color: "#2563EB"}', '', ''].join('\n'))
 const m2r = await measureLayout(m2Deck)
 const { findEdge } = await import('../lib/measurement.js')
-if (findEdge()) {
+const m2Browser = Boolean(findEdge())
+const m2Layout = m2Browser ? JSON.parse(await (await import('node:fs/promises')).readFile(join(m2Deck, 'preview', 'layout.json'), 'utf8')) : null
+// 注意：if / else **两支必须发出同样条数的断言**。原来 if 支 2 条、else 支 1 条，
+// 于是无浏览器机器上 smoke 总数会少 1，而 §37.10 的文档计数自证会因此**假红**（报"文档计数过期"，
+// 其实只是环境不同）。这类"总数随环境漂移"本身就是同一族静默问题，一并修掉。
+if (m2Browser) {
   ok('v0.12：真实测量（2 页落盘 measured.json + 无估算/实测分歧）',
     m2r.pages === 2 && m2r.measured.pages.length === 2 && existsSync(join(m2Deck, 'preview', 'measured.json')),
     `pages=${m2r.pages} notes=${(m2r.notes ?? []).join(';')}`)
-  const m2Layout = JSON.parse(await (await import('node:fs/promises')).readFile(join(m2Deck, 'preview', 'layout.json'), 'utf8'))
   const m2x = mcc(m2Layout, m2r.measured)
-  ok('v0.12：真实测量交叉无分歧（短文本不溢出）', !m2x.some((f) => f.severity === 'error'), `出现实测 error：${JSON.stringify(m2x)}`)
+  ok('v0.12：真实测量交叉无分歧（短文本不溢出——**阴性断言，防误报**；通道是否真在比由 §27.5/27.6 的注入断言负责）',
+    !m2x.some((f) => f.severity === 'error'), `出现实测 error：${JSON.stringify(m2x)}`)
 } else {
   ok('v0.12：无浏览器跳过真实测量（降级路径）', true)
+  ok('v0.12：无浏览器跳过实测交叉（降级路径）', true)
 }
+// 27.4~27.7 真产物断言（2026-09-18 新增）。**必须在真产物上跑**——原 bug 的全部原因就是
+//   "夹具照着函数期望的形状写、从没调用过真生产者"。无浏览器时按**跳过**计并写明标签：
+//   不伪装成通过，同时让断言总数保持恒定（否则 §37.10 的文档计数自证在无浏览器机器上会红）。
+const m2Real = (label, fn) => {
+  if (!m2Browser) return ok(`${label}（无浏览器：跳过）`, true)
+  const r = fn()
+  return ok(label, r.ok, r.extra ?? '')
+}
+m2Real('v0.12：两档页号契约（真产物）——layout.json 与 measured.json 的 1 基 pageNo 一一对应', () => {
+  const L = m2Layout.pages.map((p) => p.pageNo)
+  const M = m2r.measured.pages.map((p) => p.pageNo)
+  return {
+    ok: L.length === 2 && M.length === 2 && L.every((n, i) => n === i + 1) && M.every((n, i) => n === i + 1) && L.join() === M.join(),
+    extra: `layout=${JSON.stringify(L)}｜measured=${JSON.stringify(M)}`,
+  }
+})
+// 在**真产物**上只改一个元素的实测值：交叉核查必须捕获它。这条是"通道真的在比对"的判据——
+// 原来的"无分歧"断言是**否定式**的，通道死了也照样绿。
+const injectOverflowAt = (doc, pageNo, elId, px) => {
+  const copy = JSON.parse(JSON.stringify(doc))
+  const pg = (copy.pages ?? []).find((p) => p.pageNo === pageNo)
+  const el = (pg?.elements ?? []).find((e) => e.id === elId)
+  if (el) el.overflowY = px
+  return copy
+}
+m2Real('v0.12：实测交叉捕获注入溢出（真产物·第 2 页元素 t2 注入 40px → 必须报 1 条 error）', () => {
+  const x = mcc(m2Layout, injectOverflowAt(m2r.measured, 2, 't2', 40))
+  return { ok: x.filter((f) => f.code === 'measured-overflow' && f.severity === 'error' && f.id === 't2').length === 1, extra: JSON.stringify(x) }
+})
+m2Real('v0.12：实测交叉页配对无错位（真产物·第 1 页元素 t 的注入必须落在第 1 页，不得与第 2 页串页）', () => {
+  const x = mcc(m2Layout, injectOverflowAt(m2r.measured, 1, 't', 40))
+  return { ok: x.filter((f) => f.code === 'measured-overflow' && f.id === 't').length === 1, extra: JSON.stringify(x) }
+})
+m2Real('v0.12：缺 pageNo 的旧版 measured.json → 报 measured-unpaired（契约破坏必须响亮，不得静默返空）', () => {
+  const stale = JSON.parse(JSON.stringify(m2r.measured))
+  for (const p of stale.pages) delete p.pageNo
+  const x = mcc(m2Layout, stale)
+  return { ok: x.length === 2 && x.every((f) => f.code === 'measured-unpaired' && f.severity === 'error'), extra: JSON.stringify(x) }
+})
 await rm(m2Deck, { recursive: true, force: true })
 
 // ── 28. v0.13.0 (M3)：数据连贯——跨页数字对账 + source 证据核查表 + themeRef 断言 ──
@@ -1474,7 +1529,7 @@ verifyLines.forEach((line, i) => {
     if (/'error'/.test(window)) errorCodes.add(m[1])
   }
 })
-const EXPECTED_ERROR_CODES = ['theme-conformance', 'out-of-page', 'text-overflow', 'content-collision', 'unexpected-overlap', 'measured-overflow']
+const EXPECTED_ERROR_CODES = ['theme-conformance', 'out-of-page', 'text-overflow', 'content-collision', 'unexpected-overlap', 'measured-overflow', 'measured-unpaired']
 const sameSet = (a, b) => a.size === b.length && b.every((x) => a.has(x))
 ok('手册 vs 源码：门禁错误码清单与 verify.js 一致（错误码增删会被当场抓到）',
   sameSet(errorCodes, EXPECTED_ERROR_CODES),
@@ -1857,6 +1912,11 @@ ok('制作手册零指向答疑手册：craft/data/copy 正文不出现 `ppt-stu
 // 只扫"当前状态"文档（README / 技术报告 / 评审测试矩阵 / 使用手册）；docs/01/03/04 里的历史数字是记录，不动。
 // 覆盖边界（故意）：只认"N 断言"与"N/N"两种<b>套件规模</b>写法。docs/06 §一 是历史快照，那里写的是
 // 裸的 "smoke 181"（无"断言"二字），由 §一 上方的"计数说明"解释；当前规模只认 §2.1 与 §六。
+// 【2026-09-18 收紧】`N/N |` 这条原本匹配**任何** `a/b |` 表格单元格——只要该行提到 "smoke" 就命中。
+//   实测被自己踩到：新增一条 smoke 行的格子里写 `4/4 |`（4 条真产物断言全绿）→ 被误判成"文档计数过期"。
+//   且 `preflight 11/11`、`test:bundle 20/20` 之类写在 smoke 行里同样会误报。
+//   收紧为"分子 ≥ 100 才算套件规模"：smoke 规模已 218，不会再回到两位数；其余套件应由 `N 断言` 那种
+//   明确写法表达，而不是靠任何 `a/b` 单元格。防的仍是"加断言忘了同步文档"。
 const liveTotal = pass + fail + 1 // 含本条自身
 const countFiles = ['README.md', join('docs', '02-技术报告.md'), join('docs', '06-评审与测试.md'), join('skills', 'ppt-studio-manual', 'SKILL.md')]
 const staleCounts = []
@@ -1864,7 +1924,10 @@ for (const rel of countFiles) {
   readFileSync(join(root, rel), 'utf8').split(/\r?\n/).forEach((line, i) => {
     if (!/smoke/i.test(line)) return
     for (const m of line.matchAll(/(\d+)\s*断言/g)) if (Number(m[1]) !== liveTotal) staleCounts.push(`${rel}:${i + 1}=${m[1]}`)
-    for (const m of line.matchAll(/(\d+)\/(\d+)\s*\|/g)) if (Number(m[1]) !== liveTotal || Number(m[2]) !== liveTotal) staleCounts.push(`${rel}:${i + 1}=${m[1]}/${m[2]}`)
+    for (const m of line.matchAll(/(\d+)\/(\d+)\s*\|/g)) {
+      if (Number(m[1]) < 100) continue // 非套件规模（如 `4/4 |`、`preflight 11/11`）——见上方收紧说明
+      if (Number(m[1]) !== liveTotal || Number(m[2]) !== liveTotal) staleCounts.push(`${rel}:${i + 1}=${m[1]}/${m[2]}`)
+    }
   })
 }
 ok('文档计数自证：所有"smoke … N 断言 / N/N"都等于本次真实断言数（加断言必须同步 6 处引用）',

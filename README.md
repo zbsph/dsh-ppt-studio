@@ -110,7 +110,7 @@ node scripts/install.mjs
 ### 0.6 安装后的自检（四句命令）
 
 ```powershell
-node scripts/smoke.mjs          # 213 断言（含全链路）
+node scripts/smoke.mjs          # 218 断言（含全链路）
 node scripts/preflight-1.0.mjs  # 11 断言（坏输入/边界/幂等/性能）
 node scripts/check-preset.mjs   # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
 node scripts/e2e-1.0.mjs        # 13 断言（真浏览器测量 + 真 Office 渲染 + splice/slice 自证；约 2-3 分钟）
@@ -323,6 +323,8 @@ elements:
 - **字号下限 = 用户指令**（2026-09-06 用户拍板）：用户给出最小字号（如"不得小于 14 号"）→ 模型写入 `theme.minFontSize` 并严格执行（导出缩字不得低于它）；**未给下限不设强制**（auto-fit 仅 60% 原字号防荒谬保底，绝不升字）。插件不预设任何默认下限。
 - verify 通过 ⇒ 导出不缩字；到达下限仍溢出 → 报告 ✗（修复：扩大容器/精简文案；下限是用户的，不是插件的）。
 - **M2 实测档**（`ppt_measure` + `ppt_verify measured=true`）：浏览器真实排版测量——实测溢出且估算没报 = 新 error（估算漏报）；估算报但实测通过 = warning（字体差异，人工确认）。实测=终审、估算=预检。
+  - **两档页号契约**（2026-09-18 明文）：`preview/layout.json` 与 `preview/measured.json` 的每页都带 **1 基 `pageNo`**，交叉核查按它配对（`index` 只是各自文件的内部数组下标）。对不上会报 `measured-unpaired` 错误而**不是静默跳过**——契约破坏必须响亮，因为"静默返空"与"真的没问题"在输出上不可区分。
+  - **看到 `measured-unpaired` 怎么办**：几乎都是 `measured.json` 是旧版产物、或在 `ppt_measure` 之后又增删过页面 → **重跑一次 `ppt_render` + `ppt_measure`** 即可。
 
 ### 5.4 主题一致性（统一基础样式）
 
@@ -503,7 +505,7 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + smoke（213 断言）+ 预设漂移自检（DSH 升级后必跑）
+npm test                        # build + smoke（218 断言）+ 预设漂移自检（DSH 升级后必跑）
 npm run test:real               # 真实资产回归（WPS fixture；19 页 deck 缺失自动跳过）
 node scripts/preflight-1.0.mjs  # 发布前预检（坏输入/边界/幂等/性能/媒体 splice——11 断言）
 npm run test:preset             # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
@@ -537,7 +539,7 @@ npm run sync              # 发版：上传 GitHub 资产 + 把本机与 GitHub 
 - **文档链（每次改动必同步）**：`docs/01-需求与目标.md`（需求/决策/冲突）· `docs/02-技术报告.md`（实现级）· `docs/03-更新日志.md`（版本记录）· `docs/04-路线图与里程碑.md`（验收）· `docs/05-迭代流程.md`(检查单) · `docs/06-评审与测试.md`（发布前评审/测试矩阵）。
 - **git 约定**：一个功能/修复一个 commit；message `vX.Y.Z: <一句话目的>（反馈编号）`；**`lib/` 提交**（构建产物，见下）。
 - **`lib/` 为什么提交**（2026-09-16）：`dsh plugin --profile web add <本仓库 git URL>` 只拿得到 git 里**已提交**的内容，而 `exports` 指向 `./lib/index.js`——lib 不入库时，git 安装出来的包缺入口文件、插件挂不上（实测：装到的包没有 lib/）。提交后 git 安装与 tgz 安装产物一致。代价是"改了 src 忘了 build + commit"会静默发出旧代码，所以配了守卫：`npm run check:lib` + smoke 里一条同义断言（lib 必须逐字节等于 src，且 `.gitignore` 不得忽略它、git 必须跟踪它）。改码流程 = 改 `src/` → `node scripts/build.mjs` → 连同 `lib/` 一起提交。
-- **既有的自动化验证**：smoke（213 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 手册事实审计（`audit-manual-facts.mjs`）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
+- **既有的自动化验证**：smoke（218 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 手册事实审计（`audit-manual-facts.mjs`）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
 - **OOXML 产物必须用真消费者验**（2026-09-14 教训）：加备注页时先写的 `notesMasterIdLst`，python-pptx 照读不误，**真 PowerPoint 却报"文件或目录损坏"**——
   第三方库通过 ≠ 能打开。凡改导出编码，至少走一次真 PowerPoint（`ppt_visual`）/真浏览器，别只信自证断言。
 

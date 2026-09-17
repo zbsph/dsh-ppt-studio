@@ -11,6 +11,8 @@
  *  - WARN  density        单页内容元素（text/table/chart）≥ 12（信息密度警示）
  *  - ERROR theme-conformance  元素颜色不在 theme.colors 且非中性灰（themeConformance: strict 默认 / suggest 降为 warning / off 跳过）
  *  - ERROR measured-overflow  M2 实测档：实测溢出而估算漏报（实测=终审）；估算也报 = warning
+ *  - ERROR measured-unpaired  M2 实测档：两档页号契约不一致（缺 pageNo / 找不到对应页）——**契约破坏必须报错**，
+ *                             不得静默跳过（静默返空与"真没问题"在输出上不可区分，2026-09-18 假绿灯事故的根因）
  */
 
 const TOL = 1 // px
@@ -461,17 +463,40 @@ export function verifyDeck(layout) {
  */
 /**
  * M2 文本实测档交叉（D3：实测=终审、估算=预检）。
- * @param layout 估算档（layout.json：pages[].elements[].metrics）
- * @param measured 实测档（preview/measured.json：pages[].elements[]）
+ * @param layout 估算档（layout.json：pages[].pageNo 1 基 + elements[].metrics）
+ * @param measured 实测档（preview/measured.json：pages[].pageNo 1 基 + elements[]）
+ * **两档按 1 基 `pageNo` 配对**（`index` 只是各自文件的内部数组下标，两侧都是 0 基）——
+ *   这是 2026-09-18 明文化的契约：此前按 `index` 配对，而两侧底基不同（0 基 vs 1 基）⇒ 永不配对。
  * 语义：实测报错（估算没报）= M2 核心捕获（error，估算漏报）；实测复现（估算也报）= warning 佐证；
  *       估算报错但实测通过 = warning（字体差异，人工确认）；行数差异 = suggestion（断行差异目检）。
+ * 契约破坏（缺 pageNo / 找不到对应页）= error `measured-unpaired`，响亮报错而非静默跳过。
  */
 export function measuredCrossCheck(layout, measured) {
   const out = []
   if (!measured?.pages) return out
   for (const mp of measured.pages ?? []) {
-    const lp = (layout.pages ?? []).find((p) => p.index === mp.index)
-    if (!lp) continue
+    // 跨档配对键 = **1 基 pageNo**（2026-09-18 修）。
+    // 背景（真 bug，藏了整轮 1.0.0）：此前这里是 `p.index === mp.index`，而两个生产者底基不同——
+    //   layout.json 的 index 是 **0 基数组下标**（render-html 取 schema 的 pages.length），
+    //   measured.json 的 index 曾是 **1 基页号**（measurement 取 i+1）⇒ 永远配不上，
+    //   整条 M2 通道恒返空结果，界面上显示"✓ 全部一致或实测通过"——**假绿灯**。
+    //   更隐蔽的是 offset 恰好为 1：一旦两侧元素 id 跨页复用，它会拿第 N 页的实测去比第 N+1 页的估算。
+    // 现在两侧都写 1 基 pageNo，index 退回"各自文件的内部下标"。
+    // 契约破坏**必须响亮**（这是本 bug 藏这么久的根因）：配不上就报 measured-unpaired，
+    //   绝不静默 continue——静默返空与"真的没问题"在输出上不可区分。
+    if (mp.pageNo == null) {
+      out.push({ severity: 'error', code: 'measured-unpaired', page: mp.pageNo ?? null,
+        message: `实测档第 ${(mp.index ?? 0) + 1} 个条目缺 pageNo：preview/measured.json 是旧版产物，`
+          + '与 layout.json 的页号契约不一致——请重新运行 ppt_measure 后再用 measured=true 复核' })
+      continue
+    }
+    const lp = (layout.pages ?? []).find((p) => p.pageNo === mp.pageNo)
+    if (!lp) {
+      out.push({ severity: 'error', code: 'measured-unpaired', page: mp.pageNo,
+        message: `实测档 pageNo=${mp.pageNo} 在 layout.json 里找不到对应页（两档页号契约不一致）——`
+          + '常见于 ppt_measure 之后又增删过页面；请重新运行 ppt_render 与 ppt_measure 后复核' })
+      continue
+    }
     const est = new Map((lp.elements ?? []).map((e) => [e.id, e]))
     for (const el of mp.elements ?? []) {
       const snap = est.get(el.id)
