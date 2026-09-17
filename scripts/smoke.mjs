@@ -1955,6 +1955,23 @@ ok('surgicalMap：显式 map 参数与 deck.yaml 字段同义（参数优先，�
   `显式参数结果与 deck 字段一致=${smSlide1(smC.out) === smSlide1(smB.out)}`)
 await rm(smDir, { recursive: true, force: true })
 
+// ── 49. 文档漂移守卫：工具描述里的数字必须等于真产物（2026-09-18 新增）──────────────
+// 背景（真 bug · 文档漂移）：`ppt_new` 的描述写着"deck.yaml + 3 个页面"，而 `scaffoldProject` 实际生成 **4 个**。
+//   工具描述是**模型读的事实来源**，写错就是让模型按错的事实工作（docs/05 §0c"手册里的每个事实都要能指回源码行"
+//   同样适用于工具描述）。此前只有"文档里的 smoke 断言数"进了机器防线，其它同类事实没有。
+{
+  const { scaffoldProject } = await import('../lib/scaffold.js')
+  const sdDir = join(root, 'examples', 'scaffold-count-smoke')
+  await rm(sdDir, { recursive: true, force: true })
+  await scaffoldProject(sdDir, { name: 'count' })
+  const { readdir: rd } = await import('node:fs/promises')
+  const realPages = (await rd(join(sdDir, 'pages'))).filter((f) => f.endsWith('.yaml')).length
+  const m = readFileSync(join(root, 'src', 'tools.js'), 'utf8').match(/deck\.yaml \+ (\d+) 个页面/)
+  ok('文档漂移：ppt_new 描述里的页数 == scaffoldProject 实际产出页数（工具描述也是模型读的事实）',
+    Boolean(m) && Number(m[1]) === realPages, `描述=${m?.[1] ?? '(未匹配)'}｜实际=${realPages}`)
+  await rm(sdDir, { recursive: true, force: true })
+}
+
 // ── 40. profile bundle 安装路径（2026-09-14："dsh plugin add 能不能装"）────────────────
 // 机制：`dsh plugin --profile <p> <args>` = 在 profile 目录跑 pnpm，然后按**已安装状态**核对
 // dsh.profile.bundles——声明了 dsh.bundle.patch 的依赖自动入栈。真机端到端自证在
