@@ -1930,6 +1930,31 @@ await rm(egDeck, { recursive: true, force: true })
     og.text.split('\n').filter((l) => l.includes('[✗]')).join('；').slice(0, 200))
 }
 
+// ── 48. surgicalMap：deck.yaml 里的页映射必须真的被采纳（2026-09-18 新增）────────────────
+// 背景（真 bug · 契约存在但不被消费）：schema 校验 `deck.yaml` 的 `surgicalMap`，但**全项目无消费者**——
+//   `ppt_patch` 只吃工具参数 `map`。用户把映射写进 deck.yaml 以为生效，实际**静默无效**（最难发现的一类）。
+const smDir = join(root, 'examples', 'surgicalmap-smoke')
+await rm(smDir, { recursive: true, force: true })
+await mkdir(join(smDir, 'pages'), { recursive: true })
+const smDeckHead = 'version: 1\ntitle: sm\nsize: [960, 540]\ntheme: {colors: {ink: "#1F2937"}, textStyles: {body: {fontSize: 18, color: "$ink"}}}\n'
+await writeFile(join(smDir, 'deck.yaml'), `${smDeckHead}pages:\n  - pages/01.yaml\n  - pages/02.yaml\n`)
+await writeFile(join(smDir, 'pages', '01.yaml'), 'pageType: content\nelements:\n  - elementId: t\n    elementType: text\n    bounds: [60, 60, 600, 60]\n    content: {text: "AAA 第一页", style: "$body"}\n')
+await writeFile(join(smDir, 'pages', '02.yaml'), 'pageType: content\nelements:\n  - elementId: t\n    elementType: text\n    bounds: [60, 60, 600, 60]\n    content: {text: "BBB 第二页", style: "$body"}\n')
+const smTpl = await exportPptx(await resolveDeck(smDir), { out: 'tpl.pptx', engine: 'pptd' })
+const smSlide1 = (f) => zipRead(readFileSync(f)).get('ppt/slides/slide1.xml').toString('utf8')
+const smA = await surgicalPatch({ template: smTpl.file, deckDir: smDir, out: join(smDir, 'identity.pptx') })
+// 写入"交换"映射：模板第 1 页 ← deck 第 2 页
+await writeFile(join(smDir, 'deck.yaml'), `${smDeckHead}surgicalMap: {1: 2, 2: 1}\npages:\n  - pages/01.yaml\n  - pages/02.yaml\n`)
+const smB = await surgicalPatch({ template: smTpl.file, deckDir: smDir, out: join(smDir, 'mapped.pptx') })
+ok('surgicalMap：deck.yaml 里的页映射**真的被采纳**（模板第 1 页取到 deck 第 2 页的内容）',
+  smSlide1(smA.out).includes('AAA') && smSlide1(smB.out).includes('BBB'),
+  `序号对齐含 AAA=${smSlide1(smA.out).includes('AAA')}｜采纳 deck 映射后含 BBB=${smSlide1(smB.out).includes('BBB')}`)
+const smC = await surgicalPatch({ template: smTpl.file, deckDir: smDir, out: join(smDir, 'explicit.pptx'), map: { 1: 2, 2: 1 } })
+ok('surgicalMap：显式 map 参数与 deck.yaml 字段同义（参数优先，行为不回退）',
+  smSlide1(smC.out).includes('BBB') && smSlide1(smC.out) === smSlide1(smB.out),
+  `显式参数结果与 deck 字段一致=${smSlide1(smC.out) === smSlide1(smB.out)}`)
+await rm(smDir, { recursive: true, force: true })
+
 // ── 40. profile bundle 安装路径（2026-09-14："dsh plugin add 能不能装"）────────────────
 // 机制：`dsh plugin --profile <p> <args>` = 在 profile 目录跑 pnpm，然后按**已安装状态**核对
 // dsh.profile.bundles——声明了 dsh.bundle.patch 的依赖自动入栈。真机端到端自证在

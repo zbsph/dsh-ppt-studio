@@ -274,7 +274,8 @@ export function slideOrderOf(zip) {
 /**
  * 手术主流程：模板真身 ← 用户内容（deck 页文本/表格）→ 成品 pptx。
  * @param {template} 模板 pptx 绝对路径；@param deckDir 工作区（deck.yaml）；@param out 输出路径
- * @param map 可选 {1: 2}（模板页号(1-based) → deck 页号(1-based)；缺省序号对齐）
+ * @param map 可选 {1: 2}（模板页号(1-based) → deck 页号(1-based)）；**缺省时采纳 deck.yaml 的 `surgicalMap`**，
+ *            仍缺省则序号对齐。参数优先于 deck 字段。
  * @returns { entries, patchedSlides, report }
  */
 export async function surgicalPatch({ template, deckDir, out, map = {} }) {
@@ -282,6 +283,9 @@ export async function surgicalPatch({ template, deckDir, out, map = {} }) {
   const tplBuf = await readFile(template)
   const tplZip = zipRead(tplBuf)
   const ctx = await resolveDeck(deckDir)
+  // 【2026-09-18 修】缺省时采纳 deck.yaml 的 `surgicalMap`。该字段此前**只有 schema 校验、全项目无消费者**
+  // ⇒ 用户写在 deck.yaml 里以为生效，实际**静默无效**（"契约存在但不被消费"，最难发现的一类缺陷）。
+  const effMap = (map && typeof map === 'object' && Object.keys(map).length > 0) ? map : (ctx.deck?.surgicalMap ?? {})
   const order = slideOrderOf(tplZip)
   const entries = new Map([...tplZip]) // 保序（central dir 顺序）
   const pages = []
@@ -292,7 +296,7 @@ export async function surgicalPatch({ template, deckDir, out, map = {} }) {
   const extraDeckPages = []
   for (let ti = 0; ti < order.length; ti++) {
     const xmlPath = order[ti]
-    const di = map[ti + 1] !== undefined ? Number(map[ti + 1]) - 1 : (ti < ctx.pages.length ? ti : -1)
+    const di = effMap[ti + 1] !== undefined ? Number(effMap[ti + 1]) - 1 : (ti < ctx.pages.length ? ti : -1)
     const deckPage = di >= 0 ? ctx.pages[di] : undefined
     if (!deckPage) {
       pages.push({ index: ti + 1, slide: xmlPath, action: 'kept', note: '无对应 deck 页（模板原样）' })
