@@ -1745,6 +1745,82 @@ await rm(notesDir, { recursive: true, force: true })
 await rm(noNotesDir, { recursive: true, force: true })
 await rm(chartDir, { recursive: true, force: true })
 
+// ── 43. python-pptx 兜底引擎：生成物必须过**真消费者**（2026-09-18 新增）────────────────
+// 背景（真 bug）：`scripts/` 里 genPythonScript / runPythonExport 此前**零调用**——这条兜底路径
+//   从来没有被任何测试执行过（grep 无匹配）。而它是"pptd 硬失败时"的最后保险：保险自己坏了没人知道。
+//   仓库那条"产物必须用真消费者验"（docs/05 §0d）是为 OOXML 产物写的，没人把它推广到**生成的源码**——
+//   而一次 `py_compile` 就能抓到 SyntaxError。这正是"跳过与通过印同一个颜色"的典型：python 是可选依赖，
+//   缺了就打一行"跳过"算绿，于是没人发现它连编译都过不去。
+// 判据：① 生成脚本必须能编译；② 必须能真跑出 .pptx 且 **python-pptx 能把它读回**。
+//   两个断言在缺 python / 缺 python-pptx 时都按"跳过"计并写明标签（断言总数保持恒定）。
+const pyDeck = join(root, 'examples', 'py-smoke')
+await rm(pyDeck, { recursive: true, force: true })
+await mkdir(join(pyDeck, 'pages'), { recursive: true })
+await writeFile(join(pyDeck, 'deck.yaml'), 'version: 1\ntitle: py\nsize: [960, 540]\ntheme: {colors: {primary: "#2563EB", ink: "#1F2937"}, textStyles: {body: {fontSize: 16, color: "$ink"}}}\npages:\n  - pages/01.yaml\n')
+await writeFile(join(pyDeck, 'pages', '01.yaml'), [
+  'pageType: content', 'elements:',
+  '  - elementId: boxFillLine', '    elementType: shape', '    kind: roundRect', '    bounds: [60, 60, 200, 100]',
+  '    fill: "#2563EB"', '    line: {color: "#FFFFFF", width: 2}',
+  '  - elementId: boxBare', '    elementType: shape', '    kind: rect', '    bounds: [300, 60, 200, 100]',
+  '  - elementId: boxAlpha', '    elementType: shape', '    kind: rect', '    bounds: [60, 200, 200, 80]',
+  '    fill: {color: "#F59E0B", alpha: 50}',
+  '  - elementId: link', '    elementType: line',
+  '    points: [[300, 200], [460, 200]]', '    line: {color: "#1F2937", width: 1}',
+  '  - elementId: tb', '    elementType: table', '    bounds: [60, 320, 400, 120]',
+  '    cols: [甲, 乙]', '    rows: [["1", "2"], ["3", "4"]]',
+  '  - elementId: t1', '    elementType: text', '    bounds: [500, 320, 300, 40]',
+  '    content: {text: "hello", style: "$body"}', '', ''].join('\n'))
+const { genPythonScript, findPython, runPythonExport } = await import('../lib/pptxPy.js')
+const pyEnv = findPython()
+const pyFile43 = join(pyDeck, 'gen.py')
+if (pyEnv.cmd) await writeFile(pyFile43, genPythonScript(await resolveDeck(pyDeck)), 'utf8')
+// 43.1 编译（只要 python，不需要 python-pptx）
+if (pyEnv.cmd) {
+  const { spawnSync } = await import('node:child_process')
+  const c = spawnSync(pyEnv.cmd, ['-m', 'py_compile', pyFile43], { encoding: 'utf8', timeout: 60000 })
+  let detail = 'py_compile ✓'
+  if (c.status !== 0) {
+    const err = String(c.stderr ?? c.stdout ?? '')
+    // Python 只报**生成文件**的行号；把那一行源码取出来，定位才不用猜（本 bug 就是靠这行看清的）
+    const ln = Number(/line (\d+)/.exec(err)?.[1] ?? 0)
+    let srcLine = ''
+    try { srcLine = ln ? String(readFileSync(pyFile43, 'utf8').split(/\r?\n/)[ln - 1] ?? '').trim().slice(0, 160) : '' } catch { /* 忽略 */ }
+    detail = `${err.trim().split('\n').slice(-2).join(' | ').slice(0, 180)}${srcLine ? `\n      生成源码第 ${ln} 行：${srcLine}` : ''}`
+  }
+  ok('python-pptx 兜底：生成脚本可编译（覆盖 shape 无填充/对象填充/带描边 + line + table + text）',
+    c.status === 0, detail)
+} else {
+  ok('python-pptx 兜底：生成脚本可编译（无 python：跳过）', true)
+}
+// 43.2 真跑 + 真消费者读回（需要 python + python-pptx）
+if (pyEnv.has) {
+  let info = ''
+  let pass43 = false
+  try {
+    const outP = join(pyDeck, 'out-py.pptx')
+    const r = await runPythonExport(await resolveDeck(pyDeck), outP)
+    const { execFileSync } = await import('node:child_process')
+    const rb = join(pyDeck, 'readback2.py')
+    await writeFile(rb, [
+      'import sys',
+      "sys.stdout.reconfigure(encoding='utf-8')",
+      'from pptx import Presentation',
+      'p = Presentation(sys.argv[1])',
+      'print(len(p.slides), sum(len(s.shapes) for s in p.slides))',
+    ].join('\n'), 'utf8')
+    const got = execFileSync(pyEnv.cmd, [rb, outP], { encoding: 'utf8', timeout: 120000, env: { ...process.env, PYTHONIOENCODING: 'utf-8' } }).trim()
+    const [nSlides, nShapes] = got.split(/\s+/).map(Number)
+    pass43 = nSlides === 1 && nShapes >= 6
+    info = `file=${String(r.file).split(/[\\/]/).pop()}｜python-pptx 读回：slides=${nSlides} shapes=${nShapes}（期望 1 / ≥6）`
+  } catch (e) {
+    info = String(e.message).slice(0, 240)
+  }
+  ok('python-pptx 兜底：生成脚本真跑出 .pptx，且 python-pptx 能把它读回（1 页 ≥ 6 个形状）', pass43, info)
+} else {
+  ok('python-pptx 兜底：生成脚本真跑出 .pptx，且 python-pptx 能把它读回（无 python-pptx：跳过）', true)
+}
+await rm(pyDeck, { recursive: true, force: true })
+
 // ── 40. profile bundle 安装路径（2026-09-14："dsh plugin add 能不能装"）────────────────
 // 机制：`dsh plugin --profile <p> <args>` = 在 profile 目录跑 pnpm，然后按**已安装状态**核对
 // dsh.profile.bundles——声明了 dsh.bundle.patch 的依赖自动入栈。真机端到端自证在

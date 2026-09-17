@@ -95,7 +95,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 ## 7. 开发维护（仅改插件时用）
 
 - 改码：`src/` → `node scripts/build.mjs` → **重启 host**（插件经 agent preset 会话装配；`dev_reload_package` 只覆盖注入器装配包，且注入器 junction 已存在时会指向旧安装根）。
-- 回归：`node scripts/smoke.mjs`（218 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
+- 回归：`node scripts/smoke.mjs`（220 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
 - 跨层验证纪律：**预览层与成品层必须互相验证**——`ppt_render`+`ppt_verify` 只管 HTML/估算层，OOXML 层靠 `ppt_export` 的 parity 自证（表/图/线方向）+ `ppt_visual` 真渲染抽检；只跑单层会漏掉"预览对、成品错"（2026-09-14 连线方向事故）。
 - 文档链：改需求/决策 → docs/01；改机制 → docs/02；每次 → docs/03；验收 → docs/04；发布前 → docs/06。
 - 装配：**标准装法是 profile bundle 行**（`dsh plugin --profile <p> add <Releases 资产 URL>`，profile 级、随 profile 启动装配）；preset 插件行只用于"离线 junction / 不想动 profile"场景，且与前者**互斥**（`scripts/install.mjs` 按环境二选一，检测到 bundle 安装会主动删掉 preset 行——手工删行会被下次同步装回来，所以互斥逻辑在安装器里）。排查：`dsh plugin --profile web list` → `dsh --profile web --dump-config` 找 `ppt-studio` 行 → 重启 `dsh web`。
