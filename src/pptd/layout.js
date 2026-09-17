@@ -115,6 +115,9 @@ export function tableCellFontPt(ctx) {
   return Math.max(TABLE_CELL_PT, floor)
 }
 
+export const TABLE_CELL_PAD_X = 7.2 // cell 左右内边距合计（pt；导出侧 marL/marR = 45720 EMU = 3.6pt ×2）
+export const TABLE_CELL_PAD_Y = 3.6 // cell 上下内边距合计（pt；导出侧 marT/marB = 22860 EMU = 1.8pt ×2）
+
 /** 元素包围盒：bounds 优先；line 缺省时由 points 的 AABB 推导（w/h ≥ 1px）。 */
 function boundsOf(el) {
   if (el.bounds) {
@@ -166,9 +169,32 @@ export function normalizePage(page, ctx) {
       case 'image':
         elements.push({ ...base, type: 'image', src: el.src, fit: el.fit ?? 'cover' })
         break
-      case 'table':
-        elements.push({ ...base, type: 'table', cols: el.cols, rows: el.rows ?? [], header: el.header !== false, fontPt: tableCellFontPt(ctx) })
+      case 'table': {
+        // 【2026-09-18】表格内容进快照并给出**溢出估算**：此前快照只有 cols/rows 的**长度**，
+        // verify 的溢出判定只认 kind==='text' ⇒ 表格内文字溢出**既无门禁也无警告**——
+        // 而表格是 role:content 的内容元素，"内容溢出"恰恰是硬底线要管的（该严的地方没严）。
+        // 度量与正文同源（同一 wrapLines / 同一字号）⇒ "估算保守、宁可误报"这一性质对表格同样成立。
+        const fontPt = tableCellFontPt(ctx)
+        const rowsAll = [el.header !== false ? el.cols : null, ...(el.rows ?? [])].filter(Boolean)
+        const ncols = Math.max(1, ...rowsAll.map((r) => r.length))
+        const style = { fontSize: fontPt, lineHeight: 1.2 }
+        const usable = Math.max(1, b.w / ncols - TABLE_CELL_PAD_X)
+        let need = 0
+        let totalLines = 0
+        for (const r of rowsAll) {
+          let rl = 1
+          for (let ci = 0; ci < ncols; ci++) {
+            const t = String(r[ci] ?? '')
+            if (!t) continue
+            rl = Math.max(rl, wrapLines(t, style, usable).length)
+          }
+          totalLines += rl
+          need += rl * fontPt * 1.2 + TABLE_CELL_PAD_Y
+        }
+        elements.push({ ...base, type: 'table', cols: el.cols, rows: el.rows ?? [], header: el.header !== false, fontPt,
+          metrics: { overflowY: Math.round((need - b.h) * 10) / 10, lines: totalLines, textH: Math.round(need) } })
         break
+      }
       case 'chart': {
         const chart = { ...el.chart }
         if (Array.isArray(chart.colors)) chart.colors = chart.colors.map((c) => resolveColor(c))

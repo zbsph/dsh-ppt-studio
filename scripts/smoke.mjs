@@ -1529,7 +1529,7 @@ verifyLines.forEach((line, i) => {
     if (/'error'/.test(window)) errorCodes.add(m[1])
   }
 })
-const EXPECTED_ERROR_CODES = ['theme-conformance', 'out-of-page', 'out-of-safe-area', 'text-overflow', 'content-collision', 'unexpected-overlap', 'measured-overflow', 'measured-unpaired']
+const EXPECTED_ERROR_CODES = ['theme-conformance', 'out-of-page', 'out-of-safe-area', 'text-overflow', 'table-overflow', 'content-collision', 'unexpected-overlap', 'measured-overflow', 'measured-unpaired']
 const sameSet = (a, b) => a.size === b.length && b.every((x) => a.has(x))
 ok('手册 vs 源码：门禁错误码清单与 verify.js 一致（错误码增删会被当场抓到）',
   sameSet(errorCodes, EXPECTED_ERROR_CODES),
@@ -1971,6 +1971,30 @@ await rm(smDir, { recursive: true, force: true })
     Boolean(m) && Number(m[1]) === realPages, `描述=${m?.[1] ?? '(未匹配)'}｜实际=${realPages}`)
   await rm(sdDir, { recursive: true, force: true })
 }
+
+// ── 50. 表格门禁：内容溢出必须被拦（2026-09-18 新增）──────────────────────────────
+// 背景（真 bug · 内容门禁的盲区）：layout 快照里表格只有 cols/rows 的**长度**，verify 的溢出判定只认
+//   `kind === 'text'` ⇒ **表格内文字溢出既无门禁也无警告**。而表格是 role:content 的内容元素——
+//   "内容溢出/互压"正是硬底线要管的（该严的地方没严）。
+//   影响面已实测：仓库全部夹具 2 张表、**0 张**会被判溢出（余量 -228 / -52.8）⇒ 按 error 档接入对既有工程零影响。
+// 两条一起看才算数：**该拦的拦得住** + **给足高度的不得误报**（保守度量不能变成噪声）。
+const toDir = join(root, 'examples', 'tableoverflow-smoke')
+await rm(toDir, { recursive: true, force: true })
+await mkdir(join(toDir, 'pages'), { recursive: true })
+await writeFile(join(toDir, 'deck.yaml'), 'version: 1\ntitle: to\nsize: [960, 540]\ntheme: {colors: {ink: "#1F2937"}, textStyles: {body: {fontSize: 18, color: "$ink"}}}\npages:\n  - pages/01.yaml\n  - pages/02.yaml\n')
+const toCells = '    cols: [分类, 说明]\n    rows: [["甲", "这是一段很长的单元格说明文字用于触发溢出判定"], ["乙", "另一段同样很长的说明文字继续撑高需求高度"]]\n'
+await writeFile(join(toDir, 'pages', '01.yaml'), `pageType: content\nelements:\n  - elementId: tight\n    elementType: table\n    bounds: [60, 60, 300, 40]\n${toCells}`)
+await writeFile(join(toDir, 'pages', '02.yaml'), `pageType: content\nelements:\n  - elementId: roomy\n    elementType: table\n    bounds: [60, 60, 300, 400]\n${toCells}`)
+const toLayout = (await renderDeck(await resolveDeck(toDir), {})).layout
+const toV = verifyDeck(toLayout)
+const toErr = (id) => toV.text.split('\n').filter((l) => l.includes('table-overflow') && l.includes(id))
+const toRoomySnap = toLayout.pages[1].elements.find((e) => e.id === 'roomy')
+ok('表格门禁：单元格内容按列宽换行后超出表格高度 → table-overflow ERROR（此前是内容门禁的盲区）',
+  toErr('tight').length === 1, `tight 命中 ${toErr('tight').length} 条｜${toErr('tight')[0]?.slice(0, 96) ?? '(无)'}`)
+ok('表格门禁：给足高度的表格不得误报（且估算确实跑过——快照带 overflowY）',
+  toRoomySnap?.metrics?.overflowY !== undefined && toErr('roomy').length === 0,
+  `roomy overflowY=${toRoomySnap?.metrics?.overflowY ?? '(缺)'}｜误报 ${toErr('roomy').length} 条`)
+await rm(toDir, { recursive: true, force: true })
 
 // ── 40. profile bundle 安装路径（2026-09-14："dsh plugin add 能不能装"）────────────────
 // 机制：`dsh plugin --profile <p> <args>` = 在 profile 目录跑 pnpm，然后按**已安装状态**核对

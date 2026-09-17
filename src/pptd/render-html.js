@@ -152,7 +152,7 @@ function elementHtml(el, ctx, debug) {
       // 此前这里硬编码 12px、成品硬编码 11pt：同一份内容两层不一致，且都绕开了 audit 的字号下限。
       const cellPt = Number(el.fontPt) || 11
       const html = `<table class="el" id="${esc(el.id)}" data-kind="table" style="${pos};border-collapse:collapse"><tbody>${rows.map((r) => `<tr>${r.map((c) => `<td style="border:1px solid #cbd5e1;padding:4px 8px;font-size:${cellPt}px">${esc(c ?? '')}</td>`).join('')}</tr>`).join('')}</tbody></table>`
-      return { html, snap: snap({ cols: el.cols.length, rows: el.rows.length, fontPt: cellPt }) }
+      return { html, snap: snap({ cols: el.cols.length, rows: el.rows.length, fontPt: cellPt, metrics: el.metrics }) }
     }
     case 'chart': {
       const svg = chartSvg(el.chart, w, h)
