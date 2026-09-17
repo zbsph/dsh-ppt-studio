@@ -163,7 +163,7 @@ await mkdir(join(dirE, 'pages'), { recursive: true })
 await writeFile(join(dirE, 'deck.yaml'), ['version: 1', 'title: "出界夹具"', 'size: [960, 540]', 'theme:', '  colors: {ink: "#111111"}', '  safeArea: {top: 20, bottom: 20, left: 0, right: 0}', 'pages:', '  - pages/01.yaml', ''].join('\n'), 'utf8')
 await writeFile(join(dirE, 'pages', '01.yaml'), page(['  - elementId: deco', '    elementType: shape', '    kind: rect', '    role: decoration', '    bounds: [40, 4, 120, 12]', '    fill: "#111111"']), 'utf8')
 const re = await verifyDir(dirE)
-check('运行时：decoration 不豁免出界（仍报 out-of-page）——手册与 C3 口径一致', /out-of-page/.test(re.v.text), `errors=${re.errors}；${(re.v.text.match(/out-of-page[^\n]*/) ?? [''])[0].slice(0, 90)}`)
+check('运行时：decoration 不豁免出界（仍报 out-of-safe-area）——手册与 C3 口径一致', /out-of-safe-area/.test(re.v.text), `errors=${re.errors}；${(re.v.text.match(/out-of-safe-area[^\n]*/) ?? [''])[0].slice(0, 90)}`)
 
 const dirF = join(tmp, 'f-bad-chart')
 await writeDeck(dirF, ['  - elementId: c', '    elementType: chart', `    ${box}`, '    chart:', '      type: bad', '      data: [{label: A, value: 1}]'])

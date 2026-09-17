@@ -3,7 +3,10 @@
  * 输出机器结果 + markdown 报告。
  *
  * 断言（v1）：
- *  - ERROR out-of-page    元素超出页面边界（永远不可声明）/ 超出安全区（声明制：expectedOutOfSafeArea）
+ *  - ERROR out-of-page    元素超出**页面边界**（永远不可声明，放映不可见）
+ *  - ERROR out-of-safe-area 元素超出**安全区**但仍在页面内（声明制：expectedOutOfSafeArea 命中 → confirmed）
+ *                          ——2026-09-18 起与 out-of-page 分码：两者处置完全不同（改布局 vs 补声明），
+ *                            共用一个 code 会让消费方与模型都分不清要做什么
  *  - ERROR overlap        AABB 相交（容差 1px；排除 id 前缀同源组）
  *  - ERROR text-overflow  文本估算高度/宽度超出容器（wrap=false 时宽度计入）
  *  - WARN  near-align     疑似未对齐：同缘差 ∈ (1, 6]px
@@ -277,8 +280,12 @@ export function analyzePage(page, size) {
           area: b,
         })
       } else {
+        // 【2026-09-18 修】安全区出界有**自己的** code。此前它与"超页面边界"共用 `out-of-page`，
+        // 于是"分级"这个设计概念在 code 维度上丢失：消费方（templates 的清理统计、按 code 的诊断/统计）
+        // 无法区分"必须改布局、不可声明"与"补个 expectedOutOfSafeArea 声明就行"这两种完全不同的处置。
+        //（两者 severity 都是 error，所以这是**诊断精度**问题，不是门禁强度问题——改动对既有工程零影响。）
         findings.push({
-          severity: 'error', code: 'out-of-page', id: el.id,
+          severity: 'error', code: 'out-of-safe-area', id: el.id,
           message: `元素 "${el.id}" 超出页面安全区：${fmtRect(b)}（页面 ${pw}×${ph}，安全区 ${fmtSa(sa)}）—— 如属有意设计（logo/角标等），请将 "${el.id}" 加入本页 expectedOutOfSafeArea 后重验\n    P7 建议坐标：${safeAdvice(b, sa, pw, ph)}`,
           area: b,
         })

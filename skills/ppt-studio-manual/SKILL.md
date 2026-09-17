@@ -57,7 +57,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 
 ## 4. 质量门禁（答复"为什么还要改"的依据）
 
-- ERROR 必须清零：`unexpected-overlap`（未声明重叠：修布局或补声明）、`content-collision`（文字/表格/图表互压，永远不可声明）、`out-of-page`（超**页面边界**不可声明；超**安全区**可声明——同一个 code，message 里写的是"超出页面安全区"）、`text-overflow`（扩容器/精简文案；缩字下限按用户指令，未给则 max(6pt, 60% 原字号) 保底防荒谬）、`theme-conformance`（strict 档默认开：元素颜色必须 ∈ `theme.colors` 或中性灰）、`measured-overflow`（M2 实测交叉：实测=终审，估算漏报也会报错）、`measured-unpaired`（M2 两档页号对不上：多为旧版 `measured.json` 或测量后又增删了页面——**重新跑一次 `ppt_measure` 即可**；契约破坏会报错而不是静默跳过）。
+- ERROR 必须清零：`unexpected-overlap`（未声明重叠：修布局或补声明）、`content-collision`（文字/表格/图表互压，永远不可声明）、`out-of-page`（超**页面边界**：放映不可见，永远不可声明，必须改布局）、`out-of-safe-area`（超**安全区**但仍在页面内：可声明——有意落在模板页眉页脚带上的 logo/角标加入 `expectedOutOfSafeArea` 即可；与 out-of-page **是两个码**，因为处置完全不同）、`text-overflow`（扩容器/精简文案；缩字下限按用户指令，未给则 max(6pt, 60% 原字号) 保底防荒谬）、`theme-conformance`（strict 档默认开：元素颜色必须 ∈ `theme.colors` 或中性灰）、`measured-overflow`（M2 实测交叉：实测=终审，估算漏报也会报错）、`measured-unpaired`（M2 两档页号对不上：多为旧版 `measured.json` 或测量后又增删了页面——**重新跑一次 `ppt_measure` 即可**；契约破坏会报错而不是静默跳过）。
 - 声明命中显示为 ✓ 预期重叠/✓ 预期出界（确认，不算错误）。
 - 报告里的标记：`[✗]` 错误（进 `门禁：N 个错误` 计数）、`[~]` 警告（进页头"N 警告"，不入门禁）、`[·]` 建议（美学层）。`[⚠]` 不是主清单的警告标记——它只出现在 M2 实测交叉段和其它提示行。
 - `[·]` 建议（美学/对比度/孤字/长句/网格/贴边）**永不是门禁**，但逐条斟酌；`density`/`hotspot`/`near-align` 是 `[~]` 警告（同样不入门禁计数，但先看它们）。
@@ -95,7 +95,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 ## 7. 开发维护（仅改插件时用）
 
 - 改码：`src/` → `node scripts/build.mjs` → **重启 host**（插件经 agent preset 会话装配；`dev_reload_package` 只覆盖注入器装配包，且注入器 junction 已存在时会指向旧安装根）。
-- 回归：`node scripts/smoke.mjs`（228 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
+- 回归：`node scripts/smoke.mjs`（229 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
 - 跨层验证纪律：**预览层与成品层必须互相验证**——`ppt_render`+`ppt_verify` 只管 HTML/估算层，OOXML 层靠 `ppt_export` 的 parity 自证（表/图/线方向）+ `ppt_visual` 真渲染抽检；只跑单层会漏掉"预览对、成品错"（2026-09-14 连线方向事故）。
 - 文档链：改需求/决策 → docs/01；改机制 → docs/02；每次 → docs/03；验收 → docs/04；发布前 → docs/06。
 - 装配：**标准装法是 profile bundle 行**（`dsh plugin --profile <p> add <Releases 资产 URL>`，profile 级、随 profile 启动装配）；preset 插件行只用于"离线 junction / 不想动 profile"场景，且与前者**互斥**（`scripts/install.mjs` 按环境二选一，检测到 bundle 安装会主动删掉 preset 行——手工删行会被下次同步装回来，所以互斥逻辑在安装器里）。排查：`dsh plugin --profile web list` → `dsh --profile web --dump-config` 找 `ppt-studio` 行 → 重启 `dsh web`。

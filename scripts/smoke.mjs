@@ -1529,7 +1529,7 @@ verifyLines.forEach((line, i) => {
     if (/'error'/.test(window)) errorCodes.add(m[1])
   }
 })
-const EXPECTED_ERROR_CODES = ['theme-conformance', 'out-of-page', 'text-overflow', 'content-collision', 'unexpected-overlap', 'measured-overflow', 'measured-unpaired']
+const EXPECTED_ERROR_CODES = ['theme-conformance', 'out-of-page', 'out-of-safe-area', 'text-overflow', 'content-collision', 'unexpected-overlap', 'measured-overflow', 'measured-unpaired']
 const sameSet = (a, b) => a.size === b.length && b.every((x) => a.has(x))
 ok('手册 vs 源码：门禁错误码清单与 verify.js 一致（错误码增删会被当场抓到）',
   sameSet(errorCodes, EXPECTED_ERROR_CODES),
@@ -1581,7 +1581,8 @@ ok('手册 vs 源码：技能里提到的 /ppt 子命令都存在',
   ghostCmds.length === 0 && realCmds.size >= 5,
   ghostCmds.length ? `不存在的子命令：${ghostCmds.join('、')}` : `${[...mentionedCmds].join('/')} 全部存在（命令面 ${realCmds.size} 个）`)
 
-// 37.7 手册门禁清单里写的 code 名必须真实存在（A 类事实：旧手册写过 `out-of-safe-area` 这种源码里根本没有的名字）
+// 37.7 手册门禁清单里写的 code 名必须真实存在（A 类事实：旧手册曾写过 `out-of-safe-area` 这种源码里根本没有的名字；
+//      2026-09-18 起该码**真的存在了**——它被从 out-of-page 里分出来，因为两者处置完全不同）
 const gateLine = manualText.split('\n').find((l) => l.includes('ERROR 必须清零')) ?? ''
 const gateTokens = [...gateLine.matchAll(/`([a-z][a-z-]*)`/g)].map((m) => m[1])
 const ghostCodes = gateTokens.filter((t) => !errorCodes.has(t))
@@ -1905,6 +1906,29 @@ const egQ = typeof toolsMod.qualityOfDiag === 'function' ? await toolsMod.qualit
 ok('引擎：会话/项目档位可被导出侧读到（`/ppt engine X` 不再"设了没用"）',
   egQ.engine === 'python-pptx', `engine=${egQ.engine ?? '(未带出)'}`)
 await rm(egDeck, { recursive: true, force: true })
+
+// ── 47. 出界分级：两个 code 必须可分（2026-09-18 新增）──────────────────────────────
+// 背景（真 bug · 分级语义在 code 维度丢失）：`out-of-page` 同时用于"超页面边界"（放映不可见、**不可声明**、
+//   必须改布局）与"超安全区"（**可声明**、补 expectedOutOfSafeArea 即可）。两者处置完全不同，
+//   共用一个 code 让消费方（templates 的清理统计、任何按 code 的诊断）与模型都分不清该做什么。
+//   severity 都是 error ⇒ 这是**诊断精度**问题而非门禁强度问题，改动对既有工程零影响。
+{
+  const og = verifyDeck({
+    size: { width: 960, height: 540 },
+    theme: { colors: {}, themeConformance: 'off' },
+    pages: [{
+      index: 0, pageNo: 1, name: 'p', safeArea: { top: 20, bottom: 20, left: 0, right: 0 },
+      overlapMode: 'declared', expectedOverlaps: [], expectedOutOfSafeArea: [], contrastExempt: [],
+      elements: [
+        { id: 'outsidePage', kind: 'shape', bounds: { x: -5, y: 0, w: 10, h: 10 } },
+        { id: 'outsideSafe', kind: 'shape', bounds: { x: 40, y: 4, w: 120, h: 12 } },
+      ],
+    }],
+  })
+  ok('出界分级：超页面边界=out-of-page、超安全区=out-of-safe-area（两码可分，处置不同）',
+    /\[✗\] out-of-page/.test(og.text) && /\[✗\] out-of-safe-area/.test(og.text),
+    og.text.split('\n').filter((l) => l.includes('[✗]')).join('；').slice(0, 200))
+}
 
 // ── 40. profile bundle 安装路径（2026-09-14："dsh plugin add 能不能装"）────────────────
 // 机制：`dsh plugin --profile <p> <args>` = 在 profile 目录跑 pnpm，然后按**已安装状态**核对
