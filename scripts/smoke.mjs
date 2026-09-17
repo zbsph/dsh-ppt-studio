@@ -1883,6 +1883,29 @@ const qsNone = typeof stMod.loadProjectDiag === 'function'
 ok('质量档：文件不存在时 error=null（新工程不得被误判为降级）', qsNone.error === null, String(qsNone.error))
 await rm(qsDeck, { recursive: true, force: true })
 
+// ── 46. pptxgenjs 幽灵选项 + 「设了没用」的引擎档位（2026-09-18 新增）──────────────────
+// 背景（真 bug · 违反明文红线"不静默切换引擎"）：命令面接受 `/ppt engine pptxgenjs` 并回执"已记录（待接入）"，
+//   而 resolveEngine 把**任何**未知取值静默映射成 pptd ⇒ 用户以为选了引擎，实际按 pptd 跑，报告里一字不提。
+//   更深一层：`/ppt engine python-pptx` 设的档位**根本没被 ppt_export 消费**（导出只看工具参数）——
+//   一个"设了没用"的设置，而工作流提示里的 `引擎` 行还显示用户选的那个。
+ok('引擎：未知取值不再被静默当成 auto（resolveEngine 带 unknown 标记）',
+  toolsMod.resolveEngine('pptxgenjs').unknown === 'pptxgenjs' && toolsMod.resolveEngine('auto').unknown === undefined,
+  JSON.stringify(toolsMod.resolveEngine('pptxgenjs')))
+{
+  const cmdSrc = stripComments(readFileSync(join(root, 'src', 'commands.js'), 'utf8'))
+  ok('引擎：命令面不再把 pptxgenjs 收进接受集合（未实现 → 明确拒绝而非装作成功）',
+    /pptxgenjs/.test(cmdSrc) && /未实现/.test(cmdSrc) && !/,\s*'pptxgenjs'\]/.test(cmdSrc),
+    /,\s*'pptxgenjs'\]/.test(cmdSrc) ? '仍在接受集合里' : '已改为拒绝分支')
+}
+const egDeck = join(root, 'examples', 'engine-smoke')
+await rm(egDeck, { recursive: true, force: true })
+await mkdir(egDeck, { recursive: true })
+await writeFile(join(egDeck, 'state.json'), JSON.stringify({ engine: 'python-pptx' }), 'utf8')
+const egQ = typeof toolsMod.qualityOfDiag === 'function' ? await toolsMod.qualityOfDiag(null, egDeck) : {}
+ok('引擎：会话/项目档位可被导出侧读到（`/ppt engine X` 不再"设了没用"）',
+  egQ.engine === 'python-pptx', `engine=${egQ.engine ?? '(未带出)'}`)
+await rm(egDeck, { recursive: true, force: true })
+
 // ── 40. profile bundle 安装路径（2026-09-14："dsh plugin add 能不能装"）────────────────
 // 机制：`dsh plugin --profile <p> <args>` = 在 profile 目录跑 pnpm，然后按**已安装状态**核对
 // dsh.profile.bundles——声明了 dsh.bundle.patch 的依赖自动入栈。真机端到端自证在

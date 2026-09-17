@@ -81,10 +81,13 @@ async function handle(invocation) {
     }
     if (cmd === 'engine') {
       const v = (args.split(' ')[0] ?? '').toLowerCase()
-      if (!['auto', 'pptd', 'python-pptx', 'pptxgenjs'].includes(v)) return err('engine 取值 auto|pptd|python-pptx|pptxgenjs')
+      // pptxgenjs **未实现**（v1.0 前按计划不动）。旧实现把它收下、回执"已记录（待接入）"并写进会话状态，
+      // 而导出侧根本不认它 ⇒ 用户以为选了引擎，实际静默按 pptd 跑。未实现就明确拒绝，不装作成功。
+      if (v === 'pptxgenjs') return err('pptxgenjs 第三引擎**未实现**（v1.0 前按计划不动，见 docs/04）——不会静默切到 pptd。可用：auto|pptd|python-pptx')
+      if (!['auto', 'pptd', 'python-pptx'].includes(v)) return err('engine 取值 auto|pptd|python-pptx')
       state.engine = v
       await save()
-      return ok(`✓ 引擎=${v}（pptxgenjs 待接入；auto 按任务/环境自动挑）`)
+      return ok(`✓ 引擎=${v}（auto = pptd 主引擎 + 硬失败时兜底 python-pptx；此设置会被 ppt_export 采纳）`)
     }
     if (cmd === 'quality') {
       const v = (args.split(' ')[0] ?? '').toLowerCase()
