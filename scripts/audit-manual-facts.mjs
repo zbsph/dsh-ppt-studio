@@ -235,9 +235,14 @@ check('SCHEMA_REF 自洽：不声称 decoration 豁免出界', refBad === undefi
 const crossPageClaims = /跨页一致性没有断言|这些没有工具断言|工具基本不管/.test(bySkill['ppt-studio-craft'] ?? '')
 check('craft 已写明"跨页一致性没有工具断言"（源码确实无跨页/字体家族检查）', crossPageClaims && !/fontFamily/.test(src.verify), `verify.js 中 fontFamily 出现 ${(src.verify.match(/fontFamily/g) ?? []).length} 次`)
 
-const tableOverflowClaim = /(不检查表格\/图表的溢出|表格放不下没有工具替你判)/.test(bySkill['ppt-studio-data'] ?? '')
-const overflowTextOnly = /if \(el\.kind === 'text'\) \{/.test(src.verify) && !/code: '(table|chart|image)-overflow'/.test(src.verify)
-check('data 已写明"表格/图表没有溢出断言"（源码确实只对 text 判溢出）', tableOverflowClaim && overflowTextOnly, `verify.js: 溢出断言位于 el.kind === 'text' 分支内`)
+// 2026-09-18 改判：表格有了自己的溢出断言（table-overflow），图表仍然没有。
+// 这条审计的价值正在于此——加门禁时它当场抓出"手册还在说表格没有溢出断言"。
+const tableOverflowClaim = /table-overflow/.test(bySkill['ppt-studio-data'] ?? '') && /不检查图表/.test(bySkill['ppt-studio-data'] ?? '')
+const overflowTextAndTable = /el\.kind === 'text' \|\| el\.kind === 'table'/.test(src.verify)
+  && /code: 'table-overflow'/.test(src.verify)
+  && !/code: '(chart|image)-overflow'/.test(src.verify)
+check('data 已写明"表格有溢出断言（table-overflow）、图表没有"（与源码一致）',
+  tableOverflowClaim && overflowTextAndTable, `verify.js: 溢出断言覆盖 text+table；chart 仍无`)
 
 const unmappedEveryPage = /status: p\.page\.source \? 'grounded' : 'unmapped'/.test(src.crosscheck)
 const unmappedHonest = /unmapped 只对数据页有要求|按"页"判/.test(bySkill['ppt-studio-data'] ?? '')
