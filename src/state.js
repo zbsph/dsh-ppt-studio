@@ -28,12 +28,18 @@ export const DEFAULT_SESSION = () => ({
 const sessionPath = (sessionId) => join(ROOT, `session-${sanitize(sessionId)}.json`)
 
 export async function loadSession(sessionId) {
+  return (await loadSessionDiag(sessionId)).state
+}
+
+/** 会话状态 + **诊断**（2026-09-18 新增）。区分"没有文件"（正常，新会话）与"文件存在却坏了"（异常）。
+ *  两者原来都静默返回默认值，于是状态文件一旦损坏，`quality: 'audit'` 会**无声**变成 `standard`。 */
+export async function loadSessionDiag(sessionId) {
   const p = sessionPath(sessionId)
-  if (!existsSync(p)) return DEFAULT_SESSION()
+  if (!existsSync(p)) return { state: DEFAULT_SESSION(), error: null }
   try {
-    return { ...DEFAULT_SESSION(), ...JSON.parse(await readFile(p, 'utf8')) }
-  } catch {
-    return DEFAULT_SESSION()
+    return { state: { ...DEFAULT_SESSION(), ...JSON.parse(await readFile(p, 'utf8')) }, error: null }
+  } catch (e) {
+    return { state: DEFAULT_SESSION(), error: `会话状态文件读取/解析失败（${p}）：${String(e?.message ?? e)}` }
   }
 }
 
@@ -54,12 +60,20 @@ const DEFAULT_PROJECT = () => ({
 })
 
 export async function loadProject(deckDir) {
+  return (await loadProjectDiag(deckDir)).state
+}
+
+/** 项目状态 + **诊断**（2026-09-18 新增）。**为什么要区分**：文件不存在 = 正常（新工程，用默认）；
+ *  文件存在却读不了/解析失败 = 异常。原来两者都静默返回默认值 ⇒ `state.json` 一损坏，
+ *  `quality: 'audit'` 会**无声**降成 `standard`——最严档（禁 autoDeclare + 强制视觉审阅 + 导出回读断言）
+ *  被降级而用户毫不知情。这正是"严格性只升不降"与"诚实边界优于静默降级"两条原则要防的事。 */
+export async function loadProjectDiag(deckDir) {
   const p = join(deckDir, 'state.json')
-  if (!existsSync(p)) return DEFAULT_PROJECT()
+  if (!existsSync(p)) return { state: DEFAULT_PROJECT(), error: null }
   try {
-    return { ...DEFAULT_PROJECT(), ...JSON.parse(await readFile(p, 'utf8')) }
-  } catch {
-    return DEFAULT_PROJECT()
+    return { state: { ...DEFAULT_PROJECT(), ...JSON.parse(await readFile(p, 'utf8')) }, error: null }
+  } catch (e) {
+    return { state: DEFAULT_PROJECT(), error: `项目状态文件读取/解析失败（${p}）：${String(e?.message ?? e)}` }
   }
 }
 

@@ -110,7 +110,7 @@ node scripts/install.mjs
 ### 0.6 安装后的自检（四句命令）
 
 ```powershell
-node scripts/smoke.mjs          # 222 断言（含全链路）
+node scripts/smoke.mjs          # 225 断言（含全链路）
 node scripts/preflight-1.0.mjs  # 11 断言（坏输入/边界/幂等/性能）
 node scripts/check-preset.mjs   # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
 node scripts/e2e-1.0.mjs        # 13 断言（真浏览器测量 + 真 Office 渲染 + splice/slice 自证；约 2-3 分钟）
@@ -409,6 +409,10 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 → 不该出现（2026-09-14 修）：导入侧此前不做 XML 实体解码，会把 `R&D` 读成 `R&amp;D`。现在文本节点会正确解码（`&amp;/&lt;/&gt;/&quot;/&apos;` 与数字实体）。
 如果你的导入工程是旧版本产物，重新 `ppt_import` 一次即可。
 
+**Q：报告/状态里出现「⚠ 质量档降级」？**
+→ 你的项目 `state.json`（或会话状态文件）**损坏或读不了**，插件按 `standard` 继续跑——`audit` 档的额外门禁（禁 autoDeclare / 强制视觉审阅 / 导出回读断言）**本轮未生效**。修好该文件，或重跑一次 `/ppt quality audit`。
+（自 2026-09-18 起这类回落会**明说**；此前它是静默的：文件坏掉后 `audit` 会无声变成 `standard`。）
+
 **Q：如何只改原稿第 15 页？** → `ppt_splice`（第 6 节）。**如何导出单页版？** → `ppt_slice`。
 
 **Q：`dsh plugin add` 装了，但插件好像没生效？**
@@ -507,7 +511,7 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + smoke（222 断言）+ 预设漂移自检（DSH 升级后必跑）
+npm test                        # build + smoke（225 断言）+ 预设漂移自检（DSH 升级后必跑）
 npm run test:real               # 真实资产回归（WPS fixture；19 页 deck 缺失自动跳过）
 node scripts/preflight-1.0.mjs  # 发布前预检（坏输入/边界/幂等/性能/媒体 splice——11 断言）
 npm run test:preset             # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
@@ -541,7 +545,7 @@ npm run sync              # 发版：上传 GitHub 资产 + 把本机与 GitHub 
 - **文档链（每次改动必同步）**：`docs/01-需求与目标.md`（需求/决策/冲突）· `docs/02-技术报告.md`（实现级）· `docs/03-更新日志.md`（版本记录）· `docs/04-路线图与里程碑.md`（验收）· `docs/05-迭代流程.md`(检查单) · `docs/06-评审与测试.md`（发布前评审/测试矩阵）。
 - **git 约定**：一个功能/修复一个 commit；message `vX.Y.Z: <一句话目的>（反馈编号）`；**`lib/` 提交**（构建产物，见下）。
 - **`lib/` 为什么提交**（2026-09-16）：`dsh plugin --profile web add <本仓库 git URL>` 只拿得到 git 里**已提交**的内容，而 `exports` 指向 `./lib/index.js`——lib 不入库时，git 安装出来的包缺入口文件、插件挂不上（实测：装到的包没有 lib/）。提交后 git 安装与 tgz 安装产物一致。代价是"改了 src 忘了 build + commit"会静默发出旧代码，所以配了守卫：`npm run check:lib` + smoke 里一条同义断言（lib 必须逐字节等于 src，且 `.gitignore` 不得忽略它、git 必须跟踪它）。改码流程 = 改 `src/` → `node scripts/build.mjs` → 连同 `lib/` 一起提交。
-- **既有的自动化验证**：smoke（222 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 手册事实审计（`audit-manual-facts.mjs`）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
+- **既有的自动化验证**：smoke（225 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 手册事实审计（`audit-manual-facts.mjs`）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
 - **OOXML 产物必须用真消费者验**（2026-09-14 教训）：加备注页时先写的 `notesMasterIdLst`，python-pptx 照读不误，**真 PowerPoint 却报"文件或目录损坏"**——
   第三方库通过 ≠ 能打开。凡改导出编码，至少走一次真 PowerPoint（`ppt_visual`）/真浏览器，别只信自证断言。
 

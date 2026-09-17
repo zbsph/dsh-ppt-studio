@@ -1245,9 +1245,9 @@ const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\
 ok("适配·会话身份：代码里不再使用 DSH 不存在的 ctx.get('agent')（注释里的历史说明不算）",
   !/ctx\.get\('agent'\)/.test(stripComments(readFileSync(join(root, 'src', 'index.js'), 'utf8'))) &&
   !/ctx\.get\('agent'\)/.test(stripComments(readFileSync(join(root, 'src', 'tools.js'), 'utf8'))), '')
-ok('适配·会话身份：走 execute(args, exec) 的 exec.agent（状态工具 + qualityOf 两处）',
+ok('适配·会话身份：走 execute(args, exec) 的 exec.agent（状态工具 + 两处质量档查询）',
   /exec\?\.agent/.test(readFileSync(join(root, 'src', 'index.js'), 'utf8')) &&
-  (readFileSync(join(root, 'src', 'tools.js'), 'utf8').match(/qualityOf\(exec\?\.agent, dir\)/g) ?? []).length === 2, '')
+  (readFileSync(join(root, 'src', 'tools.js'), 'utf8').match(/qualityOfDiag\(exec\?\.agent, dir\)/g) ?? []).length === 2, '')
 
 const skillSrc = readFileSync(join(root, 'src', 'skill.js'), 'utf8')
 ok('适配·内嵌手册：经 ctx.skills.register 注册为运行时 skill（落调用 ctx 所在层）',
@@ -1853,6 +1853,35 @@ ok('表格字号：三层同源（快照 fontPt = 预览 cell px = 成品 sz = �
 ok('表格字号：成品全局最小 sz ≥ theme.minFontSize（audit 档不再被表格自相矛盾架空）',
   tfMin / 100 >= 14, `最小 ${tfMin / 100}pt / 用户下限 14pt`)
 await rm(tfDeck, { recursive: true, force: true })
+
+// ── 45. 质量档静默降级：状态文件坏了必须可见（2026-09-18 新增）──────────────────────
+// 背景（真 bug）：`loadSession` / `loadProject` 在"文件存在但读不了/解析失败"时**静默**返回默认值 ⇒
+//   `state.json` 一损坏，`quality: 'audit'` 就**无声**变成 `standard`——最严档的额外门禁
+//   （禁 autoDeclare / 强制视觉审阅 / 导出回读断言）全部消失，而用户看到的是一轮"正常"的 standard。
+//   修法核心是**区分两种情形**：文件不存在 = 正常（新工程，用默认）；文件存在却坏了 = 异常，必须上报。
+const qsDeck = join(root, 'examples', 'quality-smoke')
+await rm(qsDeck, { recursive: true, force: true })
+await mkdir(qsDeck, { recursive: true })
+await writeFile(join(qsDeck, 'state.json'), '{ "quality": "audit", 这不是合法 JSON', 'utf8')
+const stMod = await import('../lib/state.js')
+const qsDiag = typeof stMod.loadProjectDiag === 'function'
+  ? await stMod.loadProjectDiag(qsDeck)
+  : { state: await stMod.loadProject(qsDeck), error: null }
+ok('质量档：项目 state.json 损坏时必须**上报**（不得静默回落 standard）',
+  qsDiag.error !== null && qsDiag.state.quality === 'standard',
+  qsDiag.error ?? '（无诊断 API：损坏被静默吞掉、回落 standard 且不留任何痕迹）')
+const qsQ = typeof toolsMod.qualityOfDiag === 'function'
+  ? await toolsMod.qualityOfDiag(null, qsDeck)
+  : { quality: 'standard', degraded: false, reason: '' }
+ok('质量档：降级时 degraded=true 且带原因（工具输出据此提示"audit 额外门禁未生效"）',
+  qsQ.degraded === true && qsQ.quality === 'standard' && String(qsQ.reason).length > 0,
+  JSON.stringify(qsQ))
+// 反例（防"把新工程也判成降级"）：文件不存在必须 error=null
+const qsNone = typeof stMod.loadProjectDiag === 'function'
+  ? await stMod.loadProjectDiag(join(qsDeck, 'no-such-dir'))
+  : { state: await stMod.loadProject(join(qsDeck, 'no-such-dir')), error: null }
+ok('质量档：文件不存在时 error=null（新工程不得被误判为降级）', qsNone.error === null, String(qsNone.error))
+await rm(qsDeck, { recursive: true, force: true })
 
 // ── 40. profile bundle 安装路径（2026-09-14："dsh plugin add 能不能装"）────────────────
 // 机制：`dsh plugin --profile <p> <args>` = 在 profile 目录跑 pnpm，然后按**已安装状态**核对
