@@ -2166,14 +2166,23 @@ ok('bundle：未发布到 npm（保持 private），一键安装走 GitHub Relea
   ok('回滚：提示段注入不按预设门控（读不到会话状态时原样返回，不抛）', promptOk, promptOk ? '原样返回 ✓' : '未注册/抛错')
 }
 
-// ── 41. 装配路径：**只允许 profile bundle**（install.mjs 行为；2026-09-18 事故后收窄）─────────
-// 为什么必须机器守住（事故形状）：预设里的插件行按**裸包名**从 `harnessBase`（安装好的 harness 目录）
-// 解析，**不是** profile ⇒ 解析不到 ⇒ 该预设被标 `broken` ⇒ 前端选择器只渲染健康预设
-// （`presetOptions() = presets.filter(p => p.broken === void 0)`）⇒ **用户根本选不到「PPT 工作室」**，
-// 而 profile 里又没有 bundle ⇒ 两边都没工具。可怕的是本机的"文件级检查"全绿（junction 在、sha 一致）——
-// 错的是那条装配路径本身，只有"预设能不能被选到"这一层才看得见。
-// 所以这里钉三件事：① bundle 模式绝不写插件行；② 非 bundle 又装不上 bundle 时**宁可失败**（不产出坏预设）；
-// ③ 包内交付的预设模板本身不含插件行。
+// ── 41. 装配路径：**默认「全局」**（profile bundle = `dsh plugin add` 一句话那条路）／
+//        `--isolate`（预设行 + 预设目录内 junction）────────────────────────────────────────
+// 两种模式的差别只在"插件被装到哪一层"，**插件自身不门控**（注册在拿到手的那个 ctx ⇒ 一层实现两用）：
+//   · 全局（默认）：profile bundle ⇒ 插件在 **profile 层** ⇒ 该 profile 的所有会话都能用；
+//   · 隔离（`--isolate`）：预设行（**相对路径**）+ 预设目录内 junction ⇒ 插件被挂进**预设组合**
+//     ⇒ 工具/技能落在**预设层**（技能工具读的正是那一层）⇒ 只有「PPT 工作室」的会话能用。
+// 事故依据（2026-09-18，两轮）：
+//   · 裸包名行从 **harnessBase**（安装好的 harness 目录）解析，装在 profile/预设里的本包解析不到
+//     ⇒ 预设被判 `broken` ⇒ 前端选择器只渲染健康预设
+//     （`presetOptions() = presets.filter(p => p.broken === void 0)`）⇒ 用户根本选不到该预设；
+//   · **相对路径行**按**组合文件自己的目录**解析（本机 liangshen/j-space/superpowers 等预设正是用
+//     `name: ./xxx.mjs` 引用自己的文件）⇒ 只要预设目录里有指向本包的 junction，行就解析得到；
+//   · 用户记忆里"以前能隔离"是对的：那来自**挂载层**（install.mjs 写的预设行），不是插件门控
+//     （git 证据：v1.0.0/v0.4.0 里 `agent/created`/`presetIds` 0 处）。
+// 这里钉六件事：① 默认=全局（不写行、不建 junction）；② `--isolate` 建 junction + 写相对行；
+// ③ 两者互斥（非 bundle 且装不上 bundle 时**拒绝继续**，不产出坏预设）；④ 交付模板不含行；
+// ⑤ `--isolate` 夹具的预设经 DSH discovery 判定 **ok**（= 选择器会显示它）；⑥ 夹具清理不碰仓库本体。
 {
   const { spawnSync } = await import('node:child_process')
   const base = join(root, 'examples', 'smoke', '.tmp-install-mode')
@@ -2183,35 +2192,82 @@ ok('bundle：未发布到 npm（保持 private），一键安装走 GitHub Relea
     await mkdir(join(dir, 'profiles', 'web'), { recursive: true })
     await writeFile(join(dir, 'profiles', 'web', 'package.json'),
       JSON.stringify({ name: 'p', dependencies: withDep ? { [rootPkg.name]: 'file:x' } : {} }, null, 2), 'utf8')
-    // bundle 模式下包本体由 pnpm 物化——夹具要真的"有包"，否则校验步骤会（正确地）报错
     if (withDep) {
+      // 全局模式下包本体归 pnpm：夹具要真的"有包"，否则校验步骤会（正确地）报错
       const pd = join(dir, 'profiles', 'web', 'node_modules', '@dsh-external', 'dsh-ppt-studio')
-      await mkdir(pd, { recursive: true })
+      await mkdir(join(pd, 'lib'), { recursive: true })
       await writeFile(join(pd, 'package.json'), JSON.stringify({ name: rootPkg.name, version: rootPkg.version }), 'utf8')
+      await writeFile(join(pd, 'lib', 'index.js'), '// fixture\n', 'utf8')
     }
+    // 隔离模式：包自身的 yaml 必须可解析（ESM 按 realpath），夹具照 profile 造一个
+    const y = join(dir, 'profiles', 'web', 'node_modules', 'yaml')
+    await mkdir(y, { recursive: true })
+    await writeFile(join(y, 'package.json'), JSON.stringify({ name: 'yaml', version: '0.0.0' }), 'utf8')
     return dir
   }
-  const pfxA = await mkPrefix('a', true) // 已按 bundle 安装 → 走快路径
-  const pfxB = await mkPrefix('b', false) // 未按 bundle 安装 → 必须**失败**，不得写出坏预设
+  const pfxGlb = await mkPrefix('glb', true)   // 默认模式：已按 bundle 安装 → 走快路径
+  const pfxIso = await mkPrefix('iso', false)  // 未装 bundle → 用 --isolate
+  const pfxNo = await mkPrefix('nobundle', false) // 未装 bundle + 默认模式 + 无 dsh → 必须拒绝
   const installScript = join(root, 'scripts', 'install.mjs')
-  const resA = spawnSync(process.execPath, [installScript, '--prefix', pfxA], { encoding: 'utf8' })
-  // PATH 里只留 node 所在目录 ⇒ `dsh` 不可用 ⇒ 安装器必须拒绝继续（而不是写一个 broken 预设）
-  const resB = spawnSync(process.execPath, [installScript, '--prefix', pfxB], {
+  const presetFileOf = (prefix) => join(prefix, '.agent-presets', 'ppt', 'agent.cordis.yml')
+  const presetTextOf = (prefix) => (existsSync(presetFileOf(prefix)) ? readFileSync(presetFileOf(prefix), 'utf8') : '')
+  const linkOf = (prefix) => join(prefix, '.agent-presets', 'ppt', 'plugin')
+  const resGlb = spawnSync(process.execPath, [installScript, '--prefix', pfxGlb], { encoding: 'utf8' })
+  const resIso = spawnSync(process.execPath, [installScript, '--prefix', pfxIso, '--isolate'], { encoding: 'utf8' })
+  // PATH 里只留 node 所在目录 ⇒ `dsh` 不可用 ⇒ 默认（全局）模式必须拒绝继续，而不是写出坏预设
+  const resNo = spawnSync(process.execPath, [installScript, '--prefix', pfxNo], {
     encoding: 'utf8',
     env: { ...process.env, PATH: dirname(process.execPath), Path: dirname(process.execPath) },
   })
-  const presetFileOf = (prefix) => join(prefix, '.agent-presets', 'ppt', 'agent.cordis.yml')
-  const hasRow = (p) => existsSync(p) && /^-\s*id: ppt-studio$/m.test(readFileSync(p, 'utf8'))
-  ok('装配路径：bundle 模式**不写插件行**，非 bundle 且装不上 bundle 时**拒绝继续**（宁可失败也不写坏预设）',
-    resA.status === 0 && resB.status === 1 && !hasRow(presetFileOf(pfxA)) && !existsSync(presetFileOf(pfxB)),
-    `bundle exit=${resA.status} 含行=${hasRow(presetFileOf(pfxA))}｜非bundle exit=${resB.status} 写了预设=${existsSync(presetFileOf(pfxB))}`)
+  const relRow = /^-\s*id: ppt-studio\n\s+name: \.\/plugin\/lib\/index\.js$/m
+  ok('装配路径：**默认=全局**（profile bundle）——不写插件行、不建预设内 junction（一句话安装走这条）',
+    resGlb.status === 0 && !/^-\s*id: ppt-studio$/m.test(presetTextOf(pfxGlb)) && !existsSync(linkOf(pfxGlb)),
+    `glb exit=${resGlb.status}｜含行=${/^-\s*id: ppt-studio$/m.test(presetTextOf(pfxGlb))}｜junction=${existsSync(linkOf(pfxGlb))}`)
+  ok('装配路径：`--isolate` 建预设内 junction + 写**相对路径**行（裸包名会从 harness 解析失败 ⇒ 预设 broken）',
+    resIso.status === 0 && existsSync(join(linkOf(pfxIso), 'lib', 'index.js')) && relRow.test(presetTextOf(pfxIso)),
+    `iso exit=${resIso.status}｜junction=${existsSync(join(linkOf(pfxIso), 'lib', 'index.js'))}｜相对行=${relRow.test(presetTextOf(pfxIso))}`)
+  ok('装配路径：非 bundle 又装不上 bundle 时**拒绝继续**（宁可失败，也不写出会被判 broken 的预设）',
+    resNo.status === 1 && !existsSync(presetFileOf(pfxNo)),
+    `noBundle exit=${resNo.status}｜写了预设=${existsSync(presetFileOf(pfxNo))}`)
   const tplText = readFileSync(join(root, 'agent-presets', 'ppt', 'agent.cordis.yml'), 'utf8')
-  ok('装配路径：包内交付的预设模板**不含**本包插件行（含行 ⇒ 预设被标 broken ⇒ 选择器里看不到该预设）',
+  ok('装配路径：包内交付的预设模板**不含**本包插件行（照抄模板的预设永远健康；行由安装器按模式增删）',
     !/^-\s*id: ppt-studio$/m.test(tplText) && !/dsh-ppt-studio plugin row/.test(tplText), '模板干净 ✓')
+  // 决定性判据：用 **DSH 自己的 discovery** 判隔离夹具的预设是否健康（= 选择器会不会列出它）。
+  // 找不到 DSH 安装时按跳过计（断言总数恒定）。
+  const dsh = await findDshForSmoke()
+  if (dsh) {
+    const { pathToFileURL } = await import('node:url')
+    const { discoverPresets } = await import(pathToFileURL(dsh.lib).href)
+    const found = await discoverPresets([{ path: join(pfxIso, '.agent-presets'), trust: 'user' }], dsh.harnessBase)
+    const ours = found.find((p) => p.id === 'ppt')
+    ok('装配路径：`--isolate` 夹具的预设经 DSH discovery 判定 **ok**（相对行解析成功 ⇒ 选择器会显示它）',
+      Boolean(ours) && ours.broken === undefined,
+      ours ? (ours.broken === undefined ? 'ok（选择器可见）' : `broken: ${String(ours.broken).slice(0, 90)}`) : '未发现该预设')
+  } else {
+    ok('装配路径：`--isolate` 夹具的预设经 DSH discovery 判定 **ok**（相对行解析成功 ⇒ 选择器会显示它）', true, '⚠ 未找到 DSH 安装 → 跳过')
+  }
   await rm(base, { recursive: true, force: true })
   ok('装配路径：临时夹具清理干净且**没有碰仓库本体**',
     !existsSync(base) && existsSync(installScript) && existsSync(join(root, 'package.json')),
     '仓库根文件仍在 ✓')
+}
+
+/** 定位随包安装的 DSH（返回 agent-presets 的 lib 与 **harness base**）——用于"预设健康"判据。 */
+async function findDshForSmoke() {
+  const { existsSync: ex } = await import('node:fs')
+  const { homedir } = await import('node:os')
+  const { join: j } = await import('node:path')
+  const { pathToFileURL: p2u } = await import('node:url')
+  const rel = j('@deepseek-ai', 'dsh', 'node_modules', '@deepseek-ai', 'dsh-agent-presets', 'lib', 'index.js')
+  const roots = []
+  for (const k of ['APPDATA', 'LOCALAPPDATA']) if (process.env[k]) roots.push(j(process.env[k], 'npm', 'node_modules'))
+  roots.push(j(homedir(), 'AppData', 'Roaming', 'npm', 'node_modules'))
+  roots.push('/usr/lib/node_modules', '/usr/local/lib/node_modules')
+  for (const r of roots) {
+    const lib = j(r, rel)
+    if (ex(lib)) return { lib, harnessBase: p2u(`${j(r, '@deepseek-ai', 'dsh')}/`).href }
+  }
+  return null
 }
 
 // ── 42. 答疑手册 vs 制作手册的触发纪律（2026-09-15 真实反馈）────────────────────

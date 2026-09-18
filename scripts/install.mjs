@@ -18,7 +18,7 @@
  *   node scripts/install.mjs --profile <name>   # 指定 profile
  *   node scripts/install.mjs --no-preset        # 只保证 bundle，不装 preset
  */
-import { existsSync, mkdirSync, rmSync, readFileSync, writeFileSync, readdirSync } from 'node:fs'
+import { existsSync, mkdirSync, rmSync, readFileSync, writeFileSync, readdirSync, symlinkSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { homedir } from 'node:os'
 import { join, dirname, resolve } from 'node:path'
@@ -56,66 +56,116 @@ if (!existsSync(join(root, 'lib', 'index.js'))) {
 
 const steps = []
 
-// ── 0) 装配路径：**只支持 profile bundle**（2026-09-18 实测事故后收窄）──────────────────
-// 曾经的"两条路径互斥"是错的：**预设行这条路在本 DSH 版本上不可能成立**，而且失败得极其隐蔽。
-// 依据（都可复跑）：
-//   ① `@deepseek-ai/dsh-agent-presets` 的 PresetTree.import 对**裸包名**一律从 `harnessBase` 解析——
-//      源码注释原文："the mount records the host composition's base instead, which is inside the
-//      installed harness"。**不是**预设目录，也**不是** profile ⇒ 装在 profile 里的本包永远解析不到；
-//   ② 解析不到 ⇒ 该预设被标 `broken`；前端选择器只渲染健康预设：
-//      `presetOptions() = presets.filter(p => p.broken === void 0)`（dsh-client-ui-agent-preset）
-//      ⇒ 「PPT 工作室」**不出现在新建会话的预设列表里**（只在"管理"区可见）；
-//   ③ 于是用户选不到该预设、profile 里又没有 bundle ⇒ **两边都没有任何工具**——
-//      本机 2026-09-18 的现场：245 个会话里 `agentPreset` 为 `ppt` 的 **0 个**，用户以为"插件挂了"。
-// 所以本安装器现在**只有一条路**：确认/建立 profile bundle；包本体交给 pnpm 管，不再建 junction。
-// 预设依旧同步（身份/人格），但**永不写插件行**——它只会让预设变 broken。
+// ── 0) 装配模式：**默认「全局」**（profile bundle，`dsh plugin add` 一句话那条路）；
+//        想要"只在「PPT 工作室」预设里生效"的用户用 `--isolate`（预设行 + 预设目录内 junction）──
+// 两种模式的差别只在"插件被装到哪一层"，**插件自身不门控**（它注册在拿到手的那个 ctx ⇒ 一层实现两用）：
+//   · 全局（默认）：`dsh plugin add <包>` 装成 profile bundle ⇒ 插件在 **profile 层** ⇒ 该 profile 的
+//     每个会话都能用（含官方 standard）；「PPT 工作室」预设只提供身份/人格。**一句话安装走这条**。
+//   · 隔离（`--isolate`）：`<dshHome>/.agent-presets/ppt/plugin` junction → 本包，预设行写成**相对路径**
+//     `./plugin/lib/index.js`；相对行按**组合文件自己的目录**解析（本机 liangshen/j-space 等预设正是这么
+//     引用自己的 .mjs 的）⇒ 解析得到 ⇒ 预设健康、选择器可见；插件被挂进**预设组合** ⇒ 工具/技能落在
+//     **预设层**（技能工具读的正是那一层）⇒ **只有「PPT 工作室」的会话**可用。
+// 两条路**互斥**：同时存在时装配防重会让"先挂的"生效（profile 先），隔离永远拿不到预设层 ⇒
+// `--isolate` 会先摘掉 profile bundle，全局模式会删掉预设行与预设内 junction。
+// **为什么行不能用裸包名**（2026-09-18 实测事故）：裸包名一律从 `harnessBase`（安装好的 harness 目录）解析
+// （源码注释："the mount records the host composition's base instead, which is inside the installed harness"），
+// 装在 profile/预设里的本包**解析不到** ⇒ 预设被判 `broken` ⇒ 前端选择器只渲染健康预设
+// （`presetOptions() = presets.filter(p => p.broken === void 0)`）⇒ 用户根本选不到该预设。
+const ISOLATE = args.includes('--isolate')
+const ROW_START = '# >>> dsh-ppt-studio plugin row'
+const ROW_END = '# <<< dsh-ppt-studio plugin row'
+const PRESET_ROW_BLOCK = [
+  ROW_START + '（安装器按装配模式增删本块，勿手改标记）',
+  '# 隔离模式：预设目录内的 junction + **相对路径**行（相对行按组合文件所在目录解析）。',
+  '- id: ppt-studio',
+  '  name: ./plugin/lib/index.js',
+  ROW_END,
+].join('\n')
 const profilePkgFile = join(profileDir, 'package.json')
 let profilePkg = {}
 // 去 BOM 再解析：Windows 上被 PowerShell/记事本编辑过的 JSON 可能带 UTF-8 BOM，JSON.parse 会直接抛
 try { profilePkg = JSON.parse(readFileSync(profilePkgFile, 'utf8').replace(/^\uFEFF/, '')) } catch { /* 无/坏 → 视为非 bundle */ }
 let bundleInstalled = Boolean(profilePkg.dependencies?.[pkg.name]) || (profilePkg.dsh?.profile?.bundles ?? []).includes(pkg.name)
-// 历史遗留的行块（老版本安装器写过）：**任何模式下都清掉**——否则老用户升级后预设依然是 broken。
-const PRESET_ROW_RE = /^# >>> dsh-ppt-studio plugin row[\s\S]*?^# <<< dsh-ppt-studio plugin row\r?\n?/m
-// 兼容更老的无标记写法（直接跟在文件末尾的两行）
+// 历史遗留的行块（老版本安装器写过）：任何模式下都先清掉，再按模式决定是否写回。
+const PRESET_ROW_RE = new RegExp(`^${ROW_START}[\\s\\S]*?^${ROW_END}\\r?\\n?`, 'm')
+// 兼容更老的无标记写法（裸包名两行）
 const LEGACY_ROW_RE = /^- id: ppt-studio\n  name: '@dsh-external\/dsh-ppt-studio'\n?/m
+const presetPluginDir = join(presetDir, 'plugin')
 
-if (!bundleInstalled) {
-  // 先尝试把它装成 bundle——这就是"一条命令安装"那条路，也正是 README §10 指引用户做的事。
-  // 规格优先级：--spec <值>（发布时由 release-sync 传资产/本地构件）> 包本目录（file: 规格）。
-  const spec = opt('--spec', root)
-  steps.push(`未检测到 profile bundle → 先装成 bundle：dsh plugin --profile ${profile} add ${spec}`)
-  // **必须把 DSH_HOME 传给子进程**：`--prefix` 指的就是 DSH home，不传的话 `dsh plugin` 会去动
-  // 用户**真实**的 ~/.dsh（测试隔离形同虚设，且会污染真环境）——这是隔离夹具的第二次教训。
-  const r = spawnSync('dsh', ['plugin', '--profile', profile, 'add', spec], {
-    stdio: 'inherit',
-    shell: process.platform === 'win32',
-    env: { ...process.env, DSH_HOME: prefix },
-  })
-  if (r.status !== 0) {
-    console.error(`✗ 自动安装 profile bundle 失败（dsh 退出码 ${r.status}）。请手动执行：\n`
-      + `    dsh plugin --profile ${profile} add ${spec}\n`
-      + '  然后重跑本安装器。（预设行挂载在本 DSH 版本上不可用——见本文件顶部说明。）')
-    process.exit(1)
+if (ISOLATE) {
+  // ① 隔离模式下**不能**同时有 profile bundle（那会让插件在 profile 层也挂一次 ⇒ 全局可见 + 双挂载）
+  if (bundleInstalled) {
+    steps.push('检测到 profile bundle → 摘掉它（隔离模式要求插件只由预设行挂载）')
+    const rm = spawnSync('dsh', ['plugin', '--profile', profile, 'remove', pkg.name], {
+      stdio: 'inherit', shell: process.platform === 'win32', env: { ...process.env, DSH_HOME: prefix },
+    })
+    if (rm.status !== 0) {
+      console.error(`✗ 摘除 profile bundle 失败（dsh 退出码 ${rm.status}）。请手动执行：\n    dsh plugin --profile ${profile} remove ${pkg.name}`)
+      process.exit(1)
+    }
+    try { profilePkg = JSON.parse(readFileSync(profilePkgFile, 'utf8').replace(/^\uFEFF/, '')) } catch { profilePkg = {} }
+    bundleInstalled = Boolean(profilePkg.dependencies?.[pkg.name]) || (profilePkg.dsh?.profile?.bundles ?? []).includes(pkg.name)
+    if (bundleInstalled) { console.error('✗ 摘除后 profile 里仍有本包——拒绝继续（会出现双挂载）'); process.exit(1) }
   }
-  try { profilePkg = JSON.parse(readFileSync(profilePkgFile, 'utf8').replace(/^\uFEFF/, '')) } catch { profilePkg = {} }
-  bundleInstalled = Boolean(profilePkg.dependencies?.[pkg.name]) || (profilePkg.dsh?.profile?.bundles ?? []).includes(pkg.name)
-  if (!bundleInstalled) {
-    console.error(`✗ dsh 报告成功，但 profile 里仍没有本包（${profilePkgFile}）——拒绝继续（写不出可用装配）`)
-    process.exit(1)
+  // ② 预设目录内的 junction → 本包（**相对行**靠它解析）
+  mkdirSync(presetDir, { recursive: true })
+  if (existsSync(presetPluginDir)) rmSync(presetPluginDir, { recursive: true, force: true }) // rmSync 不跟随重解析点
+  symlinkSync(root, presetPluginDir, 'junction')
+  steps.push(`已建预设内链接：.agent-presets\\ppt\\plugin → ${root}`)
+  // ③ 包自身的 yaml 依赖：ESM 按 **realpath** 解析（junction 指向的是 root，profile 级救不了它）
+  const pkgYaml = join(root, 'node_modules', 'yaml')
+  if (!existsSync(join(pkgYaml, 'package.json'))) {
+    const src = join(profileDir, 'node_modules', 'yaml')
+    if (!existsSync(join(src, 'package.json'))) {
+      console.error(`✗ 找不到 yaml 依赖（${src}）——请先在 profile 里装好依赖（dsh 自身通常已有）`)
+      process.exit(1)
+    }
+    mkdirSync(dirname(pkgYaml), { recursive: true })
+    symlinkSync(src, pkgYaml, 'junction')
+    steps.push(`yaml 已链接进包：${pkgYaml} → ${src}`)
   }
-  steps.push(`已装成 profile bundle（${profilePkg.dependencies?.[pkg.name] ?? 'dsh.profile.bundles'}）`)
+  steps.push('装配模式：**隔离**（插件只在「PPT 工作室」预设内挂载）')
 } else {
-  steps.push(`已确认 profile bundle（${profilePkg.dependencies?.[pkg.name] ?? 'dsh.profile.bundles'}）——包本体归 pnpm 管，不建 junction`)
+  // 全局模式：清掉隔离模式留下的预设内 junction（否则预设会引用一个不再需要的链接）
+  if (existsSync(presetPluginDir)) {
+    rmSync(presetPluginDir, { recursive: true, force: true })
+    steps.push('已清理隔离模式遗留的预设内链接（.agent-presets\\ppt\\plugin）')
+  }
+  steps.push('装配模式：**全局**（profile bundle：该 profile 的所有会话都能用）')
 }
 
-// ── 1) 包本体是否真的在 profile 里（pnpm 物化）────────────────────────────────
-// 只做**校验**，不做链接：bundle 模式下这条路径完全归 pnpm，手工建 junction 会破坏 pnpm 的安装。
-if (!existsSync(join(pkgDir, 'package.json'))) {
-  console.error(`✗ profile 里找不到本包：${join(pkgDir, 'package.json')}\n`
-    + `  请重跑：dsh plugin --profile ${profile} add ${opt('--spec', root)}`)
-  process.exit(1)
+// ── 1) 包本体可达性 ─────────────────────────────────────────────────────────
+if (ISOLATE) {
+  if (!existsSync(join(presetPluginDir, 'lib', 'index.js'))) {
+    console.error(`✗ 预设内链接不可用：${join(presetPluginDir, 'lib', 'index.js')}`)
+    process.exit(1)
+  }
+  steps.push('包可解析：.agent-presets\\ppt\\plugin\\lib\\index.js ✓')
+} else {
+  if (!bundleInstalled) {
+    // 全局模式：确认/建立 profile bundle（包本体交给 pnpm；规格优先级 --spec > 包本目录）
+    const spec = opt('--spec', root)
+    steps.push(`未检测到 profile bundle → 先装成 bundle：dsh plugin --profile ${profile} add ${spec}`)
+    // **必须把 DSH_HOME 传给子进程**：`--prefix` 指的就是 DSH home，不传会让 dsh 去动真实 ~/.dsh
+    const r = spawnSync('dsh', ['plugin', '--profile', profile, 'add', spec], {
+      stdio: 'inherit', shell: process.platform === 'win32', env: { ...process.env, DSH_HOME: prefix },
+    })
+    if (r.status !== 0) {
+      console.error(`✗ 安装 profile bundle 失败（dsh 退出码 ${r.status}）。请手动执行：\n    dsh plugin --profile ${profile} add ${spec}`)
+      process.exit(1)
+    }
+    try { profilePkg = JSON.parse(readFileSync(profilePkgFile, 'utf8').replace(/^\uFEFF/, '')) } catch { profilePkg = {} }
+    bundleInstalled = Boolean(profilePkg.dependencies?.[pkg.name]) || (profilePkg.dsh?.profile?.bundles ?? []).includes(pkg.name)
+    if (!bundleInstalled) { console.error(`✗ dsh 报告成功，但 profile 里仍没有本包（${profilePkgFile}）`); process.exit(1) }
+    steps.push(`已装成 profile bundle（${profilePkg.dependencies?.[pkg.name] ?? 'dsh.profile.bundles'}）`)
+  } else {
+    steps.push(`已确认 profile bundle（${profilePkg.dependencies?.[pkg.name] ?? 'dsh.profile.bundles'}）——包本体归 pnpm 管`)
+  }
+  if (!existsSync(join(pkgDir, 'package.json'))) {
+    console.error(`✗ profile 里找不到本包：${join(pkgDir, 'package.json')}\n  请重跑：dsh plugin --profile ${profile} add ${opt('--spec', root)}`)
+    process.exit(1)
+  }
 }
-steps.push(`包已在 profile 中可解析：node_modules\\@dsh-external\\dsh-ppt-studio`)
 
 // ── 3) agent preset（预设 = 会话人格与显示元数据；**插件行按装配路径二选一**）──
 // 同步纪律（2026-09-06 用户点出）：预设与元数据是"托管文件"、以包为准**总是刷新**——
@@ -130,13 +180,17 @@ if (!noPreset) {
   {
     mkdirSync(presetDir, { recursive: true })
     let presetText = readFileSync(builtinPreset, 'utf8')
-    // 无论哪种模式：**永不写插件行**，并且**清掉历史遗留的行块**（老版本安装器写过）。
-    // 为什么：行里的裸包名在 DSH 版本上从 harness 解析（不是 profile）⇒ 解析不到 ⇒ 预设被标 broken
-    // ⇒ 选择器不显示该预设 ⇒ 用户选不到、两边都没工具。详见 agent-presets/ppt/agent.cordis.yml 的说明。
-    const before = presetText.length
+    // 先清掉历史遗留（含老版本的无标记写法），再按装配模式决定是否写回**相对路径行**：
+    //   · 隔离模式：写回 `./plugin/lib/index.js`（靠预设目录内的 junction 解析；相对行按组合文件目录解析，
+    //     本机 liangshen/j-space 等预设就是这么引用自己的 .mjs 的）；
+    //   · 全局模式：不写行（插件由 profile bundle 提供，写了会造成同进程双挂载）。
     presetText = presetText.replace(PRESET_ROW_RE, '').replace(LEGACY_ROW_RE, '')
-    if (presetText.length < before) steps.push('预设已同步（包为准，**已清掉历史遗留的插件行块**）')
-    else steps.push('预设已同步（包为准；本包**不含**插件行——装配只走 profile bundle）')
+    if (ISOLATE) {
+      presetText = `${presetText.replace(/\s*$/, '')}\n\n${PRESET_ROW_BLOCK}\n`
+      steps.push('预设已同步（隔离模式：写入**相对路径**插件行 ./plugin/lib/index.js）')
+    } else {
+      steps.push('预设已同步（全局模式：**不含**插件行——插件由 profile bundle 提供）')
+    }
     writeFileSync(presetFile, presetText, 'utf8')
   }
   // 显示元数据（拣选器显示名/简介）：preset.yml（name/description/order；缺省则只有目录名）

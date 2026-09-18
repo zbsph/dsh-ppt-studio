@@ -285,20 +285,26 @@ if (bundleMode) {
   // 判据同样是"逐文件 sha256"，只是要比的是**穿过 junction 读到的字节**。
   // 【2026-09-18 修】此前这一支不设 mountMatch（恒为 null），而 ⑥ 的 LOCAL 判据要求 `mountMatch === true`
   // ⇒ 在本模式下 `--local` **恒定报 ❌**。写 `--local` 时只考虑了 bundle 模式，这是本模式的实际缺陷。
-  const linkedPkgDir = join(dshHome, 'profiles', profileName, 'node_modules', ...pkg.name.split('/'))
+  // 【同日再修】`--isolate` 模式的 link 在**预设目录**里（`.agent-presets/ppt/plugin`），不在 profile；
+  // 两处都看，先预设后 profile——否则隔离用户的 `npm run sync -- --local` 会被误报"未找到挂载链接"。
   const fileSha2 = (p) => (existsSync(p) ? sha(readFileSync(p)) : null)
   const probeRels2 = [join('lib', 'index.js'), join('package.json'), 'cordis.patch.yml']
-  if (existsSync(linkedPkgDir)) {
+  const candidates = [
+    { dir: join(dshHome, '.agent-presets', 'ppt', 'plugin'), label: '预设内 junction（--isolate 模式）' },
+    { dir: join(dshHome, 'profiles', profileName, 'node_modules', ...pkg.name.split('/')), label: 'profile junction（旧装法）' },
+  ]
+  const hit = candidates.find((c) => existsSync(c.dir))
+  if (hit) {
     mountMatch = probeRels2.every((rel) => {
       const a = fileSha2(join(deployRoot, 'package', rel))
-      const b = fileSha2(join(linkedPkgDir, rel))
+      const b = fileSha2(join(hit.dir, rel))
       return a && b && a === b
     })
-    console.log(`⑤b 非 bundle 模式（preset 行 + junction）：挂载源 = 刚部署的副本\n    **穿过 junction** 逐文件 sha256 自证：${mountMatch ? '与部署副本同源 ✓' : '与部署副本不一致 ⚠'}（lib/index.js · package.json · cordis.patch.yml）`)
-    if (!mountMatch) console.log(`    ⚠ 不一致 → 重跑安装器重建链接：node "${join(deployRoot, 'package', 'scripts', 'install.mjs')}" --force`)
+    console.log(`⑤b 非 bundle 模式：挂载源 = 刚部署的副本（${hit.label}）\n    **穿过 junction** 逐文件 sha256 自证：${mountMatch ? '与部署副本同源 ✓' : '与部署副本不一致 ⚠'}（lib/index.js · package.json · cordis.patch.yml）`)
+    if (!mountMatch) console.log(`    ⚠ 不一致 → 重跑安装器重建链接：node "${join(deployRoot, 'package', 'scripts', 'install.mjs')}" --isolate`)
   } else {
     mountMatch = false
-    console.log(`⑤b 非 bundle 模式：**未找到挂载链接** ${linkedPkgDir}——请先跑 node "${join(deployRoot, 'package', 'scripts', 'install.mjs')}"（本步已尝试过，可能失败）`)
+    console.log(`⑤b 非 bundle 模式：**未找到挂载链接**（预设内 ${join(dshHome, '.agent-presets', 'ppt', 'plugin')} / profile ${join(dshHome, 'profiles', profileName, 'node_modules', ...pkg.name.split('/'))} 都不存在）——请先跑 node "${join(deployRoot, 'package', 'scripts', 'install.mjs')}" --isolate`)
   }
 }
 

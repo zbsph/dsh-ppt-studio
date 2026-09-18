@@ -114,7 +114,7 @@ node scripts/install.mjs
 ### 0.6 安装后的自检（四句命令）
 
 ```powershell
-node scripts/smoke.mjs          # 242 断言（含全链路）
+node scripts/smoke.mjs          # 245 断言（含全链路）
 node scripts/preflight-1.0.mjs  # 11 断言（坏输入/边界/幂等/性能）
 node scripts/check-preset.mjs   # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
 node scripts/e2e-1.0.mjs        # 13 断言（真浏览器测量 + 真 Office 渲染 + splice/slice 自证；约 2-3 分钟）
@@ -122,46 +122,44 @@ node scripts/e2e-1.0.mjs        # 13 断言（真浏览器测量 + 真 Office �
 全部绿色 = 本机环境完整可用；无 Office/Edge 的机器 e2e 会自动降级标注（不是失败）。
 `check-preset` 找不到 DSH 安装时跳过（不阻断）。
 
-### 0.7 装法：**只有 profile bundle 一条路**（2026-09-18 事故后收窄）
+### 0.7 两种装法：**默认「全局」**（一句话）／可选「隔离」（只在「PPT 工作室」预设里生效）
+
+两条路**互斥**，由安装器保证（插件自身**不门控**：它注册在"被装到的那一层"，所以一层代码两种模式）：
+
+| 装法 | 一条命令 | 插件装在哪层 | 谁能用 | 代价 |
+|---|---|---|---|---|
+| **全局**（默认，推荐） | `dsh plugin --profile web add <包名 \| tgz URL \| 仓库 URL>` | profile 层 | 该 profile 的**所有会话**（含官方 standard） | —— |
+| **隔离**（可选） | `node scripts/install.mjs --isolate`（在解压后的发布包里跑） | **预设层**（预设行 + 预设目录内 junction） | **只有「PPT 工作室」的会话** | 见下"隔离模式的三点须知" |
 
 ```bash
-dsh plugin --profile web add <包名 | tgz URL | 仓库 URL>   # 唯一装法
+# 全局（一句话；创意工坊卡片给的就是这条）
+dsh plugin --profile web add <包名 | tgz URL | 仓库 URL>
+dsh plugin --profile web remove @dsh-external/dsh-ppt-studio   # 卸载
+
+# 隔离（想要"只在 PPT 工作室里才有这些工具/技能"）
+node scripts/install.mjs --isolate     # 自动摘掉已装的 profile bundle，建预设内 junction + 写相对路径行
+node scripts/install.mjs               # 切回全局（默认）：装回 profile bundle，删掉预设行与预设内 junction
+# 装完都要：重启 dsh web
 ```
 
-**为什么不再有第二条路（预设行 + junction）**：预设里的插件行是**裸包名**，DSH 一律从
-`harnessBase`（**安装好的 harness 目录**）解析——不是预设目录、也不是 profile 目录。所以装在 profile 里的
-本包，那一行**永远解析不到** ⇒ 该预设被标 `broken` ⇒ 前端选择器只渲染**健康**预设
-（`presets.filter(p => p.broken === void 0)`）⇒ **「PPT 工作室」根本不出现在新建会话的预设列表里**
-（只在预设"管理"区可见）⇒ 用户既选不到该预设、profile 里又没有 bundle ⇒ **两边都没有任何工具**。
-失败现象与"门控把它挡掉了"一模一样，极难归因：本机 2026-09-18 的现场是 **245 个会话里 `agentPreset=ppt` 的 0 个**。
-（`scripts/install.mjs` 现在只做三件事：确认/建立 bundle、校验包可解析、同步预设身份——它**永不写插件行**，
-并会清掉老版本留下的行块。）
+两类装法的**能力面完全相同**（21 个 `ppt_*` 工具 / `/ppt` 命令面 / 4 本内嵌技能 / 工作流提示段），
+差别只在"谁能看见"。「PPT 工作室」预设额外提供**身份/人格**（persona 是预设唯一的**有意差异**，见 §0.7 末与
+`scripts/check-preset.mjs` 的白名单）。
 
-| 装法 | 由谁装 | 生效范围 | 附带 |
-|---|---|---|---|
-| **profile bundle 行**（`cordis.patch.yml`） | `dsh plugin --profile web add <包>` | **该 profile 的所有会话**（`ppt_*` 工具 / `/ppt` / 4 本技能装上即可用） | 「PPT 工作室」预设提供身份/人格（由插件自交付） |
+**隔离模式的三点须知**（都是机制决定的，不是缺陷）：
+1. **插件不出现在「插件管理」列表**里——它不是 profile bundle（那条列表列的是 profile 依赖）。
+2. **`/ppt-preview` 预览路由随该预设挂载而存在**：有「PPT 工作室」会话时正常；进程里从未挂过该预设时它是 404。
+3. 预设目录里多一个 `plugin` **junction**，相对行 `./plugin/lib/index.js` 靠它解析。**它丢了这个预设会被判
+   `broken`、选择器里就不显示它**（2026-09-18 踩过两次的坑）——重跑 `node scripts/install.mjs --isolate` 即可修复；
+   `npm test` 里有一条用 **DSH 自己的 discovery** 断言的判据（`装配路径：--isolate 夹具的预设经 DSH discovery 判定 ok`）。
 
-> **装上即可用（2026-09-18 第二次修订：撤回"会话级隔离"）**：`ppt_*` 工具、`/ppt` 命令面、
-> 4 本内嵌技能、工作流提示段都注册在**插件被装入的那一层** ⇒ 该 profile 的**每个**会话都能用
-> （含官方 standard 预设）。「PPT 工作室」预设仍然存在，负责**身份/人格**（名字、简介、standard 能力面副本）。
->
-> **为什么撤回**（两件都有实测与 DSH 源码依据，别再走回头路）：
-> 1. **空白会话切换预设拿不到能力面**：DSH 的 `agent-presets.swap` 对空白会话确实会
->    `recompose(agent.ctx, id)`，但那一刻该 agent **已经存在**，而插件的 `agent/created` 监听者是在
->    这次组合中才注册的 ⇒ **永远不会**为这个已有 agent 触发 ⇒ "先建会话、再切到该预设"永远没有工具
->    （用户实测：只有**一开始就建在该预设上**才有工具）。
-> 2. **技能在父层读不到**：技能注册表是**分层**的，技能工具（`tool-skill`）在**预设层**读；插件只能注册到
->    `agent.ctx`（子层）或 profile 根 ⇒ 父层读不到 ⇒ **技能永远不出现**（用户实测：有工具的会话也没有技能）。
->    而"用预设行把插件挂进预设层"这条路同样封死——预设行里的裸包名按 **harness base** 解析（不是 profile），
->    解析不到就会把预设标成 `broken`，前端选择器**不显示**它（见 §0.7 上方的说明）。
-> ⇒ 在这版 DSH 上"只让某个预设看到"**无法可靠交付**。宁可功能完整、行为可预期，也不要"看起来隔离、
-> 实际一半会话没有能力面"。隔离代码留在 git 历史（`4ea7037` 起的提交）里，等 DSH 提供稳定的
-> "预设已组合 / 已切换"信号再恢复。
->
-> **预设由插件自交付**：`apply` 时若 `<dshHome>/.agent-presets/ppt/` 缺失就写一份（**只在不存在时写、绝不覆盖**；
-> 交付的是**剥离插件行**的版本——含行会让预设被判 `broken`、选择器里看不到它）。所以 `dsh plugin add`
-> **一条命令**之后重启，预设列表里就有「PPT 工作室」。
-> - 想关掉自交付：在 `cordis.patch.yml` 的插件行 `config` 里设 `autoPreset: false`。
+**为什么行必须写相对路径，而不是包名**（这是"预设行"曾经失效的原因，别再走回头路）：
+预设里的**裸包名**一律从 `harnessBase`（安装好的 harness 目录）解析，**不是** profile 也不是预设目录
+（源码注释："the mount records the host composition's base instead, which is inside the installed harness"）；
+装在 profile/预设里的本包因此**解析不到** ⇒ 预设被判 `broken` ⇒ 前端选择器只渲染健康预设
+（`presetOptions() = presets.filter(p => p.broken === void 0)`）⇒ **用户根本选不到该预设**。
+而**相对路径行**按组合文件自己的目录解析（本机 `liangshen`/`j-space`/`superpowers` 等预设正是用
+`name: ./xxx.mjs` 引用自己的文件）⇒ 只要预设目录里有那个 junction，行就解析得到。
 
 ### 0.8 卸载
 
@@ -556,7 +554,7 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + LF 守卫 + smoke（242 断言）+ 预设漂移自检（DSH 升级后必跑）
+npm test                        # build + LF 守卫 + smoke（245 断言）+ 预设漂移自检（DSH 升级后必跑）
 npm run check:eol               # 发行字节守卫：跟踪的文本文件必须全 LF（git 安装 == tgz 安装；--fix 可就地修）
 npm run fresh                   # 用户视角终验：干净克隆 npm test + `dsh plugin add` 真装一遍（发版后用）
 npm run test:real               # 真实资产回归（WPS fixture；19 页 deck 缺失自动跳过）
@@ -629,7 +627,7 @@ node scripts/install.mjs                                   # 同步预设身份/
 - **文档链（每次改动必同步）**：`docs/01-需求与目标.md`（需求/决策/冲突）· `docs/02-技术报告.md`（实现级）· `docs/03-更新日志.md`（版本记录）· `docs/04-路线图与里程碑.md`（验收）· `docs/05-迭代流程.md`(检查单) · `docs/06-评审与测试.md`（发布前评审/测试矩阵）。
 - **git 约定**：一个功能/修复一个 commit；message `vX.Y.Z: <一句话目的>（反馈编号）`；**`lib/` 提交**（构建产物，见下）。
 - **`lib/` 为什么提交**（2026-09-16）：`dsh plugin --profile web add <本仓库 git URL>` 只拿得到 git 里**已提交**的内容，而 `exports` 指向 `./lib/index.js`——lib 不入库时，git 安装出来的包缺入口文件、插件挂不上（实测：装到的包没有 lib/）。提交后 git 安装与 tgz 安装产物一致。代价是"改了 src 忘了 build + commit"会静默发出旧代码，所以配了守卫：`npm run check:lib` + smoke 里一条同义断言（lib 必须逐字节等于 src，且 `.gitignore` 不得忽略它、git 必须跟踪它）。改码流程 = 改 `src/` → `node scripts/build.mjs` → 连同 `lib/` 一起提交。
-- **既有的自动化验证**：smoke（242 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 手册事实审计（`audit-manual-facts.mjs`）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
+- **既有的自动化验证**：smoke（245 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 手册事实审计（`audit-manual-facts.mjs`）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
 - **OOXML 产物必须用真消费者验**（2026-09-14 教训）：加备注页时先写的 `notesMasterIdLst`，python-pptx 照读不误，**真 PowerPoint 却报"文件或目录损坏"**——
   第三方库通过 ≠ 能打开。凡改导出编码，至少走一次真 PowerPoint（`ppt_visual`）/真浏览器，别只信自证断言。
 
