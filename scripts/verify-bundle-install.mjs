@@ -19,11 +19,11 @@
  *   node scripts/verify-bundle-install.mjs <https://…tgz>   # **验"用户会敲的那条命令"**（GitHub 资产 URL）
  */
 import { join, dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { readFileSync, existsSync, mkdirSync, rmSync, cpSync, appendFileSync, readdirSync, writeFileSync } from 'node:fs'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+import { readFileSync, existsSync, mkdirSync, rmSync, cpSync, appendFileSync, readdirSync, writeFileSync, lstatSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
-import { tmpdir } from 'node:os'
+import { tmpdir, homedir } from 'node:os'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
@@ -180,57 +180,76 @@ try {
   check('--local：**挂载副本 == 仓库刚构建的 lib/index.js**（这才是"本机跑的就是最新"的判据）',
     repoSha12 === mountSha12, `repo=${repoSha12}｜mount=${mountSha12}`)
 
-  // 7) **非 bundle（预设行 + junction）模式的 --local 自证**（2026-09-18 新增）
-  //    用户诉求："只有选「PPT 工作室」预设时才有这些工具/skills，别的预设不受影响"——
-  //    那对应的正是**预设行挂载**（会话级），而不是 profile bundle（profile 级、全会话可见）。
-  //    本模式此前会让 `release-sync --local` **恒报 ❌**：⑤b 的非 bundle 分支不设 mountMatch（恒 null），
-  //    而 ⑥ 的 LOCAL 判据要求 `mountMatch === true` —— 写 --local 时只考虑了 bundle 模式。这条把该模式钉住。
+  // 7) **预设可被选择器列出（不 broken）+ 安装器不再写插件行**（2026-09-18 事故后重写）
+  //    事故形状：预设里的插件行按**裸包名**从 `harnessBase`（安装好的 harness 目录）解析，**不是** profile
+  //    ⇒ 解析不到 ⇒ 该预设被标 `broken` ⇒ 前端选择器只渲染健康预设
+  //    （`presetOptions() = presets.filter(p => p.broken === void 0)`）⇒ **用户根本选不到「PPT 工作室」**，
+  //    而 profile 里又没有 bundle ⇒ 两边都没工具。本机会话统计：245 个会话里 `agentPreset=ppt` 的 **0 个**。
+  //    这一条用 **DSH 自己的 discovery 代码**（discoverPresets）来判——它就等于"选择器会不会显示它"。
   const home2 = join(work, 'home2')
-  mkdirSync(join(home2, 'profiles', 'web'), { recursive: true })
-  writeFileSync(join(home2, 'profiles', 'web', 'package.json'), '{}', 'utf8')
-  // 夹具必须像真实 profile 一样带 yaml：install.mjs 在非 bundle 模式要把 yaml 链到包自己的 node_modules
-  // （ESM 按 realpath 解析，profile 级救不了 junction 抽取目录）。真实机器上 dsh 自己就依赖 yaml，
-  // 缺它只是**夹具**不真——第一轮就是因此让 install.mjs 直接 exit 1（报错本身是清楚的）。
-  const yamlFrom = join(home, 'profiles', 'web', 'node_modules', 'yaml')
-  const yamlTo = join(home2, 'profiles', 'web', 'node_modules', 'yaml')
-  // 断言数必须与环境无关（否则"跳过"与"通过"又混在一起）：无条件发一条，再按结果决定是否拷贝
-  check('非 bundle 夹具：来源 profile 带 yaml（真实 profile 必有；缺了 install.mjs 会直接 exit 1）',
-    existsSync(yamlFrom), yamlFrom)
-  if (existsSync(yamlFrom)) {
-    mkdirSync(dirname(yamlTo), { recursive: true })
-    cpSync(yamlFrom, yamlTo, { recursive: true, dereference: true })
-  }
+  const profB = join(home2, 'profiles', 'web')
+  mkdirSync(join(profB, 'node_modules', '@dsh-external', 'dsh-ppt-studio'), { recursive: true })
+  // 夹具 = 已按 bundle 安装：依赖里有本包 + 包本体已被 pnpm 物化
+  writeFileSync(join(profB, 'package.json'), JSON.stringify({ name: 'p', dependencies: { [NAME]: 'file:x' } }, null, 2), 'utf8')
+  writeFileSync(join(profB, 'node_modules', '@dsh-external', 'dsh-ppt-studio', 'package.json'),
+    JSON.stringify({ name: NAME, version: pkg.version }), 'utf8')
   const env2 = { ...process.env, DSH_HOME: home2 }
-  const syncRoot2 = join(work, 'sync-root2')
-  const syncState2 = join(work, 'sync-state2.json')
-  const rel2 = run('node', ['scripts/release-sync.mjs', '--local', '--root', syncRoot2, '--state', syncState2], { env: env2, cwd: root })
-  const relOut2 = `${rel2.stdout ?? ''}\n${rel2.stderr ?? ''}`
-  check('非 bundle：`release-sync --local` 在 preset+junction 模式下退出码 0（不因挂载模式不同而误报失败）',
-    rel2.status === 0, rel2.status === 0 ? 'LOCAL ✓' : relOut2.trim().split(/\r?\n/).slice(-3).join(' | ').slice(0, 240))
-  const st2 = existsSync(syncState2) ? JSON.parse(readFileSync(syncState2, 'utf8')) : {}
-  check('非 bundle：状态文件 mount=preset-junction + mountMatch + ok',
-    st2.mount === 'preset-junction' && st2.mountMatch === true && st2.ok === true,
-    JSON.stringify({ mount: st2.mount, mountMatch: st2.mountMatch, ok: st2.ok }))
-  const link2 = join(home2, 'profiles', 'web', 'node_modules', NAME)
-  const repoSha3 = sha(join(root, 'lib', 'index.js'))
-  const linkSha3 = sha(join(link2, 'lib', 'index.js'))
-  check('非 bundle：junction 存在，且**穿过它读到的 lib/index.js** == 仓库刚构建的',
-    existsSync(link2) && repoSha3 === linkSha3, `repo=${repoSha3}｜through-junction=${linkSha3}`)
+  const inst2 = run('node', [join(root, 'scripts', 'install.mjs'), '--prefix', home2], { env: env2 })
+  check('安装器：bundle 模式下退出码 0（不再需要 junction/yaml 链接）', inst2.status === 0,
+    `${String(inst2.stdout ?? '').trim().split(/\r?\n/).length} 行输出｜exit=${inst2.status}`)
   const preset2 = join(home2, '.agent-presets', 'ppt', 'agent.cordis.yml')
-  check('非 bundle：预设**保留**插件行（这正是"只有该预设才有这些工具"的挂载点）',
-    existsSync(preset2) && /^-\s*id:\s*ppt-studio$/m.test(readFileSync(preset2, 'utf8')),
-    existsSync(preset2) ? '含插件行 ✓' : '预设缺失')
+  const presetTxt = existsSync(preset2) ? readFileSync(preset2, 'utf8') : ''
+  check('安装器：写出的预设**不含**本包插件行（含行 ⇒ 预设 broken ⇒ 选择器里看不到它）',
+    existsSync(preset2) && !/^-\s*id:\s*ppt-studio$/m.test(presetTxt) && !/dsh-ppt-studio plugin row/.test(presetTxt),
+    existsSync(preset2) ? '无插件行 ✓' : '预设缺失')
+  const link2 = join(profB, 'node_modules', NAME)
+  check('安装器：**不**把 pnpm 物化的包目录换成 junction（那条路径归 pnpm 管）',
+    existsSync(link2) && lstatSync(link2).isSymbolicLink() === false, `isSymbolicLink=${lstatSync(link2).isSymbolicLink()}`)
+  // 用 DSH 自己的 discovery 判"选择器会不会显示"：找不到 DSH 安装时按跳过计（断言总数恒定）
+  const dsh = findDsh()
+  if (dsh) {
+    const { discoverPresets } = await import(pathToFileURL(dsh.lib).href)
+    const found = await discoverPresets([{ path: join(home2, '.agent-presets'), trust: 'user' }], dsh.harnessBase)
+    const ours = found.find((p) => p.id === 'ppt')
+    check('预设健康：DSH 的 discoverPresets 不把「PPT 工作室」判为 broken（= 选择器会列出它）',
+      Boolean(ours) && ours.broken === undefined,
+      ours ? (ours.broken === undefined ? 'ok（选择器可见）' : `broken: ${String(ours.broken).slice(0, 90)}`) : '未发现该预设')
+  } else {
+    check('预设健康：DSH 的 discoverPresets 不把「PPT 工作室」判为 broken（= 选择器会列出它）', true, '⚠ 未找到 DSH 安装 → 跳过')
+  }
   // 技能泄漏面：`<dshHome>/skills/` 是**文件系统技能根**，对所有会话可见（不限预设）。
-  // 安装器此前默认把 4 本内置技能镜像到这里 ⇒ 别的预设也看得到（用户 2026-09-18 报告的正是这一类）。
-  // 现改为 opt-in：默认不镜像，且**清理历史镜像**（否则每次 sync 都会把它装回来）。
+  // 默认不镜像，且**清理历史镜像**（否则每次 sync 都会把它装回来）。
   const mirrorDir2 = join(home2, 'skills', 'ppt-studio-manual')
   check('会话隔离：默认**不**把内置技能镜像到 <dshHome>/skills（镜像 = 跨预设泄漏）',
     !existsSync(mirrorDir2), mirrorDir2)
-  const mir = run('node', [join(syncRoot2, 'package', 'scripts', 'install.mjs'), '--prefix', home2, '--mirror-skills'], { env: env2 })
+  const mir = run('node', [join(root, 'scripts', 'install.mjs'), '--prefix', home2, '--mirror-skills'], { env: env2 })
   check('会话隔离：显式 `--mirror-skills` 才产生镜像（兜底通道按需，不默认泄漏）',
     mir.status === 0 && existsSync(mirrorDir2), `exit=${mir.status}｜镜像存在=${existsSync(mirrorDir2)}`)
 } finally {
   rmSync(work, { recursive: true, force: true })
+}
+
+/**
+ * 定位随包安装的 DSH：`@deepseek-ai/dsh-agent-presets/lib/index.js` 与它的 **harness base**。
+ * harnessBase 必须是 **harness 包目录本身**（`<global>/@deepseek-ai/dsh/`）——预设里的裸包名正是从这里解析；
+ * 用错基准（全局根 / profile / 预设目录）会对**别的**行误报 broken，让本检查变成假红或假绿。
+ */
+function findDsh() {
+  const rel = join('@deepseek-ai', 'dsh', 'node_modules', '@deepseek-ai', 'dsh-agent-presets', 'lib', 'index.js')
+  const roots = []
+  try {
+    const r = run('npm', ['root', '-g'])
+    if (r.status === 0 && r.stdout) roots.push(r.stdout.trim())
+  } catch { /* npm 不可用 */ }
+  for (const k of ['APPDATA', 'LOCALAPPDATA']) if (process.env[k]) roots.push(join(process.env[k], 'npm', 'node_modules'))
+  roots.push(join(homedir(), 'AppData', 'Roaming', 'npm', 'node_modules'))
+  roots.push('/usr/lib/node_modules', '/usr/local/lib/node_modules')
+  for (const r of roots) {
+    if (!r) continue
+    const lib = join(r, rel)
+    if (existsSync(lib)) return { lib, harnessBase: pathToFileURL(join(r, '@deepseek-ai', 'dsh') + '/').href }
+  }
+  return null
 }
 
 console.log(`\n==== profile bundle 安装自证：${pass} 通过 / ${fail} 失败 ====`)

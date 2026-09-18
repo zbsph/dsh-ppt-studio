@@ -1,20 +1,25 @@
 #!/usr/bin/env node
 /**
- * dsh-ppt-studio 一键安装器（1.0.0 起随发布包提供——新用户"下载→可用"的最后一步）：
- *   1) 把包本目录链接进目标 profile 的 node_modules（@dsh-external/dsh-ppt-studio）
- *   2) 把 agent preset 复制到 <dshHome>/.agent-presets/ppt/（预设行挂载插件 = 唯一装配源）
- *   3) 保证 yaml 运行时依赖可解析（profile 内已有则直接可用；否则从候选链接）
- * 幂等：已安装则跳过；--force 强制重建。安装后：重启 dsh web → 切换"PPT 工作室"agent。
+ * dsh-ppt-studio 一键安装器（随发布包提供——新用户"下载→可用"的最后一步）：
+ *   1) 确认本包是 **profile bundle**；不是就**替你装**（`dsh plugin --profile <p> add <规格>`）
+ *   2) 校验包在 profile 里可解析（包本体归 pnpm 管，本安装器**不建 junction**）
+ *   3) 同步 agent preset（身份/人格/显示元数据）+ 清理历史遗留的插件行块
+ * 装完：重启 dsh web → 新建会话时选「PPT 工作室」→ 直接提需求。
+ *
+ * **为什么只剩 profile bundle 一条路**（2026-09-18 实测事故）：预设里的插件行按裸包名从
+ * `harnessBase`（安装好的 harness 目录）解析，**不是** profile；解析不到 ⇒ 预设被标 `broken`
+ * ⇒ 前端选择器只列健康预设 ⇒ 用户**根本选不到**该预设，而 profile 里又没 bundle ⇒ 两边都没工具。
+ * 详见 agent-presets/ppt/agent.cordis.yml 末尾的说明与 README §10。
  *
  * 用法：
  *   node scripts/install.mjs                    # 默认 DSH_HOME/~/.dsh + profile web
+ *   node scripts/install.mjs --spec <URL|路径>   # 用指定安装规格装成 bundle（发布流程会传）
  *   node scripts/install.mjs --prefix <dir>     # 指定 DSH_HOME（测试/多实例）
  *   node scripts/install.mjs --profile <name>   # 指定 profile
- *   node scripts/install.mjs --force            # 重建
- *   node scripts/install.mjs --no-preset        # 只链包，不装 preset（注入器通道用户）
+ *   node scripts/install.mjs --no-preset        # 只保证 bundle，不装 preset
  */
-import { existsSync, symlinkSync, mkdirSync, renameSync, rmSync, readFileSync, writeFileSync, readdirSync } from 'node:fs'
-import { createRequire } from 'node:module'
+import { existsSync, mkdirSync, rmSync, readFileSync, writeFileSync, readdirSync } from 'node:fs'
+import { spawnSync } from 'node:child_process'
 import { homedir } from 'node:os'
 import { join, dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -30,9 +35,8 @@ const opt = (k, d) => {
 }
 const prefix = resolve(opt('--prefix', process.env.DSH_HOME || join(homedir(), '.dsh')))
 const profile = opt('--profile', 'web')
-const force = args.includes('--force')
 const noPreset = args.includes('--no-preset')
-// 技能镜像默认**关闭**（跨预设泄漏，见第 4 步注释）；要给非 PPT 会话留兜底才显式开启。
+// 技能镜像默认**关闭**（跨预设泄漏，见第 3 步注释）；要给非 PPT 会话留兜底才显式开启。
 const mirrorSkills = args.includes('--mirror-skills')
 
 const profileDir = join(prefix, 'profiles', profile)
@@ -52,57 +56,66 @@ if (!existsSync(join(root, 'lib', 'index.js'))) {
 
 const steps = []
 
-// ── 0) 装配路径检测（2026-09-14）：两条路径**互斥**，装成 bundle 时不要再用预设行挂载 ──────
-// 背景：`dsh plugin --profile <p> add <本包>` 会把本包装成 **profile bundle**（profile 的 package.json
-// 依赖 + 自动进 dsh.profile.bundles），此时插件在该 profile 的所有会话都可用；预设行再挂一次
-// 就是同进程双挂载（插件内有装配防重兜底，但纪律是二选一）。
-// 所以：检测到 bundle 安装 → ① 不建 junction（那个路径归 pnpm 管，--force 也不能动）
-//        ② 写预设时**删掉插件行块**（标记见 agent-presets/ppt/agent.cordis.yml）。
+// ── 0) 装配路径：**只支持 profile bundle**（2026-09-18 实测事故后收窄）──────────────────
+// 曾经的"两条路径互斥"是错的：**预设行这条路在本 DSH 版本上不可能成立**，而且失败得极其隐蔽。
+// 依据（都可复跑）：
+//   ① `@deepseek-ai/dsh-agent-presets` 的 PresetTree.import 对**裸包名**一律从 `harnessBase` 解析——
+//      源码注释原文："the mount records the host composition's base instead, which is inside the
+//      installed harness"。**不是**预设目录，也**不是** profile ⇒ 装在 profile 里的本包永远解析不到；
+//   ② 解析不到 ⇒ 该预设被标 `broken`；前端选择器只渲染健康预设：
+//      `presetOptions() = presets.filter(p => p.broken === void 0)`（dsh-client-ui-agent-preset）
+//      ⇒ 「PPT 工作室」**不出现在新建会话的预设列表里**（只在"管理"区可见）；
+//   ③ 于是用户选不到该预设、profile 里又没有 bundle ⇒ **两边都没有任何工具**——
+//      本机 2026-09-18 的现场：245 个会话里 `agentPreset` 为 `ppt` 的 **0 个**，用户以为"插件挂了"。
+// 所以本安装器现在**只有一条路**：确认/建立 profile bundle；包本体交给 pnpm 管，不再建 junction。
+// 预设依旧同步（身份/人格），但**永不写插件行**——它只会让预设变 broken。
 const profilePkgFile = join(profileDir, 'package.json')
 let profilePkg = {}
 // 去 BOM 再解析：Windows 上被 PowerShell/记事本编辑过的 JSON 可能带 UTF-8 BOM，JSON.parse 会直接抛
 try { profilePkg = JSON.parse(readFileSync(profilePkgFile, 'utf8').replace(/^\uFEFF/, '')) } catch { /* 无/坏 → 视为非 bundle */ }
-const bundleInstalled = Boolean(profilePkg.dependencies?.[pkg.name]) || (profilePkg.dsh?.profile?.bundles ?? []).includes(pkg.name)
+let bundleInstalled = Boolean(profilePkg.dependencies?.[pkg.name]) || (profilePkg.dsh?.profile?.bundles ?? []).includes(pkg.name)
+// 历史遗留的行块（老版本安装器写过）：**任何模式下都清掉**——否则老用户升级后预设依然是 broken。
 const PRESET_ROW_RE = /^# >>> dsh-ppt-studio plugin row[\s\S]*?^# <<< dsh-ppt-studio plugin row\r?\n?/m
+// 兼容更老的无标记写法（直接跟在文件末尾的两行）
+const LEGACY_ROW_RE = /^- id: ppt-studio\n  name: '@dsh-external\/dsh-ppt-studio'\n?/m
 
-// ── 1) 包链接（junction/符号链接；Windows junction 不要求提权）────────────
-if (bundleInstalled) {
-  steps.push(`检测到本包已作为 profile bundle 安装（${profilePkg.dependencies?.[pkg.name] ?? 'dsh.profile.bundles'}）→ **跳过 junction**（该路径归 pnpm 管，避免破坏 pnpm 安装）`)
-} else if (existsSync(pkgDir)) {
-  if (!force) steps.push(`包已存在（幂等跳过）：${pkgDir}`)
-  else {
-    rmSync(pkgDir, { recursive: true, force: true })
-    const bak = `${pkgDir}.bak-${Date.now()}`
-    renameSync(pkgDir, bak)
-    steps.push(`旧包已重命名备份：${bak}`)
-  }
-}
-if (!bundleInstalled && !existsSync(pkgDir)) {
-  mkdirSync(dirname(pkgDir), { recursive: true })
-  symlinkSync(root, pkgDir, 'junction')
-  steps.push(`包已链接：${pkgDir} → ${root}`)
-}
-
-// ── 2) yaml 运行时依赖（关键：ESM 按 realpath 解析——yaml 必须挂在**包自身** node_modules，
-//        profile 级解析救不了 junction 抽取目录；此处幂等保证 <root>/node_modules/yaml 存在）──
-// bundle 模式下包由 pnpm 管理（依赖已装好），**不要**往 pnpm 管理的目录里塞 junction。
-const pkgYaml = join(root, 'node_modules', 'yaml')
-if (bundleInstalled) {
-  steps.push('yaml 依赖：bundle 模式由 pnpm 解析（不动包目录）')
-} else if (!existsSync(join(pkgYaml, 'package.json'))) {
-  let yamlSrc = null
-  try {
-    yamlSrc = dirname(createRequire(join(profileDir, 'package.json')).resolve('yaml/package.json'))
-  } catch { /* 本级不可解析则走候选 */ }
-  if (!yamlSrc) yamlSrc = [join(profileDir, 'node_modules', 'yaml')].find((p) => existsSync(join(p, 'package.json'))) ?? null
-  if (!yamlSrc) {
-    console.error('✗ yaml 依赖缺失：请先在 profile 目录运行 npm install yaml（或 npm i yaml --prefix ' + profileDir + '）')
+if (!bundleInstalled) {
+  // 先尝试把它装成 bundle——这就是"一条命令安装"那条路，也正是 README §10 指引用户做的事。
+  // 规格优先级：--spec <值>（发布时由 release-sync 传资产/本地构件）> 包本目录（file: 规格）。
+  const spec = opt('--spec', root)
+  steps.push(`未检测到 profile bundle → 先装成 bundle：dsh plugin --profile ${profile} add ${spec}`)
+  // **必须把 DSH_HOME 传给子进程**：`--prefix` 指的就是 DSH home，不传的话 `dsh plugin` 会去动
+  // 用户**真实**的 ~/.dsh（测试隔离形同虚设，且会污染真环境）——这是隔离夹具的第二次教训。
+  const r = spawnSync('dsh', ['plugin', '--profile', profile, 'add', spec], {
+    stdio: 'inherit',
+    shell: process.platform === 'win32',
+    env: { ...process.env, DSH_HOME: prefix },
+  })
+  if (r.status !== 0) {
+    console.error(`✗ 自动安装 profile bundle 失败（dsh 退出码 ${r.status}）。请手动执行：\n`
+      + `    dsh plugin --profile ${profile} add ${spec}\n`
+      + '  然后重跑本安装器。（预设行挂载在本 DSH 版本上不可用——见本文件顶部说明。）')
     process.exit(1)
   }
-  mkdirSync(dirname(pkgYaml), { recursive: true })
-  symlinkSync(yamlSrc, pkgYaml, 'junction')
-  steps.push(`yaml 已链接进包：${pkgYaml} → ${yamlSrc}`)
-} else steps.push('yaml 依赖：包内已可解析 ✓')
+  try { profilePkg = JSON.parse(readFileSync(profilePkgFile, 'utf8').replace(/^\uFEFF/, '')) } catch { profilePkg = {} }
+  bundleInstalled = Boolean(profilePkg.dependencies?.[pkg.name]) || (profilePkg.dsh?.profile?.bundles ?? []).includes(pkg.name)
+  if (!bundleInstalled) {
+    console.error(`✗ dsh 报告成功，但 profile 里仍没有本包（${profilePkgFile}）——拒绝继续（写不出可用装配）`)
+    process.exit(1)
+  }
+  steps.push(`已装成 profile bundle（${profilePkg.dependencies?.[pkg.name] ?? 'dsh.profile.bundles'}）`)
+} else {
+  steps.push(`已确认 profile bundle（${profilePkg.dependencies?.[pkg.name] ?? 'dsh.profile.bundles'}）——包本体归 pnpm 管，不建 junction`)
+}
+
+// ── 1) 包本体是否真的在 profile 里（pnpm 物化）────────────────────────────────
+// 只做**校验**，不做链接：bundle 模式下这条路径完全归 pnpm，手工建 junction 会破坏 pnpm 的安装。
+if (!existsSync(join(pkgDir, 'package.json'))) {
+  console.error(`✗ profile 里找不到本包：${join(pkgDir, 'package.json')}\n`
+    + `  请重跑：dsh plugin --profile ${profile} add ${opt('--spec', root)}`)
+  process.exit(1)
+}
+steps.push(`包已在 profile 中可解析：node_modules\\@dsh-external\\dsh-ppt-studio`)
 
 // ── 3) agent preset（预设 = 会话人格与显示元数据；**插件行按装配路径二选一**）──
 // 同步纪律（2026-09-06 用户点出）：预设与元数据是"托管文件"、以包为准**总是刷新**——
@@ -117,15 +130,13 @@ if (!noPreset) {
   {
     mkdirSync(presetDir, { recursive: true })
     let presetText = readFileSync(builtinPreset, 'utf8')
-    if (bundleInstalled) {
-      const before = presetText.length
-      presetText = presetText.replace(PRESET_ROW_RE, '')
-      steps.push(presetText.length < before
-        ? '预设已同步（包为准，**已按 bundle 安装删掉插件行块**——插件由 profile 提供，两条路径不并用）'
-        : '⚠ 预设已同步，但未找到插件行标记块（agent-presets/ppt/agent.cordis.yml 的 >>> / <<< 标记被改动？）')
-    } else {
-      steps.push('预设已同步（包为准，含插件行——preset 行挂载插件）')
-    }
+    // 无论哪种模式：**永不写插件行**，并且**清掉历史遗留的行块**（老版本安装器写过）。
+    // 为什么：行里的裸包名在 DSH 版本上从 harness 解析（不是 profile）⇒ 解析不到 ⇒ 预设被标 broken
+    // ⇒ 选择器不显示该预设 ⇒ 用户选不到、两边都没工具。详见 agent-presets/ppt/agent.cordis.yml 的说明。
+    const before = presetText.length
+    presetText = presetText.replace(PRESET_ROW_RE, '').replace(LEGACY_ROW_RE, '')
+    if (presetText.length < before) steps.push('预设已同步（包为准，**已清掉历史遗留的插件行块**）')
+    else steps.push('预设已同步（包为准；本包**不含**插件行——装配只走 profile bundle）')
     writeFileSync(presetFile, presetText, 'utf8')
   }
   // 显示元数据（拣选器显示名/简介）：preset.yml（name/description/order；缺省则只有目录名）

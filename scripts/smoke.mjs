@@ -2196,9 +2196,14 @@ ok('bundle：未发布到 npm（保持 private），一键安装走 GitHub Relea
     gTools > 10 && rNo.mounted === true, `tools=${gTools} mounted=${rNo.mounted}`)
 }
 
-// ── 41. 装配路径互斥（install.mjs 行为，2026-09-14）────────────────────────────
-// 为什么必须机器守住：手工把预设里的插件行删掉，**下次 `install.mjs`/release-sync 会把它装回来**
-//（预设是"以包为准总是刷新"的托管文件），于是又变成 bundle + preset 双挂载。所以互斥逻辑必须在安装器里。
+// ── 41. 装配路径：**只允许 profile bundle**（install.mjs 行为；2026-09-18 事故后收窄）─────────
+// 为什么必须机器守住（事故形状）：预设里的插件行按**裸包名**从 `harnessBase`（安装好的 harness 目录）
+// 解析，**不是** profile ⇒ 解析不到 ⇒ 该预设被标 `broken` ⇒ 前端选择器只渲染健康预设
+// （`presetOptions() = presets.filter(p => p.broken === void 0)`）⇒ **用户根本选不到「PPT 工作室」**，
+// 而 profile 里又没有 bundle ⇒ 两边都没工具。可怕的是本机的"文件级检查"全绿（junction 在、sha 一致）——
+// 错的是那条装配路径本身，只有"预设能不能被选到"这一层才看得见。
+// 所以这里钉三件事：① bundle 模式绝不写插件行；② 非 bundle 又装不上 bundle 时**宁可失败**（不产出坏预设）；
+// ③ 包内交付的预设模板本身不含插件行。
 {
   const { spawnSync } = await import('node:child_process')
   const base = join(root, 'examples', 'smoke', '.tmp-install-mode')
@@ -2208,28 +2213,34 @@ ok('bundle：未发布到 npm（保持 private），一键安装走 GitHub Relea
     await mkdir(join(dir, 'profiles', 'web'), { recursive: true })
     await writeFile(join(dir, 'profiles', 'web', 'package.json'),
       JSON.stringify({ name: 'p', dependencies: withDep ? { [rootPkg.name]: 'file:x' } : {} }, null, 2), 'utf8')
+    // bundle 模式下包本体由 pnpm 物化——夹具要真的"有包"，否则校验步骤会（正确地）报错
+    if (withDep) {
+      const pd = join(dir, 'profiles', 'web', 'node_modules', '@dsh-external', 'dsh-ppt-studio')
+      await mkdir(pd, { recursive: true })
+      await writeFile(join(pd, 'package.json'), JSON.stringify({ name: rootPkg.name, version: rootPkg.version }), 'utf8')
+    }
     return dir
   }
-  const pfxA = await mkPrefix('a', false) // 未按 bundle 安装
-  const pfxB = await mkPrefix('b', true) // 已按 bundle 安装
-  const runInstall = (prefix) => spawnSync(process.execPath, [join(root, 'scripts', 'install.mjs'), '--prefix', prefix], { encoding: 'utf8' })
-  const resA = runInstall(pfxA)
-  const resB = runInstall(pfxB)
-  const presetA = readFileSync(join(pfxA, '.agent-presets', 'ppt', 'agent.cordis.yml'), 'utf8')
-  const presetB = readFileSync(join(pfxB, '.agent-presets', 'ppt', 'agent.cordis.yml'), 'utf8')
-  const hasRow = (t) => /^-\s*id: ppt-studio$/m.test(t)
-  ok('装配路径互斥：install.mjs 非 bundle 环境写含插件行的预设、bundle 环境**删掉插件行块**（防同进程双挂载）',
-    resA.status === 0 && resB.status === 0 && hasRow(presetA) && !hasRow(presetB),
-    `非bundle含行=${hasRow(presetA)}｜bundle含行=${hasRow(presetB)}｜exit=${resA.status}/${resB.status}`)
-  const junction = (prefix) => join(prefix, 'profiles', 'web', 'node_modules', '@dsh-external', 'dsh-ppt-studio')
-  ok('装配路径互斥：bundle 模式不建 junction（那个路径归 pnpm 管，建了会破坏 pnpm 安装）',
-    existsSync(junction(pfxA)) && !existsSync(junction(pfxB)),
-    `非bundle建了=${existsSync(junction(pfxA))}｜bundle建了=${existsSync(junction(pfxB))}`)
-  // 清理：junction 必须用 rmdir/rmdir 删（**绝不**让递归删除跟随重解析点——2026-09-14 事故教训）
-  try { spawnSync(process.platform === 'win32' ? 'cmd' : 'rm', process.platform === 'win32' ? ['/c', 'rmdir', junction(pfxA)] : ['-f', junction(pfxA)], { encoding: 'utf8' }) } catch { /* 已无 */ }
+  const pfxA = await mkPrefix('a', true) // 已按 bundle 安装 → 走快路径
+  const pfxB = await mkPrefix('b', false) // 未按 bundle 安装 → 必须**失败**，不得写出坏预设
+  const installScript = join(root, 'scripts', 'install.mjs')
+  const resA = spawnSync(process.execPath, [installScript, '--prefix', pfxA], { encoding: 'utf8' })
+  // PATH 里只留 node 所在目录 ⇒ `dsh` 不可用 ⇒ 安装器必须拒绝继续（而不是写一个 broken 预设）
+  const resB = spawnSync(process.execPath, [installScript, '--prefix', pfxB], {
+    encoding: 'utf8',
+    env: { ...process.env, PATH: dirname(process.execPath), Path: dirname(process.execPath) },
+  })
+  const presetFileOf = (prefix) => join(prefix, '.agent-presets', 'ppt', 'agent.cordis.yml')
+  const hasRow = (p) => existsSync(p) && /^-\s*id: ppt-studio$/m.test(readFileSync(p, 'utf8'))
+  ok('装配路径：bundle 模式**不写插件行**，非 bundle 且装不上 bundle 时**拒绝继续**（宁可失败也不写坏预设）',
+    resA.status === 0 && resB.status === 1 && !hasRow(presetFileOf(pfxA)) && !existsSync(presetFileOf(pfxB)),
+    `bundle exit=${resA.status} 含行=${hasRow(presetFileOf(pfxA))}｜非bundle exit=${resB.status} 写了预设=${existsSync(presetFileOf(pfxB))}`)
+  const tplText = readFileSync(join(root, 'agent-presets', 'ppt', 'agent.cordis.yml'), 'utf8')
+  ok('装配路径：包内交付的预设模板**不含**本包插件行（含行 ⇒ 预设被标 broken ⇒ 选择器里看不到该预设）',
+    !/^-\s*id: ppt-studio$/m.test(tplText) && !/dsh-ppt-studio plugin row/.test(tplText), '模板干净 ✓')
   await rm(base, { recursive: true, force: true })
-  ok('装配路径互斥：临时夹具清理干净且**没有碰仓库本体**（junction 删除不得跟随重解析点）',
-    !existsSync(base) && existsSync(join(root, 'scripts', 'install.mjs')) && existsSync(join(root, 'package.json')),
+  ok('装配路径：临时夹具清理干净且**没有碰仓库本体**',
+    !existsSync(base) && existsSync(installScript) && existsSync(join(root, 'package.json')),
     '仓库根文件仍在 ✓')
 }
 

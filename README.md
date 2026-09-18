@@ -29,7 +29,7 @@
 
 - **DSH（DeepSeek Harness）web 实例**已在本机运行（`dsh web`）；本插件是预设+插件形态，不改变 DSH 安装。
 - **宿主版本基线：DSH `0.1.6-alpha.2`**（2026-09-18 实测适配；上一基线 `0.1.5-rc.2` 亦已验证）。`tools` / `commands` / `systemPrompt` / `webServer` / `skills` / `session/event` / `system-prompt/assemble` 契约逐项核对，并在真实进程里跑过挂载、内嵌技能注册与工作流提示注入。更早的 0.1.x 未逐一验证；`skills` 服务缺失（极简装配）时插件仍完整可用，只是手册不以技能形式出现。
-  > **升级 DSH 后请先跑 `npm test`**（自 2026-09-18 起含预设漂移自检）：本插件的「PPT 工作室」预设是**随包 standard 预设的全量副本 + 插件行**，上游改预设行（改包名、改 config、加/停用行）而副本没跟，会话就会挂不上——插件代码本身却完全正常，极易误判成"插件坏了"。
+  > **升级 DSH 后请先跑 `npm test`**（自 2026-09-18 起含预设漂移自检）：本插件的「PPT 工作室」预设是**随包 standard 预设的全量副本**（**不含本包插件行**——插件由 profile bundle 提供；含行会让预设被标 `broken`、选择器里看不到它，见 §0.7），上游改预设（改 config、加/停用行）而副本没跟，会话就会行为不一致——插件代码本身却完全正常，极易误判成"插件坏了"。
 - 可选增强（没有也能用，自动降级）：本机 Microsoft Office（真渲染通道）、Edge/Chrome（截图与 M2 实测）、python + python-pptx（兜底引擎）。
 
 ### 0.2 方式 A：`dsh plugin add`（标准姿势 · **一条命令**，推荐）
@@ -122,35 +122,46 @@ node scripts/e2e-1.0.mjs        # 13 断言（真浏览器测量 + 真 Office �
 全部绿色 = 本机环境完整可用；无 Office/Edge 的机器 e2e 会自动降级标注（不是失败）。
 `check-preset` 找不到 DSH 安装时跳过（不阻断）。
 
-### 0.7 装法与冲突：bundle 行 vs 预设行（**二选一**）
+### 0.7 装法：**只有 profile bundle 一条路**（2026-09-18 事故后收窄）
 
-本插件有两条**都合法但互斥**的挂载路径：
+```bash
+dsh plugin --profile web add <包名 | tgz URL | 仓库 URL>   # 唯一装法
+```
 
-| 路径 | 由谁装 | 生效范围 | 附带 |
+**为什么不再有第二条路（预设行 + junction）**：预设里的插件行是**裸包名**，DSH 一律从
+`harnessBase`（**安装好的 harness 目录**）解析——不是预设目录、也不是 profile 目录。所以装在 profile 里的
+本包，那一行**永远解析不到** ⇒ 该预设被标 `broken` ⇒ 前端选择器只渲染**健康**预设
+（`presets.filter(p => p.broken === void 0)`）⇒ **「PPT 工作室」根本不出现在新建会话的预设列表里**
+（只在预设"管理"区可见）⇒ 用户既选不到该预设、profile 里又没有 bundle ⇒ **两边都没有任何工具**。
+失败现象与"门控把它挡掉了"一模一样，极难归因：本机 2026-09-18 的现场是 **245 个会话里 `agentPreset=ppt` 的 0 个**。
+（`scripts/install.mjs` 现在只做三件事：确认/建立 bundle、校验包可解析、同步预设身份——它**永不写插件行**，
+并会清掉老版本留下的行块。）
+
+| 装法 | 由谁装 | 生效范围 | 附带 |
 |---|---|---|---|
 | **profile bundle 行**（`cordis.patch.yml`） | `dsh plugin --profile web add <包>` | **只有「PPT 工作室」预设的会话**（见下方"会话级隔离"） | 不含预设人格（预设由插件自交付） |
-| **agent preset 行** | `node scripts/install.mjs`（写 `~/.dsh/.agent-presets/ppt/agent.cordis.yml`） | 仅**「PPT 工作室」预设会话** | 含预设人格（技能**默认不再**镜像到 `<dshHome>/skills/`，见 §0.3） |
 
-> **会话级隔离（2026-09-18 起，两条路径都是）**：`ppt_*` 工具、`/ppt` 命令面、4 本内嵌技能、工作流提示段
+> **会话级隔离（2026-09-18 起）**：`ppt_*` 工具、`/ppt` 命令面、4 本内嵌技能、工作流提示段
 > **都不再注册在 profile 层**。插件在 `apply` 里只装全局管道与 `agent/created` 钩子，能力面在该钩子里
 > **按该 agent 的预设**挂到 `agent.ctx` 作用域 ⇒ **只有「PPT 工作室」预设的会话看得到**，
 > 别的预设（含官方 standard）一点也看不到、也拿不到。
 > - 判据：该 agent 的预设 id ∈ `config.presetIds`（默认 `['ppt']`）∪ 名册里"行中含本包/显示名含 PPT 工作室"的预设。
 > - **失败开放**：拿不到 `agentPresets` 服务、或该 agent 未加入任何预设（如 headless）时照旧注册——环境不支持 roster 也不会把插件弄坏。
 > - **预设由插件自交付**：`apply` 时若 `<dshHome>/.agent-presets/ppt/` 缺失就写一份（**只在不存在时写、绝不覆盖**；
->   交付的是剥离插件行的版本）。所以 `dsh plugin add` **一条命令**之后重启，选择器里就有「PPT 工作室」。
+>   交付的是**剥离插件行**的版本——这正是它必须是"健康预设"的原因）。所以 `dsh plugin add` **一条命令**之后重启，
+>   选择器里就有「PPT 工作室」。
 > - 想关掉自交付或改用别的预设 id：在 `cordis.patch.yml` 的插件行 `config` 里设 `autoPreset: false` / `presetIds: [...]`。
->
-> 两者仍**互斥**（同时挂会被装配防重拦下：首个生效 + 告警）。**日常只需要第一条**（`dsh plugin add`）；
-
-**两者都装会让同一个包在同进程被挂两次**：插件里有装配防重（首个生效 + 明确告警，见 `src/index.js`），
-所以**不会崩**，但请二选一——已经用 `dsh plugin` 装了，就跑一次
-`dsh plugin --profile web remove <包>` **或**删掉预设里的插件行。
 
 ### 0.8 卸载
 
-删除 `~/.dsh/.agent-presets/ppt/` 与 `~/.dsh/profiles/web/node_modules/@dsh-external/dsh-ppt-studio`（junction，删链接即可），重启 dsh web。
-若用 `dsh plugin` 装的：`dsh plugin --profile web remove <包名>`（会同时从 `dsh.profile.bundles` 层栈里退出）。
+删除 `~/.dsh/.agent-presets/ppt/`（预设身份；可留），并移除 profile bundle：
+
+```bash
+dsh plugin --profile web remove @dsh-external/dsh-ppt-studio   # 会同时从 dsh.profile.bundles 层栈里退出
+```
+
+（历史遗留物：若 `~/.dsh/profiles/web/node_modules/@dsh-external/dsh-ppt-studio` 是 **junction**（老装法建的），
+删链接即可——**先摘链接再删目录**，绝不能让递归删除跟随重解析点；`node scripts/install.mjs` 会清理预设里的老行块。）
 
 ---
 
@@ -489,7 +500,7 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 
 **Q：升级 DSH 之后「PPT 工作室」选不出来／切过去就报错（如 `$.prefix missing required value`、或某插件行 `Cannot find module`）？**
 → 这是**预设 composition 跟着上游漂移**，不是插件坏了——插件代码与其宿主契约在 0.1.5-rc.2 / 0.1.6-alpha.2 上都已逐项核对通过。
-本预设是随包 standard 预设的**全量副本 + 插件行**，上游一改预设行（改 config / 改包名 / 加行 / 停用行），副本没跟就会被校验或解析拦下。已发生的两次：
+本预设是随包 standard 预设的**全量副本（不含本包插件行）**，上游一改预设（改 config / 加行 / 停用行），副本没跟就会被行为差异暴露。已发生的两次：
 ① `0.1.5-rc.2` 把 `@deepseek-ai/dsh-persona` 由 `text` 改为 `prefix`(必填) + `suffix`；
 ② `0.1.6-alpha.2` **删掉了 `@deepseek-ai/dsh-workflow-worker-thread`**（换成 `@deepseek-ai/dsh-workflow-ptc`）、把 `tool-ralph` 改为默认停用、新增 `tool-plugin-manager`。
 **修法**：拿到修好的版本后重跑安装即可（`node scripts/install.mjs` —— 预设以包为准总是刷新）。
@@ -576,19 +587,20 @@ npm run sync                                            # ③ 构建 → 上传�
 > 用户照创意工坊卡片跑 `dsh plugin add <仓库 URL>` 装到的是旧版）。⓪b 与 ⑦ 就是为这一类"没有任何症状"的
 > 分叉加的机器判据；`--skip-fresh` 可跳过 ⑦，但状态文件会留 `freshInstall: null`，**不把"没验"伪装成"验过"**。
 
-**改成本机只用预设行（＝只有「PPT 工作室」才有这些工具/skills）**：
+**本机装配（只有一条路，别再切预设行）**：
 
 ```bash
-dsh plugin --profile web remove @dsh-external/dsh-ppt-studio   # ① 先摘掉 profile bundle 行
-node scripts/install.mjs                                       # ② 建 junction + 写含插件行的预设
-# ③ 重启 dsh web
+dsh plugin --profile web add <包名 | tgz URL | 仓库 URL>   # 装成 profile bundle
+node scripts/install.mjs                                   # 同步预设身份/元数据 + 清历史行块（幂等）
+# 重启 dsh web → 新建会话时选「PPT 工作室」
 ```
 
-之后日常迭代照旧 `npm run sync -- --local`（非 bundle 模式下它会穿过 junction 逐文件 sha256 自证"挂载副本 == 刚构建的字节"，
-并把预设**保留**插件行）。回退到全会话可用：`dsh plugin --profile web add <Releases 资产 URL>`。
+**不要**为了"只在某个预设里生效"去改用预设行挂载（老 README 曾这么建议）：那一行会在 DSH 侧解析失败、
+把预设标成 `broken`、于是**选择器里根本不显示它**（详见 §0.7 与 `agent-presets/ppt/agent.cordis.yml` 末尾的说明）。
+"只有「PPT 工作室」才有这些能力面"是由**插件的会话级门控**实现的，与装法无关。
 
 - `--local` 会先 `git fetch` 检查本地是否落后于 `origin/<分支>`，**落后就直接失败**（怕"以为在最新版上迭代、其实不是"——这种偏差没有任何症状，直到发版才发现分叉）。离线时明确标注"未能确认"并继续。
-- 两种模式都只有**一条挂载路径**（profile bundle 行），差别只在"从哪取字节"；`--local` 用本地 tgz 的 `file:` 规格，**不要**为了图快切回 junction/预设行装法——那会多出一条路径，"我改的是哪份代码"就有两种答案，而且答错不报错。
+- 装法只有**一条挂载路径**（profile bundle 行），差别只在"从哪取字节"；`--local` 用本地 tgz 的 `file:` 规格。
 - 想退回 GitHub 版本：`dsh plugin --profile web add <Releases 页面上的资产 URL>`。
 
 **关于发布到 npm**：本包**当前不发布**（`private: true`），一键安装走上面的 GitHub Release tgz URL（不需要 npm 账号）。
@@ -598,7 +610,9 @@ node scripts/install.mjs                                       # ② 建 junctio
 漏一处就是"装了不生效/预设挂不上"，smoke 有断言把三处钉在一起。
 
 - **装配（两条互斥路径，见 §0.7）**：① profile bundle 行（`cordis.patch.yml`，`dsh plugin add` 走这条，**profile 级**——本仓库自己的安装也走这条）；
-  ② agent preset 插件行（`<dshHome>/.agent-presets/ppt/agent.cordis.yml`，**会话级**；仅用于"不想动 profile / 离线 junction"场景，脚本 `install.mjs` 会按环境二选一并在 bundle 模式下**删掉插件行**）。
+  ② 预设身份（`<dshHome>/.agent-presets/ppt/`：`agent.cordis.yml` + `preset.yml`）——**由插件自交付**
+（缺失时写、不覆盖）或 `install.mjs` 同步；它**只负责"身份"**（名字/人格/显示元数据），**不含**本包插件行
+（老版本安装器写过，现已在两边清除）。
   改码 = build + **重启 host**（`dev_reload_package` 只覆盖注入器装配的包，本站两条路径都不在其域内）。
 - **文档链（每次改动必同步）**：`docs/01-需求与目标.md`（需求/决策/冲突）· `docs/02-技术报告.md`（实现级）· `docs/03-更新日志.md`（版本记录）· `docs/04-路线图与里程碑.md`（验收）· `docs/05-迭代流程.md`(检查单) · `docs/06-评审与测试.md`（发布前评审/测试矩阵）。
 - **git 约定**：一个功能/修复一个 commit；message `vX.Y.Z: <一句话目的>（反馈编号）`；**`lib/` 提交**（构建产物，见下）。

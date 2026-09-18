@@ -265,14 +265,18 @@
   name: '@deepseek-ai/dsh-plugin-manager/tools'
   disabled: true
 
-# >>> dsh-ppt-studio plugin row（安装器会按"装配路径二选一"决定是否保留本块，勿手改标记）
-# ── PPT 工作流（dsh-ppt-studio）────────────────────────────────────────────
-# 插件提供：/ppt 斜杠命令面 + ppt_* 工具（check/render/shot/verify/export/import/status/media/state）
-# 语义路由（PPT 任务意图 → 注入工作流提示词）+ 会话状态持久化。
-# 插件本身是 bundle（profile 装配 @dsh-external/dsh-ppt-studio），此行使预设挂载该插件。
-# 2026-09-14：**两条装配路径互斥**——若该 profile 已用 `dsh plugin add` 把本包装成 profile bundle
-# （profile 的 package.json 依赖里有它 / 已在 dsh.profile.bundles 里），install.mjs 会**删掉本块**，
-# 避免同一进程把插件挂两次（插件内有装配防重兜底，但纪律是二选一）。
-- id: ppt-studio
-  name: '@dsh-external/dsh-ppt-studio'
-# <<< dsh-ppt-studio plugin row
+# ── 为什么这里**没有**本插件的插件行（2026-09-18 实测事故后删除）────────────────────
+# 曾经的写法是本文件末尾加一行 `- id: ppt-studio / name: '@dsh-external/dsh-ppt-studio'`，
+# 让「预设行」把插件挂进该预设。**在本 DSH 版本上这条路走不通，而且失败方式极其隐蔽**：
+#   ① `@deepseek-ai/dsh-agent-presets` 的 PresetTree.import 对本行这类**裸包名**一律从
+#      `harnessBase` 解析——注释原文："the mount records the host composition's base instead,
+#      which is inside the installed harness"。**不是**预设目录，也**不是** profile 目录
+#      ⇒ 装在 profile 里的本包，这一行永远解析不到；
+#   ② 解析不到 ⇒ 该预设被标 `broken`；而前端选择器只渲染**健康**预设：
+#      `presetOptions() = presets.filter(p => p.broken === void 0)`（dsh-client-ui-agent-preset）
+#      ⇒ 「PPT 工作室」**根本不出现在新建会话的预设列表里**（只在预设"管理"区可见）；
+#   ③ 于是用户既选不到这个预设、profile 里又没有 bundle ⇒ **两边都看不到任何工具**，
+#      而现象与"门控把它挡掉了"一模一样，极难归因（本机 245 个会话里 0 个 preset=ppt）。
+# 结论：本插件**只能**作为 profile bundle 挂载（`dsh plugin add`，见 README §10）；
+# 预设只负责"身份"（名字/描述/人格），由插件的**会话级门控**决定该预设是否有 ppt_* 能力面。
+# 安装器（scripts/install.mjs）仍会清理历史遗留的行块——老版本装过的机器升级时不会留着它。
