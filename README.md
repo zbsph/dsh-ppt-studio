@@ -587,7 +587,7 @@ npm run sync              # 发版：上传 GitHub 资产 + 把本机与 GitHub 
 
 ```bash
 git push origin main                                    # ① 先把提交推上去
-gh release create v1.0.1 --target "$(git rev-parse HEAD)" --title ... --notes-file ...   # ② tag 必须显式指到这一提交
+gh release create v<版本> --target "$(git rev-parse HEAD)" --title ... --notes-file ...   # ② tag 必须显式指到这一提交
 npm run sync                                            # ③ 构建 → 上传资产 → ⓪b git 前置 + ⑦ 用户视角终验
 ```
 
