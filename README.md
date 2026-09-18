@@ -522,6 +522,11 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
   > 兜底引擎的产物自 2026-09-18 起有**真消费者验证**：生成的 Python 必须过 `py_compile`，且必须真跑出 `.pptx` 并由 python-pptx 读回（`npm test` 里两条断言）。此前它连编译都过不去而无人察觉——因为它只在 pptd 硬失败时才被走到，而 python 是可选依赖，"跳过"与"通过"印在同一个颜色上。
 - dsh 网页内嵌预览面板（client 面板）未实现——对话内预览已有 `ppt_preview` + `ppt_shot overview` 覆盖。
 - 跨平台：COM/Edge 探测路径面向 Windows（macOS/Linux 主机需要对应适配，当前未验证）。
+- **模板"真相层"整页预览需要本机 Microsoft Office**：`referenceTemplate.previews`（`reference/previews/NN.png`）
+  由 PowerPoint COM 逐页渲染，**没装 Office 时这一项不存在**——此时真相层只注入 `source: reference/template.pptx`
+  （原件仍在，可自行打开对照）。这是能力边界不是缺陷，且已被机器钉住：smoke 的两个分支分别断言
+  "有预览 ⇒ 必须注入并拷贝" 与 "无预览 ⇒ 只注入 source 且不得出现 previews 引用"
+  （旧版无条件要求预览，于是**没有 Office 的机器上 `npm test` 必红两条**——创意工坊审核就是这么发现的）。
 
 ---
 
@@ -529,23 +534,47 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + smoke（242 断言）+ 预设漂移自检（DSH 升级后必跑）
+npm test                        # build + LF 守卫 + smoke（242 断言）+ 预设漂移自检（DSH 升级后必跑）
+npm run check:eol               # 发行字节守卫：跟踪的文本文件必须全 LF（git 安装 == tgz 安装；--fix 可就地修）
+npm run fresh                   # 用户视角终验：干净克隆 npm test + `dsh plugin add` 真装一遍（发版后用）
 npm run test:real               # 真实资产回归（WPS fixture；19 页 deck 缺失自动跳过）
 node scripts/preflight-1.0.mjs  # 发布前预检（坏输入/边界/幂等/性能/媒体 splice——11 断言）
 npm run test:preset             # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
-npm run test:bundle             # 安装路径自证（20 断言）：隔离 DSH_HOME + 真 `dsh plugin add` + dump-config + `--local` 迭代模式（不碰你的 profiles）
+npm run test:bundle             # 安装路径自证：隔离 DSH_HOME + 真 `dsh plugin add` + dump-config + `--local` 迭代模式（不碰你的 profiles）
 npm run check:lib               # lib/ 新鲜度：提交的构建产物必须逐字节等于 src/（smoke 里有同义断言）
 npm run eval:skills -- --a <deckA> --b <deckB>   # 技能效果对照打分（纯本地；两个 arm 各跑一次后复算口径，见 docs/06 §7）
 node scripts/eval-skills-blind.mjs <deckA> <deckB>   # 生成匿名+随机的盲评材料（结构化盲评协议，见 docs/06 §7.6）
 node scripts/audit-manual-facts.mjs  # 手册事实审计：逐条把"手册 vs 源码"验一遍并打印源码锚点（39 条）
 ```
 
+**"干净检出"就是验收标准（CI 也是这么跑的）**：`.github/workflows/ci.yml` 在 ubuntu 与 windows 两个平台上
+各自干净检出后跑 `npm test`，并在 windows 上真跑一遍"用户会敲的那条命令"（`npm run test:bundle`）。
+这样做是因为**"作者机器全绿"曾经与"用户能用"无关**：两条真实事故都只在干净检出里现形——
+① 干净克隆在 Windows 上是 CRLF（Git for Windows 默认 `core.autocrlf=true`），按 `\n` 做的行锚定文本手术
+**静默失效**，`npm test` 直接崩在 `page file missing: pages/_cover.yaml`；
+② 没有 Office 的机器上，`referenceTemplate` 的整页预览断言必红（预览是 PowerPoint COM 渲染出来的）。
+现在：`.gitattributes`（`* text=auto eol=lf`）把检出字节钉成 LF，`normalizeText()` 兜住用户手改的 CRLF/BOM 文件，
+Office/浏览器相关断言一律**显式降级为跳过且保持断言总数恒定**（`npm test` 在裸机上也必须是全绿，否则它就不能当门禁）。
+
 **改完代码怎么让本机跑上新版**（两种模式，都**必须重启 `dsh web`**——profile bundle 挂载不热更）：
 
 ```bash
 npm run sync -- --local   # 日常迭代：不发 GitHub，本机跑的=你刚构建的字节（构件落在 D:\plugins\_artifacts\）
-npm run sync              # 发版：上传 GitHub 资产 + 把本机与 GitHub 拉回字节级同源
+npm run sync              # 发版：上传 GitHub 资产 + 把本机与 GitHub 拉回字节级同源 + 跑"用户视角"终验
 ```
+
+**发版三步（顺序不能换）**——`npm run sync` 会**拒绝**在"本地有未推送提交"或"tag 不指向 HEAD"时继续：
+
+```bash
+git push origin main                                    # ① 先把提交推上去
+gh release create v1.0.1 --target "$(git rev-parse HEAD)" --title ... --notes-file ...   # ② tag 必须显式指到这一提交
+npm run sync                                            # ③ 构建 → 上传资产 → ⓪b git 前置 + ⑦ 用户视角终验
+```
+
+> 为什么把顺序写死：`gh release create` 不指定 `--target` 时按**默认分支 HEAD** 建 tag——本地没推时它就把 tag
+> 建在旧提交上（v1.0.1 第一次发布就是这么错的：资产 sha 全绿，而 GitHub 上是指向 v1.0.0 代码的旧提交，
+> 用户照创意工坊卡片跑 `dsh plugin add <仓库 URL>` 装到的是旧版）。⓪b 与 ⑦ 就是为这一类"没有任何症状"的
+> 分叉加的机器判据；`--skip-fresh` 可跳过 ⑦，但状态文件会留 `freshInstall: null`，**不把"没验"伪装成"验过"**。
 
 **改成本机只用预设行（＝只有「PPT 工作室」才有这些工具/skills）**：
 
