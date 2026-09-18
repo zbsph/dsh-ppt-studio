@@ -1,16 +1,22 @@
-# DSH profile bundle patch —— 「PPT 工作室」插件行
+# DSH profile bundle patch —— 「PPT 工作室」插件行（**会话级**：只有该预设的会话才看得到能力面）
 #
-# 作用：让标准安装姿势生效（**一条命令**，不需要 npm 账号）
-#     dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio/releases/download/v1.0.0/dsh-external-dsh-ppt-studio-1.0.0.tgz
+# 安装（一条命令，不需要 npm 账号）：
+#     dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio/releases/download/<tag>/<资产名>.tgz
 # `dsh plugin` 会在 profile 目录里跑 pnpm，然后核对 package.json 的 dsh.profile.bundles：
 # **声明了 dsh.bundle.patch 的依赖自动入栈**（本文件即由 package.json 的 dsh.bundle.patch 指向）。
 #
-# 与"agent preset 插件行"的关系（重要）：
-#   · 本文件 = **profile 级**挂载：该 profile 的所有会话都具备 PPT 能力（工作流仍按意图触发，不会误激活）；
-#   · agent preset 行（install.mjs 写 `~/.dsh/.agent-presets/ppt/agent.cordis.yml`）= **会话级**挂载：
-#     只有选择"PPT 工作室"预设的会话才有，且带预设人格与预设层技能。
-#   两者是**替代关系**：同一个包在同进程被挂两次会被插件的装配防重拦下（首个生效 + 明确告警），
-#   但请二选一（详见 README §0.7 与 docs/05 装配纪律）。
+# 装配模型（2026-09-18 改为**会话级**，见 docs/02 §2.1 与 docs/03 当日记录）：
+#   · 本行 = **唯一挂载源**，只负责"插件在这个进程里存在"（profile 级）；
+#   · **能力面**（21 个 ppt_* 工具 / `/ppt` 命令面 / 4 本内嵌技能 / 工作流提示段）**不在 profile 层注册**——
+#     插件在 apply 里只装全局管道与 `agent/created` 钩子，能力面在该钩子里按该 agent 的**预设**
+#     挂到 `agent.ctx` 作用域 ⇒ **只有「PPT 工作室」预设的会话看得到**，别的预设（含官方 standard）
+#     完全不受影响。**失败开放**：拿不到 agentPresets 服务、或该 agent 未加入任何预设时照旧注册
+#     （保持"环境不支持 roster 时插件仍完整可用"）。
+#   · 预设本身由插件**自交付**：apply 时若 `<dshHome>/.agent-presets/ppt/` 缺失就写一份
+#     （**只在不存在时写、绝不覆盖**；交付的是剥离插件行的版本；`autoPreset: false` 可关闭）。
 - insert:
     - id: ppt-studio
       name: '@dsh-external/dsh-ppt-studio'
+      config:
+        presetIds: ['ppt']
+        autoPreset: true

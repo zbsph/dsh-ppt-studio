@@ -1,6 +1,6 @@
 {
   "name": "@dsh-external/dsh-ppt-studio",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "PPT 工作室：四类任务（从头/补完/修改/总结）工作流 + 布局工程（元素冲突防治）+ PPTD 中间层工具链 + 内置模板库",
   "//private": "保持 private：不发布到 npm registry（用户已决定）。一键安装走 GitHub Release 的 tgz URL 或 `dsh plugin --profile web add <本仓库 git URL>`——都不需要 npm 账号；若要发布：删掉本行 + 加 publishConfig.access=public + npm login && npm publish。",
   "private": true,

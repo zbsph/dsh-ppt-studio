@@ -2069,24 +2069,79 @@ ok('bundle：未发布到 npm（保持 private），一键安装走 GitHub Relea
     `package=${rootPkg.name}｜patch=${insertRow?.name ?? '(缺)'}｜预设含该行=${presetHasRow}`)
 }
 
-// 装配防重（**行为**断言）：同进程第二次 apply 必须不重复注册——bundle 行 + preset 行共存时的保护
+// 路 A（2026-09-18）：apply **不再在 profile 层注册能力面**；工具/命令/技能在 agent/created 里
+// 按该 agent 的预设挂到 `agent.ctx` 作用域 ⇒ 只有「PPT 工作室」预设的会话看得到。
 {
   const indexMod = await import('../lib/index.js')
-  let tools = 0, cmds = 0, listeners = 0
-  const fakeCtx = () => ({
-    tools: { register: () => { tools++ } },
-    commands: { register: () => { cmds++ } },
-    get: () => undefined,
-    on: () => { listeners++ },
+  let globalTools = 0, globalCmds = 0, listeners = 0
+  const handlers = new Map()
+  const makeCtx = () => ({
+    tools: { register: () => { globalTools++ } },
+    commands: { register: () => { globalCmds++ } },
+    get: () => undefined, // 无名册服务 → 失败开放（保持环境不支持 roster 时的行为）
+    on: (ev, fn) => { listeners++; handlers.set(ev, fn) },
     effect: (fn) => { fn(); return () => {} },
-    logger: () => ({ warn: () => {} }),
+    logger: () => ({ info: () => {}, warn: () => {} }),
   })
-  indexMod.apply(fakeCtx(), {})
-  const first = { tools, cmds, listeners }
-  indexMod.apply(fakeCtx(), {}) // 第二次挂载（模拟 profile bundle 行 + agent preset 行）
-  ok('装配防重：同进程第二次挂载不重复注册工具/命令/监听器（bundle 行 + preset 行共存时的保护）',
-    first.tools > 10 && first.cmds >= 1 && tools === first.tools && cmds === first.cmds && listeners === first.listeners,
-    `首次 tools=${first.tools} cmds=${first.cmds} listeners=${first.listeners}；二次挂载后 tools=${tools} cmds=${cmds} listeners=${listeners}`)
+  indexMod.apply(makeCtx(), {})
+  ok('路 A：apply 后**不**在 profile 层注册任何工具/命令（只装钩子 + 全局管道）',
+    globalTools === 0 && globalCmds === 0 && listeners >= 3,
+    `apply 后 tools=${globalTools} cmds=${globalCmds} listeners=${listeners}（应 tools=0 cmds=0）`)
+  let agentTools = 0, agentCmds = 0
+  const makeAgentCtx = () => ({
+    tools: { register: () => { agentTools++ } },
+    commands: { register: () => { agentCmds++ } },
+    get: () => undefined,
+    effect: (fn) => { fn(); return () => {} },
+    logger: () => ({ info: () => {}, warn: () => {} }),
+  })
+  const agentA = { id: 'agentA', ctx: makeAgentCtx() }
+  handlers.get('agent/created')?.({ agent: agentA })
+  await new Promise((r) => setTimeout(r, 80))
+  const firstAgent = { tools: agentTools, cmds: agentCmds }
+  ok('路 A：agent/created 把能力面挂到**该 agent 的作用域**（工具 + /ppt 命令 + ppt_state）',
+    firstAgent.tools > 10 && firstAgent.cmds >= 1 && globalTools === 0,
+    `agent 作用域 tools=${firstAgent.tools} cmds=${firstAgent.cmds}；profile 层仍 tools=${globalTools}`)
+  handlers.get('agent/created')?.({ agent: agentA }) // 同一 agent 再来一次（双挂载场景）
+  await new Promise((r) => setTimeout(r, 80))
+  ok('路 A：同一 agent 重复触发不重复注册（按 agent 幂等，防 bundle 行 + preset 行双挂）',
+    agentTools === firstAgent.tools && agentCmds === firstAgent.cmds,
+    `再次触发后 tools=${agentTools}（应=${firstAgent.tools}）cmds=${agentCmds}（应=${firstAgent.cmds}）`)
+
+  // 门控语义（机器断言）：判据是"该 agent 的预设是否属于本插件"。
+  // 上游时序已核对：api-session-controller 的 composeAgent().setup() 是 **pre-publication** 调用
+  // `presets.mount()`，而 `agent/created` 是"factory setup 之后" ⇒ 钩子执行时预设已就位。
+  // （headless 不接预设 ⇒ composedPreset 为 null ⇒ 按"失败开放"注册，这是**有意**的零回归行为。）
+  let gTools = 0, gCmds = 0
+  const mkAgent2 = (id, presets) => ({
+    id,
+    ctx: {
+      tools: { register: () => { gTools++ } },
+      commands: { register: () => { gCmds++ } },
+      get: (k) => (k === 'agentPresets' ? presets : undefined),
+      effect: (fn) => { fn(); return () => {} },
+      logger: () => ({ info: () => {}, warn: () => {} }),
+    },
+  })
+  const rootCtxWith = (presets) => ({
+    get: (k) => (k === 'agentPresets' ? presets : undefined),
+    logger: () => ({ info: () => {}, warn: () => {} }),
+  })
+  const stdFake = { composedPreset: () => 'standard', compositionInventory: async () => [] }
+  const pptFake = { composedPreset: () => 'ppt', compositionInventory: async () => [] }
+  gTools = 0; gCmds = 0
+  const rStd = await indexMod.mountForAgent(rootCtxWith(stdFake), mkAgent2('agentStd', stdFake), { presetIds: ['ppt'] })
+  ok('路 A 门控：**非本插件的预设（standard）→ 一个工具/命令都不注册**（这就是会话隔离）',
+    gTools === 0 && gCmds === 0 && rStd.mounted === false,
+    `tools=${gTools} cmds=${gCmds} mounted=${rStd.mounted}（应 0/0/false）`)
+  gTools = 0; gCmds = 0
+  const rPpt = await indexMod.mountForAgent(rootCtxWith(pptFake), mkAgent2('agentPpt', pptFake), { presetIds: ['ppt'] })
+  ok('路 A 门控：本插件预设（ppt）→ 注册 21 工具 + 1 命令',
+    gTools > 10 && gCmds >= 1 && rPpt.mounted === true, `tools=${gTools} cmds=${gCmds} mounted=${rPpt.mounted}`)
+  gTools = 0
+  const rNo = await indexMod.mountForAgent(rootCtxWith(undefined), mkAgent2('agentNoRoster', undefined), { presetIds: ['ppt'] })
+  ok('路 A 门控：拿不到 roster 服务（headless 等）→ **失败开放**仍注册（零回归）',
+    gTools > 10 && rNo.mounted === true, `tools=${gTools} mounted=${rNo.mounted}`)
 }
 
 // ── 41. 装配路径互斥（install.mjs 行为，2026-09-14）────────────────────────────

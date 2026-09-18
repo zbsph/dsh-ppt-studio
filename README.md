@@ -114,7 +114,7 @@ node scripts/install.mjs
 ### 0.6 安装后的自检（四句命令）
 
 ```powershell
-node scripts/smoke.mjs          # 234 断言（含全链路）
+node scripts/smoke.mjs          # 239 断言（含全链路）
 node scripts/preflight-1.0.mjs  # 11 断言（坏输入/边界/幂等/性能）
 node scripts/check-preset.mjs   # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
 node scripts/e2e-1.0.mjs        # 13 断言（真浏览器测量 + 真 Office 渲染 + splice/slice 自证；约 2-3 分钟）
@@ -128,14 +128,20 @@ node scripts/e2e-1.0.mjs        # 13 断言（真浏览器测量 + 真 Office �
 
 | 路径 | 由谁装 | 生效范围 | 附带 |
 |---|---|---|---|
-| **profile bundle 行**（`cordis.patch.yml`） | `dsh plugin --profile web add <包>` | 该 profile 的**所有会话**（工作流仍按意图触发，不会误激活） | 不含预设人格 |
+| **profile bundle 行**（`cordis.patch.yml`） | `dsh plugin --profile web add <包>` | **只有「PPT 工作室」预设的会话**（见下方"会话级隔离"） | 不含预设人格（预设由插件自交付） |
 | **agent preset 行** | `node scripts/install.mjs`（写 `~/.dsh/.agent-presets/ppt/agent.cordis.yml`） | 仅**「PPT 工作室」预设会话** | 含预设人格（技能**默认不再**镜像到 `<dshHome>/skills/`，见 §0.3） |
 
-> **想要"只有选「PPT 工作室」时才出现这些工具/skills"，就必须走预设行。** 这一列"生效范围"是两条路径**唯一无法兼得**的差别：
-> profile bundle 行是在 **profile 层**注册的，`ppt_*` 工具、`/ppt` 命令面、4 本内嵌技能、工作流提示段都会出现在该 profile 的**每一个**会话里
-> （包括官方标准预设）；预设行是在**预设层**注册的，只有该预设的会话看得到。
-> 插件**无法**在 bundle 挂载下自己按预设过滤——注册发生在插件 apply（进程/profile 级）时，要按预设隔离，注册就必须从预设组合里发生。
-> 两者互斥还有一个机械原因：同时挂会被装配防重拦下（首个生效 + 告警），且纪律要求二选一。切换方式见 §10「改成本机只用预设行」。
+> **会话级隔离（2026-09-18 起，两条路径都是）**：`ppt_*` 工具、`/ppt` 命令面、4 本内嵌技能、工作流提示段
+> **都不再注册在 profile 层**。插件在 `apply` 里只装全局管道与 `agent/created` 钩子，能力面在该钩子里
+> **按该 agent 的预设**挂到 `agent.ctx` 作用域 ⇒ **只有「PPT 工作室」预设的会话看得到**，
+> 别的预设（含官方 standard）一点也看不到、也拿不到。
+> - 判据：该 agent 的预设 id ∈ `config.presetIds`（默认 `['ppt']`）∪ 名册里"行中含本包/显示名含 PPT 工作室"的预设。
+> - **失败开放**：拿不到 `agentPresets` 服务、或该 agent 未加入任何预设（如 headless）时照旧注册——环境不支持 roster 也不会把插件弄坏。
+> - **预设由插件自交付**：`apply` 时若 `<dshHome>/.agent-presets/ppt/` 缺失就写一份（**只在不存在时写、绝不覆盖**；
+>   交付的是剥离插件行的版本）。所以 `dsh plugin add` **一条命令**之后重启，选择器里就有「PPT 工作室」。
+> - 想关掉自交付或改用别的预设 id：在 `cordis.patch.yml` 的插件行 `config` 里设 `autoPreset: false` / `presetIds: [...]`。
+>
+> 两者仍**互斥**（同时挂会被装配防重拦下：首个生效 + 告警）。**日常只需要第一条**（`dsh plugin add`）；
 
 **两者都装会让同一个包在同进程被挂两次**：插件里有装配防重（首个生效 + 明确告警，见 `src/index.js`），
 所以**不会崩**，但请二选一——已经用 `dsh plugin` 装了，就跑一次
@@ -523,7 +529,7 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + smoke（234 断言）+ 预设漂移自检（DSH 升级后必跑）
+npm test                        # build + smoke（239 断言）+ 预设漂移自检（DSH 升级后必跑）
 npm run test:real               # 真实资产回归（WPS fixture；19 页 deck 缺失自动跳过）
 node scripts/preflight-1.0.mjs  # 发布前预检（坏输入/边界/幂等/性能/媒体 splice——11 断言）
 npm run test:preset             # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
@@ -568,7 +574,7 @@ node scripts/install.mjs                                       # ② 建 junctio
 - **文档链（每次改动必同步）**：`docs/01-需求与目标.md`（需求/决策/冲突）· `docs/02-技术报告.md`（实现级）· `docs/03-更新日志.md`（版本记录）· `docs/04-路线图与里程碑.md`（验收）· `docs/05-迭代流程.md`(检查单) · `docs/06-评审与测试.md`（发布前评审/测试矩阵）。
 - **git 约定**：一个功能/修复一个 commit；message `vX.Y.Z: <一句话目的>（反馈编号）`；**`lib/` 提交**（构建产物，见下）。
 - **`lib/` 为什么提交**（2026-09-16）：`dsh plugin --profile web add <本仓库 git URL>` 只拿得到 git 里**已提交**的内容，而 `exports` 指向 `./lib/index.js`——lib 不入库时，git 安装出来的包缺入口文件、插件挂不上（实测：装到的包没有 lib/）。提交后 git 安装与 tgz 安装产物一致。代价是"改了 src 忘了 build + commit"会静默发出旧代码，所以配了守卫：`npm run check:lib` + smoke 里一条同义断言（lib 必须逐字节等于 src，且 `.gitignore` 不得忽略它、git 必须跟踪它）。改码流程 = 改 `src/` → `node scripts/build.mjs` → 连同 `lib/` 一起提交。
-- **既有的自动化验证**：smoke（234 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 手册事实审计（`audit-manual-facts.mjs`）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
+- **既有的自动化验证**：smoke（239 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 手册事实审计（`audit-manual-facts.mjs`）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
 - **OOXML 产物必须用真消费者验**（2026-09-14 教训）：加备注页时先写的 `notesMasterIdLst`，python-pptx 照读不误，**真 PowerPoint 却报"文件或目录损坏"**——
   第三方库通过 ≠ 能打开。凡改导出编码，至少走一次真 PowerPoint（`ppt_visual`）/真浏览器，别只信自证断言。
 
