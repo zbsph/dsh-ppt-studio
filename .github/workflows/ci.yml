@@ -1,0 +1,90 @@
+name: CI
+
+# 为什么这个文件是"必须"的（而不是锦上添花）：
+# 2026-09-18，创意工坊（dsh-web）的 PR 审核在**干净克隆**里跑 `npm test`，红了两条断言
+# （referenceTemplate 缺 previews、reference/ 拷贝只剩 template.pptx），从而打回登记 PR。
+# 但在作者机器上它一直全绿——因为作者机器有 PowerPoint（参考整页预览是 Office COM 渲染出来的），
+# 而且工作区是脚本写出来的 LF。同一类问题还有第二条：**干净克隆**在 Windows 上是 CRLF
+# （Git for Windows 默认 core.autocrlf=true），而按 `\n` 做的行锚定文本手术在 CRLF 上**静默失效**，
+# 于是 `resolveDeck` 抛 `page file missing: pages/_cover.yaml`，整条自检直接崩。
+# 结论：本仓库的"绿"必须由**别人机器上的干净检出**来定义，所以要有 CI。
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # 门禁 1（核心）：干净检出跑 npm test。
+  # ubuntu 侧顺带把"**没有 Office**"这条路钉住：Office 相关的断言必须**显式降级为跳过**
+  # （并保持断言总数恒定——否则 §37.10 的文档计数自证会假红），不能靠"作者机器有 Office"蒙过去。
+  clean-checkout:
+    name: clean checkout (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # 无 lockfile（本包只有一个运行时依赖 yaml），所以用 install 而不是 ci。
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      # 发行字节：所有跟踪的文本文件必须是 LF。
+      # git 安装（创意工坊那条 `dsh plugin add <仓库 URL>`）与 tgz 安装（npm pack 工作区）
+      # 必须是**同一份字节**；唯一能悄悄破坏它的就是检出的换行转换。
+      # `.gitattributes`（`* text=auto eol=lf`）负责钉死，这里负责"钉死失效时当场红"。
+      - name: Distribution bytes are LF
+        run: node scripts/check-tracked-lf.mjs
+
+      - name: npm test (build + smoke + preset drift)
+        run: npm test
+
+  # 门禁 2：**用户会敲的那条命令**，在一个隔离的 DSH_HOME 里真跑一遍。
+  # 只跑单元测试是不够的：安装路径（pnpm 规格、dsh.bundle.patch 是否被认到、bundles 是否自动入栈、
+  # 升级时字节是否真换）只有真 launcher 才能证明。钉 Windows 是因为插件的真实用户几乎都在 Windows
+  # （PowerPoint 用户），顺带覆盖 junction / 路径分隔符 / 无 Office 三条真实差异。
+  install-path:
+    name: one-command install (Windows, isolated DSH_HOME)
+    runs-on: windows-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dsh CLI (pinned to the version this plugin targets)
+        run: npm install -g @deepseek-ai/dsh@0.1.6-alpha.2
+
+      # `dsh plugin` 是 pnpm 转发器（缺 pnpm 时脚本会自行跳过并打印原因）
+      - name: Install pnpm
+        run: npm install -g pnpm@11
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      # scripts/verify-bundle-install.mjs：npm pack → 隔离 DSH_HOME →
+      # `dsh plugin --profile web add <tgz>` → 断言依赖入栈 / bundles 自动包含本包 /
+      # --dump-config 见本插件行 / 升级路径真换字节 / --local 迭代模式挂载副本==仓库构建。
+      - name: Pack + install into an isolated DSH_HOME
+        run: npm run test:bundle

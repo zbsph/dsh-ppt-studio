@@ -1,0 +1,32 @@
+# 让**两条安装路径拿到同样的字节**。
+#
+# 背景（2026-09-18 实测，创意工坊 PR 审核反馈的根因）：
+#   本插件的两条一键安装路径是
+#     ① 创意工坊卡片那条 `dsh plugin add <仓库 URL>` —— pnpm 走 **git** 取已提交内容；
+#     ② GitHub Release 的 `.tgz` 资产 —— `npm pack` 取**工作区**内容。
+#   没有本文件时，②永远是 LF，而①在 Windows 上会被 `core.autocrlf=true`
+#   （Git for Windows 的**系统级默认值**，用户无需配置）转成 CRLF。
+#   CRLF 会让 src/templates.js 里按 `\n` 做的行锚定文本手术**静默失效** ⇒ 物化出的
+#   模板工作区 deck.yaml 引用一个故意没被复制的母版页 ⇒ resolveDeck 抛
+#   `page file missing: pages/_cover.yaml`，干净克隆里 npm test 直接崩。
+#   更糟的是这个差异在本机上**看不见**：本机工作区是脚本写出来的 LF。
+#
+# `eol=lf` 把"检出的字节"钉死成 LF，与 tgz 一致；任何平台、任何 autocrlf 设置都一样。
+# 代码侧的 normalizeText() 是第二条防线（用户手改过的 CRLF/BOM 文件也不失效）。
+* text=auto eol=lf
+
+# 二进制：显式声明，防止 `text=auto` 的启发式在极端情况下误判（例如恰好没有 NUL 的小图/小包）
+*.pptx binary
+*.zip binary
+*.tgz binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.pdf binary

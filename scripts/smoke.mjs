@@ -583,18 +583,70 @@ const dualWS = join(root, 'examples', 'tpl-dual')
 await rm(dualWS, { recursive: true, force: true })
 const matD = await materializeTemplate(dualWS, dualId, { name: '双轨' })
 const deckD = await (await import('node:fs/promises')).readFile(join(dualWS, 'deck.yaml'), 'utf8')
-ok('v0.9.0：物化工作区注入 referenceTemplate（source/previews）',
-  deckD.includes('referenceTemplate:') && deckD.includes('reference/template.pptx') && deckD.includes('reference/previews/01.png'),
-  'referenceTemplate 块缺失' )
-ok('v0.9.0：reference/ 拷贝（template.pptx + previews 整页）',
-  matD.reference?.files?.includes('template.pptx') && existsSync(join(dualWS, 'reference', 'previews', '01.png')),
-  JSON.stringify(matD.reference?.files ?? []))
+// previews 是**Office COM 渲染**的产物（registerTemplate 里模板预览=renderPptxToPng，需要本机 PowerPoint）：
+// 没有 Office 的机器上 previews/ 根本不存在——旧断言无条件要求 reference/previews/01.png，于是
+// "干净检出（Linux CI / 没装 Office 的机器）跑 npm test" 必然红两条（2026-09-18 创意工坊 PR 审核反馈）。
+// 断言必须**如实反映能力**：previews 在就要求它被注入+拷贝，不在就要求"只注入 source 且绝不出现 previews 引用"。
+// 两个分支各自恰好两次 ok()，断言总数恒定（否则 §37.10 文档计数自证会假红）。
+const previewSrc = existsSync(join(dual.dir, 'previews'))
+if (previewSrc) {
+  ok('v0.9.0：物化工作区注入 referenceTemplate（source/previews）',
+    deckD.includes('referenceTemplate:') && deckD.includes('reference/template.pptx') && deckD.includes('reference/previews/01.png'),
+    'referenceTemplate 块缺失' )
+  ok('v0.9.0：reference/ 拷贝（template.pptx + previews 整页）',
+    matD.reference?.files?.includes('template.pptx') && existsSync(join(dualWS, 'reference', 'previews', '01.png')),
+    JSON.stringify(matD.reference?.files ?? []))
+} else {
+  console.log('[v0.9.0] 本机无 Office（预览渲染不可用）：previews 不可能存在，改断言"只注入 source"的诚实不变量')
+  ok('v0.9.0：无 Office 时 referenceTemplate 只注入 source（previews 随 Office，不虚报）',
+    deckD.includes('referenceTemplate:') && deckD.includes('reference/template.pptx') && !deckD.includes('reference/previews/'),
+    '无 Office 时不该出现 previews 引用')
+  ok('v0.9.0：无 Office 时 reference/ 只拷贝 template.pptx（拷贝清单与产物逐条对应）',
+    matD.reference?.files?.includes('template.pptx') && !existsSync(join(dualWS, 'reference', 'previews')),
+    JSON.stringify(matD.reference?.files ?? []))
+}
 const dualCtx = await resolveDeck(dualWS)
 ok('v0.9.0：带 referenceTemplate 的 deck 通过校验（非渲染字段）', dualCtx.pages.length === 1 && dualCtx.deck.referenceTemplate?.id === dualId)
 // 清理双轨测试模板 + 假 source
 await (await import('node:fs/promises')).rm(join(tplMod.TEMPLATES_DIR, dualId), { recursive: true, force: true }).catch(() => {})
 await rm(dualSrc, { force: true }).catch(() => {})
 await rm(dualWS, { recursive: true, force: true })
+
+// ── 23b. 换行鲁棒（CRLF + BOM）：文本手术不得在 Windows 检出/用户手改的文件上静默失效 ──────
+// 真因与后果（2026-09-18 实测）：`/pages:\n[\s\S]*$/` 这类行锚定正则，JS 的 `.` 不吃 `\r`、`$`（m 模式）
+// 只落在 `\n` 前 ⇒ **CRLF 文本上一条都不匹配**，`.replace()` 原样返回（不报错）：
+//   materializeTemplate 产出的工作区 deck.yaml 仍引用 `pages/_cover.yaml`，而该页故意没被复制
+//   （它是被"正式化"的首母版）⇒ resolveDeck 抛 "page file missing: pages/_cover.yaml"。
+// 触发条件一点都不罕见：Git for Windows 默认 core.autocrlf=true ⇒ **干净克隆就是 CRLF**
+// （本机工作区反而是脚本写出来的 LF，于是"本机全绿、干净克隆全崩"）。
+// 防线两条：.gitattributes（git 安装与 tgz 安装同字节）+ normalizeText（用户手改的 CRLF/BOM 也不失效）。
+const crlfId = `smoke-crlf-${Date.now().toString(36)}`
+const crlfDir = join(tplMod.TEMPLATES_DIR, crlfId)
+{
+  const fsp = await import('node:fs/promises')
+  await fsp.cp(join(tplMod.TEMPLATES_DIR, 'business-blue'), crlfDir, { recursive: true })
+  for (const rel of ['deck.yaml', 'template.yaml', 'pages/_cover.yaml', 'pages/_content.yaml']) {
+    const p = join(crlfDir, rel)
+    if (!existsSync(p)) continue
+    const lf = tplMod.normalizeText(await fsp.readFile(p, 'utf8'))
+    // deck.yaml 额外加 BOM：Windows 记事本默认加 BOM，而 BOM 会破坏 `^pages:` 的行锚
+    await fsp.writeFile(p, (rel === 'deck.yaml' ? '\uFEFF' : '') + lf.replace(/\n/g, '\r\n'), 'utf8')
+  }
+}
+const crlfWS = join(root, 'examples', 'tpl-crlf')
+await rm(crlfWS, { recursive: true, force: true })
+const matC = await tplMod.materializeTemplate(crlfWS, crlfId, { name: 'CRLF' })
+const deckC = await (await import('node:fs/promises')).readFile(join(crlfWS, 'deck.yaml'), 'utf8')
+ok('换行鲁棒：CRLF+BOM 的模板 deck.yaml 仍被改写为只引用正式页（不再静默返回原文）',
+  deckC.includes('pages/01_opening.yaml') && !deckC.includes('_cover.yaml'),
+  JSON.stringify(deckC.split('\n').filter((l) => l.includes('.yaml')).slice(0, 4)))
+const ctxC = await resolveDeck(crlfWS) // 修复前：这一行抛 page file missing: pages/_cover.yaml
+ok('换行鲁棒：CRLF+BOM 模板物化出的工作区可 resolve（正是干净克隆崩掉的那一步）', ctxC.pages.length === 1 && ctxC.deck.title === 'CRLF')
+const coverC = await (await import('node:fs/promises')).readFile(join(crlfWS, 'pages', '01_opening.yaml'), 'utf8')
+ok('换行鲁棒：CRLF 母版页的 pageType 仍被改写（`^x.*$` 类正则在 CRLF 上同样失效）',
+  coverC.includes('pageType: content') && !coverC.includes('pageType: cover'), matC.formal)
+await (await import('node:fs/promises')).rm(crlfDir, { recursive: true, force: true }).catch(() => {})
+await rm(crlfWS, { recursive: true, force: true })
 
 // ── 24. v0.9.1：候选 A——prst 形状直通 + 渐变闭环 + 参考双轨 ──────────────
 // 24.1 造含 prst/渐变 shape 的 deck → exportPptx → importPptx 回环（export→import 无损）

@@ -7,8 +7,13 @@
  *   → ⑤ 用**本地 tgz 的 `file:` 规格**把同一份字节装进 profile → ⑥ 终验 + 写 .sync-state.json
  *
  * **发版（默认）**：机器 == GitHub 字节级一致。
+ *   ⓪b **git 前置**（2026-09-18 加）：本地必须全部推上去了，且 tag 必须**正好指向 HEAD**——
+ *      否则用户从仓库 URL 装到的是旧代码（v1.0.1 就是这么发的：`gh release create` 按默认分支 HEAD
+ *      把 tag 建在了旧提交上，而资产 sha 校验全绿）。
  *   ① build → ② pack → ③ sha256 比对/上传（--clobber，幂等）→ ④ 同一 tgz 部署本机安装根
  *   → ⑤ 按 **GitHub 资产 URL** 重装 profile → ⑥ 终验三方一致 + 写 .sync-state.json
+ *   → ⑦ **发版终验**：`verify-fresh-install`（干净克隆 + 一条命令安装，"用户能不能用"的机器判据；
+ *      `--skip-fresh` 可跳过，但状态文件里会留 `freshInstall: null`，不伪装成验过）。
  *
  * 为什么 --local 用 `file:` 规格，而不是切回 junction/preset 装法：
  *   junction 会**新增一条挂载路径**——"我现在改的是哪份代码"于是有两种答案，答错**不报错**（这才是真正的风险，
@@ -25,11 +30,12 @@
  *   node scripts/release-sync.mjs --local                        # 日常迭代（不发 GitHub）
  *   node scripts/release-sync.mjs                                # 发版
  *   node scripts/release-sync.mjs --local --allow-behind          # 明知落后仍要构建（自担）
+ *   node scripts/release-sync.mjs --skip-fresh                    # 发版但跳过"用户视角"终验（留痕：freshInstall=null）
  *   可选：[--tag v1.0.0] [--root D:\plugins] [--profile web] [--no-upload] [--state <路径>]
  *
  * 回退到 GitHub 版本：`dsh plugin --profile web add <Releases 页面的资产 URL>`（发版模式做的就是这件事）。
  */
-import { execSync } from 'node:child_process'
+import { execSync, spawnSync } from 'node:child_process'
 import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync, statSync, copyFileSync, readdirSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { join, dirname, resolve } from 'node:path'
@@ -50,6 +56,9 @@ const deployRoot = resolve(opt('--root', 'D:\\plugins'))
 const noUpload = args.includes('--no-upload')
 const local = args.includes('--local')
 const allowBehind = args.includes('--allow-behind')
+// 发版终验可以显式跳过（离线、CI 里只想要资产一致性时）——但**跳过必须留痕**：
+// 状态文件里 freshInstall=null 而不是 true，免得"没验"被读成"验过了"。
+const skipFresh = args.includes('--skip-fresh')
 // --state 只为可测性存在：让隔离环境里跑的 release-sync 不要把 .sync-state.json 写进真仓库。
 const stateFile = resolve(opt('--state', join(root, '.sync-state.json')))
 
@@ -87,6 +96,59 @@ if (local) {
     }
     if (!g.ok) console.log(`⚠ --allow-behind：明知落后 ${g.behind} 个提交仍继续——本轮基线**不是最新**`)
   }
+}
+
+// ── ⓪b 发版模式的前置：**本地全部推上去了吗？tag 指向的是这一提交吗？**────────────────
+// 为什么必须在这里拦（2026-09-18 实测事故）：发布 v1.0.1 时本地有 14 个提交没推，`gh release create`
+// 于是**按默认分支 HEAD** 把 tag 建在旧提交上——"发布成功"，而 GitHub 上是 v1.0.0 的代码：
+// 用户照创意工坊卡片跑 `dsh plugin add <仓库 URL>` 拿到的是旧版（没有会话隔离、没有 8 项修复）。
+// 更糟的是 ①②③④⑤⑥ 全都照常通过——它们只比对**资产** sha，一步都没看 git。
+// 旧的 `gitFreshness()` 只在 --local 分支里跑，发版分支完全没有 git 检查，所以这个洞一直存在。
+if (!local) {
+  const branch = run('git rev-parse --abbrev-ref HEAD').trim()
+  let ahead = null
+  let behind = null
+  try {
+    run('git fetch --quiet origin')
+    ahead = Number(run(`git rev-list --count origin/${branch}..HEAD`).trim())
+    behind = Number(run(`git rev-list --count HEAD..origin/${branch}`).trim())
+  } catch {
+    console.log('⓪b git：无法比对远端（离线或 fetch 失败）——**未能确认**本地是否落后/未推送')
+  }
+  if (ahead !== null) {
+    console.log(`⓪b git：${branch} 未推送 ${ahead} 个提交｜落后 ${behind} 个`)
+    if (ahead > 0) {
+      console.error(`✗ 本地有 **${ahead} 个提交没推**——用户从仓库 URL 安装拿到的是 origin 上的旧代码，`
+        + `而资产是本地的字节：两条安装路径从此分叉，且**没有任何症状**。请先 \`git push origin ${branch}\`：`)
+      for (const l of run(`git log --oneline origin/${branch}..HEAD`).split('\n').filter(Boolean).slice(0, 10)) {
+        console.error(`    · ${l}`)
+      }
+      process.exit(1)
+    }
+    if (behind > 0) {
+      console.error(`✗ 本地落后 origin/${branch} ${behind} 个提交——发版等于把别人的提交顶掉。先 \`git pull\`。`)
+      process.exit(1)
+    }
+  }
+  // tag 必须**正好指向 HEAD**：`gh release create` 不指定 --target 时会按默认分支 HEAD 建 tag，
+  // 与"我要发布的提交"无关。这条把"发布目标 == 发布内容"钉死。
+  const head = run('git rev-parse HEAD').trim()
+  const lsTag = run(`git ls-remote --tags origin refs/tags/${tag}`).trim()
+  const remoteTagSha = lsTag ? lsTag.split(/\s+/)[0] : ''
+  if (!remoteTagSha) {
+    console.error(`✗ 远端还没有 tag ${tag}——` + '`gh release create` 不指定 --target 会**按默认分支 HEAD** 建 tag，'
+      + `本地没推时它就把 tag 建在旧提交上。请显式指定目标提交：\n`
+      + `    gh release create ${tag} --target ${head} --title "..." --notes-file ...\n`
+      + `  然后重跑本命令（本命令负责上传/校验资产）。`)
+    process.exit(1)
+  }
+  if (remoteTagSha !== head) {
+    console.error(`✗ tag ${tag} 指向 ${remoteTagSha.slice(0, 10)}，而本地 HEAD 是 ${head.slice(0, 10)}——`
+      + `"发布目标"与"发布内容"不是同一个提交（这正是 v1.0.1 那次的事故形状）。修正：\n`
+      + `    git push --force origin refs/tags/${tag}     # 或删掉重建：gh release delete ${tag} 后按上面那条重建`)
+    process.exit(1)
+  }
+  console.log(`⓪b git：tag ${tag} == HEAD（${head.slice(0, 10)}）✓ 分支已推 ✓`)
 }
 
 // ① build
@@ -279,6 +341,30 @@ if (local && mountMatch === true) {
   } catch { /* 目录读不了就算了 */ }
 }
 
+// ⑦ 发版终验：**用户视角**的"一条命令装好并用起来"（2026-09-18 新增）
+// 为什么放在最后而不是最前：前面 ①~⑥ 证明的是"我构建的字节与上传的资产一致"，这一条证明的是
+// **用户能不能照指引装好并用起来**——两件事事实上不同（v1.0.1 那次：资产 sha 完全一致，而 GitHub 上的
+// 仓库/tag 指的是旧代码；干净克隆里 npm test 还会因 CRLF 检出直接崩）。
+// 为什么失败只报 ❌ 不回滚：资产已经上传了，静默"回滚"会让 Release 页面与本地状态更难对齐；
+// 正确做法是把判据写进状态文件并**让退出码为 1**，让"没验过"和"验过且通过"永远可区分。
+let freshInstall = null
+if (local) {
+  console.log('\n⑦ 本地模式：跳过发版终验（用户视角的安装自证只在发版时跑）')
+} else if (skipFresh) {
+  console.log('\n⑦ ⚠ 已按 --skip-fresh 跳过发版终验——"用户能不能一条命令装好"**本轮未证明**（状态文件里 freshInstall=null）')
+} else if (!ok) {
+  console.log('\n⑦ 资产一致性未通过，跳过发版终验（先修上面的 ❌）')
+} else {
+  console.log('\n⑦ 发版终验：干净克隆 + 一条命令安装（verify-fresh-install）...\n')
+  const r = spawnSync(process.execPath, [join(root, 'scripts', 'verify-fresh-install.mjs')], { cwd: root, stdio: 'inherit' })
+  freshInstall = r.status === 0
+  if (!freshInstall) {
+    console.log('\n✗ 发版终验失败：资产已上传且字节一致，但"用户照指引能不能装好并用起来"**没被证明**——')
+    console.log('   逐条看上面每个 ✗（每条都写明"看到什么 / 为什么重要"）。修完重跑本命令即可。')
+  }
+}
+const okFinal = ok && freshInstall !== false
+
 const state = {
   version: pkg.version,
   tag,
@@ -292,8 +378,10 @@ const state = {
   mountMatch,
   assetUrl,
   localTgz: local ? artifactPath : (prev.localTgz ?? null),
+  // 三态：true=验过且通过｜false=验过且失败｜null=没验（--local / --skip-fresh）
+  freshInstall,
   at: new Date().toISOString(),
-  ok,
+  ok: okFinal,
 }
 writeFileSync(stateFile, JSON.stringify(state, null, 2))
 console.log(`\n${verdict}：${localSha}`)
@@ -304,7 +392,12 @@ if (local) {
   console.log('   生效：**重启 dsh web**（profile bundle 挂载不热更）')
 } else {
   console.log(remoteFinal ? '   remote: ' + remoteFinal : '   remote: 无法确认')
+  console.log(freshInstall === true
+    ? '   用户视角终验：✅ 干净克隆 npm test 全绿 + 一条命令安装自证通过（freshInstall=true）'
+    : freshInstall === false
+      ? '   用户视角终验：❌ **未通过**（freshInstall=false）——见上面 ⑦'
+      : '   用户视角终验：⚠ **本轮未跑**（freshInstall=null）——"能不能装好"未证明')
 }
 console.log(`   .sync-state.json → ${stateFile}`)
 rmSync(packDir, { recursive: true, force: true })
-process.exit(ok ? 0 : 1)
+process.exit(okFinal ? 0 : 1)

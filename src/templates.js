@@ -11,6 +11,38 @@ import YAML from 'yaml'
 
 export const TEMPLATES_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', 'templates')
 
+/**
+ * 读"要动文本手术"的文件时统一归一：去 BOM + CRLF→LF。
+ *
+ * 为什么必须做（2026-09-18 实测，创意工坊 PR 审核反馈的根因之一）：
+ *   本模块用 `/pages:\n[\s\S]*$/` 这类**行锚定正则**改写 deck.yaml。JS 的 `.` 不吃 `\r`，
+ *   而 `$`（m 模式）只落在 `\n` 前——所以 CRLF 文本上这些正则**一条都不匹配**，
+ *   `.replace()` 静默返回原文（不报错）。后果分两种，都很难查：
+ *     - materializeTemplate：新工作区 deck.yaml 仍引用 `pages/_cover.yaml`，而该页**故意没被复制**
+ *       （它是被"正式化"的首母版）→ resolveDeck 抛 `page file missing: pages/_cover.yaml`，
+ *       整条自检在干净克隆里直接崩（Windows + Git for Windows 默认 core.autocrlf=true 就会这样）。
+ *     - registerTemplate：收纳出来的模板 deck.yaml 的 pages 段没被替换 → 引用一堆不存在的页。
+ *   为什么本机一直没暴露：仓库工作区是脚本写出来的 LF（`core.autocrlf=true` 只在**检出**时转换），
+ *   而**干净克隆**是检出——于是"本机全绿、用户全崩"。
+ *   防线是两条一起：`.gitattributes`（`* text=auto eol=lf`）保证 git 安装与 tgz 安装同字节；
+ *   这里保证**用户手改过的 CRLF/BOM 文件**（Windows 记事本默认加 BOM）也不会静默失效。
+ */
+export function normalizeText(raw) {
+  return String(raw).replace(/^\uFEFF/, '').replace(/\r\n/g, '\n')
+}
+
+/**
+ * 把 deck.yaml 的 `pages:` 段（至文件末尾）整体换成给定页清单。
+ * **不匹配就抛**：这条改写过去是静默的——CRLF（见 normalizeText）或缺少 pages: 段时
+ * `.replace()` 原样返回，产物是一个"引用了不存在页"的 deck，错误推迟到 resolveDeck 才炸，
+ * 且报的是"页文件缺失"（离真因隔了一层）。宁可当场报出真因。
+ */
+function rewritePagesSection(text, refs) {
+  const re = /^pages:\n[\s\S]*$/m
+  if (!re.test(text)) throw new Error('deck.yaml 缺少顶格 `pages:` 段——无法改写页清单（模板 deck.yaml 必须含 pages:）')
+  return text.replace(re, `pages:\n${refs.map((r) => `  - ${r}`).join('\n')}\n`)
+}
+
 /** 模板清单（轻量元数据，不读母版页主体）。 */
 export async function listTemplates() {
   const out = []
@@ -41,13 +73,13 @@ export async function templateWorkspace(id) {
   const dir = join(TEMPLATES_DIR, id)
   const deckFile = join(dir, 'deck.yaml')
   if (!existsSync(deckFile)) throw new Error(`模板不存在：${id}（可用 ppt_templates 查看列表）`)
-  const deck = await readFile(deckFile, 'utf8')
+  const deck = normalizeText(await readFile(deckFile, 'utf8'))
   const metaFile = join(dir, 'template.yaml')
   const meta = existsSync(metaFile) ? (YAML.parse(await readFile(metaFile, 'utf8')) ?? {}) : {}
   const pages = []
   for (const ref of meta.pages ?? []) {
     const p = join(dir, ref)
-    if (existsSync(p)) pages.push({ ref, yaml: await readFile(p, 'utf8') })
+    if (existsSync(p)) pages.push({ ref, yaml: normalizeText(await readFile(p, 'utf8')) })
   }
   const mediaDir = join(dir, 'media')
   const media = existsSync(mediaDir) ? (await import('node:fs/promises').then((f) => f.readdir(mediaDir))).filter((n) => !n.startsWith('.')) : []
@@ -91,7 +123,8 @@ export async function registerTemplate(dir, opts = {}, { targetDir = TEMPLATES_D
     await cp(join(dir, 'media'), pagesDir === '' ? tplDir : join(tplDir, 'media'))
   }
   // 模板 deck.yaml：引用全部母版页（保留原 theme；pages 段整体替换，不动前导换行）
-  const deckTxt = (await readFile(join(dir, 'deck.yaml'), 'utf8')).replace(/pages:\n[\s\S]*$/, `pages:\n${refs.map((r) => `  - ${r}`).join('\n')}\n`)
+  // 必须先 normalizeText：CRLF 上 `/pages:\n[\s\S]*$/` 静默不匹配（用户手改过的 deck.yaml 就是 CRLF）
+  const deckTxt = rewritePagesSection(normalizeText(await readFile(join(dir, 'deck.yaml'), 'utf8')), refs)
   await writeFile(join(tplDir, 'deck.yaml'), deckTxt)
   // 收纳后自动声明清理（外部模板 = 参考资产：视觉叠层/页脚出血是有意的原始设计 → 批量声明；
   // 剩余错误按类型统计记入 meta.cleanup，供使用者预知）
@@ -258,10 +291,10 @@ export async function materializeTemplate(dir, id, { name } = {}) {
     if (tplMeta.styleAudit) lines.push('  audit: reference/audit.yaml')
     if (lines.length > 3) refBlock = '\n' + lines.join('\n') + '\n'
   }
-  const deck = t.deck
+  const deck = normalizeText(t.deck)
     .replace(/^title:.*$/m, `title: ${JSON.stringify(name ?? tplMeta.name ?? '未命名')}`)
-    .replace(/pages:\n[\s\S]*$/, `pages:\n  - ${formal}\n`)
-  await writeFile(join(dir, 'deck.yaml'), deck + refBlock)
+  const deckWithPages = rewritePagesSection(deck, [formal])
+  await writeFile(join(dir, 'deck.yaml'), deckWithPages + refBlock)
   const refs = []
   for (const p of t.pages) {
     if (p.ref === first.ref) continue // 首母版已正式化
