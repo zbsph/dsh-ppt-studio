@@ -118,8 +118,22 @@ try {
   const pack2 = run('npm', ['pack', '--pack-destination', up2Dir], { cwd: pkg2 })
   const tgz2 = join(up2Dir, (pack2.stdout ?? '').trim().split(/\r?\n/).filter(Boolean).pop() ?? 'none.tgz')
   const sha = (f) => (existsSync(f) ? createHash('sha256').update(readFileSync(f)).digest('hex').slice(0, 12) : '(缺)')
+  // 基线的取法（2026-09-18 修）：`--spec <https URL>` 时第一个"tgz"是 URL，`sha(tgz)` 恒为 '(缺)'，
+  // 于是 `sha(tgz2) !== sha(tgz)` **恒真**——断言显示 ✓ 却什么也没证明（"跳过与通过印同一个颜色"的变体）。
+  // 修法：URL 规格下把**装到的副本**（未加 marker）原样打一份作为基线——它与该 URL 同源，
+  // 已由上面那条"装到的是当前版本 + probe 脚本在位"独立证明。
+  let baseSha = sha(tgz)
+  if (isUrl) {
+    const baseDir = join(work, 'base')
+    cpSync(installedDir, baseDir, { recursive: true, dereference: true })
+    const basePackDir = join(work, 'base-pack')
+    mkdirSync(basePackDir, { recursive: true })
+    const bp = run('npm', ['pack', '--pack-destination', basePackDir], { cwd: baseDir })
+    const bpName = (bp.stdout ?? '').trim().split(/\r?\n/).filter(Boolean).pop() ?? 'none.tgz'
+    baseSha = sha(join(basePackDir, bpName))
+  }
   check('升级夹具：第二个 tgz 与首个**字节不同**（同版本号、内容不同——模拟"新版发布"）',
-    existsSync(tgz2) && sha(tgz2) !== sha(tgz), `tgzA=${sha(tgz)}｜tgzB=${sha(tgz2)}`)
+    existsSync(tgz2) && baseSha !== '(缺)' && sha(tgz2) !== baseSha, `tgzA=${baseSha}｜tgzB=${sha(tgz2)}`)
 
   const up = run('dsh', ['plugin', '--profile', 'web', 'add', tgz2], { env, cwd: work })
   const upOut = `${up.stdout ?? ''}\n${up.stderr ?? ''}`
