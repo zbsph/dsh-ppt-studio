@@ -206,6 +206,15 @@ try {
   check('非 bundle：预设**保留**插件行（这正是"只有该预设才有这些工具"的挂载点）',
     existsSync(preset2) && /^-\s*id:\s*ppt-studio$/m.test(readFileSync(preset2, 'utf8')),
     existsSync(preset2) ? '含插件行 ✓' : '预设缺失')
+  // 技能泄漏面：`<dshHome>/skills/` 是**文件系统技能根**，对所有会话可见（不限预设）。
+  // 安装器此前默认把 4 本内置技能镜像到这里 ⇒ 别的预设也看得到（用户 2026-09-18 报告的正是这一类）。
+  // 现改为 opt-in：默认不镜像，且**清理历史镜像**（否则每次 sync 都会把它装回来）。
+  const mirrorDir2 = join(home2, 'skills', 'ppt-studio-manual')
+  check('会话隔离：默认**不**把内置技能镜像到 <dshHome>/skills（镜像 = 跨预设泄漏）',
+    !existsSync(mirrorDir2), mirrorDir2)
+  const mir = run('node', [join(syncRoot2, 'package', 'scripts', 'install.mjs'), '--prefix', home2, '--mirror-skills'], { env: env2 })
+  check('会话隔离：显式 `--mirror-skills` 才产生镜像（兜底通道按需，不默认泄漏）',
+    mir.status === 0 && existsSync(mirrorDir2), `exit=${mir.status}｜镜像存在=${existsSync(mirrorDir2)}`)
 } finally {
   rmSync(work, { recursive: true, force: true })
 }

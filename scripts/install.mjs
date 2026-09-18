@@ -32,6 +32,8 @@ const prefix = resolve(opt('--prefix', process.env.DSH_HOME || join(homedir(), '
 const profile = opt('--profile', 'web')
 const force = args.includes('--force')
 const noPreset = args.includes('--no-preset')
+// 技能镜像默认**关闭**（跨预设泄漏，见第 4 步注释）；要给非 PPT 会话留兜底才显式开启。
+const mirrorSkills = args.includes('--mirror-skills')
 
 const profileDir = join(prefix, 'profiles', profile)
 const pkgDir = join(profileDir, 'node_modules', '@dsh-external', 'dsh-ppt-studio')
@@ -135,28 +137,43 @@ if (!noPreset) {
   }
 }
 
-// ── 4) 内置 skill 文件镜像（README 承诺"安装后提问即用"——随包同步刷新，以包为准）──────
-// 0.1.5-rc.2 起技能包的**主通道**是插件内嵌注册（lib/skill.js → ctx.skills.register，落 preset 层）；
-// 这里把 skills/*/SKILL.md 逐个镜像到 <dshHome>/skills/ 是"非 PPT 会话也能查到"的兜底与互通：
-// 同一份字节、同一次安装同步；同名跨层由技能注册表"就近层优先"裁决 → PPT 会话内永远命中包内嵌那份。
+// ── 4) 内置 skill 文件镜像（**默认关闭**，见下）──────────────────────────────────
+// 技能包的**主通道**是插件内嵌注册（lib/skill.js → ctx.skills.register，落 preset 层，随插件同生共死）。
+// 把 skills/*/SKILL.md 镜像到 <dshHome>/skills/ **会让该 profile 的所有会话（含官方标准预设）在技能目录里
+// 看到它们**——那是"跨预设泄漏"，与"只有选「PPT 工作室」时才有这些技能"直接冲突（2026-09-18 用户报告）。
+// 因此改为 **opt-in**：要给非 PPT 会话留"提问即用"的兜底，显式加 `--mirror-skills`。
+// 未开启时会**清理历史镜像**——否则早期安装留下的副本会继续泄漏，且此后每次 release-sync 都把它装回来，
+// 表现为"改了没生效"的静默问题。
 const skillsRoot = join(root, 'skills')
 if (!noPreset) {
   if (!existsSync(skillsRoot)) {
     console.warn('⚠ 包内缺少 skills/（此包打包不完整）——内置技能不可用')
   } else {
     const dirs = readdirSync(skillsRoot, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name)
-    const names = []
-    for (const name of dirs) {
-      const src = join(skillsRoot, name, 'SKILL.md')
-      if (!existsSync(src)) continue
-      const dstDir = join(prefix, 'skills', name)
-      mkdirSync(dstDir, { recursive: true })
-      writeFileSync(join(dstDir, 'SKILL.md'), readFileSync(src, 'utf8'), 'utf8')
-      names.push(name)
+    if (mirrorSkills) {
+      const names = []
+      for (const name of dirs) {
+        const src = join(skillsRoot, name, 'SKILL.md')
+        if (!existsSync(src)) continue
+        const dstDir = join(prefix, 'skills', name)
+        mkdirSync(dstDir, { recursive: true })
+        writeFileSync(join(dstDir, 'SKILL.md'), readFileSync(src, 'utf8'), 'utf8')
+        names.push(name)
+      }
+      steps.push(names.length
+        ? `内置技能镜像已同步（--mirror-skills 显式开启，共 ${names.length} 本）：${names.join('、')}`
+        : '⚠ 包内 skills/ 下没有可用技能')
+    } else {
+      // 清理历史镜像（fs.rmSync 不跟随重解析点；这些本来就是普通目录）
+      let removed = 0
+      for (const name of dirs) {
+        const dstDir = join(prefix, 'skills', name)
+        if (existsSync(dstDir)) { rmSync(dstDir, { recursive: true, force: true }); removed++ }
+      }
+      steps.push(removed
+        ? `内置技能：**已移除 ${removed} 本历史镜像**——技能只在「PPT 工作室」预设内可见（插件内嵌注册）；要给别的会话留兜底请加 --mirror-skills`
+        : '内置技能：未镜像（默认）——只在「PPT 工作室」预设内可见（插件内嵌注册，随插件同生共死）')
     }
-    steps.push(names.length
-      ? `内置技能镜像已同步（包为准，共 ${names.length} 本；PPT 会话内用插件内嵌版）：${names.join('、')}`
-      : '⚠ 包内 skills/ 下没有可用技能')
   }
 }
 

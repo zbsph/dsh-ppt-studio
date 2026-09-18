@@ -90,7 +90,11 @@ dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio
    安装器是幂等的——重复运行自动跳过已存在项。
 4. **重启 dsh web** → 会话左上角/预设切换器选择「**PPT 工作室**」→ 直接提需求。
 5. 验证安装成功：在 PPT 工作室里说"帮我做一个简单 PPT，用内置模板"——模型应开始走 PPT 工作流（工作流提示词自动注入）；或直接问模型"dsh-ppt-studio 怎么用"（内置 skill 手册会回答）。
-   > 手册 skill 由**插件自己内嵌提供**（`ctx.skills.register`，落 PPT 工作室预设层，随插件同生共死、升级即新）；安装器另外把它镜像到 `<dshHome>/skills/`，让不在 PPT 预设里的会话也能问到手册。想确认通道生效：让模型调一次 `ppt_state`，输出里的 `manualSkill` 会给出 `registered/visible`。
+   > 手册 skill 由**插件自己内嵌提供**（`ctx.skills.register`，落 PPT 工作室预设层，随插件同生共死、升级即新）。
+   > **安装器默认不再把它镜像到 `<dshHome>/skills/`**（2026-09-18 起）：那是**文件系统技能根**，对该 profile 的**所有会话**可见，
+   > 会让别的预设也看到这 4 本技能——与"只有选「PPT 工作室」才有这些技能"冲突。要给非 PPT 会话留"提问即用"的兜底，
+   > 显式加 `--mirror-skills`（install.mjs 未开启时会**自动清理历史镜像**，避免旧副本继续泄漏）。
+   > 想确认通道生效：让模型调一次 `ppt_state`，输出里的 `manualSkill` 会给出 `registered/visible`。
 
 ### 0.4 方式 C：git clone 源码（开发者/尝鲜）
 
@@ -125,7 +129,7 @@ node scripts/e2e-1.0.mjs        # 13 断言（真浏览器测量 + 真 Office �
 | 路径 | 由谁装 | 生效范围 | 附带 |
 |---|---|---|---|
 | **profile bundle 行**（`cordis.patch.yml`） | `dsh plugin --profile web add <包>` | 该 profile 的**所有会话**（工作流仍按意图触发，不会误激活） | 不含预设人格 |
-| **agent preset 行** | `node scripts/install.mjs`（写 `~/.dsh/.agent-presets/ppt/agent.cordis.yml`） | 仅**「PPT 工作室」预设会话** | 含预设人格 + 预设层技能镜像 |
+| **agent preset 行** | `node scripts/install.mjs`（写 `~/.dsh/.agent-presets/ppt/agent.cordis.yml`） | 仅**「PPT 工作室」预设会话** | 含预设人格（技能**默认不再**镜像到 `<dshHome>/skills/`，见 §0.3） |
 
 > **想要"只有选「PPT 工作室」时才出现这些工具/skills"，就必须走预设行。** 这一列"生效范围"是两条路径**唯一无法兼得**的差别：
 > profile bundle 行是在 **profile 层**注册的，`ppt_*` 工具、`/ppt` 命令面、4 本内嵌技能、工作流提示段都会出现在该 profile 的**每一个**会话里
