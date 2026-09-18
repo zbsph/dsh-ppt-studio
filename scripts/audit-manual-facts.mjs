@@ -244,9 +244,20 @@ const overflowTextAndTable = /el\.kind === 'text' \|\| el\.kind === 'table'/.tes
 check('data 已写明"表格有溢出断言（table-overflow）、图表没有"（与源码一致）',
   tableOverflowClaim && overflowTextAndTable, `verify.js: 溢出断言覆盖 text+table；chart 仍无`)
 
-const unmappedEveryPage = /status: p\.page\.source \? 'grounded' : 'unmapped'/.test(src.crosscheck)
-const unmappedHonest = /unmapped 只对数据页有要求|按"页"判/.test(bySkill['ppt-studio-data'] ?? '')
-check('data 对 crosscheck 的口径与源码一致（每页都判、建议级）', unmappedEveryPage && unmappedHonest, `crosscheck.js: ${(src.crosscheck.match(/status: p\.page\.source[^\n]*/) ?? [''])[0].trim().slice(0, 80)}`)
+// 2026-09-18 重写：crosscheck 从"机器判定（跨页数字分组 + grounded/unmapped 伪状态）"改为
+// "材料包 + 审阅协议（工具不判定）"。这条审计的价值仍在于**手册与源码不许各说各话**：
+// 源码里不得残留状态机/分组，data 手册必须同步成"材料包"口径且不得再提 grounded/unmapped。
+const packRewrite = /审阅材料包/.test(src.crosscheck)
+  && /无法核实/.test(src.crosscheck) && /无来源支撑/.test(src.crosscheck)
+  && /不要使用子代理/.test(src.crosscheck)
+const noVerdictLogic = !/status: [^\n]*'grounded'/.test(src.crosscheck)
+  && !/numMap/.test(src.crosscheck) && !/groups: groups/.test(src.crosscheck)
+const dataSkillSynced = /ppt_crosscheck/.test(bySkill['ppt-studio-data'] ?? '')
+  && /材料包/.test(bySkill['ppt-studio-data'] ?? '')
+  && !/grounded|unmapped/.test(bySkill['ppt-studio-data'] ?? '')
+check('data 对 crosscheck 的口径与源码一致（材料包+审阅协议；无 grounded/unmapped 伪状态、无数字分组）',
+  packRewrite && noVerdictLogic && dataSkillSynced,
+  `crosscheck.js：材料包=${packRewrite}｜无状态机=${noVerdictLogic}｜data 手册已同步=${dataSkillSynced}`)
 
 const chartIssueScope = /allZero/.test(src.svgCharts) && !/fabricat/.test(src.svgCharts)
 const chartIssueHonest = /没有任何工具会拦/.test(bySkill['ppt-studio-data'] ?? '')

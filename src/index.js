@@ -1,5 +1,5 @@
 /**
- * @dsh-external/dsh-ppt-studio —— PPT 工作室插件（host）。
+ * dsh-ppt-studio —— PPT 工作室插件（host）。
  *
  * 装配模型（2026-09-18 **第二次修订：回滚为"装上即可用"**）：
  *   `apply()` 做四件事——① 装配防重；② **全局管道**（/ppt-preview 路由、预设自交付、语义路由）；
@@ -31,7 +31,7 @@ import { ensureAgentPreset } from './preset-delivery.js'
 import { existsSync, statSync, mkdirSync, appendFileSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
-export const name = '@dsh-external/dsh-ppt-studio'
+export const name = 'dsh-ppt-studio'
 // skills 为可选依赖（ctx.get('skills')）：极简装配缺 dsh-skill 时插件仍完整可用
 export const inject = ['tools', 'commands', 'systemPrompt']
 

@@ -1001,7 +1001,7 @@ m2Real('v0.12：缺 pageNo 的旧版 measured.json → 报 measured-unpaired（�
 await rm(m2Deck, { recursive: true, force: true })
 
 // ── 28. v0.13.0 (M3)：数据连贯——跨页数字对账 + source 证据核查表 + themeRef 断言 ──
-const { crosscheckDeck } = await import('../lib/crosscheck.js')
+const { crosscheckDeck, crosscheckReport } = await import('../lib/crosscheck.js')
 const ccDeck = join(root, 'examples', 'cc-smoke')
 await rm(ccDeck, { recursive: true, force: true })
 await mkdir(join(ccDeck, 'pages'), { recursive: true })
@@ -1025,12 +1025,23 @@ await (await import('node:fs/promises')).writeFile(join(ccDeck, 'pages', '02.yam
   '', ''].join('\n'))
 const ccCtx = await resolveDeck(ccDeck)
 const cc = crosscheckDeck(ccCtx)
-ok('v0.13：跨页数字对账——同数字跨页入组（45.6% 页 1/2；52% 单页不入组）',
-  cc.groups.some((g) => g.num === '45.6%' && g.pages.join(',') === '1,2') && !cc.groups.some((g) => g.num === '52%'),
-  JSON.stringify(cc.groups.map((g) => g.num)))
-ok('v0.13：证据核查表——source 标注 grounded / 未标注 unmapped',
-  cc.pages.find((p) => p.index === 1)?.status === 'grounded' && cc.pages.find((p) => p.index === 2)?.status === 'unmapped',
-  JSON.stringify(cc.pages))
+ok('v1.0.3：材料包按阅读顺序收全页正文（2 页；数字原文照录，不再产出"跨页数字分组"）',
+  cc.pages.length === 2
+  && cc.pages[0].texts.some((t) => t.text.includes('45.6%'))
+  && cc.pages[1].texts.some((t) => t.text.includes('45.6%'))
+  && cc.pages[1].texts.some((t) => t.text.includes('52%'))
+  && cc.groups === undefined,
+  cc.pages.map((p) => `P${p.index}:${p.texts.length} 段文字`).join(' '))
+const ccReport = crosscheckReport(ccCtx)
+ok('v1.0.3：材料包不做判定（无 status/groups）——出处标"作者自述（未核实）"、含素材清单+四分类协议、完整包落盘',
+  cc.pages.every((p) => p.status === undefined)
+  && cc.pages[0].authorSource === '公司财报 2026 年报'
+  && /作者自述出处/.test(ccReport)
+  && /可核对的外部素材/.test(ccReport)
+  && ['一致', '冲突', '无来源支撑', '无法核实'].every((k) => ccReport.includes(k))
+  && /不要使用子代理/.test(ccReport)
+  && existsSync(join(ccDeck, 'preview', 'review-pack.md')),
+  `四分类齐=${['一致', '冲突', '无来源支撑', '无法核实'].every((k) => ccReport.includes(k))}；包=preview/review-pack.md`)
 // themeRef 断言：缺失 $ref → resolveDeck 报错（M3 防静默回退）
 const refDeck = join(root, 'examples', 'ref-smoke')
 await rm(refDeck, { recursive: true, force: true })
@@ -2068,9 +2079,10 @@ const insertRow = Array.isArray(patchDoc) ? (patchDoc.flatMap((l) => l?.insert ?
 ok('bundle：patch 的 insert 行名字与包名一致（改名必须两处同改——防"装了不生效"的静默失败）',
   Boolean(insertRow) && insertRow.name === rootPkg.name && typeof insertRow.id === 'string',
   `patch name=${insertRow?.name ?? '(缺)'}｜package name=${rootPkg.name}｜id=${insertRow?.id ?? '(缺)'}`)
-ok('bundle：未发布到 npm（保持 private），一键安装走 GitHub Release 的 tgz URL——发布才需要 npm 账号',
-  rootPkg.private === true,
-  `private=${rootPkg.private ?? 'undefined'}（发布需删掉它 + 加 publishConfig.access=public，见 README §10）`)
+ok('bundle：已转为公开发布 npm（无 private + publishConfig.access=public + 仓库元数据齐）——npm 通道的关键字段',
+  rootPkg.private === undefined && rootPkg.publishConfig?.access === 'public'
+  && Boolean(rootPkg.repository?.url) && Boolean(rootPkg.homepage) && Boolean(rootPkg.bugs?.url),
+  `private=${rootPkg.private ?? 'undefined'}｜publishConfig.access=${rootPkg.publishConfig?.access ?? '(缺)'}｜repository=${rootPkg.repository?.url ?? '(缺)'}｜homepage=${rootPkg.homepage ? '有' : '(缺)'}`)
 
 // lib/ 必须**提交**且与 src/ 逐字节一致（2026-09-16）：
 // 商店（dsh-web 创意工坊）对没有 npm 包的条目生成的安装命令是 `dsh plugin --profile web add <repo URL>`
@@ -2111,14 +2123,18 @@ ok('bundle：未发布到 npm（保持 private），一键安装走 GitHub Relea
     `lib=${libFiles.length} 文件｜src=${srcFiles.length}｜缺失=${libMissing.length}｜不一致=${libStale.length}｜.gitignore 忽略=${ignored}｜git 跟踪=${tracked ?? '无 .git 跳过'}`)
 }
 
-// 包名是**单一事实源**：改名（例如为发布改 scope）时必须同步 cordis.patch.yml 与预设插件行，
-// 漏一处 = "装了不生效"或"预设挂不上"，两边都是静默失败 —— 这里把三处钉在一起。
+// 包名是**单一事实源**：改名必须同步 cordis.patch.yml（漏 = 装了不生效）与预设里的插件行（若存在）。
+// 【2026-09-18 改名时抓到的假阳性】旧断言用 `presetText.includes("name: '<包名>'")` 判"预设含该行"——
+// 它命中的其实是预设文件里**注释中的举例字符串**，于是"随包预设不该含插件行"这件事被它悄悄放过了：
+// 旧包名时靠注释意外通过，改名后立刻变红。现在只认**真实的插件行**（`- id: ppt-studio` 后紧跟的 name 行），
+// 并把"不含行"当作正确状态（含行 ⇒ 预设 broken ⇒ 选择器看不到它，由 verify-bundle-install / check-preset 断言）。
 {
   const presetText = readFileSync(join(root, 'agent-presets', 'ppt', 'agent.cordis.yml'), 'utf8')
-  const presetHasRow = presetText.includes(`name: '${rootPkg.name}'`) || presetText.includes(`name: "${rootPkg.name}"`)
-  ok('bundle：包名三处一致（package.json / cordis.patch.yml / 预设插件行）——改名防漂移',
-    presetHasRow && insertRow?.name === rootPkg.name,
-    `package=${rootPkg.name}｜patch=${insertRow?.name ?? '(缺)'}｜预设含该行=${presetHasRow}`)
+  const rowMatch = presetText.match(/^-\s*id:\s*ppt-studio\s*$\n\s*name:\s*['"]([^'"]+)['"]/m)
+  const presetRowName = rowMatch ? rowMatch[1] : null
+  ok('bundle：包名三处一致（package.json / cordis.patch.yml / 预设**若有**插件行则同步）——改名防漂移',
+    insertRow?.name === rootPkg.name && (presetRowName === null || presetRowName === rootPkg.name),
+    `package=${rootPkg.name}｜patch=${insertRow?.name ?? '(缺)'}｜预设行=${presetRowName ?? '无（正确：随包预设不含插件行）'}`)
 }
 
 // 回滚后的装配形状（2026-09-18 第二次修订）：`apply()` 在**它被装入的那一层**注册全部能力面
@@ -2194,7 +2210,7 @@ ok('bundle：未发布到 npm（保持 private），一键安装走 GitHub Relea
       JSON.stringify({ name: 'p', dependencies: withDep ? { [rootPkg.name]: 'file:x' } : {} }, null, 2), 'utf8')
     if (withDep) {
       // 全局模式下包本体归 pnpm：夹具要真的"有包"，否则校验步骤会（正确地）报错
-      const pd = join(dir, 'profiles', 'web', 'node_modules', '@dsh-external', 'dsh-ppt-studio')
+      const pd = join(dir, 'profiles', 'web', 'node_modules', 'dsh-ppt-studio')
       await mkdir(join(pd, 'lib'), { recursive: true })
       await writeFile(join(pd, 'package.json'), JSON.stringify({ name: rootPkg.name, version: rootPkg.version }), 'utf8')
       await writeFile(join(pd, 'lib', 'index.js'), '// fixture\n', 'utf8')

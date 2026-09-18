@@ -380,7 +380,7 @@ expectedOverlaps:
   - elementId: num_note
     elementType: text
     bounds: [480, 120, 420, 160]
-    content: {text: "跨页对账演示：本页 45.6% 与第 04 页 key_body 的 45.6% 应被 ppt_crosscheck 归为一组。", style: "$body"}
+    content: {text: "跨页演示：本页 45.6% 与第 04 页 key_body 的 45.6% 应出现在 ppt_crosscheck 材料包。", style: "$body"}
 expectedOverlaps:
   - {pair: [num_card, num_v]}
   - {pair: [num_card, num_l]}

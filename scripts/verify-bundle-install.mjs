@@ -188,10 +188,10 @@ try {
   //    这一条用 **DSH 自己的 discovery 代码**（discoverPresets）来判——它就等于"选择器会不会显示它"。
   const home2 = join(work, 'home2')
   const profB = join(home2, 'profiles', 'web')
-  mkdirSync(join(profB, 'node_modules', '@dsh-external', 'dsh-ppt-studio'), { recursive: true })
+  mkdirSync(join(profB, 'node_modules', ...NAME.split('/')), { recursive: true })
   // 夹具 = 已按 bundle 安装：依赖里有本包 + 包本体已被 pnpm 物化
   writeFileSync(join(profB, 'package.json'), JSON.stringify({ name: 'p', dependencies: { [NAME]: 'file:x' } }, null, 2), 'utf8')
-  writeFileSync(join(profB, 'node_modules', '@dsh-external', 'dsh-ppt-studio', 'package.json'),
+  writeFileSync(join(profB, 'node_modules', ...NAME.split('/'), 'package.json'),
     JSON.stringify({ name: NAME, version: pkg.version }), 'utf8')
   const env2 = { ...process.env, DSH_HOME: home2 }
   const inst2 = run('node', [join(root, 'scripts', 'install.mjs'), '--prefix', home2], { env: env2 })

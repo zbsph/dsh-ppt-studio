@@ -40,7 +40,11 @@ const noPreset = args.includes('--no-preset')
 const mirrorSkills = args.includes('--mirror-skills')
 
 const profileDir = join(prefix, 'profiles', profile)
-const pkgDir = join(profileDir, 'node_modules', '@dsh-external', 'dsh-ppt-studio')
+// 包在 profile 里的落点：**按 pkg.name 拼**（2026-09-18 改无 scope 名 `dsh-ppt-studio` 后，
+// 硬编码 '@dsh-external/dsh-ppt-studio' 会指向一个不存在的目录）。split('/') 同时兼容 scoped 名。
+const pkgDir = join(profileDir, 'node_modules', ...pkg.name.split('/'))
+// 旧名（scoped）时代的 junction 落点——只在提示/兼容检查里用到，装新名后它是历史遗留物
+const legacyPkgDir = join(profileDir, 'node_modules', '@dsh-external', 'dsh-ppt-studio')
 const presetDir = join(prefix, '.agent-presets', 'ppt')
 const presetFile = join(presetDir, 'agent.cordis.yml')
 const builtinPreset = join(root, 'agent-presets', 'ppt', 'agent.cordis.yml')
@@ -88,8 +92,8 @@ try { profilePkg = JSON.parse(readFileSync(profilePkgFile, 'utf8').replace(/^\uF
 let bundleInstalled = Boolean(profilePkg.dependencies?.[pkg.name]) || (profilePkg.dsh?.profile?.bundles ?? []).includes(pkg.name)
 // 历史遗留的行块（老版本安装器写过）：任何模式下都先清掉，再按模式决定是否写回。
 const PRESET_ROW_RE = new RegExp(`^${ROW_START}[\\s\\S]*?^${ROW_END}\\r?\\n?`, 'm')
-// 兼容更老的无标记写法（裸包名两行）
-const LEGACY_ROW_RE = /^- id: ppt-studio\n  name: '@dsh-external\/dsh-ppt-studio'\n?/m
+// 兼容更老的无标记写法（裸包名两行）——**新旧两个包名都认**：改名不改变"要清理历史遗留行"这件事
+const LEGACY_ROW_RE = /^- id: ppt-studio\n  name: '(?:@dsh-external\/)?dsh-ppt-studio'\n?/m
 const presetPluginDir = join(presetDir, 'plugin')
 
 if (ISOLATE) {
@@ -164,6 +168,11 @@ if (ISOLATE) {
   if (!existsSync(join(pkgDir, 'package.json'))) {
     console.error(`✗ profile 里找不到本包：${join(pkgDir, 'package.json')}\n  请重跑：dsh plugin --profile ${profile} add ${opt('--spec', root)}`)
     process.exit(1)
+  }
+  // 改名（@dsh-external/dsh-ppt-studio → dsh-ppt-studio）之后的双重挂载风险：旧包若仍在 profile 里，
+  // 两行 patch 会各挂一次。插件有装配防重（不会崩），但纪律是二选一 ⇒ 主动提示清掉。
+  if (existsSync(join(legacyPkgDir, 'package.json'))) {
+    steps.push(`⚠ 检测到旧包名残留：${legacyPkgDir}\n    建议执行：dsh plugin --profile ${profile} remove @dsh-external/dsh-ppt-studio（避免新旧双挂载）`)
   }
 }
 

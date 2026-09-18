@@ -3,7 +3,7 @@
  * 1.0.0 自包含端到端验证（不需要任何外部资产——夹具即案例）：
  * ① 生成夹具 fx-pro(12页)/fx-mini(3页)/seed.pptx
  * ② fx-pro：render → verify（断言 0 错误 / 声明命中 / 建议级仅提示）
- * ③ crosscheck：45.6% 跨页归组 + source 状态
+ * ③ crosscheck：审阅材料包（全页正文覆盖 + 不做判定；判定交审阅者）
  * ④ measure（浏览器实测兜底：无浏览器自动降级并注明）
  * ⑤ export → zip 结构（12 张 slide、无 chart 部件依赖）
  * ⑥ splice（seed 第 3 页 ← fx-pro 第 6 页）→ 仅 2 条目变化；slice → 单页
@@ -51,11 +51,17 @@ const v08 = v.text.split('第 8 页')[1]?.split('## 第')[0] ?? ''
 ok('② fx-pro A8 场景无误报（08 页无 aesthetic-contrast——渐变深底白字不落背景）', !v08.includes('aesthetic-contrast'),
   v08.match(/aesthetic-contrast|aesthetic-theme/g)?.join(',') ?? '')
 
-// ③ crosscheck
+// ③ crosscheck = 内容审阅材料包（M3 重写 2026-09-18：数字必须放回整句语境，判定交审阅者）
 const cc = crosscheckDeck(ctx)
-const g456 = cc.groups.find((g) => g.num === '45.6%')
-ok('③ crosscheck 45.6% 跨页归组（3/4/10 页）', g456 && g456.pages.length >= 3, JSON.stringify(g456?.pages))
-ok('③ crosscheck source 标注 grounded', cc.pages.filter((p) => p.status === 'grounded').length >= 3, '')
+const ccText = cc.pages.flatMap((p) => p.texts.map((t) => t.text)).join('\n')
+ok('③ 材料包覆盖全 12 页正文（含跨页 45.6% 原句；表格/图表/讲稿/作者出处字段齐备）',
+  cc.pages.length === seedPages && /45\.6%/.test(ccText)
+  && cc.pages.every((p) => Array.isArray(p.texts) && Array.isArray(p.tables) && Array.isArray(p.charts)
+    && Array.isArray(p.images) && typeof p.notes === 'string' && 'authorSource' in p),
+  `${cc.pages.length} 页 / 正文 ${ccText.length} 字符 / 素材清单 ${cc.materials.length} 项`)
+ok('③ 材料包不做判定（无 groups、无 status 状态机）——判定由审阅者按协议给出',
+  cc.groups === undefined && cc.pages.every((p) => p.status === undefined),
+  Object.keys(cc).join(', '))
 
 // ④ measure（浏览器；降级则标注不判失败）
 const m = await measureLayout(pro)

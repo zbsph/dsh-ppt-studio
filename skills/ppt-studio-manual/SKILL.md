@@ -38,6 +38,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 | "要 100% 像模板" | `ppt_patch`（手术模式：只换文字/表格内容，XML 原样） |
 | "网页预览对，打开 pptx 线条不对" | 旧引擎三个连线编码 bug（四个症状：斜线镜像 / × 少一笔 / 箭头消失 / 水平线变斜），**均已修复**——看 `ppt_export` 报告的"线方向 N/N"自证；修复前导出的产物重新 `ppt_export` |
 | "表格在 PowerPoint 里空白" | 旧引擎 graphicFrame 结构 bug，**已修复**；parity 回读（表 N/N）自证；旧产物重导 |
+| "`ppt_crosscheck` 是干嘛的 / 它替我查数字吗" | 它**不判断**：生成「审阅材料包」（全页正文按阅读顺序 + 工作区实扫素材清单 + 审阅协议），判定由**审阅者**给（默认独立子代理；**用户明确禁止子代理时改自审并标注**），四分类为一致 / 冲突 / 无来源支撑 / 无法核实。旧版"跨页数字分组 + grounded/unmapped"已于 **2026-09-18 废除**——数字必须放回整句语境才有含义，`source:` 是作者自述而非机器核实的证据 |
 
 ## 3. DSL 快速参考（写页面时对照）
 
@@ -53,7 +54,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
   **`data` 只认 `cols` + `rows` 两件**（写成 `data: [{label, value}]` 会被 schema 直接拒绝）；单列 pairs 兼容（`cols: [分类]` + `rows: [[类, 值]]` 自动补"值"列），**推荐宽表** `cols: [分类, 值]`。
   chart 里**没有**分类名/数值/单位/图例字段——那些要自己用 `text` 元素补（见 `ppt-studio-data` §2）。
 - 页面级：`pageType`、`background`、`safeArea`（页面级覆盖主题）、`notes`（讲稿文本 → **导出为 pptx 备注页**；多行用 `notes: |` 块标量；没有 `notes` 的页不产生任何备注部件）。
-- 声明：`expectedOverlaps: [{pair: [a,b]}]`；出界：`expectedOutOfSafeArea: [idA]`；对比度豁免：`contrastExempt: [id]`；`source: "依据标注"`（数据核查表）；`overlapMode: declared|lenient`。
+- 声明：`expectedOverlaps: [{pair: [a,b]}]`；出界：`expectedOutOfSafeArea: [idA]`；对比度豁免：`contrastExempt: [id]`；`source: "依据标注"`（作者自述出处，供审阅者核对；**不进成品**，不是机器核实的证据）；`overlapMode: declared|lenient`。
 
 ## 4. 质量门禁（答复"为什么还要改"的依据）
 
@@ -76,7 +77,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 | 加页 | 复制母版去 `_` + 注册 deck.pages，或新写页 |
 | 总结 | import 全稿 → 提炼重排 → export |
 
-交付说明必须含：素材来源、未经视觉审阅项（如有）、修改指引；重要数字页给 `ppt_crosscheck` 的数据来源核查表。
+交付说明必须含：素材来源、未经视觉审阅项（如有）、修改指引；有具体数字/事实主张的稿子，交付前用 `ppt_crosscheck` 生成**审阅材料包**并按协议做一次内容审阅（**默认独立子代理；用户禁止子代理时改自审并标注**），把逐条判定写进交付说明。
 
 ## 6. 常见报错与解法
 

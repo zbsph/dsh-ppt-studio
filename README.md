@@ -1,4 +1,4 @@
-# @dsh-external/dsh-ppt-studio — PPT 工作室（v1.0.0）
+# dsh-ppt-studio — PPT 工作室（v1.0.3）
 
 在 DeepSeek Harness 上做一个 PPT 的完整工作区：**DSH 里说需求 → 插件做 PPT → 可验证地交付**。
 配套 agent preset「PPT 工作室」（= standard 全量功能 + 本插件行），四类任务（从头 / 补完 / 修改 / 总结）共用同一个 PPTD 中间层，质量由「数字门禁 + 视觉审阅 + 真渲染复核」三轨保证。
@@ -34,21 +34,25 @@
 
 ### 0.2 方式 A：`dsh plugin add`（标准姿势 · **一条命令**，推荐）
 
-本插件声明了 `dsh.bundle.patch`（见仓库根 `cordis.patch.yml`），所以**装完即挂载**——不需要手工建 junction、不需要跑安装器、**不需要 npm 账号**：
+本插件声明了 `dsh.bundle.patch`（见仓库根 `cordis.patch.yml`），所以**装完即挂载**——不需要手工建 junction、不需要跑安装器、不需要 npm 账号（它是**公开**包，装的人不需要账号）：
 
 ```powershell
-# 资产 URL 从 Releases 页面复制：文件名 = 版本-构建时间-构建戳（取**时间最新**的那条，原因见下方"为什么带戳"）
-dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio/releases/download/v1.0.0/dsh-external-dsh-ppt-studio-1.0.0-<YYYYMMDD-HHmm>-<构建戳>.tgz
+# ① npm（v1.0.3 起，推荐：名字短、升级只改版本号）
+dsh plugin --profile web add dsh-ppt-studio
+# 升级：dsh plugin --profile web add dsh-ppt-studio@<新版本>   （不需要先卸载）
+# 卸载：dsh plugin --profile web remove dsh-ppt-studio
 
-# 升级：用**更新的**资产 URL 再跑一次（**不需要先卸载**，URL 必变，见下）
+# ② GitHub Release 的 tgz 资产（离线 / 归档通道；与 npm 是**同一份字节**，发布时同时产出）
+# 资产名 = 版本-构建时间-构建戳，取**上传时间最新**那条（原因见下方"为什么带戳"）
+dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio/releases/download/v<版本>/dsh-ppt-studio-<版本>-<YYYYMMDD-HHmm>-<构建戳>.tgz
+
 # 懒得翻页面就用这行拿"当前版本"的资产名（按上传时间取最新，实测可用）：
-#   gh release view v1.0.0 --json assets --jq '.assets | sort_by(.createdAt) | last | .name'
+#   gh release view v<版本> --json assets --jq '.assets | sort_by(.createdAt) | last | .name'
 #   → 拼进上面的 URL 尾巴即可。**别用 `sort | tail -1`**：早期没有时间戳的资产名会排到后面，取到的是旧版本（实测踩到）。
-# 卸载：dsh plugin --profile web remove @dsh-external/dsh-ppt-studio
 # 装完 **重启 dsh web** 生效
 ```
 
-**等价的第二条路（创意工坊 / 商店用的就是这条）**：直接装本仓库的 git 地址——`lib/` 已入库，产物与 tgz 完全一致：
+**等价的第三条路（创意工坊 / 商店用的就是这条）**：直接装本仓库的 git 地址——`lib/` 已入库，产物与 tgz 完全一致：
 
 ```powershell
 dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio
@@ -66,19 +70,22 @@ dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio
 > **为什么还带构建时间**：Release 页面**有意保留历次构建**（老 URL 留给已装用户重装，删掉会让他们的
 > `pnpm install` 失败），于是页面上会并排出现多个长得像的名字——sha 段看不出新旧，所以再加
 > `<YYYYMMDD-HHmm>`：**取时间最新那条即当前版本**。
-> 代价：URL 每次构建都不同，请从 Releases 页面复制当前那条（或 `gh release view v1.0.0 --json assets`）。
-> **怎么认"当前那条"**：资产名 = `版本-构建时间-构建戳`，按**上传时间**取最新——`gh release view v1.0.0 --json assets --jq '.assets | sort_by(.createdAt) | last | .name'`。
+> 代价：URL 每次构建都不同，请从 Releases 页面复制当前那条（或 `gh release view v<版本> --json assets`）。
+> **怎么认"当前那条"**：资产名 = `版本-构建时间-构建戳`，按**上传时间**取最新——`gh release view v<版本> --json assets --jq '.assets | sort_by(.createdAt) | last | .name'`。
+> **npm 通道没有这个麻烦**（`dsh plugin add dsh-ppt-studio@<版本>` 里版本号是显式的），所以 v1.0.3 起 npm 是推荐姿势；
+> tgz 通道的价值是**离线/内网**与**归档**（老 URL 不删，已装用户重装不会失败）。
 
 > **装完怎么确认生效**：`dsh --profile web --dump-config` 里应出现 `ppt-studio` 插件行。
 > 仓库自带这条路径的**真机自证**：`npm run test:bundle`（隔离 `DSH_HOME` + 真 `dsh plugin add` + dump-config 断言，**不碰你的 profiles**）。
-> 本包**未发布到 npm registry**（保持 `private: true`）；不想装 pnpm / 要离线时用方式 B（下载 tgz + `install.mjs`）。
+> 本包**已发布到 npm**（`dsh-ppt-studio`，公开包；`private` 已于 2026-09-18 去掉）——用户装它不需要 npm 账号。
+> 不想装 pnpm / 要离线时用方式 B（下载 tgz + `install.mjs`）。
 
 ### 0.3 方式 B：下载发布包（离线/无 pnpm 时）
 
-1. 在本仓库 [Releases](https://github.com/zbsph/dsh-ppt-studio/releases) 页面下载 `dsh-external-dsh-ppt-studio-<版本>.tgz`（v1.0.0 起）。
+1. 在本仓库 [Releases](https://github.com/zbsph/dsh-ppt-studio/releases) 页面下载 `dsh-ppt-studio-<版本>-<构建时间>-<构建戳>.tgz`（v1.0.3 起；v1.0.2 及更早的名字是 `dsh-external-dsh-ppt-studio-…`）。
 2. 解压到任意目录（如 `D:\plugins\dsh-ppt-studio`）：
    ```powershell
-   tar -xzf dsh-external-dsh-ppt-studio-1.0.0.tgz -C D:\plugins
+   tar -xzf dsh-ppt-studio-1.0.3.tgz -C D:\plugins
    # 得到 D:\plugins\package\（内含 lib/ scripts/ agent-presets/ docs/ skills/ templates/）
    ```
 3. **一键安装**（会做三件事：链包进 profile node_modules、保证 yaml 依赖、写入 PPT 工作室预设）：
@@ -128,13 +135,15 @@ node scripts/e2e-1.0.mjs        # 13 断言（真浏览器测量 + 真 Office �
 
 | 装法 | 一条命令 | 插件装在哪层 | 谁能用 | 代价 |
 |---|---|---|---|---|
-| **全局**（默认，推荐） | `dsh plugin --profile web add <包名 \| tgz URL \| 仓库 URL>` | profile 层 | 该 profile 的**所有会话**（含官方 standard） | —— |
+| **全局**（默认，推荐） | `dsh plugin --profile web add dsh-ppt-studio`（包名；也接受 tgz URL / 仓库 URL） | profile 层 | 该 profile 的**所有会话**（含官方 standard） | —— |
 | **隔离**（可选） | `node scripts/install.mjs --isolate`（在解压后的发布包里跑） | **预设层**（预设行 + 预设目录内 junction） | **只有「PPT 工作室」的会话** | 见下"隔离模式的三点须知" |
 
 ```bash
 # 全局（一句话；创意工坊卡片给的就是这条）
-dsh plugin --profile web add <包名 | tgz URL | 仓库 URL>
-dsh plugin --profile web remove @dsh-external/dsh-ppt-studio   # 卸载
+dsh plugin --profile web add dsh-ppt-studio
+dsh plugin --profile web remove dsh-ppt-studio   # 卸载
+# 从 v1.0.2 或更早（包名带 @dsh-external/ 前缀）升上来时，旧包仍是独立依赖 ⇒ 建议先摘掉再装新名，避免双挂载：
+dsh plugin --profile web remove @dsh-external/dsh-ppt-studio
 
 # 隔离（想要"只在 PPT 工作室里才有这些工具/技能"）
 node scripts/install.mjs --isolate     # 自动摘掉已装的 profile bundle，建预设内 junction + 写相对路径行
@@ -166,11 +175,11 @@ node scripts/install.mjs               # 切回全局（默认）：装回 profi
 删除 `~/.dsh/.agent-presets/ppt/`（预设身份；可留），并移除 profile bundle：
 
 ```bash
-dsh plugin --profile web remove @dsh-external/dsh-ppt-studio   # 会同时从 dsh.profile.bundles 层栈里退出
+dsh plugin --profile web remove dsh-ppt-studio   # 会同时从 dsh.profile.bundles 层栈里退出
 ```
 
-（历史遗留物：若 `~/.dsh/profiles/web/node_modules/@dsh-external/dsh-ppt-studio` 是 **junction**（老装法建的），
-删链接即可——**先摘链接再删目录**，绝不能让递归删除跟随重解析点；`node scripts/install.mjs` 会清理预设里的老行块。）
+（历史遗留物：① v1.0.2 及更早的包名是 `@dsh-external/dsh-ppt-studio`，若你从那时升上来，先 `dsh plugin --profile web remove @dsh-external/dsh-ppt-studio` 摘掉旧包；② 若任一名字在 `~/.dsh/profiles/web/node_modules/` 下是 **junction**（老装法建的），
+删链接即可——**先摘链接再删目录**，绝不能让递归删除跟随重解析点；`node scripts/install.mjs` 会清理预设里的老行块并**提示旧包名残留**。）
 
 ---
 
@@ -246,7 +255,7 @@ ppt_render(D:\demo) → ppt_verify(D:\demo) → ppt_export(D:\demo)
 | `ppt_verify` | **数字审阅门禁**：重叠/出界/溢出/对齐/密度。`autoDeclare=true` 一键声明；`measured=true` 交叉实测档；`pages="2,5-7"` 局部审阅 |
 | `ppt_shot` | Edge headless 截图 → PNG（视觉审阅；`index=N` 单页 / `overview=true` 整览） |
 | `ppt_measure` | **M2 实测档**：浏览器真实排版测量（行盒/溢出/几何）→ `measured.json`；`ppt_verify measured=true` 交叉（实测=终审） |
-| `ppt_crosscheck` | **M3 数据连贯**：跨页数字对账 + 数据来源核查表（交付说明用） |
+| `ppt_crosscheck` | **M3 内容审阅材料包**（2026-09-18 重写）：全页正文（阅读顺序）+ 工作区实扫素材清单 + 审阅协议（一致/冲突/无来源支撑/无法核实）；**工具只端材料、不做判定、不进门禁**，判定交独立子代理（用户禁止子代理时自审并标注） |
 | `ppt_preview` | 对话内预览：同源链接（整览+单页），用户点击即看 |
 
 **输入链**：
@@ -505,7 +514,7 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 → 插件经 agent preset 会话装配（重启才生效）。修复后验证清单：`node scripts/build.mjs` → `node scripts/smoke.mjs`（回归）→ 会话内直跑 `node -e "import(...lib...)...验证修复产物"` → **重启 host 用真工具复验**；重启前需导出用 `engine=python-pptx` 兜底（P11）。
 
 **Q：网页/百科内容查不到？**
-→ `web_fetch` 受本机网络/DNS 限制（非公网 IP 拦截）；`ppt_crosscheck` 数据核查表为"页面 source 自证"机制，交付说明已如实标注（P2，环境侧）。
+→ `web_fetch` 受本机网络/DNS 限制（非公网 IP 拦截）；数据来源核查改由**审阅者**判定（`ppt_crosscheck` 只汇总材料包，不再产出 grounded/unmapped 伪状态），交付说明如实标注"未提供素材 ⇒ 外部主张无法核实"（P2，环境侧）。
 
 **Q：升级 DSH 之后「PPT 工作室」选不出来／切过去就报错（如 `$.prefix missing required value`、或某插件行 `Cannot find module`）？**
 → 这是**预设 composition 跟着上游漂移**，不是插件坏了——插件代码与其宿主契约在 0.1.5-rc.2 / 0.1.6-alpha.2 上都已逐项核对通过。
@@ -589,7 +598,12 @@ npm run sync              # 发版：上传 GitHub 资产 + 把本机与 GitHub 
 git push origin main                                    # ① 先把提交推上去
 gh release create v<版本> --target "$(git rev-parse HEAD)" --title ... --notes-file ...   # ② tag 必须显式指到这一提交
 npm run sync                                            # ③ 构建 → 上传资产 → ⓪b git 前置 + ⑦ 用户视角终验
+npm publish                                             # ④ 发 npm（v1.0.3 起；需本机已 `npm login` 或配好 token——见 docs/06 §发布）
 ```
+
+> **npm 与 GitHub 必须是同一份字节**：`npm publish` 打的是 `npm pack` 的工作区（与 ③ 上传的资产同源），
+> 所以顺序是"先 ③ 证明 ⓪b/⑦ 全绿，再 ④ 发布"；发布后用 `npm view dsh-ppt-studio version dist.integrity`
+> 与本地 `npm pack` 的 integrity 对照（步骤见 docs/06）。
 
 > 为什么把顺序写死：`gh release create` 不指定 `--target` 时按**默认分支 HEAD** 建 tag——本地没推时它就把 tag
 > 建在旧提交上（v1.0.1 第一次发布就是这么错的：资产 sha 全绿，而 GitHub 上是指向 v1.0.0 代码的旧提交，
