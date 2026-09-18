@@ -37,3 +37,7 @@ templates/*/preview/
 templates/*/previews/
 templates/*/_cleanup-tmp/
 examples/fx/*/preview/
+
+# smoke/自检的临时目录（脚本正常会清理；崩过就残留，绝不能进版本库）
+examples/**/.tmp-*/
+
