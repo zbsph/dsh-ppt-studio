@@ -1,655 +1,423 @@
-# dsh-ppt-studio — PPT 工作室（v1.0.3）
+# PPT 工作室（dsh-ppt-studio）
 
-在 DeepSeek Harness 上做一个 PPT 的完整工作区：**DSH 里说需求 → 插件做 PPT → 可验证地交付**。
-配套 agent preset「PPT 工作室」（= standard 全量功能 + 本插件行），四类任务（从头 / 补完 / 修改 / 总结）共用同一个 PPTD 中间层，质量由「数字门禁 + 视觉审阅 + 真渲染复核」三轨保证。
+在 DeepSeek Harness 里说需求，它把 PPT 做出来：先定大纲和版式，再逐页制作，每页过一遍自动检查，最后交付一个能用 PowerPoint 打开、继续改的 `.pptx`。
 
-> **新手不用读完本文档**：进入 PPT 工作室后直接说需求（如"帮我做一个 10 页的年度总结 PPT"），工作流会引导你；语法细节问模型即可（模型内置本手册 skill —— 你可以直接问"expectedOverlaps 怎么写"、"怎么只改原稿的某一页"）。
+当前版本 **1.0.4**，安装包 **866 kB**（1.0.3 及更早的版本是 35 MB，因为随包带着 4 套没人用过的导入模板，1.0.4 把它们删了）。
 
----
-
-## 目录
-
-0. [安装与上手（新用户：从下载到可用）](#0-安装与上手新用户从下载到可用)
-1. [快速开始](#1-快速开始)
-2. [四类任务与工作流](#2-四类任务与工作流)
-3. [工具面全表](#3-工具面全表)
-4. [PPTD 中间层（deck.yaml）](#4-pptd-中间层deckyaml)
-5. [质量门禁体系（为什么不会元素打架）](#5-质量门禁体系为什么不会元素打架)
-6. [保真与贴模板（三重通道）](#6-保真与贴模板三重通道)
-7. [内置模板库](#7-内置模板库)
-8. [常见问题 FAQ](#8-常见问题-faq)
-9. [环境与能力边界](#9-环境与能力边界)
-10. [开发与维护（给改插件的人）](#10-开发与维护给改插件的人)
+装上之后，**这个 profile 的所有会话都能用**，不需要专门切到某个预设。预设「PPT 工作室」提供的是人格和身份，不是"开关"。
 
 ---
 
-## 0. 安装与上手（新用户：从下载到可用）
+## 1. 装上
 
-### 0.1 前提
+### 1.1 需要什么
 
-- **DSH（DeepSeek Harness）web 实例**已在本机运行（`dsh web`）；本插件是预设+插件形态，不改变 DSH 安装。
-- **宿主版本基线：DSH `0.1.6-alpha.2`**（2026-09-18 实测适配；上一基线 `0.1.5-rc.2` 亦已验证）。`tools` / `commands` / `systemPrompt` / `webServer` / `skills` / `session/event` / `system-prompt/assemble` 契约逐项核对，并在真实进程里跑过挂载、内嵌技能注册与工作流提示注入。更早的 0.1.x 未逐一验证；`skills` 服务缺失（极简装配）时插件仍完整可用，只是手册不以技能形式出现。
-  > **升级 DSH 后请先跑 `npm test`**（自 2026-09-18 起含预设漂移自检）：本插件的「PPT 工作室」预设是**随包 standard 预设的全量副本**（**不含本包插件行**——插件由 profile bundle 提供；含行会让预设被标 `broken`、选择器里看不到它，见 §0.7），上游改预设（改 config、加/停用行）而副本没跟，会话就会行为不一致——插件代码本身却完全正常，极易误判成"插件坏了"。
-- 可选增强（没有也能用，自动降级）：本机 Microsoft Office（真渲染通道）、Edge/Chrome（截图与 M2 实测）、python + python-pptx（兜底引擎）。
+一台能跑 `dsh web` 的机器。宿主版本基线是 DSH `0.1.6-alpha.2`（`0.1.5-rc.2` 也验过）。Office、Edge/Chrome、python-pptx 都是**可选增强**：没有它们插件照常工作，只是真渲染、截图、兜底引擎这些能力自动降级，交付说明里会写明。
 
-### 0.2 方式 A：`dsh plugin add`（标准姿势 · **一条命令**，推荐）
+### 1.2 一条命令
 
-本插件声明了 `dsh.bundle.patch`（见仓库根 `cordis.patch.yml`），所以**装完即挂载**——不需要手工建 junction、不需要跑安装器、不需要 npm 账号（它是**公开**包，装的人不需要账号）：
+从 [Releases 页面](https://github.com/zbsph/dsh-ppt-studio/releases) 复制**最新那条** `.tgz` 资产的完整链接，然后：
 
 ```powershell
-# ① npm（v1.0.3 起，推荐：名字短、升级只改版本号）
-dsh plugin --profile web add dsh-ppt-studio
-# 升级：dsh plugin --profile web add dsh-ppt-studio@<新版本>   （不需要先卸载）
-# 卸载：dsh plugin --profile web remove dsh-ppt-studio
-
-# ② GitHub Release 的 tgz 资产（离线 / 归档通道；与 npm 是**同一份字节**，发布时同时产出）
-# 资产名 = 版本-构建时间-构建戳，取**上传时间最新**那条（原因见下方"为什么带戳"）
-dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio/releases/download/v<版本>/dsh-ppt-studio-<版本>-<YYYYMMDD-HHmm>-<构建戳>.tgz
-
-# 懒得翻页面就用这行拿"当前版本"的资产名（按上传时间取最新，实测可用）：
-#   gh release view v<版本> --json assets --jq '.assets | sort_by(.createdAt) | last | .name'
-#   → 拼进上面的 URL 尾巴即可。**别用 `sort | tail -1`**：早期没有时间戳的资产名会排到后面，取到的是旧版本（实测踩到）。
-# 装完 **重启 dsh web** 生效
+dsh plugin --profile web add <粘贴那条资产 URL>
+# 装完重启 dsh web
 ```
 
-**等价的第三条路（创意工坊 / 商店用的就是这条）**：直接装本仓库的 git 地址——`lib/` 已入库，产物与 tgz 完全一致：
+本插件声明了 `dsh.bundle.patch`（仓库根的 `cordis.patch.yml`），所以**装完就挂上了**：不用手工建链接，不用跑安装器，也不用 npm 账号（包是公开的，装的人不需要账号）。
+
+资产名形如 `dsh-ppt-studio-1.0.4-20260919-0226-b805e912.tgz`：版本、构建时间、构建内容的前 8 位哈希。页面会保留历次构建，所以**按上传时间取最新那条**。懒得翻页面就用这行拿名字：
+
+```powershell
+gh release view v1.0.4 --json assets --jq '.assets | sort_by(.createdAt) | last | .name'
+```
+
+也可以直接装仓库地址，产物和 tgz 一样（`lib/` 已入库）：
 
 ```powershell
 dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio
 ```
 
-`dsh plugin` 是**薄 pnpm 转发器**：在 `<DSH_HOME>/profiles/web/` 里跑 pnpm，然后按**已安装状态**核对
-`dsh.profile.bundles`——声明了 `dsh.bundle` 的依赖会**自动进入层栈**（你不需要手改任何配置）。
+> 为什么资产名不固定：同一个 URL 用 `--clobber` 覆盖内容后，pnpm 会复用本地旧副本，`dsh plugin add <同一 URL>` 不会重新下载（2026-09-15 实测，`--force` 也绕不过）。把构建哈希写进文件名，URL 必变，升级才真的换字节。
 
-> **为什么文件名带构建戳（2026-09-15 实测）**：同一个 URL 用 `--clobber` 覆盖内容后，
-> **`dsh plugin add <同一 URL>` 不会重新下载**（pnpm 按 URL 规格复用旧副本，`--force` 也没绕过；
-> 独立 GET 该 URL 证明 URL 本身已是新字节 ⇒ 是包管理器侧的复用）。所以资产名若固定，用户重跑同一条命令
-> "升级"会拿到旧版本。改成把构建产物的 sha256 前 8 位写进文件名 ⇒ URL 必变 ⇒ 必然重取；
-> 反向也已实测（`npm run test:bundle` 的升级自证）：**同版本号、内容不同的新规格 → 装到的就是新字节，且
-> `dsh.profile.bundles` 与 `--dump-config` 都不丢**。
-> **为什么还带构建时间**：Release 页面**有意保留历次构建**（老 URL 留给已装用户重装，删掉会让他们的
-> `pnpm install` 失败），于是页面上会并排出现多个长得像的名字——sha 段看不出新旧，所以再加
-> `<YYYYMMDD-HHmm>`：**取时间最新那条即当前版本**。
-> 代价：URL 每次构建都不同，请从 Releases 页面复制当前那条（或 `gh release view v<版本> --json assets`）。
-> **怎么认"当前那条"**：资产名 = `版本-构建时间-构建戳`，按**上传时间**取最新——`gh release view v<版本> --json assets --jq '.assets | sort_by(.createdAt) | last | .name'`。
-> **npm 通道没有这个麻烦**（`dsh plugin add dsh-ppt-studio@<版本>` 里版本号是显式的），所以 v1.0.3 起 npm 是推荐姿势；
-> tgz 通道的价值是**离线/内网**与**归档**（老 URL 不删，已装用户重装不会失败）。
-
-> **装完怎么确认生效**：`dsh --profile web --dump-config` 里应出现 `ppt-studio` 插件行。
-> 仓库自带这条路径的**真机自证**：`npm run test:bundle`（隔离 `DSH_HOME` + 真 `dsh plugin add` + dump-config 断言，**不碰你的 profiles**）。
-> 本包**已发布到 npm**（`dsh-ppt-studio`，公开包；`private` 已于 2026-09-18 去掉）——用户装它不需要 npm 账号。
-> 不想装 pnpm / 要离线时用方式 B（下载 tgz + `install.mjs`）。
-
-### 0.3 方式 B：下载发布包（离线/无 pnpm 时）
-
-1. 在本仓库 [Releases](https://github.com/zbsph/dsh-ppt-studio/releases) 页面下载 `dsh-ppt-studio-<版本>-<构建时间>-<构建戳>.tgz`（v1.0.3 起；v1.0.2 及更早的名字是 `dsh-external-dsh-ppt-studio-…`）。
-2. 解压到任意目录（如 `D:\plugins\dsh-ppt-studio`）：
-   ```powershell
-   tar -xzf dsh-ppt-studio-1.0.3.tgz -C D:\plugins
-   # 得到 D:\plugins\package\（内含 lib/ scripts/ agent-presets/ docs/ skills/ templates/）
-   ```
-3. **一键安装**（会做三件事：链包进 profile node_modules、保证 yaml 依赖、写入 PPT 工作室预设）：
-   ```powershell
-   node D:\plugins\package\scripts\install.mjs
-   # 自定义 DSH_HOME 时：node ...\install.mjs --prefix <你的 .dsh 目录>
-   # 重装/强制：--force；只装包不写预设（配合注入器）：--no-preset
-   ```
-   安装器是幂等的——重复运行自动跳过已存在项。
-4. **重启 dsh web** → 会话左上角/预设切换器选择「**PPT 工作室**」→ 直接提需求。
-5. 验证安装成功：在 PPT 工作室里说"帮我做一个简单 PPT，用内置模板"——模型应开始走 PPT 工作流（工作流提示词自动注入）；或直接问模型"dsh-ppt-studio 怎么用"（内置 skill 手册会回答）。
-   > 手册 skill 由**插件自己内嵌提供**（`ctx.skills.register`，落 PPT 工作室预设层，随插件同生共死、升级即新）。
-   > **安装器默认不再把它镜像到 `<dshHome>/skills/`**（2026-09-18 起）：那是**文件系统技能根**，对该 profile 的**所有会话**可见，
-   > 会让别的预设也看到这 4 本技能——与"只有选「PPT 工作室」才有这些技能"冲突。要给非 PPT 会话留"提问即用"的兜底，
-   > 显式加 `--mirror-skills`（install.mjs 未开启时会**自动清理历史镜像**，避免旧副本继续泄漏）。
-   > 想确认通道生效：让模型调一次 `ppt_state`，输出里的 `manualSkill` 会给出 `registered/visible`。
-
-### 0.4 方式 C：git clone 源码（开发者/尝鲜）
+### 1.3 装完怎么确认
 
 ```powershell
-git clone https://github.com/zbsph/dsh-ppt-studio.git
-cd dsh-ppt-studio
-npm install            # 仅需 yaml（本地开发依赖）
-node scripts/build.mjs # 免 tsc：src → lib
-node scripts/install.mjs
-# 重启 dsh web → 进入「PPT 工作室」
+dsh --profile web --dump-config      # 组合树里应出现 ppt-studio 插件行
 ```
 
-### 0.5 方式 D：已有 dsh-super-injector（生态惯例）
+看到这行就说明挂上了，重启 `dsh web` 后生效。
 
-在注入器环境内：`dev_inject_plugin <解压目录>`（或源码目录）→ 注入器负责 junction + 重启恢复；预设同上（仓库 `agent-presets/ppt/agent.cordis.yml` 复制到 `~/.dsh/.agent-presets/ppt/`，或让安装器写：`node scripts/install.mjs --prefix <DSH_HOME> --no-preset` 后手工放预设）。
-
-### 0.6 安装后的自检（四句命令）
+### 1.4 升级 / 卸载
 
 ```powershell
-node scripts/smoke.mjs          # 245 断言（含全链路）
-node scripts/preflight-1.0.mjs  # 11 断言（坏输入/边界/幂等/性能）
-node scripts/check-preset.mjs   # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
-node scripts/e2e-1.0.mjs        # 13 断言（真浏览器测量 + 真 Office 渲染 + splice/slice 自证；约 2-3 分钟）
+# 升级：拿新的资产 URL 再跑一次 add，不需要先卸载
+dsh plugin --profile web add <新的资产 URL>
+
+# 卸载
+dsh plugin --profile web remove dsh-ppt-studio
 ```
-全部绿色 = 本机环境完整可用；无 Office/Edge 的机器 e2e 会自动降级标注（不是失败）。
-`check-preset` 找不到 DSH 安装时跳过（不阻断）。
 
-### 0.7 两种装法：**默认「全局」**（一句话）／可选「隔离」（只在「PPT 工作室」预设里生效）
+从 v1.0.2 或更早升上来的注意一件事：那时的包名是 `@dsh-external/dsh-ppt-studio`。旧包会作为独立依赖留在 profile 里，和新包一起被挂载两次。先摘掉它：
 
-两条路**互斥**，由安装器保证（插件自身**不门控**：它注册在"被装到的那一层"，所以一层代码两种模式）：
-
-| 装法 | 一条命令 | 插件装在哪层 | 谁能用 | 代价 |
-|---|---|---|---|---|
-| **全局**（默认，推荐） | `dsh plugin --profile web add dsh-ppt-studio`（包名；也接受 tgz URL / 仓库 URL） | profile 层 | 该 profile 的**所有会话**（含官方 standard） | —— |
-| **隔离**（可选） | `node scripts/install.mjs --isolate`（在解压后的发布包里跑） | **预设层**（预设行 + 预设目录内 junction） | **只有「PPT 工作室」的会话** | 见下"隔离模式的三点须知" |
-
-```bash
-# 全局（一句话；创意工坊卡片给的就是这条）
-dsh plugin --profile web add dsh-ppt-studio
-dsh plugin --profile web remove dsh-ppt-studio   # 卸载
-# 从 v1.0.2 或更早（包名带 @dsh-external/ 前缀）升上来时，旧包仍是独立依赖 ⇒ 建议先摘掉再装新名，避免双挂载：
+```powershell
 dsh plugin --profile web remove @dsh-external/dsh-ppt-studio
-
-# 隔离（想要"只在 PPT 工作室里才有这些工具/技能"）
-node scripts/install.mjs --isolate     # 自动摘掉已装的 profile bundle，建预设内 junction + 写相对路径行
-node scripts/install.mjs               # 切回全局（默认）：装回 profile bundle，删掉预设行与预设内 junction
-# 装完都要：重启 dsh web
 ```
 
-两类装法的**能力面完全相同**（21 个 `ppt_*` 工具 / `/ppt` 命令面 / 4 本内嵌技能 / 工作流提示段），
-差别只在"谁能看见"。「PPT 工作室」预设额外提供**身份/人格**（persona 是预设唯一的**有意差异**，见 §0.7 末与
-`scripts/check-preset.mjs` 的白名单）。
+同时装不会崩（插件里有防重），但没必要。安装器检测到旧包残留时会提醒你。
 
-**隔离模式的三点须知**（都是机制决定的，不是缺陷）：
-1. **插件不出现在「插件管理」列表**里——它不是 profile bundle（那条列表列的是 profile 依赖）。
-2. **`/ppt-preview` 预览路由随该预设挂载而存在**：有「PPT 工作室」会话时正常；进程里从未挂过该预设时它是 404。
-3. 预设目录里多一个 `plugin` **junction**，相对行 `./plugin/lib/index.js` 靠它解析。**它丢了这个预设会被判
-   `broken`、选择器里就不显示它**（2026-09-18 踩过两次的坑）——重跑 `node scripts/install.mjs --isolate` 即可修复；
-   `npm test` 里有一条用 **DSH 自己的 discovery** 断言的判据（`装配路径：--isolate 夹具的预设经 DSH discovery 判定 ok`）。
+### 1.5 没有 pnpm，或者想离线装
 
-**为什么行必须写相对路径，而不是包名**（这是"预设行"曾经失效的原因，别再走回头路）：
-预设里的**裸包名**一律从 `harnessBase`（安装好的 harness 目录）解析，**不是** profile 也不是预设目录
-（源码注释："the mount records the host composition's base instead, which is inside the installed harness"）；
-装在 profile/预设里的本包因此**解析不到** ⇒ 预设被判 `broken` ⇒ 前端选择器只渲染健康预设
-（`presetOptions() = presets.filter(p => p.broken === void 0)`）⇒ **用户根本选不到该预设**。
-而**相对路径行**按组合文件自己的目录解析（本机 `liangshen`/`j-space`/`superpowers` 等预设正是用
-`name: ./xxx.mjs` 引用自己的文件）⇒ 只要预设目录里有那个 junction，行就解析得到。
+下载 `.tgz`，解压到任意目录，然后跑安装器：
 
-### 0.8 卸载
-
-删除 `~/.dsh/.agent-presets/ppt/`（预设身份；可留），并移除 profile bundle：
-
-```bash
-dsh plugin --profile web remove dsh-ppt-studio   # 会同时从 dsh.profile.bundles 层栈里退出
+```powershell
+tar -xzf dsh-ppt-studio-1.0.4-<构建时间>-<构建戳>.tgz -C D:\plugins
+node D:\plugins\package\scripts\install.mjs
+# 自定义 DSH_HOME：加 --prefix <你的 .dsh 目录>
+# 重装：--force；只装包不写预设：--no-preset
 ```
 
-（历史遗留物：① v1.0.2 及更早的包名是 `@dsh-external/dsh-ppt-studio`，若你从那时升上来，先 `dsh plugin --profile web remove @dsh-external/dsh-ppt-studio` 摘掉旧包；② 若任一名字在 `~/.dsh/profiles/web/node_modules/` 下是 **junction**（老装法建的），
-删链接即可——**先摘链接再删目录**，绝不能让递归删除跟随重解析点；`node scripts/install.mjs` 会清理预设里的老行块并**提示旧包名残留**。）
+安装器是幂等的，重复跑会跳过已经存在的项。装完一样要重启 `dsh web`。
+
+如果你已经在用 dsh-super-injector，在注入器环境里对解压目录（或源码目录）跑 `dev_inject_plugin` 也行，注入器负责建链接和重启恢复；预设那份文件在仓库的 `agent-presets/ppt/agent.cordis.yml`，复制到 `~/.dsh/.agent-presets/ppt/` 即可。
+
+### 1.6 想让工具只在「PPT 工作室」里出现
+
+默认是全局的（`dsh plugin add` 装的那条路）。如果你希望这些工具和手册只在「PPT 工作室」会话里可见，用安装器的隔离模式：
+
+```powershell
+node scripts/install.mjs --isolate    # 摘掉 profile bundle，改为预设层挂载
+node scripts/install.mjs              # 切回全局
+# 两种都要重启 dsh web
+```
+
+两条路互斥，安装器保证这一点。隔离模式有三点要知道：
+
+1. 插件不会出现在「插件管理」列表里（那条列表列的是 profile 依赖）。
+2. `/ppt-preview` 预览路由随预设挂载存在：进程里从没有过「PPT 工作室」会话时，它是 404。
+3. 预设目录里会多一个 `plugin` 链接，预设里那行插件引用靠它解析。**链接丢了，预设会被判 `broken`，选择器里就看不到它**。重跑一次 `--isolate` 即可修复。
+
+> 为什么预设里那行写的是相对路径 `./plugin/lib/index.js` 而不是包名：预设里的裸包名一律从**安装好的 harness 目录**解析，不认 profile 也不认预设目录，装在 profile 里的本包根本解析不到。（这一条踩过两次，别再改回去。）
 
 ---
 
-## 1. 快速开始
+## 2. 用起来
 
-**三步交付**：
+### 2.1 三步
 
-1. **进入 PPT 工作室**（agent 预设）——说需求。四类任务自动识别，也可 `/ppt` 命令面显式控制：
-   ```
-   /ppt quick        # 快速模式：低 token 快交付（质量底线不变）
-   /ppt normal       # 完整模式：S0-S6 全流程（默认）
-   /ppt quality audit  # 从严档：禁一键声明 + 强制视觉审阅 + 导出回读断言 + 自动真渲染审核
-   /ppt template <id>    # 记录本会话默认模板
-   /ppt help
-   ```
-2. **跟着工作流走**：S0 规格澄清 → S1 大纲 → S2 视觉定调（用内置模板或参考素材）→ S3 逐页制作 → S4 页审循环 → S5 整体审 → S6 导出交付。每页制作后自动跑 `ppt_render → ppt_verify → ppt_shot`。
-3. **交付**：`.pptx`（默认 pptd 引擎）+ 中间层工程 + 交付说明；对话内可点 `ppt_preview` 链接直接看。**如果要改"已有精美 PPT 的某一页"：见 [第 6 节 splice](#6-保真与贴模板三重通道)。**
+1. 进入「PPT 工作室」，直接说需求。比如"帮我做一个 10 页的年度总结 PPT，用内置模板"。
+2. 跟着工作流走：澄清需求 → 定大纲 → 定版式 → 逐页制作 → 页审 → 整体审 → 导出。每页做完会自动跑一遍渲染和检查。
+3. 拿交付物：`.pptx` + 中间层工程 + 一份说明（素材来源、没做视觉审阅的部分、怎么改）。对话里会给你一个预览链接，点开就能看。
 
-**最快试跑**：
 ```text
-ppt_new(dir=D:\demo)                 # 一键生成可跑通全链路的示例工程（3 页，含全部范本）
-ppt_render(D:\demo) → ppt_verify(D:\demo) → ppt_export(D:\demo)
+/ppt quick           # 快速模式：省 token，页数≤8、文本精简、跳过视觉审阅（交付说明会标注）
+/ppt normal          # 完整模式（默认）
+/ppt quality audit   # 从严档：禁止一键声明、强制逐页视觉审阅、导出后回读断言 + 真渲染复核
+/ppt template <id>   # 记本会话默认模板
+/ppt help
 ```
 
-### 1.4 内置技能包（提问式手册 + 制作手册）
+还不熟 DSL 的话，让它先 `ppt_new(dir=D:\demo)` 生成一个能跑通的示例工程，改那个比从空文件写快。
 
-插件自带 4 本技能，**随插件同生共死**（内嵌注册 `ctx.skills.register`，落 PPT 工作室预设层；升级即新、卸载即净）：
+### 2.2 四类任务
 
-| 技能 | 何时加载 | 内容 |
-|---|---|---|
-| `ppt-studio-manual` | **只在用户提问时**（"这个插件怎么用 / XX 怎么写 / 为什么报错"）；制作任务进行中**不加载** | 提问式使用手册（四类任务、DSL 速查、声明制、splice 与贴模板、报错处置） |
-| `ppt-studio-craft` | 定纲/定版式；"这页怎么排 / 太挤 / 太像模板了" | 叙事 spine、一页一论点、结论式标题、按内容量选构图、反模板自检 |
-| `ppt-studio-data` | 页面要放数字或图表 | 图表选型、**成品里图表只有几何**（标签要自己补）、口径与来源标注、跨页数字一致 |
-| `ppt-studio-copy` | 写标题与要点；"太 AI 了 / 像机器写的" | 页面三类角色的写法、成组 AI 味信号清单、before → after 对照 |
-
-**三条承诺**：
-
-1. **纯增量**：技能只给启发式与反例——**不改任何铁律、不定义任何门禁数值**；工作流提示词只在标准档新增了一行"何时加载"的指引，且由机器断言保证**旧行一行未改/未删**（`npm test` 里的两条"★老用户不受影响"）。
-   另有 **13 条"手册 vs 源码"断言**（`npm test` §37/§38）盯住手册的**事实**不许说错：工具名是否真实存在、门禁错误码清单与源码是否一致、
-   警告标记是 `[~]` 而不是 `[⚠]`、`density`/`near-align` 属警告而非建议、chart 的 `data` 形状、预览截断阈值、`/ppt` 子命令、
-   讲稿是否写明了"不导出备注"、缩字下限常量、`SCHEMA_REF` 自洽，以及**文档里的"smoke N 断言"必须等于真实断言数**（加断言忘同步文档会当场红）。
-2. **不加载也照常工作**：部署里没有 `dsh-skill`（无 `skills` 服务）或技能文件缺失时，插件功能完整，只是技能不以目录形式出现。
-3. **不与用户自装技能打架**：技能注册表跨层重名按"就近层优先"裁决——PPT 会话内命中插件内嵌版，用户自装那份在其它会话照旧可见。想整体退掉：删掉本机的 `~/.dsh/skills/ppt-studio-*` 镜像即可（内嵌版仍在 PPT 会话内生效，反之亦然）。
-4. **答疑手册不打扰制作**（2026-09-15 反馈修正）：`ppt-studio-manual` 讲的是"怎么回答用户提问"，不是"怎么做 PPT"——所以它**只由用户提问触发**，"制作任务进行中不要加载"这句写进了技能描述、技能正文横幅与工作流提示段三处；制作中拿不准某个写法时，权威来源是 `ppt_schema` / `ppt_check` / `ppt_verify` 的**输出**（手册可能落后于源码）。`npm test` §42 三条断言把这条纪律钉住（技能描述与 whenToUse、正文横幅与工作流分行、制作三本正文零指向答疑手册）。
-
-想确认通道是否生效：让模型调一次 `ppt_state`，输出里的 `manualSkill.skills` 会逐个给出注册与可见状态。
-
----
-
-## 2. 四类任务与工作流
-
-| 类型 | 触发词 | 路径 | 交付 |
+| 任务 | 怎么说 | 它怎么做 | 你拿到什么 |
 |---|---|---|---|
-| **from-scratch 从头** | "做一个 XX 主题的 PPT" | 模板/定调 → 逐页制作 | 完整工程 + pptx |
-| **augment 补完** | "补两页 / 加一个章节" | 默认可复用模板工作区；新增页 = 复制母版去 `_` 前缀 + 注册 deck.pages | 追加后的完整工程 + pptx（或 `ppt_splice` 进原稿） |
-| **edit 修改** | "改第 15 页 / 美化这页" | `ppt_import` 读参考层真身 → 独立改该页 → **`ppt_splice` 替换回原稿** | 整册只变一页 + 单页版（`ppt_slice`） |
-| **summarize 总结** | "把这 50 页总结成 10 页" | `ppt_import` 全稿 → 提炼 → 重排 | 新工程 + pptx |
+| 从头做 | "做一个 XX 主题的 PPT" | 选模板或定基调，逐页做 | 完整工程 + pptx |
+| 补完 | "补两页 / 加个章节" | 复制母版当参考，新增页注册进页表 | 追加后的工程 + pptx |
+| 修改 | "改第 15 页 / 美化这页" | 导入原稿读真身 → 只改这页 → 替换回原稿 | 整册只变一页（其余页逐字节不动）+ 可选单页版 |
+| 总结 | "把这 50 页总结成 10 页" | 导入全稿，提炼重排 | 新工程 + pptx |
 
-> 任务识别是**语义路由**（明确 PPT 意图才进入工作流；只提一句无关话题不会误切）——非 PPT 需求行为与标准模式完全一致。
+任务是按语义识别的：说清楚是 PPT 需求才进入工作流，随便提一句"我昨天做了个 PPT"不会误触发。
+
+### 2.3 自带 4 本手册
+
+插件里内置了 4 本手册，模型按需加载，不用你管：
+
+| 手册 | 什么时候用 |
+|---|---|
+| `ppt-studio-manual` | 你**提问**时用（"这插件怎么用 / XX 怎么写 / 为什么报错"）。制作过程中不加载 |
+| `ppt-studio-craft` | 定大纲、定版式，"这页怎么排 / 太挤 / 太像模板了" |
+| `ppt-studio-data` | 页面要放数字或图表 |
+| `ppt-studio-copy` | 写标题要点，"太 AI 了 / 像机器写的" |
+
+这 4 本是纯增量：只给启发式和反例，不改规则、也不定义任何检查数值。没有 `dsh-skill` 服务的极简装配下也能用，只是手册不以目录形式出现。
 
 ---
 
-## 3. 工具面全表
+## 3. 模板
 
-**创作链**：
+自带 4 套自研风格，每套含主题和 6 张版式母版：`business-blue`（商务蓝）、`academic-white`（学术会议）、`tech-dark`（科技深色）、`pitch-bold`（路演大字）。
 
-| 工具 | 用途 |
-|---|---|
-| `ppt_schema` | **语法速查**（deck.yaml / 元素 / 主题 token / 声明 / 安全区）——不熟 DSL 先调它 |
-| `ppt_new` | 一键生成示例工程（现成范本：主题 token / 色块衬底声明 / safeArea / line 无 bounds 写法） |
-| `ppt_check` | 结构校验（deck/页面 YAML、元素、主题引用 `$ref`、声明 id 防呆） |
-| `ppt_render` | deck → `preview/*.html` + `layout.json`（数字审阅数据源）；`debug=true` 画安全区参考框 |
-| `ppt_verify` | **数字审阅门禁**：重叠/出界/溢出/对齐/密度。`autoDeclare=true` 一键声明；`measured=true` 交叉实测档；`pages="2,5-7"` 局部审阅 |
-| `ppt_shot` | Edge headless 截图 → PNG（视觉审阅；`index=N` 单页 / `overview=true` 整览） |
-| `ppt_measure` | **M2 实测档**：浏览器真实排版测量（行盒/溢出/几何）→ `measured.json`；`ppt_verify measured=true` 交叉（实测=终审） |
-| `ppt_crosscheck` | **M3 内容审阅材料包**（2026-09-18 重写）：全页正文（阅读顺序）+ 工作区实扫素材清单 + 审阅协议（一致/冲突/无来源支撑/无法核实）；**工具只端材料、不做判定、不进门禁**，判定交独立子代理（用户禁止子代理时自审并标注） |
-| `ppt_preview` | 对话内预览：同源链接（整览+单页），用户点击即看 |
+```text
+ppt_templates                      # 看清单和预览图
+/ppt template business-blue        # 记本会话默认
+ppt_new(dir=D:\demo, template=business-blue)   # 物化成工作区
+```
 
-**输入链**：
+物化出来的工作区里，`pages/_*.yaml` 是**参考母版**（不进检查），`01_opening.yaml` 是正式页。第一件事是跑 `ppt_verify autoDeclare=true` 把模板自带的有意叠层声明掉；剩下的错误都是模板原文案残留，替换掉就干净了。
 
-| 工具 | 用途 |
-|---|---|
-| `ppt_import` | 任意 .pptx → deck 工程（内容保真 + 参考层：`source.pptx` 真相 + Office 真渲染整页 + theme 聚合；备注读回 `notes:`） |
-| `ppt_visual` | Office PPT COM 真渲染 → 逐页 PNG；`pages="15"` 只渲指定页（页号=源原页号） |
-| `ppt_media` | 图片元数据（尺寸/格式，估算 media 用量） |
+想用自己的模板：`ppt_import` 导入你的 pptx → `ppt_template_add` 收纳进库，以后直接物化。
 
-**交付链**：
-
-| 工具 | 用途 |
-|---|---|
-| `ppt_export` | 导出 .pptx（`auto`=pptd 主引擎，硬失败自动回退 python-pptx 并醒目标注；`out` 支持绝对路径；有 `notes:` 的页生成备注页，parity 自证） |
-| `ppt_patch` | **手术模式**：以模板 .pptx 为底版贴内容（只改文本/表格 `<a:t>`，样式/几何/图片原样保留；未动页 sha256 验证） |
-| `ppt_splice` | **替换进原稿**：工作区某页替换进源 .pptx（保留母版横幅/页脚/备注/媒体；其余页条目 SHA256 逐字节一致——自动自证） |
-| `ppt_slice` | **单页版**：从 .pptx 修剪出"单页 + 完整母版/布局/主题"独立文件 |
-
-**状态链**：`ppt_status`（工作流状态）/ `ppt_state`（会话状态）/ `ppt_templates`（模板清单）/ `/ppt` 命令面。
+> **1.0.4 变更**：随包不再带 4 套"从真实 PPT 导入"的重型模板（实用毕业设计论文答辩、极简实用部门工作总结、深蓝质感论文答辩、简约商务）。它们合计 46.2 MB，占安装包 96%，实际从未被用过。想找回来：从 [v1.0.3 的资产](https://github.com/zbsph/dsh-ppt-studio/releases/tag/v1.0.3) 里取 `package/templates/<id>/`，或从 git 历史取 `git show v1.0.3:templates/<id>/...`（注意 `previews/` 是 Office 渲染产物，没进 git，只在资产里）。放回 `templates/` 就能用。
 
 ---
 
-## 4. PPTD 中间层（deck.yaml）
+## 4. 保真与改稿（三条通道）
 
-**唯一事实源**：`deck.yaml` + `pages/*.yaml` + `media/`。导出/渲染/校验共用，1px = 1pt，原点左上，默认尺寸 960×540（约 10 英寸 × 5.63 英寸）。
+| 你的目标 | 用什么 | 保真到什么程度 |
+|---|---|---|
+| 想"像"某个模板或原稿 | `ppt_import` 导入 → 看 `reference/previews/*.png` 真身 → 自己创作 | 风格级，版式由你掌控 |
+| 要"看起来就是模板原样" | `ppt_patch`（只替换文字和表格内容，样式几何图片原样保留） | 结构级，模板 XML 不动 |
+| 改既有精美 PPT 的**某一页** | `ppt_splice` 替换一页；要单页文件再用 `ppt_slice` | 逐字节级，其余页 SHA256 自证没动 |
+
+改一页的标准流程：
+
+```text
+ppt_import(<源.pptx>, D:\work)          # 导入，顺带拿到参考层
+# 先看 reference/previews 里的整页真身，再改 D:\work\pages\slide_15.yaml
+ppt_render → ppt_verify                  # 检查清零
+ppt_splice(dir=D:\work, source=<源.pptx>, page=15)   # 整册副本，只变第 15 页
+ppt_visual(pptx=<spliced 产物>, pages="15")          # 抽查这页真实观感
+```
+
+改一页别用"整册重新导出"：近似稿重渲会顺手改坏其他页的观感。`ppt_splice` 只替换目标页，其余条目逐字节不变，它会自己打印 SHA256 校验结果。
+
+---
+
+## 5. 常见问题
+
+**装了但好像没生效？**
+按顺序查：`dsh plugin --profile web list` 看包装上没 → `dsh --profile web --dump-config` 看组合树里有没有 `ppt-studio` 行 → **重启 dsh web**。第二步看不到通常是版本太老（v1.0.0 之前没有 `dsh.bundle` 声明，装了不挂载），升级后重装一次。
+
+**为什么 verify 报重叠，可我就是想让它重叠？**
+把这对元素写进该页 `expectedOverlaps` 再重验，命中就显示 ✓ 预期重叠。嵌套的卡片只要声明**相邻层**（面板→框→文字），隔层自动通过。但文字压文字、表格压图表这种**内容互压永远不放过**，那是真冲突，得改布局。
+
+**样式写了没生效。**
+样式键必须写在 `content` 里面。元素级写 `fontSize: 14` 无效，`ppt_check` 会直接报错。
+
+**字号能到 11pt 吗？**
+能。字号下限**只由你的指令决定**：你说"不得小于 14 号"，它就写进 `theme.minFontSize` 并严格遵守；你没说，就没有强制下限（导出自动缩字最多到原字号的 60%，不会往上抬）。表格单元格另有 11pt 的底。
+
+**导出总在缩字。**
+先看 verify 是不是已经报了溢出。溢出清零后导出就不会再缩。只有个别页有存量问题（导入的近似稿常见），用 `ppt_splice` 改那一页，别整册重渲。
+
+**中文长句被误报溢出。**
+度量偏保守，宁可误报不可漏报。按提示加宽容器、精简文案，或在语义断点显式 `\n` 换行。想确认到底溢没溢，跑 `ppt_measure` 用浏览器实测复核（实测是终审）。
+
+**预览链接 404。**
+路由由「PPT 工作室」会话挂载时注册。确认当前会话是 PPT 工作室；进去之后链接就有了。
+
+**没有 Edge / 没有 Office 还能用吗？**
+能。截图、实测、真渲染会自动降级并标注，HTML 预览和结构检查照常。交付说明里会写"未经视觉审阅"。
+
+**图表支持哪些？**
+bar / line / pie，矢量拼绘，导出的图在 PowerPoint 里可编辑。用 python-pptx 兜底引擎时会降级成表格（报告里会标注）。复杂图表建议用图片，或者直接用形状拼。
+
+**讲稿能进 pptx 吗？**
+能。页面写 `notes:`（多行用 `|` 块标量），导出就成了 PowerPoint 备注页，`ppt_import` 也能读回来改。没写 `notes:` 的页不会产生备注部件，老工程导出结果不变。翻页和计时属于放映设置，不在插件范围内。
+
+**导入后文字里出现 `&amp;` `&lt;`？**
+不该出现（2026-09-14 修）。旧版本导入的工程重新 `ppt_import` 一次即可。
+
+**报告里出现"质量档降级"？**
+你的工程状态文件（`state.json`）损坏或读不出来，插件按 standard 继续跑，audit 档的额外检查这一轮没生效。修好文件或重跑 `/ppt quality audit`。2026-09-18 起这类回落会明说，之前是静默的。
+
+**装的时候下载超时？**
+网络抖动时在 `~/.dsh/profiles/web/.npmrc` 里加这几行，然后重跑：
+
+```ini
+fetch-timeout=600000
+fetch-retries=5
+fetch-retry-maxtimeout=120000
+```
+
+失败不会破坏已有安装，直接重试。
+
+**表格在 PowerPoint 里不见了 / 一片空白？**
+v1.0.0 修订前旧引擎的结构 bug（graphicFrame 里嵌了 `<a:xfrm>`，PowerPoint 会静默丢帧）。已修复，导出报告现在带 parity 回读自证（表 N/N、图 M/M、线方向 N/N）。旧产物重新 `ppt_export`。
+
+**网页预览是对的，打开 pptx 斜线方向反了 / 叉号少一笔 / 水平线变斜了？**
+同一个家族的三个旧引擎编码 bug，都已修复：连线方向丢 `flipH/flipV`、箭头 `<a:tailEnd>` 写在 `<a:ln>` 外面、水平线包围盒被 `max(1,…)` 抬成 1pt 高。导出报告的 parity 行会逐条从 OOXML 反推端点自证。**修复前导出的产物请重新 `ppt_export`**。
+
+**真渲染图上怎么有水印？**
+那是比例标注（"1px=1pt · 960×540" 加细边框），防止人工读图时把坐标看错。脚本参数 `noWatermark` 可以关。
+
+**PowerShell 解压 .pptx 报 "not a supported archive format"？**
+`Expand-Archive` 只认 `.zip`。先复制成 `.zip` 再解，或者用 `tar -xzf <file> -C <out>`。
+
+**Office 渲染时窗口闪一下？**
+正常，PowerPoint COM 需要。只读打开，结束自动释放。
+
+**升级 DSH 之后「PPT 工作室」选不出来，或者切过去就报错？**
+那是预设跟着上游漂移了，不是插件坏了。本插件的预设是随包 standard 预设的副本，只加了一处有意差异（persona 人格，理由写在 `agent-presets/ppt/agent.cordis.yml` 顶部，白名单在 `scripts/check-preset.mjs`）。上游改预设（改配置、加行、停用行）而副本没跟，会话行为就会不一致。发生过两次：`0.1.5-rc.2` 把 persona 从 `text` 改成必填的 `prefix`；`0.1.6-alpha.2` 删掉了 `dsh-workflow-worker-thread`、把 `tool-ralph` 改成默认停用、新增 `tool-plugin-manager`。修法是拿到修好的版本后重跑安装（预设以包为准总是刷新），或者单独跑 `node scripts/check-preset.mjs` 看漂移。
+
+**插件对外只交付三样东西**：`ppt_*` 工具面 + `/ppt` 命令面、工作流提示段、内置手册。都挂在插件实例上，卸载即净。想确认手册通道：调一次 `ppt_state`，`manualSkill` 会报注册与可见状态。
+
+---
+
+## 6. 环境要求与已知边界
+
+**环境**：DSH web `0.1.6-alpha.2`，Windows 主机（COM/Edge 探测路径按 Windows 写的，macOS/Linux 未验证）。路径与中间层一律 UTF-8，也兼容 WPS 导出的 UTF-16 文件。
+
+**支持的元素**：text / shape / line / image / table / chart。
+
+- shape 支持 rect、roundRect、ellipse、triangle，常见的 prst 自选图形（箭头、菱形、五边形、流程图等），以及 custGeom 自定义路径，带旋转、纯色/渐变/透明度填充。
+- line 只有两个点，多点折线要拆成首尾相接的多条。
+- chart 支持 bar/line/pie；图表里的分类名、数值、单位、图例需要你自己用文本元素补上（DSL 里没有这些字段）。
+- 背景支持 hex、主题引用、纯色、图片（cover/contain/fill）。
+
+**这些不做，都有替代路径**：
+
+- 文本度量是估算档加实测档。实测依赖浏览器；和 Office 原生排版之间存在字体级系统差异（加粗中文已按 1.06 倍补偿）。
+- 导入不支持阴影、动画、超链接、母版继承；渐变归一到主色（原始 stops 存在 `import-styles.json`）；chart 降级成占位；EMF 媒体和 WPS 跨实现打开未验证。
+- pptxgenjs 第三引擎没做，`/ppt engine pptxgenjs` 会被明确拒绝，不会静默换成别的引擎。python-pptx 只在兜底或显式指定时用，且里头的透明度和渐变按纯色近似。
+- dsh 网页里的内嵌预览面板没做，对话内用 `ppt_preview` 和整览截图已经够用。
+- **模板的整页真身预览需要本机装 Microsoft Office**。没有 Office 时，参考层只注入 `source: reference/template.pptx`，原件还在，可以自己打开对照。这一条有机器断言钉着：smoke 分别断言"有预览就必须注入并拷贝"和"没有预览就只能注入 source，且不得出现 previews 引用"。
+
+---
+
+## 7. 参考：中间层 DSL
+
+整个工程就是 `deck.yaml` + `pages/*.yaml` + `media/`。渲染、检查、导出都读这一份，1px = 1pt，原点在左上，默认 960×540。
 
 ```yaml
 version: 1
 title: 我的演示
-size: [960, 540]              # 或 {width, height}
-theme:                        # 样式只在 theme 定义元素引用 token；新增风格先改这
+size: [960, 540]              # 也可写 {width, height}
+theme:                        # 样式统一在 theme 定义，元素只引用 token
   colors: {primary: "#2563EB", ink: "#1F2937"}
-  textStyles: {title: {fontSize: 32, color: "$ink", bold: true}, body: {fontSize: 16, color: "$ink"}}
-  safeArea: {top: 20, bottom: 20}   # 可选：模板背景非内容区（logo/页眉页脚带）
-  minFontSize: 14             # 可选：用户给出字号下限时设置（如"不得小于14号"→14）；缺省无强制下限
+  textStyles:
+    title: {fontSize: 32, color: "$ink", bold: true}
+    body: {fontSize: 16, color: "$ink"}
+  safeArea: {top: 20, bottom: 20}   # 可选：模板页眉页脚带这类非内容区
+  minFontSize: 14             # 可选：你给了字号下限时才写
 pages:
   - pages/01_cover.yaml
 ```
 
-页面元素（`pages/01_cover.yaml`）：
+页面文件：
+
 ```yaml
 pageType: cover
 background: "#F5F6F7"         # hex / $themeRef / {type: solid,color} / {type: image,src,fit}
-notes: |                      # 可选：讲稿 → 导出为 **pptx 备注页**（PowerPoint"备注"区可见/可编辑）
+notes: |                      # 可选：讲稿，导出成 pptx 备注页
   开场先给结论。
-  第二行：再给证据。            # 单行也可写 notes: "一句话讲稿"
+  第二行给证据。
 elements:
-  - elementId: 页内唯一字符串   # 必须
-    elementType: text|shape|line|image|table|chart
-    bounds: [x, y, w, h]       # 必须（line 可省略：由 points 的 AABB 自动推导）
-  # chart：
+  - elementId: t1             # 页内唯一，必填
+    elementType: text         # text|shape|line|image|table|chart
+    bounds: [60, 60, 400, 50] # 必填（line 可省，由 points 推导）
+    content:
+      text: "正文，长句在语义断点显式 \n 换行"
+      style: "$body"          # 引用 theme.textStyles，或直接写样式字段（必须写在 content 内）
   - elementId: bar
     elementType: chart
     bounds: [60, 300, 400, 200]
     chart:
-      type: bar                # bar|line|pie
-      data: {cols: [分类, 值], rows: [[甲, 10], [乙, 20]]}   # 只认 {cols, rows}；多系列加 series: [{name,x,y}]
-      colors: ["$primary"]     # 可选：$themeRef 在预览与成品两层都会解析；不写则用内置调色板（不在 theme.colors 里）
-  # text：
-  - elementId: t1
-    elementType: text
-    bounds: [60, 60, 400, 50]
-    content:
-      text: "正文，长句在语义断点显式 \n 换行"
-      style: "$body"            # 引用 theme.textStyles；或直接写字段（**必须写在 content 内**！）
-      # fontSize: 14 / color: "$ink" / bold / align / lineHeight / wrap
-  # shape（常用 prst：rightArrow/leftArrow/upArrow/downArrow/leftRightArrow/pentagon/hexagon/
-  #         chevron/parallelogram/diamond/octagon/star5/flowchartProcess|Decision|Data|Terminator
-  #         + roundRect/ellipse/triangle/rect + custGeom 自定义路径）
+      type: bar
+      data: {cols: [分类, 值], rows: [[甲, 10], [乙, 20]]}   # 只认 cols + rows；多系列加 series
   - elementId: card
     elementType: shape
-    kind: roundRect
+    kind: roundRect           # 也可以是 rightArrow / diamond / flowchartProcess / custGeom …
     bounds: [60, 60, 400, 200]
-    fill: "$colors.primary"     # #hex | {color, alpha}（透明度）| {type: gradient, stops: [...], angle}
+    fill: "$colors.primary"   # 或 {color, alpha}、{type: gradient, stops: [...], angle}
     line: {color: "#FFFFFF", width: 1}
-    rotation: 0                 # 度
 ```
 
-- **样式键必须在 `content` 内部**（元素级 `fontSize/color/…` 无效——v1.0.0 起 `ppt_check` 直接报错）。
-- `expectedOverlaps` 流式/块式**等价**：`[{pair: [a,b]}]` 与 `- pair: [a,b]`，每对一行。
-- **讲稿（`notes:`）**：写进页面，`ppt_export` 为这些页生成标准备注页（notesSlide + notesMaster，`ppt_export` 报告的 parity 里 `notesExp/notesOut` 自证）；
-  `ppt_import` 会把原稿备注读回 `notes:`；**没有 `notes:` 的页不产生任何备注部件**（不写讲稿的工程产物与旧版逐字节一致）。
-  没有翻页/计时字段（放映设置不在本插件范围）。
-- 完整速查永远可以问模型（`ppt_schema`）或直接看 `examples/smoke` 样例工程。
+几个容易踩的点：
+
+- 样式键必须在 `content` 里面。
+- `expectedOverlaps` 两种写法等价：`[{pair: [a,b]}]` 和 `- pair: [a,b]`，每对一行。
+- 声明里的 id 必须是本页真实存在的元素，写错会被防呆拦住。
+- 更全的写法直接问模型（`ppt_schema`），或者看 `examples/smoke` 里的样例工程。
 
 ---
 
-## 5. 质量门禁体系（为什么不会元素打架）
+## 8. 参考：质量检查体系
 
-**核心：重叠的合法性由"设计意图"决定，而非元素类型：设计时声明，审阅时对照。**
+核心思路：**重叠合不合法，由设计意图决定，不由元素类型决定**。设计时声明，审阅时对照。
 
-### 5.1 重叠声明制（expectedOverlaps）
+**重叠**。有意重叠写进该页 `expectedOverlaps`，检查时逐对对照，命中就是 ✓，没命中就是错误（要么改布局，要么确认有意后补声明）。嵌套承载只需声明相邻层。内容互压永远不放过。`role: decoration` 只豁免重叠，不豁免出界。批量声明用 `ppt_verify autoDeclare=true`（audit 档禁用）。
 
-- 设计时把**有意**重叠对记入页面 `expectedOverlaps: [{pair: [idA, idB]}, ...]`（图片标注/色块衬底/箭头跨越/装饰叠加）。
-- 审阅（`ppt_verify`）逐对对照：命中 → ✓ 预期重叠（确认）；未命中 → **ERROR**（修正布局，或确认有意 → 补声明重验）。
-- **声明闭包**：嵌套承载只需声明**相邻层**（面板→框→文字），隔层由包含关系传递自动通过（架构图声明省 1/3）。
-- **内容互压（content-collision）永远 ERROR，不可声明**（文字/表格/图表相互遮挡——真正要防的冲突）。
-- `role: decoration` 只豁免**重叠**，不豁免出界。
-- 批量：`ppt_verify autoDeclare=true`（写入后附"声明清单 + 每对一句意图"；**audit 档禁用**）。
+**出界**分两级。超页面边界是 `out-of-page`，永远错误，不可声明（放映时看不到）。超安全区是 `out-of-safe-area`，可以声明：把有意落在页眉页脚带上的 logo、角标写进该页 `expectedOutOfSafeArea`。这两个码分开是因为处置完全不同：一个补声明就行，另一个必须改布局。
 
-### 5.2 出界分级（与声明制同构）
+**文本**。估算偏保守，渲染、检查、导出用同一套度量。字号下限由你的指令决定。表格单元格按列宽换行后超出表格高度会报 `table-overflow`，修法是扩大表格高度、加宽列或精简单元格文案。
 
-- 超**页面边界** = 永远 ERROR，不可声明（放映不可见）——错误码 `out-of-page`。
-- 超**安全区**（模板 logo/页眉页脚带）= 声明制：`expectedOutOfSafeArea: [idA, ...]` 手工声明（id 必须存在）——错误码 `out-of-safe-area`（2026-09-18 起与 `out-of-page` **分码**：前者补个声明就行，后者必须改布局，混用一个码会让"该做什么"说不清）。
+**主题一致性**。`theme-conformance` 默认 strict：页面颜色必须来自 `theme.colors` 或中性灰，出板就报错。要加新颜色先加进 theme。字号字体是建议级。导入的工程会自动带上原稿全量色板，不会误报原稿色。
 
-### 5.3 文本度量与"下限 = 用户指令"
-
-- 保守估算（CJK 1em·加粗 ×1.06 / Latin 数字 0.6em / 空格 0.4em），宁可误报不可漏报；渲染/校验/导出**同一度量**（溢出 > 1px 才缩字）。
-- **字号下限 = 用户指令**（2026-09-06 用户拍板）：用户给出最小字号（如"不得小于 14 号"）→ 模型写入 `theme.minFontSize` 并严格执行（导出缩字不得低于它）；**未给下限不设强制**（auto-fit 仅 60% 原字号防荒谬保底，绝不升字）。插件不预设任何默认下限。
-- verify 通过 ⇒ 导出不缩字；到达下限仍溢出 → 报告 ✗（修复：扩大容器/精简文案；下限是用户的，不是插件的）。
-- **M2 实测档**（`ppt_measure` + `ppt_verify measured=true`）：浏览器真实排版测量——实测溢出且估算没报 = 新 error（估算漏报）；估算报但实测通过 = warning（字体差异，人工确认）。实测=终审、估算=预检。
-  - **两档页号契约**（2026-09-18 明文）：`preview/layout.json` 与 `preview/measured.json` 的每页都带 **1 基 `pageNo`**，交叉核查按它配对（`index` 只是各自文件的内部数组下标）。对不上会报 `measured-unpaired` 错误而**不是静默跳过**——契约破坏必须响亮，因为"静默返空"与"真的没问题"在输出上不可区分。
-  - **看到 `measured-unpaired` 怎么办**：几乎都是 `measured.json` 是旧版产物、或在 `ppt_measure` 之后又增删过页面 → **重跑一次 `ppt_render` + `ppt_measure`** 即可。
-  - **表格字号**（2026-09-18）：表格 cell 字号 = `max(11pt, theme.minFontSize)`，**预览与成品同源**。未声明下限时仍是 11pt（既有工程观感零变化）；声明了下限（如"不得小于 14 号"）时表格会跟着抬到下限——否则 audit 档"最小字号 ≥ 下限"的回读断言会被表格自己架空，而 DSL 里没有别的手段能改表格字号。
-  - **表格内容溢出进门槛**（2026-09-18）：表格单元格文字按列宽换行后超出表格高度 → `table-overflow` **ERROR**（与文本溢出同级）。此前表格内容**完全不进快照**，是内容门禁的盲区。度量与正文同源（同一保守估算），修复手段是**扩大表格高度 / 加宽列 / 精简单元格文案**。影响面已实测：仓库全部夹具 2 张表、0 张被判溢出。
-
-### 5.4 主题一致性（统一基础样式）
-
-- `theme-conformance` strict（默认）：页面颜色必须 ∈ `theme.colors` 或中性灰，出板 = ERROR；新增颜色先加进 theme。
-- 字号/字体为建议级（[·]），单页多处时聚合出一条。
-- **图表配色是建议级**（2026-09-14）：图表的默认调色板是内置的一套（**不在 `theme.colors` 里**，属既有行为、不报错也不提示）；
-  你若**显式**写了 `chart.colors` 且其中有主题外颜色，会出一条 `[·] aesthetic-theme` 建议（可用 `$ref` 改成主题色）。
-  刻意**不**把图表配色纳入门禁：那会给既有工程/模板凭空新增错误。
-- 导入工程自动带**原稿全量色板**（c1-c7 高频 + 扩展），不再误报原稿色。
-
-### 5.5 审阅节奏（三层校验）
+**审阅三层**：
 
 ```text
-ppt_render + ppt_verify   # ① 数字门禁：ERROR 清零（快）
-ppt_shot + read_image     # ② 视觉审阅：构图失衡/断行/比重（慢但必要，数字门禁发现不了）
-ppt_visual                # ③ Office 真渲染复核（有条件时；audit 档导出自动跑）
+ppt_render + ppt_verify     # 数字检查，快，错误必须清零
+ppt_shot + 读图             # 视觉审阅，慢，但构图失衡这类问题只有看图才发现
+ppt_visual                  # Office 真渲染复核（有 Office 时；audit 档导出后自动跑）
 ```
 
-`[·]` 建议（美学/对比度/孤字/密度）永不作为门禁——但请逐条斟酌采纳。
+`[·]` 开头的建议（美学、对比度、孤字、密度）永远不是门禁，但值得逐条看。
+
+**实测档**。`ppt_measure` 用浏览器真实排版测量，`ppt_verify measured=true` 拿它和估算交叉：实测发现溢出而估算没发现，算新错误；估算报了而实测没事，降为警告（字体差异，人工确认）。两个文件每页都带 1 基的 `pageNo` 用来配对，对不上会报 `measured-unpaired` 而不是静默跳过。看到这个错，基本都是 `measured.json` 是旧产物，或者在测量之后又动过页面，重跑 `ppt_render` + `ppt_measure` 即可。
 
 ---
 
-## 6. 保真与贴模板（三重通道）
+## 9. 参考：工具一览
 
-| 通道 | 工具 | 适用 | 保真度 |
-|---|---|---|---|
-| **参考双轨**（想"像"） | `ppt_import` → `reference/previews/*.png` 真身 → 读 `audit.yaml` → 创作 | 按模板做/参考用户 PPT 做；导入改稿 | 风格级（新版式由你掌控） |
-| **手术模式**（要"贴"） | `ppt_patch` | 成品要"看起来就是模板原样"（只换文字/表格内容） | 结构级（模板 XML 原样，只改文本槽） |
-| **替换/单页**（要"保"） | `ppt_splice` / `ppt_slice` | **编辑既有精美 PPT 的某一页**——只换一页，其余逐字节不动，母版横幅/页脚/备注保留 | 逐字节级（其余页 SHA256 自证） |
+**创作链**：`ppt_schema`（语法速查）、`ppt_new`（生成示例工程）、`ppt_check`（结构校验）、`ppt_render`（渲染 HTML + `layout.json`）、`ppt_verify`（布局检查，支持 `autoDeclare` / `measured` / `pages` 局部审阅）、`ppt_shot`（截图，`overview=true` 出整览）、`ppt_measure`（浏览器实测）、`ppt_crosscheck`（内容审阅材料包）、`ppt_preview`（对话内预览链接）。
 
-**edit 任务的标准姿势（v1.0.0 起一键）**：
-```text
-ppt_import(<源.pptx>, D:\work)        # 读参考层真身（先 read_image 看 reference/previews）
-# 改 D:\work\pages\slide_15.yaml → ppt_render → ppt_verify（0 错误）
-ppt_splice(dir=D:\work, source=<源.pptx>, page=15)      # 整册副本，只变第 15 页
-ppt_slice(source=<spliced产物>, page=15)                 # 单页版（可选）
-ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实观感（按页渲染）
-```
+**输入链**：`ppt_import`（pptx → 工程 + 参考层）、`ppt_visual`（Office 逐页真渲染）、`ppt_media`（图片尺寸格式）。
+
+**交付链**：`ppt_export`（导出 pptx，默认 pptd 引擎）、`ppt_patch`（贴模板手术）、`ppt_splice`（替换进原稿）、`ppt_slice`（裁单页）。
+
+**模板链**：`ppt_templates`（清单与预览）、`ppt_template_add`（收纳自己的模板）、`ppt_template_styleaudit`（写/看模板的视觉审计缓存）。
+
+**状态链**：`ppt_status`、`ppt_state`。
+
+`ppt_crosscheck` 值得单独说一句：它**不做判断**，只把材料摆上桌（全页正文按阅读顺序、工作区里实际有哪些素材、一份审阅协议）。判定由审阅者给，默认用独立子代理（你说"不要用子代理"时它自己审并标注）；没有外部素材时只能判"无法核实"，不会报绿。它不进任何门禁，输出里也没有可"变绿"的东西。
 
 ---
 
-## 7. 内置模板库
-
-4 套版权自研风格（business-blue 商务蓝 / academic-white 学术会议 / tech-dark 科技深色 / pitch-bold 路演大字，各含 theme + 6 张版式母版）。
-
-> **1.0.4 变更：随包不再附带 4 套"从真实 PPT 导入"的重型模板**（实用毕业设计论文答辩 / 极简实用部门工作总结 / 深蓝质感论文答辩 / 简约商务）。
-> 它们合计 **46.2 MB，占整个安装包的 96%**，而实测从未被使用；移除后安装包 **48 MB → 约 2 MB**（下载/安装时间同比例下降）。
-> 想恢复其中某一套：① 从 [v1.0.3 的 Release 资产](https://github.com/zbsph/dsh-ppt-studio/releases/tag/v1.0.3) 下载 tgz、解压取 `package/templates/<id>/`；
-> 或 ② 从 git 历史取 `git show v1.0.3:templates/<id>/...`（注意 `previews/` 是 Office 渲染产物、**未被 git 跟踪**，只在资产里）。
-> 放回 `templates/` 后与内置模板同等可用。
-
-- `ppt_templates` 看清单与预览；`/ppt template <id>` 记默认。
-- `ppt_new(dir, template=<id>)` 物化工作区：`pages/_*.yaml` 是**参考母版**（不进门禁）；`01_opening.yaml` 是正式副本（先 `ppt_verify autoDeclare=true` 声明模板固有叠层 → 剩余错误是模板原文案残留，替换后自然干净）。
-- 你自己的模板：`ppt_import`（保留 source.pptx）→ `ppt_template_add` 永久进库 → 以后直接物化使用。
-
----
-
-## 8. 常见问题 FAQ
-
-**Q：为什么 verify 报重叠但我的设计是有意的？**
-→ 这是设计意图声明制：把这对元素加进页面 `expectedOverlaps` 再重验（命中即 ✓）。说明不清意图的对子请改布局；内容互压（文字×文字）永远不能声明。
-
-**Q：autoDeclare 为什么不声明全部？**
-→ 只声明警告级（承载/装饰模式），内容互压不可声明（硬底线）；audit 档禁一键声明。写入后模型必须输出"每对一句意图"。
-
-**Q：样式写了但效果不对/按 18pt 计量？**
-→ 样式键必须写在 `content` 内。元素级 `fontSize` 无效（v1.0.0 起 ppt_check 直接报错并指引）。
-
-**Q：预览链接打不开（404）？**
-→ 路由由 PPT 工作室会话挂载时注册：请确认当前会话在 PPT 工作室；进入后链接即恢复。
-
-**Q：Office 渲染时窗口闪一下？**
-→ 正常（PowerPoint COM 需要）；只读打开、结束自动释放。
-
-**Q：无 Edge/无 Office 还能用吗？**
-→ 能。截图/实测/真渲染自动降级并标注（HTML 预览 + 结构断言仍在）；交付说明会标注"未经视觉审阅"。
-
-**Q：图表支持哪些？**
-→ bar/line/pie（矢量拼绘，可编辑）；python-pptx 兜底引擎下降级为表格（报告醒目标注）；复杂图表建议作为图片或直接用 Shape 拼。
-
-**Q：讲稿/备注能进 pptx 吗？**
-→ 能（2026-09-14 起）：页面写 `notes:`（多行用 `|` 块标量），导出即成 PowerPoint 备注页；`ppt_import` 会读回 `notes:`，可编辑。
-没有 `notes:` 的页不产生备注部件（老工程产物不变）。翻页/计时（放映设置）不在插件范围。
-`ppt_splice` 替换某页时保留**源文件该页既有**的备注关系（不会把 deck 里新写的 notes 塞进被替换的源页）。
-
-**Q：从原稿导入后文字里的 `&amp;` / `&lt;` 是正常的吗？**
-→ 不该出现（2026-09-14 修）：导入侧此前不做 XML 实体解码，会把 `R&D` 读成 `R&amp;D`。现在文本节点会正确解码（`&amp;/&lt;/&gt;/&quot;/&apos;` 与数字实体）。
-如果你的导入工程是旧版本产物，重新 `ppt_import` 一次即可。
-
-**Q：报告/状态里出现「⚠ 质量档降级」？**
-→ 你的项目 `state.json`（或会话状态文件）**损坏或读不了**，插件按 `standard` 继续跑——`audit` 档的额外门禁（禁 autoDeclare / 强制视觉审阅 / 导出回读断言）**本轮未生效**。修好该文件，或重跑一次 `/ppt quality audit`。
-（自 2026-09-18 起这类回落会**明说**；此前它是静默的：文件坏掉后 `audit` 会无声变成 `standard`。）
-
-**Q：如何只改原稿第 15 页？** → `ppt_splice`（第 6 节）。**如何导出单页版？** → `ppt_slice`。
-
-**Q：`dsh plugin add` 装了，但插件好像没生效？**
-→ 三步查：① `dsh plugin --profile web list` 看包装上没（装不上会直接报错）；
-② `dsh --profile web --dump-config` 看组合树里有没有 `ppt-studio` 插件行（有 = `dsh.bundle` 声明生效、已进层栈）；
-③ **重启 dsh web**。
-若第 ② 步看不到，多半是版本太老（v1.0.0 之前没有 `dsh.bundle` 声明——那时 `dsh plugin` 只会打一行
-"declares no dsh.bundle … not a profile layer" 的警告，装了不挂载）→ 升到 v1.0.0+ 再装一次。
-
-**Q：可以用 `dsh plugin` 和 `install.mjs` 同时装吗？**
-→ 能装，但没必要，而且是**替代关系**（§0.7）。同时装会让同一个包在同进程挂两次——插件里有装配防重（首个生效 + 告警），
-所以不会崩，但请二选一：`dsh plugin --profile web remove <包>` 或移除预设里的插件行。
-
-**Q：怎么升级？**
-→ `dsh plugin` 装的：用 **Releases 页面上的新资产 URL** 再跑一次 `add`（**必须换 URL**——同 URL 覆盖内容时 pnpm 不会重取，见 §0.2）；
-`install.mjs` 装的：重新解压新包跑 `node scripts/install.mjs`。两种方式都**重启 dsh web** 后生效。
-
-**Q：装的时候下载总超时/失败？**
-→ 资产约 33MB、走 GitHub 直连；网络抖动时可在 `~/.dsh/profiles/web/.npmrc` 加：`fetch-timeout=600000`、`fetch-retries=5`、
-`fetch-retry-maxtimeout=120000`，然后重跑 `add`（**失败不会破坏已有安装**，直接重试即可）。
-
-**Q：模板页脚带被 logo 占着，内容放哪？**
-→ deck.yaml `theme.safeArea` 声明安全区 → verify 把关；logo 类有意元素加 `expectedOutOfSafeArea`。
-
-**Q：中文长句会被误报溢出？**
-→ 估算保守（宁可误报）——按提示加宽容器/缩小字号/在语义断点显式 `\n` 换行；`ppt_measure` 实测档复核（实测=终审）。
-
-**Q：导出总是 auto-fit 缩字？**
-→ 先看 verify 是否已经报溢出；溢出清零后导出不再缩字。若仅个别页（导入近似稿存量问题）→ 改某页用 `ppt_splice` 而非整册重渲。
-
-**Q：新增一页怎么注册？**
-→ 复制母版去 `_` 前缀改名（如 `_06_...` → `06_...`）+ 在 deck.yaml `pages:` 注册；或新写完整页。
-
-**Q：表格在 PowerPoint 里看不见/空白？**
-→ 这是 v1.0.0-修订前旧引擎的结构 bug（graphicFrame 嵌套 `<a:xfrm>`，PowerPoint 打开时静默弃帧）——**已修复**；导出报告现在带 parity 回读自证（表 N/N · 图 M/M · 线方向 N/N · 结构合法）。旧产物请重新 `ppt_export`。
-
-**Q：网页预览看着对，打开导出的 pptx 却发现斜线方向反了 / × 少一笔 / 阶梯竖线不见了？**
-→ v1.0.0-修订前旧引擎**丢连线方向**：`straightConnector1` 在 OOXML 里只画包围盒左上→右下，真实走向必须靠 `flipH`/`flipV` 表达——漏写会镜像斜率，两条交叉线还会重合成一条。**已修复**；导出 parity 行现在打印"线方向 N/N（逐条从 OOXML 反推端点自证）"。**修复前导出的产物请重新 `ppt_export`**。
-
-**Q：箭头在预览里有、到 PowerPoint 里没了？水平连接线在预览里是平的、到 PowerPoint 里变斜了？**
-→ 同一族的两个导出编码 bug，**均已修复**：① `<a:tailEnd>`（箭头）之前被写在了 `<a:ln>` **外面**，PowerPoint 直接忽略；② 连线包围盒之前有 `max(1,…)` 兜底，水平线被抬成 1pt 高 → `straightConnector1` 画对角线就成了"假斜线"。现在箭头写在 `<a:ln>` 内，包围盒精确等于线段跨度（水平线 `cy=0`）。同样**旧产物请重新 `ppt_export`**。
-
-**Q：为什么线画并没穿过标签，verify 还报重叠？**
-→ 已修复（P6）：线元素按**真实几何**判定（线段×矩形 / 线段×线段），AABB 假阳性不再报、也不进声明队列；真跨越仍按"连线/箭头"声明制处理。
-
-**Q：真渲染图上为什么有水印？**
-→ 比例参考标注（"1px=1pt · 960×540" + 细边框），防人工读图坐标误判（P9）；脚本参数 `noWatermark` 可关。
-
-**Q：PowerShell 解压 .pptx 报"not a supported archive format"？**
-→ `Expand-Archive` 只认 .zip：先复制为 .zip 再解压，或 `tar -xzf <file> -C <out>`；读 zip 内 XML 请显式 UTF-8（P3/P4）。
-
-**Q：改码后为什么会话里还是旧行为？**
-→ 插件经 agent preset 会话装配（重启才生效）。修复后验证清单：`node scripts/build.mjs` → `node scripts/smoke.mjs`（回归）→ 会话内直跑 `node -e "import(...lib...)...验证修复产物"` → **重启 host 用真工具复验**；重启前需导出用 `engine=python-pptx` 兜底（P11）。
-
-**Q：网页/百科内容查不到？**
-→ `web_fetch` 受本机网络/DNS 限制（非公网 IP 拦截）；数据来源核查改由**审阅者**判定（`ppt_crosscheck` 只汇总材料包，不再产出 grounded/unmapped 伪状态），交付说明如实标注"未提供素材 ⇒ 外部主张无法核实"（P2，环境侧）。
-
-**Q：升级 DSH 之后「PPT 工作室」选不出来／切过去就报错（如 `$.prefix missing required value`、或某插件行 `Cannot find module`）？**
-→ 这是**预设 composition 跟着上游漂移**，不是插件坏了——插件代码与其宿主契约在 0.1.5-rc.2 / 0.1.6-alpha.2 上都已逐项核对通过。
-本预设是随包 standard 预设的**副本（不含本包插件行）+ 一处声明过的有意差异：persona**（`agent-presets/ppt/agent.cordis.yml` 顶部写明理由；门禁白名单在 `scripts/check-preset.mjs`），上游一改预设（改 config / 加行 / 停用行），副本没跟就会被行为差异暴露。已发生的两次：
-① `0.1.5-rc.2` 把 `@deepseek-ai/dsh-persona` 由 `text` 改为 `prefix`(必填) + `suffix`；
-② `0.1.6-alpha.2` **删掉了 `@deepseek-ai/dsh-workflow-worker-thread`**（换成 `@deepseek-ai/dsh-workflow-ptc`）、把 `tool-ralph` 改为默认停用、新增 `tool-plugin-manager`。
-**修法**：拿到修好的版本后重跑安装即可（`node scripts/install.mjs` —— 预设以包为准总是刷新）。
-**自查**：`npm test`（自 2026-09-18 起含预设自检）或单独 `node scripts/check-preset.mjs`；它逐行比对本预设与随包 standard，报漂移/缺行。
-自建预设同样会中招，改法是**重新以随包 standard 为底生成 + 保留自己的插件行块**（别手工维护那两百多行）。
-
----
-
-## 9. 环境与能力边界
-
-**环境**：DSH web `0.1.6-alpha.2`（Windows 主机；宿主服务/事件契约已逐项核对）。Office/Edge 为**可选增强**（探测失败自动降级）；python-pptx 为**可选兜底**。路径/中间层一律 UTF-8；已兼容 WPS 导出的 UTF-16 文件。
-
-**插件对外交付的三样东西**（都挂在插件 fiber 上，停用/卸载即净）：`ppt_*` 模型工具面 + `/ppt` 命令面；工作流提示词段（`system-prompt/assemble` 注入 `ppt-workflow`）；内置手册 skill（`ctx.skills.register` 内嵌注册）。自检入口：`ppt_state` 会一并报告手册 skill 的注册与可见状态。
-
-**支持矩阵（PPTD v1 视觉子集）**：
-
-| 类别 | 支持 | 说明 |
-|---|---|---|
-| 元素 | text / shape / line / image / table / chart | chart：bar/line/pie；line **仅 2 点**（多点拆多条） |
-| shape | rect/roundRect/ellipse/triangle + **prst 常见形状**（箭头/菱形/五边形/流程图等）+ **custGeom 自定义路径** + rotation + 纯色/渐变/alpha fill | roundRect 圆角 8%；custGeom：moveTo/lnTo/quadBezTo/cubicBezTo/arcTo/close |
-| 文本 | 主题引用、fontSize/family/color/bold/italic/align/lineHeight/wrap | 中文换行带标点禁则 |
-| 背景 | hex / `$themeRef` / solid / image（cover/contain/fill + 媒体嵌入） | 渲染/导出/导入三端一致 |
-| 图表 | 矢量拼绘（可编辑）；python-pptx 引擎降级为表格 | 数据全零显式警告 |
-
-**诚实边界**（不承诺，均有替代路径）：
-- 文本度量是**估算档 + 实测档**双档（实测依赖浏览器）；与 Office 原生排版存在字体级系统差（加粗 CJK 已计 1.06 补偿）。
-- 导入：阴影/动画/超链接/母版继承不支持；渐变归一主色（stops 保留在 import-styles.json）；chart 降级为占位；**EMF 媒体**与跨实现（WPS）打开未验证。
-- 引擎：pptxgenjs 第三引擎未实现（v1.0 前按计划不动）——**`/ppt engine pptxgenjs` 会被明确拒绝**，不会静默切到 pptd；python-pptx 仅兜底/显式指定，**在兜底引擎里 alpha / 渐变按纯色近似**（原生引擎 pptd 保留原样；生成脚本内会留一行注释）。
-  > `/ppt engine <auto|pptd|python-pptx>` 设的档位**会被 `ppt_export` 采纳**（工具参数缺省时用它；显式传 `engine=` 时以参数为准）。
-  > 兜底引擎的产物自 2026-09-18 起有**真消费者验证**：生成的 Python 必须过 `py_compile`，且必须真跑出 `.pptx` 并由 python-pptx 读回（`npm test` 里两条断言）。此前它连编译都过不去而无人察觉——因为它只在 pptd 硬失败时才被走到，而 python 是可选依赖，"跳过"与"通过"印在同一个颜色上。
-- dsh 网页内嵌预览面板（client 面板）未实现——对话内预览已有 `ppt_preview` + `ppt_shot overview` 覆盖。
-- 跨平台：COM/Edge 探测路径面向 Windows（macOS/Linux 主机需要对应适配，当前未验证）。
-- **模板"真相层"整页预览需要本机 Microsoft Office**：`referenceTemplate.previews`（`reference/previews/NN.png`）
-  由 PowerPoint COM 逐页渲染，**没装 Office 时这一项不存在**——此时真相层只注入 `source: reference/template.pptx`
-  （原件仍在，可自行打开对照）。这是能力边界不是缺陷，且已被机器钉住：smoke 的两个分支分别断言
-  "有预览 ⇒ 必须注入并拷贝" 与 "无预览 ⇒ 只注入 source 且不得出现 previews 引用"
-  （旧版无条件要求预览，于是**没有 Office 的机器上 `npm test` 必红两条**——创意工坊审核就是这么发现的）。
-
----
-
-## 10. 开发与维护（给改插件的人）
+## 10. 开发与维护
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + LF 守卫 + smoke（245 断言）+ 预设漂移自检（DSH 升级后必跑）
-npm run check:eol               # 发行字节守卫：跟踪的文本文件必须全 LF（git 安装 == tgz 安装；--fix 可就地修）
-npm run fresh                   # 用户视角终验：干净克隆 npm test + `dsh plugin add` 真装一遍（发版后用）
-npm run test:real               # 真实资产回归（WPS fixture；19 页 deck 缺失自动跳过）
-node scripts/preflight-1.0.mjs  # 发布前预检（坏输入/边界/幂等/性能/媒体 splice——11 断言）
+npm test                        # build + LF 守卫 + smoke（245 断言）+ 预设漂移自检
+npm run check:eol               # 发行字节守卫：跟踪的文本文件必须全 LF（--fix 就地修）
+npm run fresh                   # 用户视角终验：干净克隆 npm test + 真装一遍
+npm run test:bundle             # 安装路径自证：隔离 DSH_HOME + 真 dsh plugin add + dump-config
 npm run test:preset             # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
-npm run test:bundle             # 安装路径自证：隔离 DSH_HOME + 真 `dsh plugin add` + dump-config + `--local` 迭代模式（不碰你的 profiles）
-npm run check:lib               # lib/ 新鲜度：提交的构建产物必须逐字节等于 src/（smoke 里有同义断言）
-npm run eval:skills -- --a <deckA> --b <deckB>   # 技能效果对照打分（纯本地；两个 arm 各跑一次后复算口径，见 docs/06 §7）
-node scripts/eval-skills-blind.mjs <deckA> <deckB>   # 生成匿名+随机的盲评材料（结构化盲评协议，见 docs/06 §7.6）
-node scripts/audit-manual-facts.mjs  # 手册事实审计：逐条把"手册 vs 源码"验一遍并打印源码锚点（39 条）
+npm run check:lib               # lib/ 必须逐字节等于 src/
+node scripts/preflight-1.0.mjs  # 发布前预检（11 断言）
+node scripts/e2e-1.0.mjs        # 端到端（13 断言：真浏览器测量 + 真 Office 渲染 + splice/slice）
+node scripts/audit-manual-facts.mjs   # 手册事实审计：逐条核对"手册 vs 源码"（39 条）
 ```
 
-**"干净检出"就是验收标准（CI 也是这么跑的）**：`.github/workflows/ci.yml` 在 ubuntu 与 windows 两个平台上
-各自干净检出后跑 `npm test`，并在 windows 上真跑一遍"用户会敲的那条命令"（`npm run test:bundle`）。
-这样做是因为**"作者机器全绿"曾经与"用户能用"无关**：两条真实事故都只在干净检出里现形——
-① 干净克隆在 Windows 上是 CRLF（Git for Windows 默认 `core.autocrlf=true`），按 `\n` 做的行锚定文本手术
-**静默失效**，`npm test` 直接崩在 `page file missing: pages/_cover.yaml`；
-② 没有 Office 的机器上，`referenceTemplate` 的整页预览断言必红（预览是 PowerPoint COM 渲染出来的）。
-现在：`.gitattributes`（`* text=auto eol=lf`）把检出字节钉成 LF，`normalizeText()` 兜住用户手改的 CRLF/BOM 文件，
-Office/浏览器相关断言一律**显式降级为跳过且保持断言总数恒定**（`npm test` 在裸机上也必须是全绿，否则它就不能当门禁）。
+**"干净检出"才算验收**。`.github/workflows/ci.yml` 在 ubuntu 和 windows 上各自干净检出后跑 `npm test`，并在 windows 上真跑一遍用户会敲的那条命令。这条规矩来自两次真实事故：Windows 干净克隆是 CRLF（Git for Windows 默认 `core.autocrlf=true`），按 `\n` 做的文本手术会**静默失效**；没有 Office 的机器上，整页预览断言必红，而预览本来就是 PowerPoint COM 渲染出来的。现在 `.gitattributes` 把检出字节钉成 LF，`normalizeText()` 兜住手改过的 CRLF/BOM 文件，Office 和浏览器相关的断言一律显式降级为跳过、且保持断言总数恒定。
 
-**改完代码怎么让本机跑上新版**（两种模式，都**必须重启 `dsh web`**——profile bundle 挂载不热更）：
+**改完代码让本机跑上新版**（都要重启 `dsh web`，profile bundle 不热更）：
 
 ```bash
-npm run sync -- --local   # 日常迭代：不发 GitHub，本机跑的=你刚构建的字节（构件落在 D:\plugins\_artifacts\）
-npm run sync              # 发版：上传 GitHub 资产 + 把本机与 GitHub 拉回字节级同源 + 跑"用户视角"终验
+npm run sync -- --local   # 日常迭代：不发 GitHub，本机跑刚构建的字节
+npm run sync              # 发版：上传资产 + 本机与 GitHub 拉齐 + 用户视角终验
 ```
 
-**发版三步（顺序不能换）**——`npm run sync` 会**拒绝**在"本地有未推送提交"或"tag 不指向 HEAD"时继续：
+**发版四步，顺序不能换**。`npm run sync` 在"本地有未推送提交"或"tag 不指向 HEAD"时会拒绝继续。
 
 ```bash
-git push origin main                                    # ① 先把提交推上去
-gh release create v<版本> --target "$(git rev-parse HEAD)" --title ... --notes-file ...   # ② tag 必须显式指到这一提交
-npm run sync                                            # ③ 构建 → 上传资产 → ⓪b git 前置 + ⑦ 用户视角终验
-npm publish "D:\plugins\_artifacts\dsh-ppt-studio-<版本>-<构建时间>-<构建戳>.tgz"   # ④ 发 npm（用 ③ 刚构建的那个 tgz，见下方注）
+git push origin main                                    # ① 推提交
+gh release create v<版本> --target "$(git rev-parse HEAD)" --title ... --notes-file ...   # ② tag 显式指到这一提交
+npm run sync                                            # ③ 构建 → 上传资产 → git 前置检查 + 用户视角终验
+npm publish "<③ 产出的那个 tgz>"                          # ④ 发 npm（用同一个 tgz，保证两条通道同一份字节）
 ```
 
-> **npm 与 GitHub 必须是同一份字节**：`npm publish <tgz>` 直接发 ③ 产出的那个 tgz（路径与名称写在
-> `.sync-state.json` 的 `localTgz` / 资产名里），因此 npm 包与 Release 资产逐字节相同。
-> **不要**在主分支已经前进后再跑裸 `npm publish`（那会按**当前工作区**打包 ⇒ 同名版本内容却不同）。
-> 发布后核对：`npm view dsh-ppt-studio version dist.integrity` 应与本地 `npm pack` 输出一致。
+`gh release create` 不指定 `--target` 时会按默认分支 HEAD 建 tag，本地没推就把 tag 建在旧提交上。v1.0.1 第一次发布就是这么错的：资产哈希全绿，而 GitHub 上的 tag 指向 v1.0.0 的代码。所以加了机器判据。`--skip-fresh` 能跳过终验，但状态文件里会留 `freshInstall: null`，不把"没验"伪装成"验过"。
 
-> 为什么把顺序写死：`gh release create` 不指定 `--target` 时按**默认分支 HEAD** 建 tag——本地没推时它就把 tag
-> 建在旧提交上（v1.0.1 第一次发布就是这么错的：资产 sha 全绿，而 GitHub 上是指向 v1.0.0 代码的旧提交，
-> 用户照创意工坊卡片跑 `dsh plugin add <仓库 URL>` 装到的是旧版）。⓪b 与 ⑦ 就是为这一类"没有任何症状"的
-> 分叉加的机器判据；`--skip-fresh` 可跳过 ⑦，但状态文件会留 `freshInstall: null`，**不把"没验"伪装成"验过"**。
+**npm 通道的现状**：包名已经改成无 scope 的 `dsh-ppt-studio`，`private` 也去掉了，但**还没有发布成功**——npm 网站对我们这个出口 IP 返回 403，注册和创建 token 都走不通（细节见 docs/06 §六）。所以现在不要用 `dsh plugin --profile web add dsh-ppt-studio`，它取不到包。首次发布时用上面第 ④ 步的那个 tgz。
 
-**本机装配（只有一条路，别再切预设行）**：
+**`lib/` 为什么提交**：`dsh plugin add <仓库 URL>` 只能拿到 git 里已提交的内容，而 `exports` 指向 `./lib/index.js`。lib 不入库，git 装出来的包就缺入口文件、挂不上。代价是"改了 src 忘了 build 就提交"会静默发旧代码，所以配了守卫：`npm run check:lib` 加 smoke 里一条同义断言（lib 必须逐字节等于 src，且不能被 `.gitignore` 忽略、必须被 git 跟踪）。改码流程就是改 `src/` → `node scripts/build.mjs` → 连 `lib/` 一起提交。
 
-```bash
-dsh plugin --profile web add <包名 | tgz URL | 仓库 URL>   # 装成 profile bundle
-node scripts/install.mjs                                   # 同步预设身份/元数据 + 清历史行块（幂等）
-# 重启 dsh web → 新建会话时选「PPT 工作室」
-```
+**包名是单一事实源**：改名要同步 `package.json`、`cordis.patch.yml` 的插件行，以及 `scripts/install.mjs` 里的落点路径。漏一处就是"装了不生效"，smoke 有断言盯着。
 
-**不要**为了"只在某个预设里生效"去改用预设行挂载（老 README 曾这么建议）：那一行会在 DSH 侧解析失败、
-把预设标成 `broken`、于是**选择器里根本不显示它**（详见 §0.7 与 `agent-presets/ppt/agent.cordis.yml` 末尾的说明）。
-"只有该预设才有能力面"这件事在**这版 DSH 上做不到**（切换预设拿不到 + 技能在父层读不到，见 §0.7），
-所以本插件的口径是**装上即可用**，「PPT 工作室」预设只提供身份/人格。
+**OOXML 产物必须用真消费者验**。加备注页时先写的 `notesMasterIdLst`，python-pptx 照读不误，真 PowerPoint 却报"文件或目录损坏"。第三方库能读不等于能打开。凡改导出编码，至少走一次真 PowerPoint（`ppt_visual`）或真浏览器。
 
-- `--local` 会先 `git fetch` 检查本地是否落后于 `origin/<分支>`，**落后就直接失败**（怕"以为在最新版上迭代、其实不是"——这种偏差没有任何症状，直到发版才发现分叉）。离线时明确标注"未能确认"并继续。
-- 装法只有**一条挂载路径**（profile bundle 行），差别只在"从哪取字节"；`--local` 用本地 tgz 的 `file:` 规格。
-- 想退回 GitHub 版本：`dsh plugin --profile web add <Releases 页面上的资产 URL>`。
+**文档链**（每次改动同步）：`docs/01-需求与目标.md`（需求与决策）、`docs/02-技术报告.md`（实现）、`docs/03-更新日志.md`（版本记录）、`docs/04-路线图与里程碑.md`（验收）、`docs/05-迭代流程.md`（检查单）、`docs/06-评审与测试.md`（发布前评审与测试矩阵）。
 
-**关于发布到 npm**：本包**当前不发布**（`private: true`），一键安装走上面的 GitHub Release tgz URL（不需要 npm 账号）。
-将来若要发布：删掉 `package.json` 的 `private`、加 `"publishConfig": { "access": "public" }`（作用域包默认 restricted），再 `npm login && npm publish`；
-发布前建议先跑 `npm test` 与 `npm run test:bundle`。
-**包名是单一事实源**：改名时必须同步 `cordis.patch.yml` 与 `agent-presets/ppt/agent.cordis.yml` 的插件行——
-漏一处就是"装了不生效/预设挂不上"，smoke 有断言把三处钉在一起。
-
-- **装配（两条互斥路径，见 §0.7）**：① profile bundle 行（`cordis.patch.yml`，`dsh plugin add` 走这条，**profile 级**——本仓库自己的安装也走这条）；
-  ② 预设身份（`<dshHome>/.agent-presets/ppt/`：`agent.cordis.yml` + `preset.yml`）——**由插件自交付**
-（缺失时写、不覆盖）或 `install.mjs` 同步；它**只负责"身份"**（名字/人格/显示元数据），**不含**本包插件行
-（老版本安装器写过，现已在两边清除）。
-  改码 = build + **重启 host**（`dev_reload_package` 只覆盖注入器装配的包，本站两条路径都不在其域内）。
-- **文档链（每次改动必同步）**：`docs/01-需求与目标.md`（需求/决策/冲突）· `docs/02-技术报告.md`（实现级）· `docs/03-更新日志.md`（版本记录）· `docs/04-路线图与里程碑.md`（验收）· `docs/05-迭代流程.md`(检查单) · `docs/06-评审与测试.md`（发布前评审/测试矩阵）。
-- **git 约定**：一个功能/修复一个 commit；message `vX.Y.Z: <一句话目的>（反馈编号）`；**`lib/` 提交**（构建产物，见下）。
-- **`lib/` 为什么提交**（2026-09-16）：`dsh plugin --profile web add <本仓库 git URL>` 只拿得到 git 里**已提交**的内容，而 `exports` 指向 `./lib/index.js`——lib 不入库时，git 安装出来的包缺入口文件、插件挂不上（实测：装到的包没有 lib/）。提交后 git 安装与 tgz 安装产物一致。代价是"改了 src 忘了 build + commit"会静默发出旧代码，所以配了守卫：`npm run check:lib` + smoke 里一条同义断言（lib 必须逐字节等于 src，且 `.gitignore` 不得忽略它、git 必须跟踪它）。改码流程 = 改 `src/` → `node scripts/build.mjs` → 连同 `lib/` 一起提交。
-- **既有的自动化验证**：smoke（245 断言，全链路）→ preflight（发布预检）→ regression-real（真实资产）→ preset 自检（DSH 升级后）→ 手册事实审计（`audit-manual-facts.mjs`）→ 真实任务闭环（参考 docs/06 的测试矩阵与历轮反馈）。
-- **OOXML 产物必须用真消费者验**（2026-09-14 教训）：加备注页时先写的 `notesMasterIdLst`，python-pptx 照读不误，**真 PowerPoint 却报"文件或目录损坏"**——
-  第三方库通过 ≠ 能打开。凡改导出编码，至少走一次真 PowerPoint（`ppt_visual`）/真浏览器，别只信自证断言。
-
-**版本规则**：semver。`major` 破坏中间层/接口兼容；`minor` 新特性；`patch` 修复/文档。v1.0.0 = 三轮真实端到端测试通过后的稳定基线。
+**版本规则**：semver。破坏中间层或接口兼容是 major，新特性是 minor，修复和文档是 patch。v1.0.0 是三轮真实端到端测试通过后的稳定基线。
