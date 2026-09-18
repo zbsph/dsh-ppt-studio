@@ -46,7 +46,8 @@ const LOCAL = args.includes('--local')
 const SKIP_CLONE_TEST = args.includes('--skip-clone-test')
 const SKIP_INSTALL = args.includes('--skip-install')
 const branch = opt('--branch', 'main')
-const repo = opt('--repo', run('git', ['remote', 'get-url', 'origin'], root) || '')
+const gitRemote = run('git', ['remote', 'get-url', 'origin'], root)
+const repo = opt('--repo', isFail(gitRemote) ? '(未配置 origin)' : gitRemote)
 const tag = opt('--tag', `v${pkg.version}`)
 
 let pass = 0
@@ -57,40 +58,54 @@ function check(label, ok, detail = '', why = '') {
   if (!ok && why) console.log(`    ↳ 为什么重要：${why}`)
   ok ? pass++ : fail++
 }
+/** shell 下需要引号的参数（含空白/管道/重定向等）。
+ *  写成**函数声明**（不是 const 箭头函数）：下面的模块级代码要在定义之前调用 run()，
+ *  箭头函数在 TDZ 里会抛 "Cannot access 'shellQuote' before initialization"（本脚本第一版就这样，
+ *  表现为顶部那行"仓库 __FAIL__Cannot access…"）。 */
+function shellQuote(s) {
+  return /[\s"&|<>^]/.test(s) ? `"${String(s).replace(/"/g, '\\"')}"` : String(s)
+}
 /** 跑命令；不抛（失败由断言处理）。 */
 function run(cmd, cmdArgs, cwd = root, extraEnv = {}) {
   try {
-    return execFileSync(cmd, cmdArgs, { cwd, encoding: 'utf8', env: { ...process.env, ...extraEnv }, stdio: ['ignore', 'pipe', 'pipe'] }).trim()
+    return execFileSync(cmd, cmdArgs.map(shellQuote), {
+      cwd,
+      encoding: 'utf8',
+      env: { ...process.env, ...extraEnv },
+      stdio: ['ignore', 'pipe', 'pipe'],
+      // Windows 上 `npm` 是 npm.cmd：execFileSync 不解析 .cmd，不加 shell 会**直接失败**
+      // （本脚本第一版就栽在这里：npm install / npm test 全报 ✗，而输出是空的，看起来像被测对象的问题）。
+      // 仓库里 verify-bundle-install.mjs 的 run() 用的是同一个写法，保持一致。
+      shell: process.platform === 'win32',
+    }).trim()
   } catch (e) {
     const out = `${e.stdout ?? ''}${e.stderr ?? ''}`
-    return `__FAIL__${out}`
+    // 连 stdout/stderr 都没有时（spawn 本身失败）把 message 带上，别让断言显示成"空失败"。
+    return `__FAIL__${out || String(e?.message ?? e)}`
   }
 }
-const isFail = (s) => typeof s === 'string' && s.startsWith('__FAIL__')
-const tail = (s, n = 200) => String(s).replace(/__FAIL__/, '').trim().split(/\r?\n/).filter(Boolean).slice(-3).join(' | ').slice(0, n)
+function isFail(s) {
+  return typeof s === 'string' && s.startsWith('__FAIL__')
+}
+function tail(s, n = 200) {
+  return String(s).replace(/__FAIL__/, '').trim().split(/\r?\n/).filter(Boolean).slice(-3).join(' | ').slice(0, n)
+}
 
 console.log(`verify-fresh-install：版本 ${pkg.version}｜模式 ${LOCAL ? 'local（本地迭代）' : 'release（查 GitHub）'}｜仓库 ${repo}｜分支 ${branch}｜tag ${tag}\n`)
 
 // ── ① 本地是否全部推上去了 ─────────────────────────────────────────────────────
 // 这一条最容易被忽略，而它的后果最严重：本地全绿、用户装到旧代码。查的是"用户会克隆到的那个分支"。
-let remoteHasAll = null
+// 注意：**只有 release 模式把它当断言**——`--local` 是日常迭代，本地领先远端是常态（那正是它的目的），
+// 所以那里只打印信息，不判失败。真正的本地判据是 ②（干净检出我的**当前工作**能不能过）。
 if (LOCAL) {
-  console.log('① 远端分支与本地的一致性')
   const fetch = run('git', ['fetch', '--quiet', 'origin'])
   if (isFail(fetch)) {
-    check('能 fetch origin（离线时无法确认，不当作失败）', true, '未能确认（离线或远端不可达）')
-    remoteHasAll = null
+    console.log('① 远端信息：未能确认（离线或远端不可达）——不影响本地自检')
   } else {
     const behind = Number(run('git', ['rev-list', '--count', `HEAD..origin/${branch}`]) || '0')
     const ahead = Number(run('git', ['rev-list', '--count', `origin/${branch}..HEAD`]) || '0')
-    check(`本地没有未推送的提交（origin/${branch} 已包含本地 HEAD）`, ahead === 0,
-      `未推送 ${ahead} 个｜落后 ${behind} 个`,
-      '用户照指引从仓库 URL 安装时拿到的是 **origin 上**的代码；本地没推 = 用户装到旧版。')
-    remoteHasAll = ahead === 0
-    if (ahead > 0) {
-      const list = run('git', ['log', '--oneline', `origin/${branch}..HEAD`]).split('\n').filter(Boolean)
-      for (const l of list.slice(0, 8)) console.log(`      · ${l}`)
-    }
+    console.log(`① 远端信息（仅信息，不判失败）：本地领先 origin/${branch} ${ahead} 个提交｜落后 ${behind} 个`
+      + `${ahead > 0 ? '——发版前必须 push（发版模式会拒绝继续）' : ''}`)
   }
 } else {
   console.log('① 远端 tag 与本地 HEAD 的一致性（release 模式）')
@@ -106,7 +121,7 @@ if (LOCAL) {
   // 顺带断言：远端分支确实包含 HEAD（否则 git 安装路径仍是旧的）
   const lsMain = run('git', ['ls-remote', '--heads', 'origin', `refs/heads/${branch}`])
   const remoteBranchSha = isFail(lsMain) ? '' : (lsMain.split(/\s+/)[0] ?? '')
-  const contains = remoteBranchSha && !isFail(run('git', ['merge-base', '--is-ancestor', head, remoteBranchSha]))
+  const contains = remoteBranchSha && run('git', ['merge-base', '--is-ancestor', head, remoteBranchSha]) !== '__FAIL__'
   check(`origin/${branch} 已包含本地 HEAD（git 安装路径拿到的是本版）`, Boolean(contains),
     `branch=${remoteBranchSha.slice(0, 10) || '(缺)'}｜HEAD=${head.slice(0, 10)}`,
     '创意工坊对无 npm 包的条目生成的就是 `dsh plugin add <仓库 URL>`——分支落后就等于用户装不到新版。')
@@ -124,10 +139,13 @@ if (SKIP_CLONE_TEST) {
   try {
     // 故意**不**传 -c core.autocrlf=false：用户机器是什么样，这里就什么样。
     // .gitattributes 的 `* text=auto eol=lf` 负责把检出钉成 LF；若它失效，这段就会像用户一样崩。
-    const cloneRef = LOCAL ? branch : tag
-    const cloneDepth = LOCAL ? ['--depth', '1', '--branch', branch] : ['--depth', '1', '--branch', tag]
-    const clone = run('git', ['clone', '--quiet', ...cloneDepth, repo, cloneDir])
-    check(`干净克隆成功（${cloneRef}）`, !isFail(clone), tail(clone),
+    // **克隆源按模式区分**：release 克隆 GitHub 上的 tag（= 用户真正会拿到的东西）；
+    // `--local` 克隆**本地仓库路径**（= "我这台机器上这份工作，全新检出能不能过"）——
+    // 本地迭代时本地领先远端是常态，从远端克隆反而验错了对象（这是本脚本第一版的真实缺陷）。
+    const cloneSource = LOCAL ? root : repo
+    const cloneDepth = ['--depth', '1', '--branch', LOCAL ? branch : tag]
+    const clone = run('git', ['clone', '--quiet', ...cloneDepth, cloneSource, cloneDir])
+    check(`干净克隆成功（${LOCAL ? `本地 HEAD @ ${branch}` : tag}）`, !isFail(clone), tail(clone),
       '克隆都失败时后面全是假象——必须先确认这一步。')
     if (isFail(clone)) throw new Error('clone failed')
 
@@ -135,6 +153,13 @@ if (SKIP_CLONE_TEST) {
     check('克隆出来的就是本版（package.json.version）', cloneVer === pkg.version,
       `克隆=${cloneVer}｜本机=${pkg.version}`,
       '用户装到的必须是你刚发布的那一版；版本不一致说明 tag/分支指向的不是本版。')
+    if (LOCAL) {
+      const cloneHead = run('git', ['rev-parse', 'HEAD'], cloneDir)
+      const localHead = run('git', ['rev-parse', 'HEAD'])
+      check('本地模式的干净检出来自**当前 HEAD**（不是远端旧提交）', cloneHead === localHead,
+        `克隆=${cloneHead.slice(0, 10)}｜本地=${localHead.slice(0, 10)}`,
+        '--local 要答的问题是"我这份工作全新检出能不能过"，克隆到远端就是把旧代码当成新代码来验。')
+    }
 
     // 检出字节的证据（不是断言，是现场记录）：git 安装与 tgz 安装必须是同一份字节。
     const crlf = countCrlfFiles(cloneDir)
@@ -205,16 +230,20 @@ function countCrlfFiles(dir) {
   return out
 }
 
-/** 取 Release 资产 URL（用 gh；未安装 gh 时退回"让 verify-bundle-install 自己 pack"）。 */
+/** 取 Release 资产 URL（用户会在资产页复制粘贴的那一条）。 */
 function findReleaseAsset(t) {
   const gh = process.env.GH || 'gh'
-  const out = run(gh, ['release', 'view', t, '--json', 'assets', '--jq', '.assets[] | select(.name | endswith(".tgz")) | .url'])
-  const first = isFail(out) ? '' : String(out).split(/\r?\n/).filter(Boolean).pop()
-  if (!first) return ''
-  // gh 给的是 API URL；资产下载走浏览器 URL（用户会复制的那条）
+  // 用 REST + 本地解析，**不用 --jq**：cmd.exe 下 shell 无法用单引号 jq（release-sync.mjs 里同一条教训）。
+  const remote = run('git', ['remote', 'get-url', 'origin']) || ''
+  const m = /github\.com[:/]([^/]+)\/([^/]+?)(?:\.git)?$/.exec(remote.trim())
+  if (!m) return ''
+  const json = run(gh, ['api', `repos/${m[1]}/${m[2]}/releases/tags/${t}`])
+  if (isFail(json)) return ''
   try {
-    const api = JSON.parse(run(gh, ['api', first.replace('https://api.github.com/', '')]) || '{}')
-    return api.browser_download_url || ''
+    const assets = (JSON.parse(json).assets ?? []).filter((a) => String(a.name).endsWith('.tgz'))
+    // 资产名 = 版本-构建时间-构建戳；历次构建都挂在同一 Release 上，按创建时间取最新即当前版本。
+    assets.sort((a, b) => String(a.created_at).localeCompare(String(b.created_at)))
+    return assets.pop()?.browser_download_url ?? ''
   } catch {
     return ''
   }
