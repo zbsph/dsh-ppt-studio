@@ -1,19 +1,25 @@
 /**
  * @dsh-external/dsh-ppt-studio —— PPT 工作室插件（host）。
  *
- * 装配模型（2026-09-18 改为**会话级**，路 A）：
- *   `apply()` 只做三件事——① 装配防重；② **全局管道**（/ppt-preview 路由、预设自交付、语义路由、
- *   提示段注入的"逐次门控"）；③ 挂 `agent/created` 钩子。**不再在 profile 层注册任何能力面**。
- *   工具（21 个 ppt_*）/ `/ppt` 命令面 / 4 本内嵌技能，都在 `agent/created` 时**按该 agent 的预设**
- *   挂到 `agent.ctx` 作用域——于是它们只对「PPT 工作室」预设的会话可见，别的预设（含官方 standard）
- *   完全看不到。机制由隔离探针实测：在 `agent.ctx` 注册的工具**该 agent 能调用**，且
- *   **不进入 profile 层目录**（而 profile 层正是今天"全会话可见"的那一层）。
+ * 装配模型（2026-09-18 **第二次修订：回滚为"装上即可用"**）：
+ *   `apply()` 做四件事——① 装配防重；② **全局管道**（/ppt-preview 路由、预设自交付、语义路由）；
+ *   ③ 工作流提示段注入（`system-prompt/assemble`）；④ **在本 ctx 注册全部能力面**：
+ *   21 个 `ppt_*` 工具 / `/ppt` 命令面 / `ppt_state` / 4 本内嵌技能。
+ *   ⇒ **装上插件，所有会话都能用**（= 1.0.0 的行为）。
  *
- * 为什么不在 profile 层按预设过滤：注册发生在插件 `apply`（进程/profile 级）时；要按预设隔离，
- *   注册就必须发生在**该 agent 的作用域**里——这正是本文件的 `agent/created` 钩子做的事。
+ * 为什么放弃了"只让「PPT 工作室」预设看到"（两件事，都有实测与源码依据）：
+ *   ① **切换预设拿不到**：空白会话切预设时 `agent-presets.swap` 确实会 `recompose(agent.ctx, id)`，
+ *      但那一刻该 agent **已经存在**，而我们的 `agent/created` 监听者是在这次组合里才注册的
+ *      ⇒ 它永远不会为这个已有 agent 触发 ⇒ "先建会话再切到该预设"永远看不到工具
+ *      （用户实测：只有一开始就建在该预设上才有工具）。
+ *   ② **技能在父层读不到**：技能注册表分层，技能工具在**预设层**读；我们只能注册到 `agent.ctx`（子层）
+ *      或 profile 根 ⇒ 预设层读不到 ⇒ 技能永不出现。而"用预设行挂载"这条路同样封死
+ *      （行里的裸包名按 **harness base** 解析，不是 profile ⇒ 预设被判 `broken` ⇒ 选择器不显示它）。
+ *   ⇒ 在这版 DSH 上，"按预设隔离"无法可靠交付。宁可**功能完整、行为可预期**，也不要"看起来隔离、
+ *      实际一半会话没能力面"。隔离代码留在 git 历史（`4ea7037` 起的提交）里，等 DSH 提供稳定的
+ *      "预设已组合/已切换"信号再恢复。
  *
- * 失败开放（重要，零回归）：拿不到 `agentPresets` 服务、或该 agent 没有加入任何预设时，
- *   **照旧注册**——保持"环境不支持 roster 时插件仍然完整可用"。
+ * 「PPT 工作室」预设仍然存在并自交付：它负责**身份/人格**（名字、简介、standard 能力面副本）。
  */
 import { registerTools, defineTool } from './tools.js'
 import { registerCommands } from './commands.js'
@@ -28,13 +34,6 @@ import { join } from 'node:path'
 export const name = '@dsh-external/dsh-ppt-studio'
 // skills 为可选依赖（ctx.get('skills')）：极简装配缺 dsh-skill 时插件仍完整可用
 export const inject = ['tools', 'commands', 'systemPrompt']
-
-/** 默认只在**这些预设 id** 上开放能力面（可用 patch 的 config.presetIds 覆盖）。 */
-const DEFAULT_PRESET_IDS = ['ppt']
-
-// 跨模块实例共享（junction/真实路径双加载下模块级变量不可靠——与 __pptCoreReg / ROUTE_REG 同款）
-const agentReg = () => (globalThis.__pptAgentReg ??= new Set())
-const oursCache = () => (globalThis.__pptOursCache ??= new Map())
 
 function loggerOf(ctx) {
   try { return typeof ctx.logger === 'function' ? ctx.logger('ppt-studio') : ctx.logger } catch { return undefined }
@@ -122,12 +121,11 @@ export function apply(ctx, config = {}) {
     } catch { /* 防缺失目录等异常 */ }
   })
 
-  // 工作流提示词注入：**逐次按该 agent 的预设门控**（非本插件的会话绝不注入）
+  // 工作流提示词注入（**不按预设门控**——见下"回滚"说明）
   ctx.on('system-prompt/assemble', async (assembly, context, next) => {
     const assembled = await next()
     const agent = context.agent
     if (!agent?.session?.id) return assembled
-    if (!(await agentIsOurs(ctx, agent, config))) return assembled
     const sessionId = agent.session.id
     let state
     try { state = await loadSession(sessionId) } catch { return assembled }
@@ -139,85 +137,41 @@ export function apply(ctx, config = {}) {
     return { ...assembled, sections }
   })
 
-  // ── 路 A 的核心：逐 agent 按预设把能力面挂到**该 agent 的作用域** ──────────────────
-  ctx.on('agent/created', ({ agent }) => {
-    // 不 await：钩子是同步 emit；注册是幂等的，失败只告警
-    diag('agent/created', `agent=${agent?.id ?? '(无)'}｜composedPreset=${(() => {
-      try { return String(ctx.get('agentPresets')?.composedPreset?.(agent?.ctx)) } catch (e) { return '抛错:' + String(e?.message ?? e).slice(0, 40) }
-    })()}`)
-    void mountForAgent(ctx, agent, config).then((r) => {
-      diag('mount', `agent=${agent?.id ?? '(无)'}｜mounted=${r?.mounted}｜reason=${String(r?.reason ?? '').slice(0, 120)}`)
-    })
-  })
+  // ── 能力面：注册在**本 ctx**（= 装它的那一层）——2026-09-18 第二轮回滚 ──────────────────
+  // 背景（用户实测 + DSH 源码实锤，两件事一起推翻了"按预设隔离"这条路）：
+  //   ① **切换预设拿不到能力面**：空白会话切预设（`agent-presets.swap`）确实会
+  //      `recompose(agent.ctx, id)` 重新组合，但那一刻**该 agent 已经存在**——我们的
+  //      `agent/created` 监听者是在这次组合中才注册的，**永远不会**为这个已有 agent 触发。
+  //      于是"先建会话再切过去"= 工具永远不出现（用户原话：只有一开始就是该预设才有工具）。
+  //   ② **技能在预设层读不到**：注册表是**分层**的（`dsh-skill` 的 preset 层），而技能工具
+  //      （`tool-skill`）在**预设层**读；我们注册进 `agent.ctx`（子层）⇒ 父层读不到 ⇒ 技能永远不出现。
+  //      在 profile bundle 装法下我们的 ctx 就是 profile 根，**够不到预设层**，
+  //      而预设行又无法解析本包（行按 harness base 解析，见 preset 模板末尾说明）⇒ 这条路封死。
+  // 结论：本 DSH 版本上"只让某个预设看到工具/技能"**无法可靠交付**。按用户指示回滚到
+  // 「装上插件 → 所有会话都能用」这一久经验证的行为（= 1.0.0 的行为），并把预设保留为**身份/人格**。
+  const faces = []
+  const step = (label, fn) => { try { fn() } catch (e) { faces.push(`${label}: ${String(e?.message ?? e)}`) } }
+  step('tools', () => registerTools(ctx))
+  step('commands', () => registerCommands(ctx))
+  step('ppt_state', () => statusToolFor(ctx))
+  step('skills', () => registerManualSkill(ctx))
+  if (faces.length) loggerOf(ctx)?.warn?.(`[ppt-studio] 部分能力面注册失败：${faces.join('；')}`)
+  diag('faces', `tools/commands/ppt_state/skills 已注册在 apply ctx（回滚为全局可见）｜失败=${faces.length ? faces.join(';') : '无'}`)
 }
 
 /**
- * 把能力面挂到某个 agent 的作用域（仅当该 agent 属于本插件的预设）。
- * 幂等：同一 agent 只挂一次（防 profile bundle 行 + preset 行双挂时的重复注册）。
+ * 【已删除】`mountForAgent` / `agentIsOurs` / `computeOurs`（2026-09-18 第二次修订回滚）
+ *
+ * 它们实现了"只让「PPT 工作室」预设的会话看到工具/技能"，但在这版 DSH 上**无法可靠交付**：
+ *   ① 空白会话**切换**预设时，`agent-presets.swap` 会 `recompose(agent.ctx, id)`，可那一刻该 agent
+ *      已经存在——我们的 `agent/created` 监听者是这次组合才注册的，**不会**为它触发 ⇒ 工具永不出现
+ *      （用户实测：只有一开始就是该预设才有工具）；
+ *   ② 技能注册表是**分层**的，技能工具在**预设层**读，而我们只能注册到 `agent.ctx`（子层）或
+ *      profile 根 ⇒ 父层读不到 ⇒ 技能永不出现；而"预设行挂载"这条路又被
+ *      "行按 harness base 解析"封死（见 agent-presets/ppt/agent.cordis.yml 末尾说明）。
+ * 代码留在 git 历史里（提交 4ea7037 起）。若将来 DSH 提供稳定的"预设已切换/已组合"信号，
+ * 可以按同样的形状恢复隔离。
  */
-export async function mountForAgent(ctx, agent, config = {}) {
-  const id = agent?.id ?? agent?.session?.id
-  const actx = agent?.ctx
-  if (!id || !actx) return { mounted: false, reason: 'agent 缺少 id 或 ctx' }
-  const REG = agentReg()
-  if (REG.has(id)) return { mounted: false, reason: '该 agent 已挂载（幂等跳过）' }
-  if (!(await agentIsOurs(ctx, agent, config))) return { mounted: false, reason: '该 agent 不在本插件的预设上' }
-  REG.add(id)
-  // 注意：清理逻辑必须包在**返回的函数**里（写成 `() => REG.delete(id)` 会当场执行）
-  try { actx.effect(() => () => { REG.delete(id) }, 'ppt-studio: agent reg (ref)') } catch { /* 无 effect 时降级 */ }
-  const failed = []
-  const step = (label, fn) => { try { fn() } catch (e) { failed.push(`${label}: ${String(e?.message ?? e)}`) } }
-  step('tools', () => registerTools(actx))
-  step('commands', () => registerCommands(actx))
-  step('ppt_state', () => statusToolFor(actx))
-  step('skills', () => registerManualSkill(actx))
-  if (failed.length) loggerOf(ctx)?.warn?.(`[ppt-studio] agent ${id} 部分能力面挂载失败：${failed.join('；')}`)
-  return { mounted: failed.length === 0, reason: failed.length ? failed.join('；') : 'ok' }
-}
-
-/** 该 agent 是否属于本插件（带缓存：预设不会在会话中途改变——"只有空白会话能切预设"）。 */
-async function agentIsOurs(ctx, agent, config = {}) {
-  const id = agent?.id ?? agent?.session?.id
-  if (!id) return true
-  const CACHE = oursCache()
-  if (CACHE.has(id)) return CACHE.get(id)
-  const v = await computeOurs(ctx, agent, config)
-  CACHE.set(id, v)
-  return v
-}
-
-/**
- * 判定规则（顺序即优先级）：
- *   ① 拿不到 `agentPresets` 服务 → **失败开放**（环境不支持 roster，保持今天的行为）；
- *   ② 该 agent 没有加入任何预设 → **失败开放**（同上）；
- *   ③ 预设 id ∈（config.presetIds ?? ['ppt']）∪（名册里"行中含本包"的预设 id）→ true；
- *   ④ 其余 → false（**这就是隔离**）。
- */
-async function computeOurs(ctx, agent, config = {}) {
-  let ap
-  try { ap = ctx.get('agentPresets') } catch { return true }
-  if (!ap || typeof ap.composedPreset !== 'function') return true
-  let presetId = null
-  try { presetId = ap.composedPreset(agent.ctx) ?? null } catch { return true }
-  if (!presetId) return true
-  const ids = new Set(Array.isArray(config?.presetIds) && config.presetIds.length ? config.presetIds : DEFAULT_PRESET_IDS)
-  if (typeof config?.presetIds === 'string' && config.presetIds) ids.add(config.presetIds)
-  try {
-    const inv = await ap.compositionInventory()
-    for (const c of inv ?? []) {
-      const cid = c?.id ?? c?.preset ?? c?.agentPreset
-      if (!cid) continue
-      const rows = c?.rows ?? c?.entries ?? c?.composition ?? []
-      const flat = Array.isArray(rows) ? rows : []
-      // ① 行里点名本包（非 bundle 模式：预设带插件行）→ 该预设属于我们
-      if (flat.some((r) => r?.name === name || r?.moduleName === name)) { ids.add(String(cid)); continue }
-      // ② 显示名兜底（降低"预设被改名 → PPT 会话什么都拿不到"的风险）
-      const label = `${c?.displayName ?? ''} ${c?.name ?? ''} ${c?.title ?? ''}`
-      if (/PPT\s*工作室|ppt-studio/i.test(label)) ids.add(String(cid))
-    }
-  } catch { /* 名册读不到就只用配置的 id——够用（默认 'ppt' 就是本包预设的目录名） */ }
-  return ids.has(String(presetId))
-}
 
 function extractText(data) {
   const c = data.content

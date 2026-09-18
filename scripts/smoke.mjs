@@ -2121,79 +2121,49 @@ ok('bundle：未发布到 npm（保持 private），一键安装走 GitHub Relea
     `package=${rootPkg.name}｜patch=${insertRow?.name ?? '(缺)'}｜预设含该行=${presetHasRow}`)
 }
 
-// 路 A（2026-09-18）：apply **不再在 profile 层注册能力面**；工具/命令/技能在 agent/created 里
-// 按该 agent 的预设挂到 `agent.ctx` 作用域 ⇒ 只有「PPT 工作室」预设的会话看得到。
+// 回滚后的装配形状（2026-09-18 第二次修订）：`apply()` 在**它被装入的那一层**注册全部能力面
+// （工具 / `/ppt` 命令 / `ppt_state` / 4 本技能）⇒ 装上插件，**所有会话**都能用。
+// 为什么放弃按预设隔离（两件都实测过，代码见 src/index.js 顶部）：
+//   ① 空白会话**切换**预设时 `agent-presets.swap` 会 `recompose(agent.ctx, id)`，但那一刻该 agent 已存在，
+//      我们的 `agent/created` 监听者才刚在这次组合中注册 ⇒ **不会**为它触发 ⇒ 切过去永远没有工具；
+//   ② 技能注册表分层、技能工具在**预设层**读，而我们只能注册到 agent 子层或 profile 根 ⇒ 技能永不出现。
 {
   const indexMod = await import('../lib/index.js')
-  let globalTools = 0, globalCmds = 0, listeners = 0
+  let tools = 0, cmds = 0, skills = 0, listeners = 0
   const handlers = new Map()
+  const skillsSvc = { register: () => { skills++ } }
   const makeCtx = () => ({
-    tools: { register: () => { globalTools++ } },
-    commands: { register: () => { globalCmds++ } },
-    get: () => undefined, // 无名册服务 → 失败开放（保持环境不支持 roster 时的行为）
+    tools: { register: () => { tools++ } },
+    commands: { register: () => { cmds++ } },
+    skills: skillsSvc,
+    get: (k) => (k === 'skills' ? skillsSvc : undefined),
+    // 上游 roster 服务存在也**必须不再影响装配**（回滚后不再按预设过滤）
+    agentPresets: { composedPreset: () => 'standard', compositionInventory: async () => [] },
     on: (ev, fn) => { listeners++; handlers.set(ev, fn) },
     effect: (fn) => { fn(); return () => {} },
     logger: () => ({ info: () => {}, warn: () => {} }),
   })
-  indexMod.apply(makeCtx(), {})
-  ok('路 A：apply 后**不**在 profile 层注册任何工具/命令（只装钩子 + 全局管道）',
-    globalTools === 0 && globalCmds === 0 && listeners >= 3,
-    `apply 后 tools=${globalTools} cmds=${globalCmds} listeners=${listeners}（应 tools=0 cmds=0）`)
-  let agentTools = 0, agentCmds = 0
-  const makeAgentCtx = () => ({
-    tools: { register: () => { agentTools++ } },
-    commands: { register: () => { agentCmds++ } },
-    get: () => undefined,
-    effect: (fn) => { fn(); return () => {} },
-    logger: () => ({ info: () => {}, warn: () => {} }),
-  })
-  const agentA = { id: 'agentA', ctx: makeAgentCtx() }
-  handlers.get('agent/created')?.({ agent: agentA })
-  await new Promise((r) => setTimeout(r, 80))
-  const firstAgent = { tools: agentTools, cmds: agentCmds }
-  ok('路 A：agent/created 把能力面挂到**该 agent 的作用域**（工具 + /ppt 命令 + ppt_state）',
-    firstAgent.tools > 10 && firstAgent.cmds >= 1 && globalTools === 0,
-    `agent 作用域 tools=${firstAgent.tools} cmds=${firstAgent.cmds}；profile 层仍 tools=${globalTools}`)
-  handlers.get('agent/created')?.({ agent: agentA }) // 同一 agent 再来一次（双挂载场景）
-  await new Promise((r) => setTimeout(r, 80))
-  ok('路 A：同一 agent 重复触发不重复注册（按 agent 幂等，防 bundle 行 + preset 行双挂）',
-    agentTools === firstAgent.tools && agentCmds === firstAgent.cmds,
-    `再次触发后 tools=${agentTools}（应=${firstAgent.tools}）cmds=${agentCmds}（应=${firstAgent.cmds}）`)
-
-  // 门控语义（机器断言）：判据是"该 agent 的预设是否属于本插件"。
-  // 上游时序已核对：api-session-controller 的 composeAgent().setup() 是 **pre-publication** 调用
-  // `presets.mount()`，而 `agent/created` 是"factory setup 之后" ⇒ 钩子执行时预设已就位。
-  // （headless 不接预设 ⇒ composedPreset 为 null ⇒ 按"失败开放"注册，这是**有意**的零回归行为。）
-  let gTools = 0, gCmds = 0
-  const mkAgent2 = (id, presets) => ({
-    id,
-    ctx: {
-      tools: { register: () => { gTools++ } },
-      commands: { register: () => { gCmds++ } },
-      get: (k) => (k === 'agentPresets' ? presets : undefined),
-      effect: (fn) => { fn(); return () => {} },
-      logger: () => ({ info: () => {}, warn: () => {} }),
-    },
-  })
-  const rootCtxWith = (presets) => ({
-    get: (k) => (k === 'agentPresets' ? presets : undefined),
-    logger: () => ({ info: () => {}, warn: () => {} }),
-  })
-  const stdFake = { composedPreset: () => 'standard', compositionInventory: async () => [] }
-  const pptFake = { composedPreset: () => 'ppt', compositionInventory: async () => [] }
-  gTools = 0; gCmds = 0
-  const rStd = await indexMod.mountForAgent(rootCtxWith(stdFake), mkAgent2('agentStd', stdFake), { presetIds: ['ppt'] })
-  ok('路 A 门控：**非本插件的预设（standard）→ 一个工具/命令都不注册**（这就是会话隔离）',
-    gTools === 0 && gCmds === 0 && rStd.mounted === false,
-    `tools=${gTools} cmds=${gCmds} mounted=${rStd.mounted}（应 0/0/false）`)
-  gTools = 0; gCmds = 0
-  const rPpt = await indexMod.mountForAgent(rootCtxWith(pptFake), mkAgent2('agentPpt', pptFake), { presetIds: ['ppt'] })
-  ok('路 A 门控：本插件预设（ppt）→ 注册 21 工具 + 1 命令',
-    gTools > 10 && gCmds >= 1 && rPpt.mounted === true, `tools=${gTools} cmds=${gCmds} mounted=${rPpt.mounted}`)
-  gTools = 0
-  const rNo = await indexMod.mountForAgent(rootCtxWith(undefined), mkAgent2('agentNoRoster', undefined), { presetIds: ['ppt'] })
-  ok('路 A 门控：拿不到 roster 服务（headless 等）→ **失败开放**仍注册（零回归）',
-    gTools > 10 && rNo.mounted === true, `tools=${gTools} mounted=${rNo.mounted}`)
+  indexMod.apply(makeCtx(), { presetIds: ['ppt'] })
+  ok('回滚：apply 在**装入层**注册工具与命令面（21 工具 + /ppt 命令）——"装上即可用"',
+    tools === 21 && cmds >= 1, `tools=${tools} cmds=${cmds}`)
+  ok('回滚：4 本内嵌技能注册在**同一层**（技能注册表分层，技能工具在父层读——注册到子层就永远看不见）',
+    skills === 4, `skills=${skills}（应=4）`)
+  ok('回滚：隔离代码已移除（不再导出 mountForAgent，也不再用 roster 决定装配）',
+    indexMod.mountForAgent === undefined && tools === 21, `mountForAgent=${typeof indexMod.mountForAgent}｜tools=${tools}`)
+  const first = { tools, cmds, skills }
+  indexMod.apply(makeCtx(), { presetIds: ['ppt'] }) // 第二次装配（双挂载场景）
+  ok('回滚：同进程第二次装配被防重拦下（首个生效 + 计数），不重复注册',
+    tools === first.tools && cmds === first.cmds && skills === first.skills,
+    `二次后 tools=${tools}（应=${first.tools}）cmds=${cmds} skills=${skills}｜refcount=${globalThis.__pptCoreReg?.count ?? '?'}`)
+  ok('回滚：apply 装的全局管道仍在（预览路由/语义路由/提示段注入靠这些监听器）',
+    listeners >= 2, `listeners=${listeners}`)
+  let promptOk = false
+  try {
+    const h = handlers.get('system-prompt/assemble')
+    const out = h ? await h({ sections: [] }, { agent: { session: { id: 'no-such-session-xyz' } } }, async () => ({ sections: [] })) : null
+    promptOk = Boolean(out)
+  } catch { promptOk = false }
+  ok('回滚：提示段注入不按预设门控（读不到会话状态时原样返回，不抛）', promptOk, promptOk ? '原样返回 ✓' : '未注册/抛错')
 }
 
 // ── 41. 装配路径：**只允许 profile bundle**（install.mjs 行为；2026-09-18 事故后收窄）─────────
