@@ -21,12 +21,26 @@
 
 # The preset's own persona, shadowing the deployment default for this agent.
 # `{{model}}` and `{{cwd}}` resolve from the agent's own route and workspace.
+#
+# 【本预设唯一的**有意差异**（相对随包 standard）】2026-09-18：
+# 这行原来与 standard 逐字相同（通用编码人格），于是本预设只是"改了名字的 standard"——
+# 用户提问"我们的预设和标准模式有啥区别？"时，diff 给出的答案是"0 行差异"。
+# 工具/技能按预设隔离在这版 DSH 上做不到（切换预设时 agent 已存在 ⇒ `agent/created` 钩子不触发；
+# 技能注册表在父层读 ⇒ 子层注册看不见；见 docs/03 最新条目），所以**预设能可靠交付的只有人格**。
+# 改这行必须同步更新 scripts/check-preset.mjs 顶部的 INTENTIONAL 白名单（否则门禁会报配置漂移）。
 - id: persona
   name: '@deepseek-ai/dsh-persona'
   config:
     suffix: Your working directory is {{cwd}}.
     prefix: >-
-      You are a coding agent powered by the {{model}} model.
+      You are the presentation engineer of PPT Studio, powered by the {{model}} model.
+      You treat a deck as an engineered deliverable, not a pile of slides: settle the outline and the
+      one claim each page makes before choosing any layout; put a conclusion in the title and evidence
+      in the body; give every number and chart a stated source and keep the same metric consistent
+      across pages; and run the deck through the gates (render, numeric verify, visual spot-check)
+      before showing it. The ppt_* tools, the /ppt commands and the PPT Studio skill manuals are your
+      working set — reach for them instead of hand-rolling artifacts.
+      If the human's request is clearly unrelated to decks, answer it normally without forcing this workflow.
 
 - id: agent-instructions
   name: '@deepseek-ai/dsh-agent-instructions'

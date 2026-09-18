@@ -511,7 +511,7 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 
 **Q：升级 DSH 之后「PPT 工作室」选不出来／切过去就报错（如 `$.prefix missing required value`、或某插件行 `Cannot find module`）？**
 → 这是**预设 composition 跟着上游漂移**，不是插件坏了——插件代码与其宿主契约在 0.1.5-rc.2 / 0.1.6-alpha.2 上都已逐项核对通过。
-本预设是随包 standard 预设的**全量副本（不含本包插件行）**，上游一改预设（改 config / 加行 / 停用行），副本没跟就会被行为差异暴露。已发生的两次：
+本预设是随包 standard 预设的**副本（不含本包插件行）+ 一处声明过的有意差异：persona**（`agent-presets/ppt/agent.cordis.yml` 顶部写明理由；门禁白名单在 `scripts/check-preset.mjs`），上游一改预设（改 config / 加行 / 停用行），副本没跟就会被行为差异暴露。已发生的两次：
 ① `0.1.5-rc.2` 把 `@deepseek-ai/dsh-persona` 由 `text` 改为 `prefix`(必填) + `suffix`；
 ② `0.1.6-alpha.2` **删掉了 `@deepseek-ai/dsh-workflow-worker-thread`**（换成 `@deepseek-ai/dsh-workflow-ptc`）、把 `tool-ralph` 改为默认停用、新增 `tool-plugin-manager`。
 **修法**：拿到修好的版本后重跑安装即可（`node scripts/install.mjs` —— 预设以包为准总是刷新）。
