@@ -3,6 +3,10 @@
  * 保留 styleAudit + 双轨字段（template.pptx/previews/），幂等。
  * 流程：备份 template.yaml（styleAudit）→ rm 模板目录 → importPptx(桌面源) → registerTemplate →
  *       迁移脚本补双轨资产 → 合并 styleAudit。
+ *
+ * 【2026-09-18 状态（1.0.4）】它重建的那 4 套模板已移出随包发行物，桌面源目录
+ * `C:/Users/11867/Desktop/ppt模板库` 也已不存在 ⇒ 默认调用必然失败。保留为**一次完整重建的参考流程**
+ * （收纳自己的模板时按同样顺序走：importPptx → ppt_template_add → 可选补双轨）。
  */
 import { readFile, writeFile, mkdir, rm, readdir, copyFile } from 'node:fs/promises'
 import { join, dirname, basename } from 'node:path'

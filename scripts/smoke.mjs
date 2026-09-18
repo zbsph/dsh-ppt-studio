@@ -428,7 +428,11 @@ const builtins = tplList.filter((t) => BUILTIN_TPLS.includes(t.id))
 const externals = tplList.filter((t) => !BUILTIN_TPLS.includes(t.id))
 ok('v0.5：内置模板 4 套齐全（含外部收纳的并存）', builtins.length === 4 && tplList.length >= 4, `总 ${tplList.length} 套：${tplList.map((t) => t.id).join(',')}`)
 ok('v0.5：内置模板元信息完整（含预览图）', builtins.every((t) => t.name && t.style && t.scene && t.preview), builtins.map((t) => `${t.id}:${t.preview ? 'png' : 'MISSING'}`).join(' '))
-ok('v0.6.2：外部收纳模板自包含（预览图生成 + 无外部目录引用）', externals.every((t) => t.preview), externals.map((t) => `${t.id}:${t.preview ? 'png' : 'MISSING'}`).join(' '))
+// 【1.0.4】原来这条只查"外部收纳模板自包含"。随包移除 4 套重型导入模板后，externals 恒为空 ⇒
+// `[].every()` 会**空转通过**（假绿）。改成对**整个模板库**的不变量：每套都必须自包含（元数据齐 + 有预览图）。
+ok('v0.6.2：模板库每套都自包含（元数据齐 + 有预览图，无外部目录引用）',
+  tplList.length > 0 && tplList.every((t) => t.name && t.style && t.preview),
+  tplList.map((t) => `${t.id}:${t.preview ? 'png' : 'MISSING'}`).join(' '))
 let tplAllOk = true
 const tplReport = []
 for (const t of builtins) {
@@ -466,7 +470,9 @@ for (const t of externals) {
     extReport.push(`${t.id}:FAIL ${e?.message}`)
   }
 }
-ok('v0.6.2：外部模板可渲染（内容参照，清理后工作区可用）', extOk && externals.length >= 1, extReport.join('; '))
+ok('v0.6.2：外部收纳模板可渲染（内容参照，清理后工作区可用）',
+  externals.length === 0 || extOk,
+  externals.length ? extReport.join('; ') : '随包无外部收纳模板（4 套重型导入模板已于 1.0.4 移除）；收纳路径由下方 registerTemplate 断言覆盖')
 // theme-conformance：出板颜色=ERROR；suggest 档=warning；off=跳过
 const confPage = { elements: [{ id: 'x', kind: 'shape', fill: '#123456', bounds: { x: 0, y: 0, w: 10, h: 10 } }] }
 ok('v0.5：theme-conformance strict 出板颜色 → ERROR', verifyDeck({ size: size960, theme: { colors: { a: '#2563EB' } }, pages: [{ index: 0, name: 'p', safeArea: null, overlapMode: 'declared', expectedOverlaps: [], expectedOutOfSafeArea: [], elements: [{ id: 'x', kind: 'shape', fill: '#123456', bounds: { x: 0, y: 0, w: 10, h: 10 } }] }] }).text.includes('[✗] theme-conformance'))
@@ -481,15 +487,24 @@ const ctxTW2 = await resolveDeck(tplWS)
 ok('v0.7：模板工作区——正式页单页注册 + 母版不进门禁', ctxTW2.pages.length === 1 && ctxTW2.pages[0].ref === mat.formal && mat.firstRef === 'pages/_cover.yaml', `pages=${ctxTW2.pages.length} ref=${ctxTW2.pages[0]?.ref}`)
 const tplV0 = verifyDeck((await renderDeck(ctxTW2, {})).layout)
 ok('v0.7：内置模板正式页（首母版副本）0 错误', tplV0.text.split('\n').filter((l) => l.includes('[✗]')).length === 0)
-// 外部模板工作区：母版未注册不报错（用户反馈场景：加载模板不再被门禁拦住）
-const extT = externals[0]
-if (extT) {
+// 模板工作区物化（1.0.4 起改用内置模板：随包已无"带 media/真相层"的导入模板）：
+//   ① 母版未注册不报错（只注册 1 个正式页）——用户反馈场景：加载模板不再被门禁拦住
+//   ② 媒体必须与模板清单**数量一致**（0 也是合法值：内置模板无 media），且**无真相层时不建 reference/**
+{
+  const extT = { id: BUILTIN_TPLS[0] }   // business-blue（6 张母版；确保 refs > 5 这条仍然有意义）
   const extWS = join(root, 'examples', 'tpl-work-ext')
   await rm(extWS, { recursive: true, force: true })
+  const tplMetaSrc = await tplMod.templateWorkspace(extT.id)
+  const tplMediaCount = tplMetaSrc.media.length
   const matE = await materializeTemplate(extWS, extT.id, {})
   const extCtx = await resolveDeck(extWS)
-  ok('v0.7：外部模板工作区——只注册 1 个正式页（母版参考不报错）', extCtx.pages.length === 1 && matE.refs.length > 5 && matE.mediaCount >= 0, `registered=${extCtx.pages.length} refs=${matE.refs.length}`)
-  ok('v0.7：外部模板媒体跟随复制', matE.mediaCount > 0, `media=${matE.mediaCount}`)
+  // 不变式：refs = 母版页数 − 1（首母版被"正式化"为 pages/01_opening.yaml，其余以参考母版随行，见 templates.js:300）
+  ok('v0.7：模板工作区——只注册 1 个正式页（母版参考不报错，其余母版全部随行）',
+    extCtx.pages.length === 1 && matE.refs.length === (tplMetaSrc.meta.pages ?? []).length - 1 && matE.refs.length > 4,
+    `registered=${extCtx.pages.length} refs=${matE.refs.length}/${(tplMetaSrc.meta.pages ?? []).length - 1}（首母版正式化后余下的参考母版）template=${extT.id}`)
+  ok('v0.7：模板媒体跟随复制（数量与清单一致）+ 无真相层时不建 reference/',
+    matE.mediaCount === tplMediaCount && !existsSync(join(extWS, 'reference')),
+    `media=${matE.mediaCount}/${tplMediaCount} reference=${existsSync(join(extWS, 'reference'))}`)
 }
 // 收纳清洗升级：registerTemplate 声明出界元素 + 剩余错误分类（bandDeck safeArea 外元素）
 const reg2 = await tplMod.registerTemplate(bandDeck, { id: `smoke-wash-${Date.now().toString(36)}`, name: '洗涤测试' }, {})

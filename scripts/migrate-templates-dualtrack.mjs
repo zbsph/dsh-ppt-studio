@@ -4,6 +4,10 @@
  * ② 已渲染 COM 整页 PNG（~/.dsh/ppt-studio/fidelity/orig/<模板名>/NN.png）→ templates/<id>/previews/
  * ③ template.yaml 补 sourcePptx/previews 元数据
  * 用法：node scripts/migrate-templates-dualtrack.mjs
+ *
+ * 【2026-09-18 状态（1.0.4）】它服务的那 4 套导入模板已移出随包发行物、桌面源目录也已不存在 ⇒
+ * 默认调用会找不到源。保留为**双轨真相层的迁移参考实现**（收纳自己的模板时仍可照此补齐
+ * template.pptx + previews/；生成侧现在有 `ppt_template_add` 覆盖）。
  */
 import { readFile, writeFile, copyFile, mkdir, readdir } from 'node:fs/promises'
 import { existsSync } from 'node:fs'

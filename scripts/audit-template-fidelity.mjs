@@ -1,6 +1,10 @@
 /**
  * 模板导入保真审计：源 pptx（XML 逐页）vs 导入模板工程（yaml）同口径对比。
  * 输出每套的逐页差异表 + 汇总保真率与主要失真类别，落盘 docs/fidelity-report.md。
+ *
+ * 【2026-09-18 状态（1.0.4）】本脚本默认源目录 `桌面/ppt模板库` **已不存在**，它审计的那 4 套模板
+ * 也已从随包发行物移除。保留本脚本是因为它是 docs/fidelity-report.md 里那些结论的**复现工具**——
+ * 要再跑，需自备原始 pptx 并把那 4 套收纳回 `templates/<id>/`（来源见 docs/03 的 1.0.4 记录）。
  */
 import { join, dirname, basename } from 'node:path'
 import { fileURLToPath } from 'node:url'

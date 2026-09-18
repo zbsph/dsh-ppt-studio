@@ -415,7 +415,13 @@ ppt_visual(pptx=<spliced产物>, pages="15")               # 抽查该页真实�
 
 ## 7. 内置模板库
 
-4 套版权自研风格（business-blue 商务蓝 / academic-white 学术会议 / tech-dark 科技深色 / pitch-bold 路演大字，各含 theme + 6 张版式母版）+ 外部模板（实用毕业设计/极简部门总结/深蓝质感答辩/简约商务等，双轨含真实模板 pptx + 真渲染预览）。
+4 套版权自研风格（business-blue 商务蓝 / academic-white 学术会议 / tech-dark 科技深色 / pitch-bold 路演大字，各含 theme + 6 张版式母版）。
+
+> **1.0.4 变更：随包不再附带 4 套"从真实 PPT 导入"的重型模板**（实用毕业设计论文答辩 / 极简实用部门工作总结 / 深蓝质感论文答辩 / 简约商务）。
+> 它们合计 **46.2 MB，占整个安装包的 96%**，而实测从未被使用；移除后安装包 **48 MB → 约 2 MB**（下载/安装时间同比例下降）。
+> 想恢复其中某一套：① 从 [v1.0.3 的 Release 资产](https://github.com/zbsph/dsh-ppt-studio/releases/tag/v1.0.3) 下载 tgz、解压取 `package/templates/<id>/`；
+> 或 ② 从 git 历史取 `git show v1.0.3:templates/<id>/...`（注意 `previews/` 是 Office 渲染产物、**未被 git 跟踪**，只在资产里）。
+> 放回 `templates/` 后与内置模板同等可用。
 
 - `ppt_templates` 看清单与预览；`/ppt template <id>` 记默认。
 - `ppt_new(dir, template=<id>)` 物化工作区：`pages/_*.yaml` 是**参考母版**（不进门禁）；`01_opening.yaml` 是正式副本（先 `ppt_verify autoDeclare=true` 声明模板固有叠层 → 剩余错误是模板原文案残留，替换后自然干净）。

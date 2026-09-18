@@ -1,10 +1,13 @@
 /**
  * 导入版模板逐页截图（保真对照用）：render 模板工程 → Edge 逐页 1920×1080 PNG。
  * 输出 fidelity/imp/<id>/NN.png；渲染临时目录 _imp-tmp 用后即删。
+ * 用法：node scripts/shot-templates.mjs [id...]（缺省 = **模板库里现有的全部模板**）
+ *   【2026-09-18】此前默认硬编码 4 套"导入版"模板 id；那 4 套已从随包发行物移除
+ *   （46.2 MB → 0.13 MB，见 docs/03 的 1.0.4 记录），硬编码 id 会立刻失效 ⇒ 改为动态列举。
  */
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { existsSync } from 'node:fs'
+import { existsSync, readdirSync } from 'node:fs'
 import { spawn } from 'node:child_process'
 import { rm, mkdir } from 'node:fs/promises'
 import { resolveDeck } from '../lib/pptd/schema.js'
@@ -18,7 +21,9 @@ const edge = ['C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe
   'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
   'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'].find((p) => existsSync(p))
 
-const ids = process.argv.slice(2).length ? process.argv.slice(2) : ['实用毕业设计论文答辩ppt模板', '极简实用部门工作总结ppt模板', '深蓝质感论文答辩ppt模板', '简约商务']
+const ids = process.argv.slice(2).length
+  ? process.argv.slice(2)
+  : (existsSync(TEMPLATES_DIR) ? readdirSync(TEMPLATES_DIR, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name) : [])
 for (const id of ids) {
   const t = await templateWorkspace(id)
   const dir = t.dir
