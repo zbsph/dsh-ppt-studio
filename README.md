@@ -598,12 +598,13 @@ npm run sync              # 发版：上传 GitHub 资产 + 把本机与 GitHub 
 git push origin main                                    # ① 先把提交推上去
 gh release create v<版本> --target "$(git rev-parse HEAD)" --title ... --notes-file ...   # ② tag 必须显式指到这一提交
 npm run sync                                            # ③ 构建 → 上传资产 → ⓪b git 前置 + ⑦ 用户视角终验
-npm publish                                             # ④ 发 npm（v1.0.3 起；需本机已 `npm login` 或配好 token——见 docs/06 §发布）
+npm publish "D:\plugins\_artifacts\dsh-ppt-studio-<版本>-<构建时间>-<构建戳>.tgz"   # ④ 发 npm（用 ③ 刚构建的那个 tgz，见下方注）
 ```
 
-> **npm 与 GitHub 必须是同一份字节**：`npm publish` 打的是 `npm pack` 的工作区（与 ③ 上传的资产同源），
-> 所以顺序是"先 ③ 证明 ⓪b/⑦ 全绿，再 ④ 发布"；发布后用 `npm view dsh-ppt-studio version dist.integrity`
-> 与本地 `npm pack` 的 integrity 对照（步骤见 docs/06）。
+> **npm 与 GitHub 必须是同一份字节**：`npm publish <tgz>` 直接发 ③ 产出的那个 tgz（路径与名称写在
+> `.sync-state.json` 的 `localTgz` / 资产名里），因此 npm 包与 Release 资产逐字节相同。
+> **不要**在主分支已经前进后再跑裸 `npm publish`（那会按**当前工作区**打包 ⇒ 同名版本内容却不同）。
+> 发布后核对：`npm view dsh-ppt-studio version dist.integrity` 应与本地 `npm pack` 输出一致。
 
 > 为什么把顺序写死：`gh release create` 不指定 `--target` 时按**默认分支 HEAD** 建 tag——本地没推时它就把 tag
 > 建在旧提交上（v1.0.1 第一次发布就是这么错的：资产 sha 全绿，而 GitHub 上是指向 v1.0.0 代码的旧提交，

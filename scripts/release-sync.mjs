@@ -133,7 +133,20 @@ if (!local) {
   // tag 必须**正好指向 HEAD**：`gh release create` 不指定 --target 时会按默认分支 HEAD 建 tag，
   // 与"我要发布的提交"无关。这条把"发布目标 == 发布内容"钉死。
   const head = run('git rev-parse HEAD').trim()
-  const lsTag = run(`git ls-remote --tags origin refs/tags/${tag}`).trim()
+  // 【2026-09-18 实测】这一行此前没有兜底：github.com 抖一下（HTTPS 21s 超时）就**崩栈**——
+  // 上一行 ⓪b 刚打印"未能确认（离线或 fetch 失败）"，下一行就把 Node 堆栈糊在屏幕上，
+  // 既看不出该干什么，也没留下"这次没验成"的记录。网络类失败必须**失败得可读**：
+  // tag 与 HEAD 的一致性没法确认 ⇒ 拒绝继续（发布目标可能是错的，比"没发布"更糟）。
+  let lsTag = ''
+  try {
+    lsTag = run(`git ls-remote --tags origin refs/tags/${tag}`).trim()
+  } catch (e) {
+    const detail = String(e?.stderr ?? e?.stdout ?? e?.message ?? e).trim().split('\n').find((l) => l.trim()) ?? '(无输出)'
+    console.error(`✗ ⓪b git：**无法查询远端 tag ${tag}**（网络不可达或代理拦截）——本次未能确认"发布目标 == 发布内容"，拒绝继续。\n`
+      + `    原因：${detail}\n`
+      + '    处理：网络恢复后重跑 `npm run sync`（已上传资产会被 --clobber 幂等覆盖；不会产生重复发布）。')
+    process.exit(1)
+  }
   const remoteTagSha = lsTag ? lsTag.split(/\s+/)[0] : ''
   if (!remoteTagSha) {
     console.error(`✗ 远端还没有 tag ${tag}——` + '`gh release create` 不指定 --target 会**按默认分支 HEAD** 建 tag，'
@@ -383,7 +396,10 @@ const state = {
   mount: bundleMode ? (local ? 'bundle-local' : 'bundle') : 'preset-junction',
   mountMatch,
   assetUrl,
-  localTgz: local ? artifactPath : (prev.localTgz ?? null),
+  // 本地构件 = **本次构建**的稳定路径（两种模式 ② 都产出它）。此前 release 模式沿用 `prev.localTgz`，
+  // 于是状态文件里会留着一个**上一版甚至上一版之前**的 tgz 路径（v1.0.3 实测：文件已不存在），
+  // 读状态的人会以为"本机就是从这个构件装的"。状态文件必须只说当下真实的事。
+  localTgz: artifactPath,
   // 三态：true=验过且通过｜false=验过且失败｜null=没验（--local / --skip-fresh）
   freshInstall,
   at: new Date().toISOString(),

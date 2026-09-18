@@ -68,7 +68,11 @@ function shellQuote(s) {
 /** 跑命令；不抛（失败由断言处理）。 */
 function run(cmd, cmdArgs, cwd = root, extraEnv = {}) {
   try {
-    return execFileSync(cmd, cmdArgs.map(shellQuote), {
+    // **命令本身也要加引号**（2026-09-18 实测事故）：只转义参数、不转义命令时，
+    // `$env:GH='C:\Program Files\GitHub CLI\gh.exe'` 这种带空格的路径在 shell:true 下会被 cmd.exe
+    // 截成 `C:\Program`（报 "'C:\Program' is not recognized"），而调用方 `isFail()` 把失败当"没查到"
+    // ⇒ 表现为"资产 URL 未找到"，看起来像资产没上传。加引号后复现命令即通过（已用等价脚本实测三态）。
+    return execFileSync(shellQuote(cmd), cmdArgs.map(shellQuote), {
       cwd,
       encoding: 'utf8',
       env: { ...process.env, ...extraEnv },
@@ -194,13 +198,16 @@ if (SKIP_INSTALL) {
     const pack = run('npm', ['pack', '--pack-destination', packDir])
     spec = isFail(pack) ? '' : join(packDir, String(pack).split(/\r?\n/).filter(Boolean).pop())
   }
+  let specWhy = ''
   if (!spec) {
     // release：用 Release 页面上那条资产 URL（用户会复制粘贴的那一条）
-    const asset = findReleaseAsset(tag)
-    if (asset) spec = asset
+    const found = findReleaseAsset(tag)
+    if (found.url) spec = found.url
+    else specWhy = found.why
   }
   if (!spec) {
-    check('能定位到"用户会敲的那条命令"的安装规格（Release 资产 URL / 本地 tgz）', false, '(未找到)',
+    check('能定位到"用户会敲的那条命令"的安装规格（Release 资产 URL / 本地 tgz）', false,
+      `(未找到)${specWhy ? ` ${specWhy}` : ''}`,
       '这条命令是文档指引的核心；找不到规格就无法证明它可用。可用 --spec 显式给定。')
   } else {
     console.log(`      规格：${spec}`)
@@ -230,21 +237,24 @@ function countCrlfFiles(dir) {
   return out
 }
 
-/** 取 Release 资产 URL（用户会在资产页复制粘贴的那一条）。 */
+/** 取 Release 资产 URL（用户会在资产页复制粘贴的那一条）。返回 { url, why }——why 为空表示成功。 */
 function findReleaseAsset(t) {
   const gh = process.env.GH || 'gh'
   // 用 REST + 本地解析，**不用 --jq**：cmd.exe 下 shell 无法用单引号 jq（release-sync.mjs 里同一条教训）。
   const remote = run('git', ['remote', 'get-url', 'origin']) || ''
   const m = /github\.com[:/]([^/]+)\/([^/]+?)(?:\.git)?$/.exec(remote.trim())
-  if (!m) return ''
+  if (!m) return { url: '', why: `无法从 origin 解析 owner/repo：${remote.trim() || '(空)'}` }
   const json = run(gh, ['api', `repos/${m[1]}/${m[2]}/releases/tags/${t}`])
-  if (isFail(json)) return ''
+  // **失败必须说出原因**（别再静默返回空）：这条断言红过两次，第一次的样子就是"未找到"三个字，
+  // 而真正原因（gh 调用被 shell 截断 / 网络超时）全被吞掉了。
+  if (isFail(json)) return { url: '', why: `gh api 调用失败：${json.replace(/^__FAIL__/, '').trim().split('\n')[0]}` }
   try {
     const assets = (JSON.parse(json).assets ?? []).filter((a) => String(a.name).endsWith('.tgz'))
     // 资产名 = 版本-构建时间-构建戳；历次构建都挂在同一 Release 上，按创建时间取最新即当前版本。
     assets.sort((a, b) => String(a.created_at).localeCompare(String(b.created_at)))
-    return assets.pop()?.browser_download_url ?? ''
-  } catch {
-    return ''
+    const url = assets.pop()?.browser_download_url ?? ''
+    return { url, why: url ? '' : `release ${t} 上没有任何 .tgz 资产（资产是 release-sync 上传的，先跑它）` }
+  } catch (e) {
+    return { url: '', why: `解析 gh 输出失败：${String(e?.message ?? e)}` }
   }
 }
