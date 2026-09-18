@@ -1,0 +1,27 @@
+pageType: content
+elements:
+  - elementId: dr
+    elementType: line
+    points: [[100, 100], [200, 160]]
+    line: {color: "$ink", width: 2}
+  - elementId: dl
+    elementType: line
+    points: [[300, 100], [200, 160]]
+    line: {color: "$ink", width: 2}
+  - elementId: ur
+    elementType: line
+    points: [[400, 200], [500, 140]]
+    arrow: true
+    line: {color: "$jin", width: 2}
+  - elementId: ul
+    elementType: line
+    points: [[600, 200], [500, 140]]
+    line: {color: "$jin", width: 2}
+  - elementId: cross1
+    elementType: line
+    points: [[700, 300], [714, 314]]
+    line: {color: "$wu", width: 2.5}
+  - elementId: cross2
+    elementType: line
+    points: [[714, 300], [700, 314]]
+    line: {color: "$wu", width: 2.5}

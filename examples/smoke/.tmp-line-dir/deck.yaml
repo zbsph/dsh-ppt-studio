@@ -1,0 +1,9 @@
+version: 1
+title: "连线方向夹具"
+size: [960, 540]
+theme:
+  colors: {ink: "#111111", wu: "#B03A2E", jin: "#B7791F", line: "#94A3B8"}
+  textStyles:
+    body: {fontSize: 14, color: "$ink"}
+pages:
+  - pages/01.yaml

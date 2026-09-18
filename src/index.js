@@ -22,6 +22,8 @@ import { isPptIntent, isPptOff, isQuickIntent, detectTaskType, workflowSection }
 import { registerPreviewRoute } from './preview-server.js'
 import { registerManualSkill, manualSkillStatus } from './skill.js'
 import { ensureAgentPreset } from './preset-delivery.js'
+import { existsSync, statSync, mkdirSync, appendFileSync, readFileSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
 
 export const name = '@dsh-external/dsh-ppt-studio'
 // skills 为可选依赖（ctx.get('skills')）：极简装配缺 dsh-skill 时插件仍完整可用
@@ -38,7 +40,35 @@ function loggerOf(ctx) {
   try { return typeof ctx.logger === 'function' ? ctx.logger('ppt-studio') : ctx.logger } catch { return undefined }
 }
 
+/**
+ * 按需诊断日志（**默认关闭**）：`PPT_STUDIO_DEBUG=1`，或存在 `<dshHome>/ppt-studio/debug.on` 时启用。
+ *
+ * 为什么需要它（2026-09-18 的真实排查困境）：本插件的"不生效"有三种完全不同的原因——
+ *   ① 插件没被加载（装法/装配问题）；② 加载了，但门控判成"这个 agent 不属于本插件"；
+ *   ③ 门控放行，但能力面挂到 agent 作用域时失败。
+ * 三者在 UI 上**长得一模一样**（都看不到工具），而会话里一个工具都没有时**什么都问不了**
+ * （连诊断工具本身都没挂上）——所以诊断必须写到**文件**，不依赖"模型肯不肯说"。
+ * 每次判定一行；超过 256KB 时截断保留尾部。
+ */
+function diag(event, detail = '') {
+  try {
+    const home = process.env.DSH_HOME || join(process.env.USERPROFILE || process.env.HOME || '', '.dsh')
+    const dir = join(home, 'ppt-studio')
+    const on = process.env.PPT_STUDIO_DEBUG === '1' || existsSync(join(dir, 'debug.on'))
+    if (!on) return
+    mkdirSync(dir, { recursive: true })
+    const file = join(dir, 'debug.log')
+    try { if (existsSync(file) && statSync(file).size > 256 * 1024) {
+      const buf = readFileSync(file); writeFileSync(file, buf.subarray(buf.length - 128 * 1024))
+    } } catch { /* 忽略 */ }
+    appendFileSync(file, `${new Date().toISOString()}  ${event}  ${detail}\n`, 'utf8')
+  } catch { /* 诊断永不抛 */ }
+}
+
 export function apply(ctx, config = {}) {
+  diag('apply', `baseUrl=${String(ctx?.baseUrl ?? '(无)').slice(0, 90)}`
+    + `｜agentPresets=${(() => { try { return ctx.get('agentPresets') ? '可见' : '不可见' } catch { return '取用抛错' } })()}`
+    + `｜presetIds=${JSON.stringify(config?.presetIds ?? ['ppt'])}｜pid=${process.pid}`)
   // ── 装配防重（2026-09-14 新增 profile bundle 安装路径后必需）────────────────────────
   // 同一个包可能在**同一进程**里被挂两次：
   //   ① profile bundle 行（包的 cordis.patch.yml，`dsh plugin add` 装完即挂）；
@@ -112,7 +142,12 @@ export function apply(ctx, config = {}) {
   // ── 路 A 的核心：逐 agent 按预设把能力面挂到**该 agent 的作用域** ──────────────────
   ctx.on('agent/created', ({ agent }) => {
     // 不 await：钩子是同步 emit；注册是幂等的，失败只告警
-    void mountForAgent(ctx, agent, config)
+    diag('agent/created', `agent=${agent?.id ?? '(无)'}｜composedPreset=${(() => {
+      try { return String(ctx.get('agentPresets')?.composedPreset?.(agent?.ctx)) } catch (e) { return '抛错:' + String(e?.message ?? e).slice(0, 40) }
+    })()}`)
+    void mountForAgent(ctx, agent, config).then((r) => {
+      diag('mount', `agent=${agent?.id ?? '(无)'}｜mounted=${r?.mounted}｜reason=${String(r?.reason ?? '').slice(0, 120)}`)
+    })
   })
 }
 
