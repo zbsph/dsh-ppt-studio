@@ -127,6 +127,12 @@ node scripts/e2e-1.0.mjs        # 13 断言（真浏览器测量 + 真 Office �
 | **profile bundle 行**（`cordis.patch.yml`） | `dsh plugin --profile web add <包>` | 该 profile 的**所有会话**（工作流仍按意图触发，不会误激活） | 不含预设人格 |
 | **agent preset 行** | `node scripts/install.mjs`（写 `~/.dsh/.agent-presets/ppt/agent.cordis.yml`） | 仅**「PPT 工作室」预设会话** | 含预设人格 + 预设层技能镜像 |
 
+> **想要"只有选「PPT 工作室」时才出现这些工具/skills"，就必须走预设行。** 这一列"生效范围"是两条路径**唯一无法兼得**的差别：
+> profile bundle 行是在 **profile 层**注册的，`ppt_*` 工具、`/ppt` 命令面、4 本内嵌技能、工作流提示段都会出现在该 profile 的**每一个**会话里
+> （包括官方标准预设）；预设行是在**预设层**注册的，只有该预设的会话看得到。
+> 插件**无法**在 bundle 挂载下自己按预设过滤——注册发生在插件 apply（进程/profile 级）时，要按预设隔离，注册就必须从预设组合里发生。
+> 两者互斥还有一个机械原因：同时挂会被装配防重拦下（首个生效 + 告警），且纪律要求二选一。切换方式见 §10「改成本机只用预设行」。
+
 **两者都装会让同一个包在同进程被挂两次**：插件里有装配防重（首个生效 + 明确告警，见 `src/index.js`），
 所以**不会崩**，但请二选一——已经用 `dsh plugin` 装了，就跑一次
 `dsh plugin --profile web remove <包>` **或**删掉预设里的插件行。
@@ -530,6 +536,17 @@ node scripts/audit-manual-facts.mjs  # 手册事实审计：逐条把"手册 vs 
 npm run sync -- --local   # 日常迭代：不发 GitHub，本机跑的=你刚构建的字节（构件落在 D:\plugins\_artifacts\）
 npm run sync              # 发版：上传 GitHub 资产 + 把本机与 GitHub 拉回字节级同源
 ```
+
+**改成本机只用预设行（＝只有「PPT 工作室」才有这些工具/skills）**：
+
+```bash
+dsh plugin --profile web remove @dsh-external/dsh-ppt-studio   # ① 先摘掉 profile bundle 行
+node scripts/install.mjs                                       # ② 建 junction + 写含插件行的预设
+# ③ 重启 dsh web
+```
+
+之后日常迭代照旧 `npm run sync -- --local`（非 bundle 模式下它会穿过 junction 逐文件 sha256 自证"挂载副本 == 刚构建的字节"，
+并把预设**保留**插件行）。回退到全会话可用：`dsh plugin --profile web add <Releases 资产 URL>`。
 
 - `--local` 会先 `git fetch` 检查本地是否落后于 `origin/<分支>`，**落后就直接失败**（怕"以为在最新版上迭代、其实不是"——这种偏差没有任何症状，直到发版才发现分叉）。离线时明确标注"未能确认"并继续。
 - 两种模式都只有**一条挂载路径**（profile bundle 行），差别只在"从哪取字节"；`--local` 用本地 tgz 的 `file:` 规格，**不要**为了图快切回 junction/预设行装法——那会多出一条路径，"我改的是哪份代码"就有两种答案，而且答错不报错。

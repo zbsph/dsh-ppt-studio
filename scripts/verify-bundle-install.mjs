@@ -20,7 +20,7 @@
  */
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { readFileSync, existsSync, mkdirSync, rmSync, cpSync, appendFileSync, readdirSync } from 'node:fs'
+import { readFileSync, existsSync, mkdirSync, rmSync, cpSync, appendFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { tmpdir } from 'node:os'
@@ -165,6 +165,47 @@ try {
   const mountSha12 = sha(join(installedDir, 'lib', 'index.js'))
   check('--local：**挂载副本 == 仓库刚构建的 lib/index.js**（这才是"本机跑的就是最新"的判据）',
     repoSha12 === mountSha12, `repo=${repoSha12}｜mount=${mountSha12}`)
+
+  // 7) **非 bundle（预设行 + junction）模式的 --local 自证**（2026-09-18 新增）
+  //    用户诉求："只有选「PPT 工作室」预设时才有这些工具/skills，别的预设不受影响"——
+  //    那对应的正是**预设行挂载**（会话级），而不是 profile bundle（profile 级、全会话可见）。
+  //    本模式此前会让 `release-sync --local` **恒报 ❌**：⑤b 的非 bundle 分支不设 mountMatch（恒 null），
+  //    而 ⑥ 的 LOCAL 判据要求 `mountMatch === true` —— 写 --local 时只考虑了 bundle 模式。这条把该模式钉住。
+  const home2 = join(work, 'home2')
+  mkdirSync(join(home2, 'profiles', 'web'), { recursive: true })
+  writeFileSync(join(home2, 'profiles', 'web', 'package.json'), '{}', 'utf8')
+  // 夹具必须像真实 profile 一样带 yaml：install.mjs 在非 bundle 模式要把 yaml 链到包自己的 node_modules
+  // （ESM 按 realpath 解析，profile 级救不了 junction 抽取目录）。真实机器上 dsh 自己就依赖 yaml，
+  // 缺它只是**夹具**不真——第一轮就是因此让 install.mjs 直接 exit 1（报错本身是清楚的）。
+  const yamlFrom = join(home, 'profiles', 'web', 'node_modules', 'yaml')
+  const yamlTo = join(home2, 'profiles', 'web', 'node_modules', 'yaml')
+  // 断言数必须与环境无关（否则"跳过"与"通过"又混在一起）：无条件发一条，再按结果决定是否拷贝
+  check('非 bundle 夹具：来源 profile 带 yaml（真实 profile 必有；缺了 install.mjs 会直接 exit 1）',
+    existsSync(yamlFrom), yamlFrom)
+  if (existsSync(yamlFrom)) {
+    mkdirSync(dirname(yamlTo), { recursive: true })
+    cpSync(yamlFrom, yamlTo, { recursive: true, dereference: true })
+  }
+  const env2 = { ...process.env, DSH_HOME: home2 }
+  const syncRoot2 = join(work, 'sync-root2')
+  const syncState2 = join(work, 'sync-state2.json')
+  const rel2 = run('node', ['scripts/release-sync.mjs', '--local', '--root', syncRoot2, '--state', syncState2], { env: env2, cwd: root })
+  const relOut2 = `${rel2.stdout ?? ''}\n${rel2.stderr ?? ''}`
+  check('非 bundle：`release-sync --local` 在 preset+junction 模式下退出码 0（不因挂载模式不同而误报失败）',
+    rel2.status === 0, rel2.status === 0 ? 'LOCAL ✓' : relOut2.trim().split(/\r?\n/).slice(-3).join(' | ').slice(0, 240))
+  const st2 = existsSync(syncState2) ? JSON.parse(readFileSync(syncState2, 'utf8')) : {}
+  check('非 bundle：状态文件 mount=preset-junction + mountMatch + ok',
+    st2.mount === 'preset-junction' && st2.mountMatch === true && st2.ok === true,
+    JSON.stringify({ mount: st2.mount, mountMatch: st2.mountMatch, ok: st2.ok }))
+  const link2 = join(home2, 'profiles', 'web', 'node_modules', NAME)
+  const repoSha3 = sha(join(root, 'lib', 'index.js'))
+  const linkSha3 = sha(join(link2, 'lib', 'index.js'))
+  check('非 bundle：junction 存在，且**穿过它读到的 lib/index.js** == 仓库刚构建的',
+    existsSync(link2) && repoSha3 === linkSha3, `repo=${repoSha3}｜through-junction=${linkSha3}`)
+  const preset2 = join(home2, '.agent-presets', 'ppt', 'agent.cordis.yml')
+  check('非 bundle：预设**保留**插件行（这正是"只有该预设才有这些工具"的挂载点）',
+    existsSync(preset2) && /^-\s*id:\s*ppt-studio$/m.test(readFileSync(preset2, 'utf8')),
+    existsSync(preset2) ? '含插件行 ✓' : '预设缺失')
 } finally {
   rmSync(work, { recursive: true, force: true })
 }

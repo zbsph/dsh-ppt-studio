@@ -219,7 +219,25 @@ if (bundleMode) {
     console.log('      手动执行：dsh plugin --profile ' + profileName + ' add "' + installSpec + '"')
   }
 } else {
-  console.log('⑤b 非 bundle 模式（preset/junction 装法）：挂载源就是刚部署的副本，install.mjs 已同步，无需 add')
+  // 非 bundle 模式（**预设行 + junction**）：挂载源 = install.mjs 建的那条 junction → 部署副本。
+  // 判据同样是"逐文件 sha256"，只是要比的是**穿过 junction 读到的字节**。
+  // 【2026-09-18 修】此前这一支不设 mountMatch（恒为 null），而 ⑥ 的 LOCAL 判据要求 `mountMatch === true`
+  // ⇒ 在本模式下 `--local` **恒定报 ❌**。写 `--local` 时只考虑了 bundle 模式，这是本模式的实际缺陷。
+  const linkedPkgDir = join(dshHome, 'profiles', profileName, 'node_modules', ...pkg.name.split('/'))
+  const fileSha2 = (p) => (existsSync(p) ? sha(readFileSync(p)) : null)
+  const probeRels2 = [join('lib', 'index.js'), join('package.json'), 'cordis.patch.yml']
+  if (existsSync(linkedPkgDir)) {
+    mountMatch = probeRels2.every((rel) => {
+      const a = fileSha2(join(deployRoot, 'package', rel))
+      const b = fileSha2(join(linkedPkgDir, rel))
+      return a && b && a === b
+    })
+    console.log(`⑤b 非 bundle 模式（preset 行 + junction）：挂载源 = 刚部署的副本\n    **穿过 junction** 逐文件 sha256 自证：${mountMatch ? '与部署副本同源 ✓' : '与部署副本不一致 ⚠'}（lib/index.js · package.json · cordis.patch.yml）`)
+    if (!mountMatch) console.log(`    ⚠ 不一致 → 重跑安装器重建链接：node "${join(deployRoot, 'package', 'scripts', 'install.mjs')}" --force`)
+  } else {
+    mountMatch = false
+    console.log(`⑤b 非 bundle 模式：**未找到挂载链接** ${linkedPkgDir}——请先跑 node "${join(deployRoot, 'package', 'scripts', 'install.mjs')}"（本步已尝试过，可能失败）`)
+  }
 }
 
 // ⑥ 终验
@@ -232,13 +250,14 @@ let ok
 let verdict
 if (local) {
   // 本地模式的判据**不是**"== GitHub"，而是"**本机跑的 == 刚构建的字节**"：
-  //   mountMatch 已在 ⑤b 用逐文件 sha256 自证（lib/index.js · package.json · cordis.patch.yml）。
-  //   ——这一点必须写清楚：本地模式**故意**放弃"机器 == GitHub"这条不变量，换取不发版也能迭代；
-  //   代价是发版前两者可以不同，所以发版模式（默认）仍然做三向校验，且状态文件用 mode 字段区分。
+  //   mountMatch 已在 ⑤b 用逐文件 sha256 自证——两种挂载模式都要证（bundle=pnpm 快照；
+  //   非 bundle=穿过 junction 读部署副本）。两种模式下它都必须为 true，否则这里报 ❌。
+  //   ——本地模式**故意**放弃"机器 == GitHub"这条不变量，换取不发版也能迭代；
+  //   代价是发版前两者可以不同，所以发版模式（默认）仍做三向校验，状态文件用 mode 区分。
   ok = mountMatch === true && deployOk && artifactSha === localSha
   verdict = ok
-    ? '✅ LOCAL ✓ 本机跑的 == 本地刚构建的字节（本轮未发 GitHub）'
-    : '❌ LOCAL 失败'
+    ? `✅ LOCAL ✓ 本机跑的 == 本地刚构建的字节（${bundleMode ? 'bundle' : 'preset-junction'} 挂载，本轮未发 GitHub）`
+    : `❌ LOCAL 失败（挂载模式 ${bundleMode ? 'bundle' : 'preset-junction'}：mountMatch=${mountMatch}｜部署副本=${deployOk}｜构件一致=${artifactSha === localSha}）`
 } else {
   remoteFinal = remoteDigest()
   ok = localSha === remoteFinal && deployOk
