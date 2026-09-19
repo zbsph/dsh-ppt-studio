@@ -1,5 +1,7 @@
 pageType: content
-# 图表页母版（学术版：大图表 + 数据注释 + 结论区）
+# 图表页母版（学术版：大图表 + 结论区）
+# 【2026-09-18】不再预置"数据说明：口径/来源/n/置信/脱敏声明"占位块：依据写进页面 `source:` 字段（YAML，不进成品）；
+#   页面上只有读者确实需要知道口径时才留一行小字，不要逐页挂（见 ppt-studio-data §3）。
 elements:
   - elementId: pageNo
     elementType: text
@@ -21,10 +23,6 @@ elements:
     elementType: text
     bounds: [60, 470, 620, 24]
     content: {text: "横轴：时间 ｜ 纵轴：指标值（示例数据）", style: "$caption"}
-  - elementId: note
-    elementType: text
-    bounds: [720, 120, 180, 200]
-    content: {text: "数据说明：\n- 口径/来源\n- n / 置信\n- 脱敏声明", style: "$caption"}
   - elementId: conclusion
     elementType: shape
     kind: rect

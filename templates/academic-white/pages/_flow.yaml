@@ -57,7 +57,5 @@ elements:
     points: [[612, 250], [638, 250]]
     arrow: true
     line: {color: "$navy", width: 2}
-  - elementId: footnote
-    elementType: text
-    bounds: [60, 410, 840, 60]
-    content: {text: "注：流程涉及的口径/假设在此说明（小字 12pt）。", style: "$caption"}
+# 【2026-09-18】删掉原来的"注：流程涉及的口径/假设在此说明"占位块（footnote）：
+#   要交代口径就写页面 `source:` 字段（YAML，不进成品）；页面上只在读者确实需要时留一行小字，不要逐页挂。

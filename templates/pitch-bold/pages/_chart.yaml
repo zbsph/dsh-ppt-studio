@@ -1,5 +1,7 @@
 pageType: content
 # 图表页母版（大字版：数字冲击 + 简图）
+# 【2026-09-18】不预置"数据口径/来源/脱敏声明"占位块：依据写进页面 `source:` 字段（YAML，不进成品）；
+#   页面上只有读者确实需要知道口径时才留一行小字，不要逐页挂（见 ppt-studio-data §3）。
 expectedOverlaps:
   - {pair: [bigNumBg, bigNum]}
 elements:
@@ -24,10 +26,6 @@ elements:
     elementType: chart
     bounds: [460, 200, 440, 220]
     chart: {type: bar, data: {cols: ["指标", "值"], rows: [["当前", 12], ["改进", 88]]}}
-  - elementId: note
-    elementType: text
-    bounds: [460, 440, 440, 40]
-    content: {text: "数据口径：来源/单位/脱敏声明（13pt）", style: "$caption"}
   - elementId: footer
     elementType: text
     bounds: [60, 500, 300, 20]

@@ -1,5 +1,7 @@
 pageType: content
-# 图表页母版：标题 + 图表区（chart 元素占位）+ 数据注释
+# 图表页母版：标题 + 图表区（chart 元素占位）+ 读图结论
+# 【2026-09-18】不再预置"数据口径/来源/脱敏声明"占位块：依据写进页面 `source:` 字段（YAML，不进成品）；
+#   页面上只有读者确实需要知道口径时（引用外部数据、口径有歧义）才留一行小字，不要逐页挂（见 ppt-studio-data §3）。
 expectedOverlaps:
   - {pair: [chartBox, chartEl]}
   - {pair: [headbar, pageTitle]}
@@ -28,10 +30,6 @@ elements:
     elementType: text
     bounds: [700, 100, 200, 120]
     content: {text: "读图结论\n（12pt）", style: "$label", color: "$primary", bold: true}
-  - elementId: note
-    elementType: text
-    bounds: [700, 240, 200, 180]
-    content: {text: "数据口径：\n- 来源说明\n- 单位/时间\n- 脱敏声明", style: "$caption"}
   - elementId: footerLine
     elementType: line
     points: [[60, 505], [900, 505]]
