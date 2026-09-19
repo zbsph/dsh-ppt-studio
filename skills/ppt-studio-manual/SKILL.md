@@ -26,6 +26,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 | "先帮我做个 PPT" | 问一句主题+页数即可（工作流自动进入；"帮我做一个 5 页的产品介绍 PPT"这类带修饰语的说法也认得）；建议先 `ppt_new` 立骨架（**用户没提模板时按题材自己定风格，不要默认套内置模板**） |
 | "工作流怎么没自动进入 / 手册哪儿来的" | 进入靠语义判据（名词+任务动词邻近共现；只提一句 PPT 不激活），也可 `/ppt on` 强制；本手册由插件**内嵌注册**（跟着插件走，PPT 会话内即时生效）。**默认不镜像到 `<dshHome>/skills/`**（2026-09-18 起：那是跨预设可见的文件系统技能根，会让别的预设也看到这 4 本）——要让非 PPT 会话也能查阅，安装时显式加 `--mirror-skills`。确认通道：调 `ppt_state` 看 `manualSkill.visible` |
 | "你想看模板吗" | `ppt_templates` 展示。参考优先级：**用户给的模板/既有 ppt（只参考它，内置不参与）> 用户明确要求时的内置模板 > 按题材自己设计风格（默认路径）**；内置模板只有明显贴合题材时才参考 |
+| "我自己的模板想加进库 / 想删掉某个模板" | 入库：`ppt_template_add pptx=<绝对路径>`（写用户层 `<dshHome>/ppt-studio/templates`，**升级不丢**）；删除：`ppt_template_remove id=<id>`（**只能删自建的**，随包拒删）。`ppt_templates` 分"你的 / 随包的"两段列出。用户自攒的模板视同"用户给的模板"，优先级最高 |
 | "怎么装/怎么升级这个插件" | **一键（推荐）**：`dsh plugin --profile web add <Releases 页面上的资产 URL>`（profile 级，装完即挂载，**不需要 npm 账号**；装完重启 dsh web）。**升级必须换更新的 URL，但不需要先卸载**——资产名 = `版本-构建时间-构建戳`（页面保留历次构建，取**时间最新**那条），同一 URL 覆盖内容后包管理器不会重取（实测）。备选：`node scripts/install.mjs` + 预设行（会话级，带"PPT 工作室"预设）。**别同时用**：会挂两次（插件有防重、不会崩，但按纪律二选一）。排查：`dsh plugin --profile web list` → `dsh --profile web --dump-config` 找 `ppt-studio` 行 → 重启 |
 | "怎么只改原稿第 15 页" | `ppt_import` 读真身 → 改工作区页（verify 清零）→ `ppt_splice`（替换进源，其余页 SHA256 逐字节不变）→ 可选 `ppt_slice` 单页版 → `ppt_visual pages="15"` 抽查 |
 | "为什么报重叠错误，我明明想要这样" | design-intent 声明制：把有意重叠对加入该页 `expectedOverlaps`（流式 `[{pair: [a,b]}]` 或块式 `- pair: [a,b]`，每对一行），重验即 ✓；说不清意图的对子改布局；**内容互压（文字×文字）永远不能声明** |
@@ -96,7 +97,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 ## 7. 开发维护（仅改插件时用）
 
 - 改码：`src/` → `node scripts/build.mjs` → **重启 host**（插件经 agent preset 会话装配；`dev_reload_package` 只覆盖注入器装配包，且注入器 junction 已存在时会指向旧安装根）。
-- 回归：`node scripts/smoke.mjs`（245 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
+- 回归：`node scripts/smoke.mjs`（250 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
 - 跨层验证纪律：**预览层与成品层必须互相验证**——`ppt_render`+`ppt_verify` 只管 HTML/估算层，OOXML 层靠 `ppt_export` 的 parity 自证（表/图/线方向）+ `ppt_visual` 真渲染抽检；只跑单层会漏掉"预览对、成品错"（2026-09-14 连线方向事故）。
 - 文档链：改需求/决策 → docs/01；改机制 → docs/02；每次 → docs/03；验收 → docs/04；发布前 → docs/06。
 - 装配：**标准装法是 profile bundle 行**（`dsh plugin --profile <p> add <Releases 资产 URL>`，profile 级、随 profile 启动装配）；preset 插件行只用于"离线 junction / 不想动 profile"场景，且与前者**互斥**（`scripts/install.mjs` 按环境二选一，检测到 bundle 安装会主动删掉 preset 行——手工删行会被下次同步装回来，所以互斥逻辑在安装器里）。排查：`dsh plugin --profile web list` → `dsh --profile web --dump-config` 找 `ppt-studio` 行 → 重启 `dsh web`。

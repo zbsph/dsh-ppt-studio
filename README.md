@@ -158,7 +158,15 @@ ppt_new(dir=D:\demo, template=business-blue)   # 物化成工作区
 
 物化出来的工作区里，`pages/_*.yaml` 是**参考母版**（不进检查），`01_opening.yaml` 是正式页。第一件事是跑 `ppt_verify autoDeclare=true` 把模板自带的有意叠层声明掉；剩下的错误都是模板原文案残留，替换掉就干净了。
 
-想用自己的模板：`ppt_import` 导入你的 pptx → `ppt_template_add` 收纳进库，以后直接物化。
+想用自己的模板：**把 .pptx 直接交给它**，一句话就行（"把这个模板加进模板库"）。它会保留你那份原始 pptx 当真相层，存到**你自己的模板库**里：
+
+```text
+ppt_template_add pptx=D:\我的模板.pptx        # 入库（可给多份，逐个来）
+ppt_template_remove id=我的模板                # 删掉（只能删你自己加的）
+ppt_templates                                # 看清单：你的 + 随包的分别列出
+```
+
+你的模板库在 `~/.dsh/ppt-studio/templates/`（Windows：`C:\Users\<你>\.dsh\ppt-studio\templates`）。它**不在插件包里**，所以升级插件不会丢；随包那 4 套是只读的，删不掉（删了升级也会回来，不如不删）。入库之后，你自己的模板和随包模板在清单里同等可选，而且按上面的政策，**你给的模板优先级最高**——要用它就直接说。
 
 > **1.0.4 变更**：随包不再带 4 套"从真实 PPT 导入"的重型模板（实用毕业设计论文答辩、极简实用部门工作总结、深蓝质感论文答辩、简约商务）。它们合计 46.2 MB，占安装包 96%，实际从未被用过。想找回来：从 [v1.0.3 的资产](https://github.com/zbsph/dsh-ppt-studio/releases/tag/v1.0.3) 里取 `package/templates/<id>/`，或从 git 历史取 `git show v1.0.3:templates/<id>/...`（注意 `previews/` 是 Office 渲染产物，没进 git，只在资产里）。放回 `templates/` 就能用。
 
@@ -381,7 +389,7 @@ ppt_visual                  # Office 真渲染复核（有 Office 时；audit �
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + LF 守卫 + smoke（245 断言）+ 预设漂移自检
+npm test                        # build + LF 守卫 + smoke（250 断言）+ 预设漂移自检
 npm run check:eol               # 发行字节守卫：跟踪的文本文件必须全 LF（--fix 就地修）
 npm run fresh                   # 用户视角终验：干净克隆 npm test + 真装一遍
 npm run test:bundle             # 安装路径自证：隔离 DSH_HOME + 真 dsh plugin add + dump-config

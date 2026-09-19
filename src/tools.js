@@ -5,7 +5,7 @@
  * 统一约定：deck 项目 = 目录（deck.yaml + pages/ + media/）；路径由模型显式传。
  */
 import { existsSync } from 'node:fs'
-import { readFile, writeFile, mkdir, readdir } from 'node:fs/promises'
+import { readFile, writeFile, mkdir, readdir, mkdtemp, rm } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { pathToFileURL } from 'node:url'
@@ -18,7 +18,7 @@ import { importPptx } from './pptd/import-pptx.js'
 import { verifyDeck, measuredCrossCheck } from './verify.js'
 import { SCHEMA_REF, scaffoldProject } from './scaffold.js'
 import { applyAutoDeclare } from './autodeclare.js'
-import { listTemplates, templateWorkspace, registerTemplate, materializeTemplate } from './templates.js'
+import { listTemplates, templateWorkspace, registerTemplate, materializeTemplate, removeTemplate, userTemplatesDir } from './templates.js'
 import { surgicalPatch } from './surgical.js'
 import { spliceIntoSource, sliceSource } from './splice.js'
 import { measureLayout } from './measurement.js'
@@ -293,13 +293,19 @@ export function registerTools(ctx) {
 
   reg({
     name: 'ppt_templates',
-    description: '模板库列表（id/名称/风格/适用场景/预览图路径）。**只在用户明确要求用内置模板、或用户问"有哪些模板"时才展示**——用户没提模板时应按题材自己设计风格（见工作流 6b）；选定后用 ppt_new dir=... template=<id> 或 /ppt template <id> 生成工作区',
+    description: '模板库列表（id/名称/风格/适用场景/预览图路径）。分两层：**用户自建**（`<dshHome>/ppt-studio/templates`，可删、升级不丢）+ **随包**（只读，不能删）。**只在用户明确要求用内置模板、或用户问"有哪些模板"时才展示**——用户没提模板时应按题材自己设计风格（见工作流 6b）；选定后用 ppt_new dir=... template=<id> 或 /ppt template <id> 生成工作区',
     parameters: {},
     output: markdownResult(),
     async execute() {
       const list = await listTemplates()
-      if (!list.length) return '（模板库为空：templates/ 目录缺失或未打包）'
-      return `模板库（${list.length} 套）：\n\n${list.map((t) => `## ${t.id} — ${t.name}\n风格：${t.style}\n适用：${t.scene}\n关键词：${t.words}\n色板：${t.colors.join('  ')}\n预览图：${t.preview ?? '（未生成）'}\n`).join('\n---\n')}\n使用：ppt_new dir=<新目录> template=<id>（复制模板工作区；模板一致性断言 themeConformance=strict 默认开启）`
+      if (!list.length) return '（模板库为空）'
+      const bundled = list.filter((t) => t.source === 'bundled')
+      const mine = list.filter((t) => t.source === 'user')
+      const body = (arr) => arr.map((t) => `## ${t.id} — ${t.name}${t.shadowsBundled ? '（**覆盖了同名随包模板**）' : ''}\n风格：${t.style}\n适用：${t.scene}\n关键词：${t.words}\n色板：${t.colors.join('  ')}\n预览图：${t.preview ?? '（未生成）'}\n`).join('\n---\n')
+      const head = `模板库（${list.length} 套：随包 ${bundled.length} + 你自己的 ${mine.length}）\n\n`
+      const mineBlock = mine.length ? `# 你自己的模板（可删：ppt_template_remove id=<id>）\n\n${body(mine)}\n\n---\n\n` : '# 你自己的模板：暂无（让模型把你给的 .pptx 加进来：ppt_template_add pptx=<路径>）\n\n---\n\n'
+      const bundledBlock = bundled.length ? `# 随包模板（随插件分发，**不能删**）\n\n${body(bundled)}` : '# 随包模板：无'
+      return head + mineBlock + bundledBlock + `\n使用：ppt_new dir=<新目录> template=<id>（复制模板工作区；模板一致性断言 themeConformance=strict 默认开启）\n你的模板库目录：${userTemplatesDir()}（在插件包之外，升级不会丢）`
     },
   })
 
@@ -343,27 +349,58 @@ export function registerTools(ctx) {
 
   reg({
     name: 'ppt_template_add',
-    description: '外部模板收纳（模板随使用增长通道）：把任意 deck 工程（通常是 ppt_import 产物，用户自己/签购买的模板文件转出来的）注册为内置模板 → templates/<id>/（theme/全部页面/媒体原样转入 + 自动缩略图 + 双轨真相层：原始 pptx + Office 整页真渲染）。用户模板文件 > 导入模板 > 内置精磨，三级增长',
+    description: '把用户的模板/成品 PPT 加进**他自己的本地模板库**（写入 `<dshHome>/ppt-studio/templates`，在插件包之外 ⇒ **升级不丢**）：直接给 .pptx 即可（内部先 import：保留原始 pptx 作真相层 + 有 Office 时整页真渲染），也接受已导入的 deck 工程目录。模板库分两层：用户层（可删）+ 随包层（只读，拒写）',
     parameters: {
-      dir: { type: 'string', required: true, description: '源工程目录（含 deck.yaml；先 ppt_import 得到）' },
+      pptx: { type: 'string', description: '源 .pptx 绝对路径（推荐，一步到位；内部自动 import 成工程再收纳）' },
+      dir: { type: 'string', description: '已导入的 deck 工程目录（含 deck.yaml）——与 pptx 二选一' },
       id: { type: 'string', description: '模板 id（缺省按标题 slug 化；冲突自动加后缀）' },
       name: { type: 'string', description: '模板名称（缺省取工程标题）' },
       style: { type: 'string', description: '风格标签（如 企业蓝/学术白）' },
       scene: { type: 'string', description: '适用场景' },
-      sourcePptx: { type: 'string', description: '原始 .pptx 绝对路径（可选；缺省自动取工程内 source.pptx，ppt_import 已保留）' },
+      sourcePptx: { type: 'string', description: '原始 .pptx 绝对路径（可选；缺省自动取工程内 source.pptx）' },
     },
     output: markdownResult(),
     async execute(args) {
+      if (!args.pptx && !args.dir) return '✗ 需要 `pptx=<.pptx 绝对路径>` 或 `dir=<deck 工程目录>`'
+      let tmp = null
       try {
-        const r = await registerTemplate(args.dir, { id: args.id, name: args.name, style: args.style, scene: args.scene, sourcePptx: args.sourcePptx })
+        let srcDir = args.dir
+        if (args.pptx) {
+          if (!existsSync(args.pptx)) return `✗ 找不到文件：${args.pptx}`
+          tmp = await mkdtemp(join(tmpdir(), 'ppt-tpl-add-'))
+          await importPptx(args.pptx, tmp)   // 导入即带 source.pptx（真相层）
+          srcDir = tmp
+        }
+        const r = await registerTemplate(srcDir, {
+          id: args.id, name: args.name, style: args.style, scene: args.scene, sourcePptx: args.sourcePptx,
+        })
         const track = [
           r.sourcePptx ? `真相层：${r.sourcePptx}（原始 pptx，零失真）` : null,
           r.previews ? `整页参考：${r.previews}（Office 真渲染 ${await countPng(r.previews)} 页）` : null,
-          r.meta.cleanup ? `清理：${r.meta.cleanup}` : null,
+          `层级：${r.layer === 'user' ? `你的模板库（升级不丢）` : '自定义目录'}｜目录：${r.dir}`,
         ].filter(Boolean)
-        return `✓ 已收纳为模板「${r.meta.name}」（id=${r.id}，${r.pages} 张母版页）\n  - ${r.dir}\n  - 预览图：${r.preview ?? '（未生成：无浏览器或渲染失败，模板仍可用）'}\n${track.map((t) => `  - ${t}`).join('\n')}\n下一步（可选）：ppt_template_styleaudit id=${r.id}（先用 read_image 看整页参考 → 写风格审计，模板参考通道的"设计时声明"）`
+        return `✓ 已加入模板库：「${r.meta.name}」（id=${r.id}，${r.pages} 张母版页）\n${track.map((t) => `  - ${t}`).join('\n')}\n  - 预览图：${r.preview ?? '（未生成：无浏览器或渲染失败，模板仍可用）'}\n用法：ppt_new dir=<工作区> template=${r.id}；要删：ppt_template_remove id=${r.id}\n（可选）ppt_template_styleaudit id=${r.id}：先用 read_image 看整页参考 → 写风格审计缓存`
       } catch (error) {
         return `✗ 收纳失败：${error?.message ?? String(error)}`
+      } finally {
+        if (tmp) await rm(tmp, { recursive: true, force: true }).catch(() => {})
+      }
+    },
+  })
+
+  reg({
+    name: 'ppt_template_remove',
+    description: '从**用户自己的模板库**里删除模板（`<dshHome>/ppt-studio/templates/<id>`）。**随包模板拒删**（它随插件分发，升级会重新出现，删了只会让人困惑）；若被删的 id 与随包同名（覆盖关系），删完随包那份会重新可见',
+    parameters: {
+      id: { type: 'string', required: true, description: '要删的模板 id（`ppt_templates` 可查；只允许删 source=user 的）' },
+    },
+    output: markdownResult(),
+    async execute({ id }) {
+      try {
+        const r = await removeTemplate(id)
+        return `✓ 已从你的模板库删除「${r.id}」\n  - ${r.dir}\n（若这个 id 原本覆盖了随包同名模板，随包那份现在重新可见）`
+      } catch (error) {
+        return `✗ 删除失败：${error?.message ?? String(error)}`
       }
     },
   })

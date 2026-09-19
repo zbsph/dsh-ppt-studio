@@ -429,10 +429,56 @@ const externals = tplList.filter((t) => !BUILTIN_TPLS.includes(t.id))
 ok('v0.5：内置模板 4 套齐全（含外部收纳的并存）', builtins.length === 4 && tplList.length >= 4, `总 ${tplList.length} 套：${tplList.map((t) => t.id).join(',')}`)
 ok('v0.5：内置模板元信息完整（含预览图）', builtins.every((t) => t.name && t.style && t.scene && t.preview), builtins.map((t) => `${t.id}:${t.preview ? 'png' : 'MISSING'}`).join(' '))
 // 【1.0.4】原来这条只查"外部收纳模板自包含"。随包移除 4 套重型导入模板后，externals 恒为空 ⇒
-// `[].every()` 会**空转通过**（假绿）。改成对**整个模板库**的不变量：每套都必须自包含（元数据齐 + 有预览图）。
-ok('v0.6.2：模板库每套都自包含（元数据齐 + 有预览图，无外部目录引用）',
-  tplList.length > 0 && tplList.every((t) => t.name && t.style && t.preview),
-  tplList.map((t) => `${t.id}:${t.preview ? 'png' : 'MISSING'}`).join(' '))
+// `[].every()` 会**空转通过**（假绿）。改成对**随包层**的不变量：每套都必须自包含（元数据齐 + 有预览图）。
+// 【1.0.6】模板库变成两层（用户自建 + 随包），所以这里按 `source` 过滤随包层——用户自己的模板
+// 可能确实没有 preview.png（无浏览器时），不该把用户的库算进"随包模板必须自包含"这条。
+ok('v0.6.2：随包模板每套都自包含（元数据齐 + 有预览图）',
+  builtins.length === 4 && builtins.every((t) => t.name && t.style && t.preview),
+  builtins.map((t) => `${t.id}:${t.preview ? 'png' : 'MISSING'}`).join(' '))
+
+// ── 17b. v1.0.6 用户自建模板库：两层目录 + 入库（.pptx）/ 物化 / 删除 ──
+// DSH_HOME 指到临时目录：`userTemplatesDir()` 是**按调用求值**的，所以这里能安全地隔离，
+// 不碰开发机/CI 上真实的 `~/.dsh/ppt-studio/templates`。
+{
+  const libHome = join(root, 'examples', '.tmp-tpl-home')
+  await rm(libHome, { recursive: true, force: true })
+  const prevHome = process.env.DSH_HOME
+  process.env.DSH_HOME = libHome
+  try {
+    const libUserDir = tplMod.userTemplatesDir()
+    ok('v1.0.6：用户模板层在插件包之外（升级重新物化包也丢不了）',
+      !libUserDir.startsWith(tplMod.TEMPLATES_DIR) && libUserDir.startsWith(libHome), libUserDir)
+    // 用 smoke 开头导出的 pptx 当"用户给的模板文件"：走 import → 收纳 的完整路径
+    const libProj = join(libHome, '_import')
+    await mkdir(libProj, { recursive: true })
+    await importPptx(exp.file, libProj)
+    const libId = `smoke-mine-${Date.now().toString(36)}`
+    const libAdded = await tplMod.registerTemplate(libProj, { id: libId, name: '我的测试模板' })
+    const libList = await tplMod.listTemplates()
+    const libMine = libList.find((t) => t.id === libId)
+    ok('v1.0.6：入库后出现在清单里且 source=user（缺省写用户层）',
+      libAdded.layer === 'user' && libMine?.source === 'user',
+      `layer=${libAdded.layer}｜清单里=${libMine?.source ?? '(未出现)'}｜总 ${libList.length} 套`)
+    const libWs = join(libHome, '_ws')
+    const libMat = await tplMod.materializeTemplate(libWs, libId, { name: '我的模板' })
+    ok('v1.0.6：用户模板可物化（与随包模板同一条路，带真相层 reference/template.pptx）',
+      existsSync(join(libWs, 'deck.yaml')) && existsSync(join(libWs, 'reference', 'template.pptx')),
+      `refs=${libMat.refs.length}`)
+    const libDel = await tplMod.removeTemplate(libId)
+    const libAfter = await tplMod.listTemplates()
+    ok('v1.0.6：删除自建模板 → 从清单消失',
+      libDel.removed === true && !libAfter.some((t) => t.id === libId), libId)
+    let libRefuse = null
+    try { await tplMod.removeTemplate('business-blue') } catch (e) { libRefuse = e }
+    ok('v1.0.6：随包模板拒删（提示"升级会重新出现"），且文件确实还在',
+      !!libRefuse && /随包/.test(libRefuse.message) && existsSync(join(tplMod.TEMPLATES_DIR, 'business-blue', 'template.yaml')),
+      libRefuse?.message?.slice(0, 46) ?? '(没拦住)')
+  } finally {
+    if (prevHome === undefined) delete process.env.DSH_HOME
+    else process.env.DSH_HOME = prevHome
+    await rm(libHome, { recursive: true, force: true })
+  }
+}
 let tplAllOk = true
 const tplReport = []
 for (const t of builtins) {
@@ -2175,12 +2221,12 @@ ok('bundle：已转为公开发布 npm（无 private + publishConfig.access=publ
     logger: () => ({ info: () => {}, warn: () => {} }),
   })
   indexMod.apply(makeCtx(), { presetIds: ['ppt'] })
-  ok('回滚：apply 在**装入层**注册工具与命令面（21 工具 + /ppt 命令）——"装上即可用"',
-    tools === 21 && cmds >= 1, `tools=${tools} cmds=${cmds}`)
+  ok('回滚：apply 在**装入层**注册工具与命令面（22 工具 + /ppt 命令）——"装上即可用"',
+    tools === 22 && cmds >= 1, `tools=${tools} cmds=${cmds}`)
   ok('回滚：4 本内嵌技能注册在**同一层**（技能注册表分层，技能工具在父层读——注册到子层就永远看不见）',
     skills === 4, `skills=${skills}（应=4）`)
   ok('回滚：隔离代码已移除（不再导出 mountForAgent，也不再用 roster 决定装配）',
-    indexMod.mountForAgent === undefined && tools === 21, `mountForAgent=${typeof indexMod.mountForAgent}｜tools=${tools}`)
+    indexMod.mountForAgent === undefined && tools === 22, `mountForAgent=${typeof indexMod.mountForAgent}｜tools=${tools}`)
   const first = { tools, cmds, skills }
   indexMod.apply(makeCtx(), { presetIds: ['ppt'] }) // 第二次装配（双挂载场景）
   ok('回滚：同进程第二次装配被防重拦下（首个生效 + 计数），不重复注册',

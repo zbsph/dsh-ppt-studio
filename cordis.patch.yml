@@ -8,7 +8,7 @@
 #
 # 装配模型（2026-09-18 最终态 = **装上即可用**，见 docs/02 §2.1 与 docs/03 当日记录）：
 #   · 本行 = 把插件挂进 **profile 层**；插件在 `apply()` 里向**拿到手的那个 ctx** 注册全部能力面
-#     （21 个 ppt_* 工具 / `/ppt` 命令面 / `ppt_state` / 4 本内嵌技能 / 工作流提示段）⇒ 该 profile 的
+#     （22 个 ppt_* 工具 / `/ppt` 命令面 / `ppt_state` / 4 本内嵌技能 / 工作流提示段）⇒ 该 profile 的
 #     **每个会话**都能用（含官方 standard）。
 #   · 想要"只在「PPT 工作室」预设里生效"的用户改用 `node scripts/install.mjs --isolate`：安装器会摘掉本
 #     profile bundle，改为**预设目录内 junction + 相对路径行**（`./plugin/lib/index.js`——相对行按组合文件
