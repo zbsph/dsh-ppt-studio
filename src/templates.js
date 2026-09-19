@@ -1,7 +1,8 @@
 /**
  * 模板库：PPT 工作室内置模板（templates/<id>/，随插件分发）。
  * 模板 = 版式母版包：template.yaml 元数据 + deck.yaml（完整 theme）+ pages/_*.yaml 母版页
- * + preview.png（脚本生成）。用户流：用户模板文件 > 模板库选择 > 从零定调。
+ * + preview.png（脚本生成）。参考优先级（2026-09-18 用户政策）：用户给的模板/既有 ppt > （用户明确要求时的）内置模板 >
+ * 按题材自己设计风格（默认路径，内置模板不作兜底）。
  */
 import { readFile, readdir } from 'node:fs/promises'
 import { existsSync } from 'node:fs'

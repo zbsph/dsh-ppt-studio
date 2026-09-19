@@ -293,13 +293,13 @@ export function registerTools(ctx) {
 
   reg({
     name: 'ppt_templates',
-    description: '内置模板库列表（id/名称/风格/适用场景/预览图路径）。从头任务的 S0/S2 展示给用户选择；选定后用 ppt_new dir=... template=<id> 或 /ppt template <id> 生成工作区',
+    description: '模板库列表（id/名称/风格/适用场景/预览图路径）。**只在用户明确要求用内置模板、或用户问"有哪些模板"时才展示**——用户没提模板时应按题材自己设计风格（见工作流 6b）；选定后用 ppt_new dir=... template=<id> 或 /ppt template <id> 生成工作区',
     parameters: {},
     output: markdownResult(),
     async execute() {
       const list = await listTemplates()
       if (!list.length) return '（模板库为空：templates/ 目录缺失或未打包）'
-      return `内置模板库（${list.length} 套 · 风格版权自研）：\n\n${list.map((t) => `## ${t.id} — ${t.name}\n风格：${t.style}\n适用：${t.scene}\n关键词：${t.words}\n色板：${t.colors.join('  ')}\n预览图：${t.preview ?? '（未生成）'}\n`).join('\n---\n')}\n使用：ppt_new dir=<新目录> template=<id>（复制模板工作区；模板一致性断言 themeConformance=strict 默认开启）`
+      return `模板库（${list.length} 套）：\n\n${list.map((t) => `## ${t.id} — ${t.name}\n风格：${t.style}\n适用：${t.scene}\n关键词：${t.words}\n色板：${t.colors.join('  ')}\n预览图：${t.preview ?? '（未生成）'}\n`).join('\n---\n')}\n使用：ppt_new dir=<新目录> template=<id>（复制模板工作区；模板一致性断言 themeConformance=strict 默认开启）`
     },
   })
 
