@@ -2209,29 +2209,68 @@ ok('bundle：已转为公开发布 npm（无 private + publishConfig.access=publ
   let tools = 0, cmds = 0, skills = 0, listeners = 0
   const handlers = new Map()
   const skillsSvc = { register: () => { skills++ } }
+  // 预设注册表 stub（**按 DSH 0.1.7 的真实契约**）：`register()` 对重复 id **抛错**
+  // （真源码：`if (this.definitions.has(definition.id)) throw new Error(\`Duplicate agent preset: ${def.id}\`)`），
+  // 并返回注销函数。于是"双挂载会不会把同一个预设声明两次"在这里是可判定的。
+  const declared = []
+  const seenIds = new Set()
+  const registry = {
+    register: (def) => {
+      if (seenIds.has(def.id)) return Promise.reject(new Error(`Duplicate agent preset: ${def.id}`))
+      seenIds.add(def.id)
+      declared.push(def)
+      return Promise.resolve(async () => { seenIds.delete(def.id) })
+    },
+  }
+  const childOf = () => ({ get: (k) => (k === 'agentPresets' ? registry : undefined) })
   const makeCtx = () => ({
     tools: { register: () => { tools++ } },
     commands: { register: () => { cmds++ } },
     skills: skillsSvc,
-    get: (k) => (k === 'skills' ? skillsSvc : undefined),
-    // 上游 roster 服务存在也**必须不再影响装配**（回滚后不再按预设过滤）
-    agentPresets: { composedPreset: () => 'standard', compositionInventory: async () => [] },
+    get: (k) => (k === 'skills' ? skillsSvc : k === 'agentPresets' ? registry : undefined),
+    agentPresets: registry,
+    // 0.1.7 的正确取法：注册表可能比本插件行**晚激活** ⇒ `inject` 等它出现（服务消失时子 ctx 释放）
+    inject: (deps, fn) => { if (deps.includes('agentPresets')) fn(childOf()) },
     on: (ev, fn) => { listeners++; handlers.set(ev, fn) },
     effect: (fn) => { fn(); return () => {} },
     logger: () => ({ info: () => {}, warn: () => {} }),
   })
+  // 装配防重计数是**进程级**（globalThis）：本节要自己从 0 起算，否则会被前面的用例带偏
+  delete globalThis.__pptCoreReg
   indexMod.apply(makeCtx(), { presetIds: ['ppt'] })
+  const flush = () => new Promise((r) => setTimeout(r, 0))
+  await flush() // 声明走的是异步队列（inject → register），让它落地
   ok('回滚：apply 在**装入层**注册工具与命令面（22 工具 + /ppt 命令）——"装上即可用"',
     tools === 22 && cmds >= 1, `tools=${tools} cmds=${cmds}`)
   ok('回滚：4 本内嵌技能注册在**同一层**（技能注册表分层，技能工具在父层读——注册到子层就永远看不见）',
     skills === 4, `skills=${skills}（应=4）`)
   ok('回滚：隔离代码已移除（不再导出 mountForAgent，也不再用 roster 决定装配）',
     indexMod.mountForAgent === undefined && tools === 22, `mountForAgent=${typeof indexMod.mountForAgent}｜tools=${tools}`)
+  // ── 0.1.7 的**真适配**：预设靠"向注册表声明"交付（写目录那条路已被上游删除）────────────
+  // 判据分三层：① 真的调到 register 了；② 声明形状对（id/名/序/行数/内容）；③ 双挂载不会声明两次。
+  const d0 = declared[0]
+  ok('0.1.7：预设靠 `agentPresets.register()` **声明**（不再写目录——上游已无目录发现路径）',
+    declared.length === 1 && d0?.id === 'ppt', `声明次数=${declared.length}｜id=${d0?.id ?? '(无)'}`)
+  ok('0.1.7：声明形状取自包内 `agent-presets/ppt/`（名字/简介/序号 + 19 条 standard 组合行）',
+    d0?.name === 'PPT 工作室' && d0?.order === 2 && d0?.plugins?.length === 19
+      && typeof d0?.description === 'string' && d0.description.length > 10,
+    `name=${d0?.name ?? '(无)'}｜order=${d0?.order}｜rows=${d0?.plugins?.length}｜desc=${d0?.description?.length ?? 0} 字`)
+  // `!!js` 必须**保真**成 Loader 认的 `{__jsExpr}`：降级成普通字符串会让
+  // `Boolean(<非空字符串>) === true` ⇒ Windows 上 pwsh 行被误停用（= 没有 shell）。
+  const rowOf = (def, id) => def?.plugins?.find((r) => r.id === id)
+  const bashD = rowOf(d0, 'tool-bash')?.disabled
+  const pwshD = rowOf(d0, 'tool-pwsh')?.disabled
+  ok('0.1.7：`!!js` 表达式保真为 `{__jsExpr}`（降级成字符串 ⇒ Windows 上 pwsh 行会被误停用）',
+    bashD?.__jsExpr === "process.platform === 'win32'" && pwshD?.__jsExpr === "process.platform !== 'win32'",
+    `bash=${JSON.stringify(bashD)}｜pwsh=${JSON.stringify(pwshD)}`)
   const first = { tools, cmds, skills }
   indexMod.apply(makeCtx(), { presetIds: ['ppt'] }) // 第二次装配（双挂载场景）
+  await flush()
   ok('回滚：同进程第二次装配被防重拦下（首个生效 + 计数），不重复注册',
     tools === first.tools && cmds === first.cmds && skills === first.skills,
     `二次后 tools=${tools}（应=${first.tools}）cmds=${cmds} skills=${skills}｜refcount=${globalThis.__pptCoreReg?.count ?? '?'}`)
+  ok('0.1.7：双挂载也**不会重复声明**预设（真注册表对重复 id 直接 throw ⇒ 声明只发一次）',
+    declared.length === 1, `声明次数=${declared.length}（应=1）`)
   ok('回滚：apply 装的全局管道仍在（预览路由/语义路由/提示段注入靠这些监听器）',
     listeners >= 2, `listeners=${listeners}`)
   let promptOk = false
@@ -2241,27 +2280,34 @@ ok('bundle：已转为公开发布 npm（无 private + publishConfig.access=publ
     promptOk = Boolean(out)
   } catch { promptOk = false }
   ok('回滚：提示段注入不按预设门控（读不到会话状态时原样返回，不抛）', promptOk, promptOk ? '原样返回 ✓' : '未注册/抛错')
+  // 注册表缺失时必须**只告警不抛**（极简部署没有 agentPresets）：插件仍要完整可用
+  let noRegThrew = false
+  delete globalThis.__pptCoreReg
+  try {
+    indexMod.apply({
+      tools: { register: () => {} }, commands: { register: () => {} }, skills: skillsSvc,
+      get: () => undefined, inject: () => {}, on: () => {}, effect: (fn) => { fn(); return () => {} },
+      logger: () => ({ info: () => {}, warn: () => {} }),
+    }, {})
+    await flush()
+  } catch { noRegThrew = true }
+  ok('0.1.7：注册表不可用时只告警不抛（预设没了也不能让插件挂不上）',
+    noRegThrew === false, noRegThrew ? '装配抛错了' : '静默降级 ✓')
+  delete globalThis.__pptCoreReg
 }
 
-// ── 41. 装配路径：**默认「全局」**（profile bundle = `dsh plugin add` 一句话那条路）／
-//        `--isolate`（预设行 + 预设目录内 junction）────────────────────────────────────────
-// 两种模式的差别只在"插件被装到哪一层"，**插件自身不门控**（注册在拿到手的那个 ctx ⇒ 一层实现两用）：
-//   · 全局（默认）：profile bundle ⇒ 插件在 **profile 层** ⇒ 该 profile 的所有会话都能用；
-//   · 隔离（`--isolate`）：预设行（**相对路径**）+ 预设目录内 junction ⇒ 插件被挂进**预设组合**
-//     ⇒ 工具/技能落在**预设层**（技能工具读的正是那一层）⇒ 只有「PPT 工作室」的会话能用。
-// 事故依据（2026-09-18，两轮）：
-//   · 裸包名行从 **harnessBase**（安装好的 harness 目录）解析，装在 profile/预设里的本包解析不到
-//     ⇒ 预设被判 `broken` ⇒ 前端选择器只渲染健康预设
-//     （`presetOptions() = presets.filter(p => p.broken === void 0)`）⇒ 用户根本选不到该预设；
-//   · **相对路径行**按**组合文件自己的目录**解析（本机 liangshen/j-space/superpowers 等预设正是用
-//     `name: ./xxx.mjs` 引用自己的文件）⇒ 只要预设目录里有指向本包的 junction，行就解析得到；
-//   · 用户记忆里"以前能隔离"是对的：那来自**挂载层**（install.mjs 写的预设行），不是插件门控
-//     （git 证据：v1.0.0/v0.4.0 里 `agent/created`/`presetIds` 0 处）。
-// 这里钉六件事：① 默认=全局（不写行、不建 junction）；② `--isolate` 建 junction + 写相对行；
-// ③ 两者互斥（非 bundle 且装不上 bundle 时**拒绝继续**，不产出坏预设）；④ 交付模板不含行；
-// ⑤ `--isolate` 夹具的预设经 DSH discovery 判定 **ok**（= 选择器会显示它）；⑥ 夹具清理不碰仓库本体。
+// ── 41. 安装器 + 预设**声明**（2026-09-24 为 DSH 0.1.7-rc.1 重写）──────────────────────
+// 0.1.6 及以前这条测的是"预设目录内的 junction + 相对路径行"。0.1.7 把目录发现整个删掉了
+// （上游原文 "the harness discovers no preset on disk"），预设改为向 `agentPresets` 注册表**声明**，
+// 安装器也不再写预设文件。这里钉五件事：
+//   ① 默认=全局（profile bundle）：exit 0，且**不产出**任何 `.agent-presets/`（写了也没人读）；
+//   ② 0.1.6 遗留的预设目录被**清理**（留着会让"改了预设为什么没生效"变成假线索）；
+//   ③ `--isolate` **明确拒绝**（exit 1 + 说清原因），不写出一个永远不会被读到的预设；
+//   ④ 装到的副本带着"声明预设"所需的资产，且组合里**不含**本包插件行（含行 ⇒ 双挂载）；
+//   ⑤ 夹具清理不碰仓库本体。
 {
   const { spawnSync } = await import('node:child_process')
+  const { cp } = await import('node:fs/promises')
   const base = join(root, 'examples', 'smoke', '.tmp-install-mode')
   await rm(base, { recursive: true, force: true })
   const mkPrefix = async (name, withDep) => {
@@ -2269,82 +2315,96 @@ ok('bundle：已转为公开发布 npm（无 private + publishConfig.access=publ
     await mkdir(join(dir, 'profiles', 'web'), { recursive: true })
     await writeFile(join(dir, 'profiles', 'web', 'package.json'),
       JSON.stringify({ name: 'p', dependencies: withDep ? { [rootPkg.name]: 'file:x' } : {} }, null, 2), 'utf8')
+    // 包本体归 pnpm：夹具要真的"有包"，并且带上**声明预设所需的资产**（否则安装器的资产校验会正确报错）
+    const pd = join(dir, 'profiles', 'web', 'node_modules', 'dsh-ppt-studio')
+    await mkdir(pd, { recursive: true })
+    await writeFile(join(pd, 'package.json'), JSON.stringify({ name: rootPkg.name, version: rootPkg.version }), 'utf8')
     if (withDep) {
-      // 全局模式下包本体归 pnpm：夹具要真的"有包"，否则校验步骤会（正确地）报错
-      const pd = join(dir, 'profiles', 'web', 'node_modules', 'dsh-ppt-studio')
-      await mkdir(join(pd, 'lib'), { recursive: true })
-      await writeFile(join(pd, 'package.json'), JSON.stringify({ name: rootPkg.name, version: rootPkg.version }), 'utf8')
-      await writeFile(join(pd, 'lib', 'index.js'), '// fixture\n', 'utf8')
+      await cp(join(root, 'lib'), join(pd, 'lib'), { recursive: true })
+      await cp(join(root, 'agent-presets'), join(pd, 'agent-presets'), { recursive: true })
     }
-    // 隔离模式：包自身的 yaml 必须可解析（ESM 按 realpath），夹具照 profile 造一个
-    const y = join(dir, 'profiles', 'web', 'node_modules', 'yaml')
-    await mkdir(y, { recursive: true })
-    await writeFile(join(y, 'package.json'), JSON.stringify({ name: 'yaml', version: '0.0.0' }), 'utf8')
     return dir
   }
-  const pfxGlb = await mkPrefix('glb', true)   // 默认模式：已按 bundle 安装 → 走快路径
-  const pfxIso = await mkPrefix('iso', false)  // 未装 bundle → 用 --isolate
+  const pfxGlb = await mkPrefix('glb', true)      // 默认模式：已按 bundle 安装 → 走快路径
   const pfxNo = await mkPrefix('nobundle', false) // 未装 bundle + 默认模式 + 无 dsh → 必须拒绝
   const installScript = join(root, 'scripts', 'install.mjs')
-  const presetFileOf = (prefix) => join(prefix, '.agent-presets', 'ppt', 'agent.cordis.yml')
-  const presetTextOf = (prefix) => (existsSync(presetFileOf(prefix)) ? readFileSync(presetFileOf(prefix), 'utf8') : '')
-  const linkOf = (prefix) => join(prefix, '.agent-presets', 'ppt', 'plugin')
+  const legacyDirOf = (prefix) => join(prefix, '.agent-presets', 'ppt')
+  // 先埋一份 0.1.6 时代的遗留产物（预设目录 + 一份组合），验证安装器会清掉它
+  await mkdir(legacyDirOf(pfxGlb), { recursive: true })
+  await writeFile(join(legacyDirOf(pfxGlb), 'agent.cordis.yml'), '- id: persona\n', 'utf8')
+  await writeFile(join(legacyDirOf(pfxGlb), 'preset.yml'), 'name: 旧\n', 'utf8')
   const resGlb = spawnSync(process.execPath, [installScript, '--prefix', pfxGlb], { encoding: 'utf8' })
-  const resIso = spawnSync(process.execPath, [installScript, '--prefix', pfxIso, '--isolate'], { encoding: 'utf8' })
-  // PATH 里只留 node 所在目录 ⇒ `dsh` 不可用 ⇒ 默认（全局）模式必须拒绝继续，而不是写出坏预设
+  const resIso = spawnSync(process.execPath, [installScript, '--prefix', pfxGlb, '--isolate'], { encoding: 'utf8' })
+  // PATH 里只留 node 所在目录 ⇒ `dsh` 不可用 ⇒ 默认（全局）模式必须拒绝继续，而不是假装成功
   const resNo = spawnSync(process.execPath, [installScript, '--prefix', pfxNo], {
     encoding: 'utf8',
     env: { ...process.env, PATH: dirname(process.execPath), Path: dirname(process.execPath) },
   })
-  const relRow = /^-\s*id: ppt-studio\n\s+name: \.\/plugin\/lib\/index\.js$/m
-  ok('装配路径：**默认=全局**（profile bundle）——不写插件行、不建预设内 junction（一句话安装走这条）',
-    resGlb.status === 0 && !/^-\s*id: ppt-studio$/m.test(presetTextOf(pfxGlb)) && !existsSync(linkOf(pfxGlb)),
-    `glb exit=${resGlb.status}｜含行=${/^-\s*id: ppt-studio$/m.test(presetTextOf(pfxGlb))}｜junction=${existsSync(linkOf(pfxGlb))}`)
-  ok('装配路径：`--isolate` 建预设内 junction + 写**相对路径**行（裸包名会从 harness 解析失败 ⇒ 预设 broken）',
-    resIso.status === 0 && existsSync(join(linkOf(pfxIso), 'lib', 'index.js')) && relRow.test(presetTextOf(pfxIso)),
-    `iso exit=${resIso.status}｜junction=${existsSync(join(linkOf(pfxIso), 'lib', 'index.js'))}｜相对行=${relRow.test(presetTextOf(pfxIso))}`)
-  ok('装配路径：非 bundle 又装不上 bundle 时**拒绝继续**（宁可失败，也不写出会被判 broken 的预设）',
-    resNo.status === 1 && !existsSync(presetFileOf(pfxNo)),
-    `noBundle exit=${resNo.status}｜写了预设=${existsSync(presetFileOf(pfxNo))}`)
+  ok('装配路径：**默认=全局**（profile bundle）且**不再产出** .agent-presets/（0.1.7 无目录发现路径）',
+    resGlb.status === 0 && !existsSync(legacyDirOf(pfxGlb)),
+    `glb exit=${resGlb.status}｜遗留目录=${existsSync(legacyDirOf(pfxGlb))}`)
+  ok('装配路径：0.1.6 遗留的预设目录被**清理**（留着会让"改了预设为什么没生效"变成假线索）',
+    !existsSync(legacyDirOf(pfxGlb)) && /已清理 0\.1\.6 遗留的预设目录/.test(String(resGlb.stdout ?? '')),
+    (String(resGlb.stdout ?? '').match(/已清理[^\n]*/) ?? ['(无清理日志)'])[0].slice(0, 110))
+  ok('装配路径：`--isolate` 在 0.1.7 上**明确拒绝**（exit 1 + 说清原因，不写出没人读的预设）',
+    resIso.status === 1 && /--isolate 在 DSH 0\.1\.7 上不再可用/.test(String(resIso.stderr ?? '')),
+    `iso exit=${resIso.status}｜有原因=${/不再可用/.test(String(resIso.stderr ?? ''))}`)
+  ok('装配路径：非 bundle 又装不上 bundle 时**拒绝继续**（宁可失败，也不静默假成功）',
+    resNo.status === 1, `noBundle exit=${resNo.status}`)
+  ok('装配路径：安装器校验"声明预设"所需的资产（agent-presets/ppt/* + lib/preset-delivery.js）',
+    /预设资产已就位/.test(String(resGlb.stdout ?? '')), 
+    (String(resGlb.stdout ?? '').match(/预设资产已就位[^\n]*/) ?? ['(无资产校验输出)'])[0].slice(0, 110))
   const tplText = readFileSync(join(root, 'agent-presets', 'ppt', 'agent.cordis.yml'), 'utf8')
-  ok('装配路径：包内交付的预设模板**不含**本包插件行（照抄模板的预设永远健康；行由安装器按模式增删）',
-    !/^-\s*id: ppt-studio$/m.test(tplText) && !/dsh-ppt-studio plugin row/.test(tplText), '模板干净 ✓')
-  // 决定性判据：用 **DSH 自己的 discovery** 判隔离夹具的预设是否健康（= 选择器会不会列出它）。
-  // 找不到 DSH 安装时按跳过计（断言总数恒定）。
-  const dsh = await findDshForSmoke()
-  if (dsh) {
-    const { pathToFileURL } = await import('node:url')
-    const { discoverPresets } = await import(pathToFileURL(dsh.lib).href)
-    const found = await discoverPresets([{ path: join(pfxIso, '.agent-presets'), trust: 'user' }], dsh.harnessBase)
-    const ours = found.find((p) => p.id === 'ppt')
-    ok('装配路径：`--isolate` 夹具的预设经 DSH discovery 判定 **ok**（相对行解析成功 ⇒ 选择器会显示它）',
-      Boolean(ours) && ours.broken === undefined,
-      ours ? (ours.broken === undefined ? 'ok（选择器可见）' : `broken: ${String(ours.broken).slice(0, 90)}`) : '未发现该预设')
-  } else {
-    ok('装配路径：`--isolate` 夹具的预设经 DSH discovery 判定 **ok**（相对行解析成功 ⇒ 选择器会显示它）', true, '⚠ 未找到 DSH 安装 → 跳过')
-  }
+  ok('装配路径：包内交付的预设组合**不含**本包插件行（含行 ⇒ 同进程双挂载；插件由 bundle 提供）',
+    !/^-\s*id: ppt-studio$/m.test(tplText) && !/dsh-ppt-studio plugin row/.test(tplText), '组合干净 ✓')
   await rm(base, { recursive: true, force: true })
   ok('装配路径：临时夹具清理干净且**没有碰仓库本体**',
     !existsSync(base) && existsSync(installScript) && existsSync(join(root, 'package.json')),
     '仓库根文件仍在 ✓')
 }
 
-/** 定位随包安装的 DSH（返回 agent-presets 的 lib 与 **harness base**）——用于"预设健康"判据。 */
-async function findDshForSmoke() {
-  const { existsSync: ex } = await import('node:fs')
-  const { homedir } = await import('node:os')
-  const { join: j } = await import('node:path')
-  const { pathToFileURL: p2u } = await import('node:url')
-  const rel = j('@deepseek-ai', 'dsh', 'node_modules', '@deepseek-ai', 'dsh-agent-presets', 'lib', 'index.js')
-  const roots = []
-  for (const k of ['APPDATA', 'LOCALAPPDATA']) if (process.env[k]) roots.push(j(process.env[k], 'npm', 'node_modules'))
-  roots.push(j(homedir(), 'AppData', 'Roaming', 'npm', 'node_modules'))
-  roots.push('/usr/lib/node_modules', '/usr/local/lib/node_modules')
-  for (const r of roots) {
-    const lib = j(r, rel)
-    if (ex(lib)) return { lib, harnessBase: p2u(`${j(r, '@deepseek-ai', 'dsh')}/`).href }
-  }
-  return null
+// ── 41b. 预设漂移门禁认得 **0.1.7 的新参照格式**（hermetic：自带夹具，不依赖本机装没装 DSH）──
+// 为什么要有这条：0.1.7 把参照物从 `dsh-agent-presets/presets/standard/agent.cordis.yml`（条目数组）
+// 换成 `dsh-web-app/presets/standard.patch.yml`（patch → insert → `config.plugins`）。
+// 旧脚本找不到参照时**静默跳过**——于是"整套 DSH 相关检查都在跳过"伪装成了 250/0 全绿。
+// 这条夹具把新格式**钉死**：报漂移要真报、找不到参照要真喊。
+{
+  const { spawnSync } = await import('node:child_process')
+  const fx = join(root, 'examples', 'smoke', '.tmp-preset-ref')
+  await rm(fx, { recursive: true, force: true })
+  const refDir = join(fx, 'node_modules', '@deepseek-ai', 'dsh-web-app', 'presets')
+  await mkdir(refDir, { recursive: true })
+  const refFile = join(refDir, 'standard.patch.yml')
+  const oursText = readFileSync(join(root, 'agent-presets', 'ppt', 'agent.cordis.yml'), 'utf8')
+  // 我们的组合原样缩进成 `config.plugins` 的值（**纯文本缩进** ⇒ `!!js` 保真，不经过序列化）
+  const nest = (text) => text.split('\n').map((l) => (l.trim() ? '          ' + l : l)).join('\n')
+  const modernPatch = (rows) => `- insert:\n    - id: preset-standard\n      name: '@deepseek-ai/dsh-agent-preset'\n      config:\n        id: standard\n        order: 1\n        plugins:\n${nest(rows)}\n`
+  const cpScript = join(root, 'scripts', 'check-preset.mjs')
+  const pin = join(fx, 'pinned.yml')
+  const runCp = (refPath, extra = []) => spawnSync(process.execPath, [cpScript, '--ref', refPath, ...extra], { encoding: 'utf8' })
+  await writeFile(refFile, modernPatch(oursText), 'utf8')
+  const okRef = runCp(refFile, ['--require'])
+  ok('0.1.7：预设门禁认得新参照格式（patch → insert → config.plugins）——行相同 ⇒ 漂移 0',
+    okRef.status === 0 && /modern/.test(okRef.stdout) && /漂移 0/.test(okRef.stdout),
+    (okRef.stdout ?? '').split('\n').filter((l) => /格式|预设自检/.test(l)).join(' | ').slice(0, 150))
+  await writeFile(pin, modernPatch(oursText.replace('maxBytes: 65536', 'maxBytes: 4096')), 'utf8')
+  const bad = runCp(pin)
+  ok('0.1.7：参照行被改动 ⇒ **报漂移并 exit 1**（门禁真在比对，不是解析完就放过）',
+    bad.status === 1 && /配置漂移/.test(bad.stdout), `exit=${bad.status}｜报漂移=${/配置漂移/.test(bad.stdout)}`)
+  // 旧格式（0.1.6 的条目数组）：我们的组合文件**本身就是**这个格式 ⇒ 原样当参照 ⇒ 漂移 0。
+  // 这条同时证明"legacy 分支真的把行读进来比对了"，而不是识别完就放过。
+  await writeFile(pin, oursText, 'utf8')
+  const lg = runCp(pin)
+  ok('0.1.7：**旧格式（0.1.6 条目数组）也还认**——老宿主上跑不瞎',
+    lg.status === 0 && /legacy/.test(lg.stdout) && /漂移 0/.test(lg.stdout),
+    `exit=${lg.status}｜${(lg.stdout.match(/格式：.*/) ?? ['(无格式行)'])[0].slice(0, 40)}｜漂移0=${/漂移 0/.test(lg.stdout)}`)
+  await rm(fx, { recursive: true, force: true })
+  const missing = runCp(join(fx, 'nope.yml'), ['--require'])
+  const missingSoft = runCp(join(fx, 'nope.yml'))
+  ok('0.1.7：找不到参照物时 `--require` **失败**、默认**醒目告警**（静默跳过是"假绿"的成因）',
+    missing.status === 1 && missingSoft.status === 0 && /没有生效/.test(missingSoft.stdout),
+    `require exit=${missing.status}｜默认 exit=${missingSoft.status}`)
+  await rm(fx, { recursive: true, force: true })
 }
 
 // ── 42. 答疑手册 vs 制作手册的触发纪律（2026-09-15 真实反馈）────────────────────

@@ -10,14 +10,16 @@
 #   · 本行 = 把插件挂进 **profile 层**；插件在 `apply()` 里向**拿到手的那个 ctx** 注册全部能力面
 #     （22 个 ppt_* 工具 / `/ppt` 命令面 / `ppt_state` / 4 本内嵌技能 / 工作流提示段）⇒ 该 profile 的
 #     **每个会话**都能用（含官方 standard）。
-#   · 想要"只在「PPT 工作室」预设里生效"的用户改用 `node scripts/install.mjs --isolate`：安装器会摘掉本
-#     profile bundle，改为**预设目录内 junction + 相对路径行**（`./plugin/lib/index.js`——相对行按组合文件
-#     自己的目录解析，这是本机 DSH 上唯一能让预设既解析得到又保持健康的方式）。两种模式**互斥**，由安装器保证。
+#   · 想要"只在「PPT 工作室」预设里生效"的用户：本版本**不支持**（`install.mjs --isolate` 会明确拒绝）。
+#     0.1.6 时代靠"预设目录内的 junction + 相对路径行"实现，而 0.1.7 删掉了目录发现、
+#     预设行改为在**注册表所在层**的 baseUrl 下解析 ⇒ 相对行与裸包名都解析不到 ⇒ 预设被判 broken。
+#     详见 agent-presets/ppt/agent.cordis.yml 末尾与 scripts/install.mjs 顶部。
 #   · 曾经的"按 agent 预设门控"设计（`agent/created` 钩子 + 预设层注册）已**证伪并撤除**：空白会话切预设时
 #     agent 已存在、钩子不会为它触发（先建会话再切 = 永远没工具），且技能注册表按层读、子层注册父层看不见。
 #     细节与实测见 docs/03（2026-09-18 三条撤回记录）与 src/index.js 顶部注释。
-#   · 预设本身由插件**自交付**：apply 时若 `<dshHome>/.agent-presets/ppt/` 缺失就写一份
-#     （**只在不存在时写、绝不覆盖**；交付的是剥离插件行的版本；`autoPreset: false` 可关闭）。
+#   · 预设本身由插件**声明**（2026-09-24 适配 0.1.7）：apply 时把包内 `agent-presets/ppt/` 的组合交给
+#     `ctx.agentPresets.register({id:'ppt', …})`，随插件同生共死（卸载即注销；`autoPreset: false` 可关闭）。
+#     0.1.6 及以前是"写到 `<dshHome>/.agent-presets/ppt/`"——那条发现路径在 0.1.7 已被上游整个删除。
 - insert:
     - id: ppt-studio
       name: 'dsh-ppt-studio'

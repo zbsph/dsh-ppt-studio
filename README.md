@@ -12,7 +12,7 @@
 
 ### 1.1 需要什么
 
-一台能跑 `dsh web` 的机器。宿主版本基线是 DSH `0.1.6-alpha.2`（`0.1.5-rc.2` 也验过）。Office、Edge/Chrome、python-pptx 都是**可选增强**：没有它们插件照常工作，只是真渲染、截图、兜底引擎这些能力自动降级，交付说明里会写明。
+一台能跑 `dsh web` 的机器。宿主版本要求 **DSH `>= 0.1.7-rc.1`**（本包 1.0.7 起；基线就是在 `0.1.7-rc.1` 上验的）。Office、Edge/Chrome、python-pptx 都是**可选增强**：没有它们插件照常工作，只是真渲染、截图、兜底引擎这些能力自动降级，交付说明里会写明。
 
 ### 1.2 一条命令
 
@@ -70,33 +70,31 @@ dsh plugin --profile web remove @dsh-external/dsh-ppt-studio
 下载 `.tgz`，解压到任意目录，然后跑安装器：
 
 ```powershell
-tar -xzf dsh-ppt-studio-1.0.4-<构建时间>-<构建戳>.tgz -C D:\plugins
+tar -xzf dsh-ppt-studio-<版本>-<构建时间>-<构建戳>.tgz -C D:\plugins
 node D:\plugins\package\scripts\install.mjs
 # 自定义 DSH_HOME：加 --prefix <你的 .dsh 目录>
-# 重装：--force；只装包不写预设：--no-preset
+# 指定安装规格：--spec <URL|目录>；跳过预设资产校验：--no-preset
 ```
 
 安装器是幂等的，重复跑会跳过已经存在的项。装完一样要重启 `dsh web`。
 
-如果你已经在用 dsh-super-injector，在注入器环境里对解压目录（或源码目录）跑 `dev_inject_plugin` 也行，注入器负责建链接和重启恢复；预设那份文件在仓库的 `agent-presets/ppt/agent.cordis.yml`，复制到 `~/.dsh/.agent-presets/ppt/` 即可。
+如果你已经在用 dsh-super-injector，在注入器环境里对解压目录（或源码目录）跑 `dev_inject_plugin` 也行，注入器负责建链接和重启恢复。
 
 ### 1.6 想让工具只在「PPT 工作室」里出现
 
-默认是全局的（`dsh plugin add` 装的那条路）。如果你希望这些工具和手册只在「PPT 工作室」会话里可见，用安装器的隔离模式：
+**本版本（DSH 0.1.7 及以后）不支持这种隔离**，安装器的 `--isolate` 会直接拒绝并说明原因，而不是写出一个永远不会被读到的预设。
 
-```powershell
-node scripts/install.mjs --isolate    # 摘掉 profile bundle，改为预设层挂载
-node scripts/install.mjs              # 切回全局
-# 两种都要重启 dsh web
-```
+原因是宿主换了机制：0.1.6 及以前，预设是"磁盘上的一个目录"（`~/.dsh/.agent-presets/ppt/`），
+所以隔离可以靠"预设目录里放一个链接 + 预设里写一行相对路径"实现；**0.1.7 把目录发现整个删掉了**
+（上游原文：*the harness discovers no preset on disk*），预设改为向 `agentPresets` 注册表**声明**，
+而预设里的每一行都要在**注册表所在那一层**的路径下解析——那里既不是你的 profile，也不是预设目录，
+所以相对路径和包名都解析不到，预设会被判 `broken`，选择器里根本不会列出它。
 
-两条路互斥，安装器保证这一点。隔离模式有三点要知道：
+于是本版本只有一条受支持的装法：**默认的全局装法**（`dsh plugin add` / `install.mjs` 不带 `--isolate`），
+这个 profile 的所有会话都能用 ppt_* 工具与手册。预设「PPT 工作室」仍然存在、仍可选，它提供的是**人格与身份**（见 §1.1）。
 
-1. 插件不会出现在「插件管理」列表里（那条列表列的是 profile 依赖）。
-2. `/ppt-preview` 预览路由随预设挂载存在：进程里从没有过「PPT 工作室」会话时，它是 404。
-3. 预设目录里会多一个 `plugin` 链接，预设里那行插件引用靠它解析。**链接丢了，预设会被判 `broken`，选择器里就看不到它**。重跑一次 `--isolate` 即可修复。
-
-> 为什么预设里那行写的是相对路径 `./plugin/lib/index.js` 而不是包名：预设里的裸包名一律从**安装好的 harness 目录**解析，不认 profile 也不认预设目录，装在 profile 里的本包根本解析不到。（这一条踩过两次，别再改回去。）
+> 想要"只在某个预设里生效"需要把插件行写进**预设声明本身**，并给它一个安装期算出的绝对 `file://` 名字。
+> 这块还没做——宁可明确拒绝，也不静默失败。
 
 ---
 
@@ -259,7 +257,11 @@ v1.0.0 修订前旧引擎的结构 bug（graphicFrame 里嵌了 `<a:xfrm>`，Pow
 正常，PowerPoint COM 需要。只读打开，结束自动释放。
 
 **升级 DSH 之后「PPT 工作室」选不出来，或者切过去就报错？**
-那是预设跟着上游漂移了，不是插件坏了。本插件的预设是随包 standard 预设的副本，只加了一处有意差异（persona 人格，理由写在 `agent-presets/ppt/agent.cordis.yml` 顶部，白名单在 `scripts/check-preset.mjs`）。上游改预设（改配置、加行、停用行）而副本没跟，会话行为就会不一致。发生过两次：`0.1.5-rc.2` 把 persona 从 `text` 改成必填的 `prefix`；`0.1.6-alpha.2` 删掉了 `dsh-workflow-worker-thread`、把 `tool-ralph` 改成默认停用、新增 `tool-plugin-manager`。修法是拿到修好的版本后重跑安装（预设以包为准总是刷新），或者单独跑 `node scripts/check-preset.mjs` 看漂移。
+先分清是"预设漂移"还是"宿主换了预设机制"，两者的修法不同：
+
+- **内容漂移**：本插件的预设是随包 standard 预设的副本，只加了一处有意差异（persona 人格，理由写在 `agent-presets/ppt/agent.cordis.yml` 顶部，白名单在 `scripts/check-preset.mjs`）。上游改预设（改配置、加行、停用行）而副本没跟，会话行为就会不一致。发生过两次：`0.1.5-rc.2` 把 persona 从 `text` 改成必填的 `prefix`；`0.1.6-alpha.2` 删掉了 `dsh-workflow-worker-thread`、把 `tool-ralph` 改成默认停用、新增 `tool-plugin-manager`。修法是拿到修好的版本后重跑安装，或者单独跑 `node scripts/check-preset.mjs` 看漂移。
+- **机制变更**：`0.1.7` 换了预设的交付方式（磁盘目录 → 注册表声明，见 §1.6），参照物文件也从 `dsh-agent-presets/presets/standard/agent.cordis.yml` 换成了 `dsh-web-app/presets/standard.patch.yml`。本包 1.0.7 起已适配；`check-preset.mjs` 两种格式都认，认到哪种会在输出第一屏写明。
+- **完全看不到这个预设**：调一次 `ppt_state`，看 `presetDelivery` 字段——它会写明是否已声明、以及失败原因（例如宿主没装配 `agentPresets` 注册表）。这比翻日志可靠。
 
 **插件对外只交付三样东西**：`ppt_*` 工具面 + `/ppt` 命令面、工作流提示段、内置手册。都挂在插件实例上，卸载即净。想确认手册通道：调一次 `ppt_state`，`manualSkill` 会报注册与可见状态。
 
@@ -267,7 +269,7 @@ v1.0.0 修订前旧引擎的结构 bug（graphicFrame 里嵌了 `<a:xfrm>`，Pow
 
 ## 6. 环境要求与已知边界
 
-**环境**：DSH web `0.1.6-alpha.2`，Windows 主机（COM/Edge 探测路径按 Windows 写的，macOS/Linux 未验证）。路径与中间层一律 UTF-8，也兼容 WPS 导出的 UTF-16 文件。
+**环境**：DSH web `0.1.7-rc.1`（Windows 主机实测；COM/Edge 探测路径按 Windows 写的，macOS/Linux 未验证）。路径与中间层一律 UTF-8，也兼容 WPS 导出的 UTF-16 文件。
 
 **支持的元素**：text / shape / line / image / table / chart。
 
@@ -389,7 +391,7 @@ ppt_visual                  # Office 真渲染复核（有 Office 时；audit �
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + LF 守卫 + smoke（250 断言）+ 预设漂移自检
+npm test                        # build + LF 守卫 + smoke（260 断言）+ 预设漂移自检
 npm run check:eol               # 发行字节守卫：跟踪的文本文件必须全 LF（--fix 就地修）
 npm run fresh                   # 用户视角终验：干净克隆 npm test + 真装一遍
 npm run test:bundle             # 安装路径自证：隔离 DSH_HOME + 真 dsh plugin add + dump-config

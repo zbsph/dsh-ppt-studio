@@ -19,11 +19,13 @@
  *   node scripts/verify-bundle-install.mjs <https://…tgz>   # **验"用户会敲的那条命令"**（GitHub 资产 URL）
  */
 import { join, dirname } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { fileURLToPath } from 'node:url'
 import { readFileSync, existsSync, mkdirSync, rmSync, cpSync, appendFileSync, readdirSync, writeFileSync, lstatSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
+import { createRequire } from 'node:module'
 import { tmpdir, homedir } from 'node:os'
+import YAML from 'yaml'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
@@ -180,42 +182,63 @@ try {
   check('--local：**挂载副本 == 仓库刚构建的 lib/index.js**（这才是"本机跑的就是最新"的判据）',
     repoSha12 === mountSha12, `repo=${repoSha12}｜mount=${mountSha12}`)
 
-  // 7) **预设可被选择器列出（不 broken）+ 安装器不再写插件行**（2026-09-18 事故后重写）
-  //    事故形状：预设里的插件行按**裸包名**从 `harnessBase`（安装好的 harness 目录）解析，**不是** profile
-  //    ⇒ 解析不到 ⇒ 该预设被标 `broken` ⇒ 前端选择器只渲染健康预设
-  //    （`presetOptions() = presets.filter(p => p.broken === void 0)`）⇒ **用户根本选不到「PPT 工作室」**，
-  //    而 profile 里又没有 bundle ⇒ 两边都没工具。本机会话统计：245 个会话里 `agentPreset=ppt` 的 **0 个**。
-  //    这一条用 **DSH 自己的 discovery 代码**（discoverPresets）来判——它就等于"选择器会不会显示它"。
+  // 7) **预设可被选择器列出（不 broken）+ 安装器不再写预设目录**（2026-09-24 为 DSH 0.1.7 重写）
+  //    0.1.6 的形状：预设靠"写 `<dshHome>/.agent-presets/ppt/`"交付，用 `discoverPresets` 判健康。
+  //    0.1.7：目录发现**整个被删掉**（上游原文 "the harness discovers no preset on disk"），
+  //    预设改为向 `agentPresets` 注册表**声明**（本插件在激活时自己声明，见 src/preset-delivery.js）。
+  //    健康判据随之换成"真正决定它会不会 broken 的那一步"：注册表 mount 预设时用**注册表自己 ctx 的
+  //    baseUrl**（源码 `mountPreset(scope.ctx.extend({ baseUrl: record.context.baseUrl }), …)`，
+  //    而 `register()` 里 `context = this.ctx`）——即 `dsh-web-app` 的包目录，不是 profile、不是预设目录。
+  //    所以"每一行的 name 能否**从那里**解析"就是"预设会不会 broken"的判据；这里用 Node 的解析器真解一遍。
   const home2 = join(work, 'home2')
   const profB = join(home2, 'profiles', 'web')
-  mkdirSync(join(profB, 'node_modules', ...NAME.split('/')), { recursive: true })
-  // 夹具 = 已按 bundle 安装：依赖里有本包 + 包本体已被 pnpm 物化
+  const instPkgDir = join(profB, 'node_modules', ...NAME.split('/'))
+  mkdirSync(instPkgDir, { recursive: true })
+  // 夹具 = 已按 bundle 安装：依赖里有本包 + 包本体已被 pnpm 物化（带齐"声明预设"所需的资产）
   writeFileSync(join(profB, 'package.json'), JSON.stringify({ name: 'p', dependencies: { [NAME]: 'file:x' } }, null, 2), 'utf8')
-  writeFileSync(join(profB, 'node_modules', ...NAME.split('/'), 'package.json'),
-    JSON.stringify({ name: NAME, version: pkg.version }), 'utf8')
+  writeFileSync(join(instPkgDir, 'package.json'), JSON.stringify({ name: NAME, version: pkg.version }), 'utf8')
+  cpSync(join(root, 'lib'), join(instPkgDir, 'lib'), { recursive: true })
+  cpSync(join(root, 'agent-presets'), join(instPkgDir, 'agent-presets'), { recursive: true })
+  // 0.1.6 遗留产物：先埋一份预设目录，验证安装器会清掉它
+  const legacyPreset = join(home2, '.agent-presets', 'ppt')
+  mkdirSync(legacyPreset, { recursive: true })
+  writeFileSync(join(legacyPreset, 'agent.cordis.yml'), '- id: persona\n', 'utf8')
   const env2 = { ...process.env, DSH_HOME: home2 }
   const inst2 = run('node', [join(root, 'scripts', 'install.mjs'), '--prefix', home2], { env: env2 })
-  check('安装器：bundle 模式下退出码 0（不再需要 junction/yaml 链接）', inst2.status === 0,
+  check('安装器：bundle 模式下退出码 0', inst2.status === 0,
     `${String(inst2.stdout ?? '').trim().split(/\r?\n/).length} 行输出｜exit=${inst2.status}`)
-  const preset2 = join(home2, '.agent-presets', 'ppt', 'agent.cordis.yml')
-  const presetTxt = existsSync(preset2) ? readFileSync(preset2, 'utf8') : ''
-  check('安装器：写出的预设**不含**本包插件行（含行 ⇒ 预设 broken ⇒ 选择器里看不到它）',
-    existsSync(preset2) && !/^-\s*id:\s*ppt-studio$/m.test(presetTxt) && !/dsh-ppt-studio plugin row/.test(presetTxt),
-    existsSync(preset2) ? '无插件行 ✓' : '预设缺失')
+  check('安装器：**不再**产出 `.agent-presets/`（0.1.7 无目录发现路径），并清理 0.1.6 遗留',
+    !existsSync(legacyPreset) && !/^-\s*id: ppt-studio$/m.test(readFileSync(join(instPkgDir, 'agent-presets', 'ppt', 'agent.cordis.yml'), 'utf8')),
+    `遗留目录=${existsSync(legacyPreset)}｜组合含插件行=${/^-\s*id: ppt-studio$/m.test(readFileSync(join(instPkgDir, 'agent-presets', 'ppt', 'agent.cordis.yml'), 'utf8'))}`)
+  check('安装器：校验"声明预设"所需的资产（agent-presets/ppt/* + lib/preset-delivery.js）',
+    /预设资产已就位/.test(String(inst2.stdout ?? '')) && existsSync(join(instPkgDir, 'lib', 'preset-delivery.js')),
+    /预设资产已就位/.test(String(inst2.stdout ?? '')) ? '资产校验通过 ✓' : '(无资产校验输出)')
+  const iso2 = run('node', [join(root, 'scripts', 'install.mjs'), '--prefix', home2, '--isolate'], { env: env2 })
+  check('安装器：`--isolate` 在 0.1.7 上**明确拒绝**（exit 1 + 说清原因，不写出没人读的预设）',
+    iso2.status === 1 && /不再可用/.test(`${iso2.stdout ?? ''}${iso2.stderr ?? ''}`),
+    `exit=${iso2.status}｜有原因=${/不再可用/.test(`${iso2.stdout ?? ''}${iso2.stderr ?? ''}`)}`)
   const link2 = join(profB, 'node_modules', NAME)
   check('安装器：**不**把 pnpm 物化的包目录换成 junction（那条路径归 pnpm 管）',
     existsSync(link2) && lstatSync(link2).isSymbolicLink() === false, `isSymbolicLink=${lstatSync(link2).isSymbolicLink()}`)
-  // 用 DSH 自己的 discovery 判"选择器会不会显示"：找不到 DSH 安装时按跳过计（断言总数恒定）
-  const dsh = findDsh()
-  if (dsh) {
-    const { discoverPresets } = await import(pathToFileURL(dsh.lib).href)
-    const found = await discoverPresets([{ path: join(home2, '.agent-presets'), trust: 'user' }], dsh.harnessBase)
-    const ours = found.find((p) => p.id === 'ppt')
-    check('预设健康：DSH 的 discoverPresets 不把「PPT 工作室」判为 broken（= 选择器会列出它）',
-      Boolean(ours) && ours.broken === undefined,
-      ours ? (ours.broken === undefined ? 'ok（选择器可见）' : `broken: ${String(ours.broken).slice(0, 90)}`) : '未发现该预设')
+  // 预设健康（0.1.7 判据）：组合里每一行的 `name` 都能从**注册表的 mount base** 解析
+  const mountBase = findPresetMountBase()
+  if (mountBase) {
+    const composition = YAML.parse(readFileSync(join(instPkgDir, 'agent-presets', 'ppt', 'agent.cordis.yml'), 'utf8'))
+    const names = []
+    const walk = (rows) => {
+      for (const r of rows ?? []) {
+        if (typeof r?.name === 'string' && r.name !== 'cordis:group' && !/^\.\.?\//.test(r.name)) names.push(r.name)
+        if (Array.isArray(r?.config)) walk(r.config)
+      }
+    }
+    walk(composition)
+    const req = createRequire(join(mountBase, 'package.json'))
+    const unresolved = names.filter((n) => { try { req.resolve(n); return false } catch { return true } })
+    check('预设健康：组合里每一行都能从**注册表的 mount base** 解析（解析不到 ⇒ 预设 broken ⇒ 选择器看不到它）',
+      names.length > 0 && unresolved.length === 0,
+      `mount base=${mountBase.replace(/\\/g, '/')}｜行=${names.length}｜解析不到=${unresolved.join('、') || '无'}`)
   } else {
-    check('预设健康：DSH 的 discoverPresets 不把「PPT 工作室」判为 broken（= 选择器会列出它）', true, '⚠ 未找到 DSH 安装 → 跳过')
+    check('预设健康：组合里每一行都能从**注册表的 mount base** 解析（解析不到 ⇒ 预设 broken ⇒ 选择器看不到它）', true, '⚠ 未找到 dsh-web-app（未装 DSH？）→ 跳过')
   }
   // 技能泄漏面：`<dshHome>/skills/` 是**文件系统技能根**，对所有会话可见（不限预设）。
   // 默认不镜像，且**清理历史镜像**（否则每次 sync 都会把它装回来）。
@@ -230,24 +253,26 @@ try {
 }
 
 /**
- * 定位随包安装的 DSH：`@deepseek-ai/dsh-agent-presets/lib/index.js` 与它的 **harness base**。
- * harnessBase 必须是 **harness 包目录本身**（`<global>/@deepseek-ai/dsh/`）——预设里的裸包名正是从这里解析；
- * 用错基准（全局根 / profile / 预设目录）会对**别的**行误报 broken，让本检查变成假红或假绿。
+ * 定位"预设行会被从哪个 base 解析"——即 **agent-preset 注册表所在层的 baseUrl**。
+ * 依据（DSH 源码）：`AgentPresetRegistry.register()` 里 `const context = this.ctx`（注册表自己的 ctx），
+ * `activate()` 再 `mountPreset(scope.ctx.extend({ baseUrl: record.context.baseUrl }), …)`
+ * ⇒ 预设里每一行的 `name` 都从**注册表所在层**解析，而注册表由 `dsh-web-app` 的 patch 插入
+ * ⇒ base 就是 **`dsh-web-app` 的包目录**（既不是 profile，也不是预设目录、更不是"harness 包目录"）。
+ * 用错基准会对别的行误报 broken（假红）或漏报（假绿），所以这里按包目录精确定位。
  */
-function findDsh() {
-  const rel = join('@deepseek-ai', 'dsh', 'node_modules', '@deepseek-ai', 'dsh-agent-presets', 'lib', 'index.js')
+function findPresetMountBase() {
+  const rel = join('node_modules', '@deepseek-ai', 'dsh-web-app', 'package.json')
   const roots = []
   try {
     const r = run('npm', ['root', '-g'])
-    if (r.status === 0 && r.stdout) roots.push(r.stdout.trim())
+    if (r.status === 0 && r.stdout) roots.push(join(r.stdout.trim(), '@deepseek-ai', 'dsh'))
   } catch { /* npm 不可用 */ }
-  for (const k of ['APPDATA', 'LOCALAPPDATA']) if (process.env[k]) roots.push(join(process.env[k], 'npm', 'node_modules'))
-  roots.push(join(homedir(), 'AppData', 'Roaming', 'npm', 'node_modules'))
-  roots.push('/usr/lib/node_modules', '/usr/local/lib/node_modules')
+  for (const k of ['APPDATA', 'LOCALAPPDATA']) if (process.env[k]) roots.push(join(process.env[k], 'npm', 'node_modules', '@deepseek-ai', 'dsh'))
+  roots.push(join(homedir(), 'AppData', 'Roaming', 'npm', 'node_modules', '@deepseek-ai', 'dsh'))
+  roots.push('/usr/lib/node_modules/@deepseek-ai/dsh', '/usr/local/lib/node_modules/@deepseek-ai/dsh')
   for (const r of roots) {
-    if (!r) continue
-    const lib = join(r, rel)
-    if (existsSync(lib)) return { lib, harnessBase: pathToFileURL(join(r, '@deepseek-ai', 'dsh') + '/').href }
+    const dir = dirname(join(r, rel))
+    if (existsSync(join(dir, 'package.json'))) return dir
   }
   return null
 }

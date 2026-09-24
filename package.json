@@ -1,6 +1,6 @@
 {
   "name": "dsh-ppt-studio",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "在 DeepSeek Harness 里做 PPT：说需求 → 逐页制作 → 导出可编辑的 .pptx。含布局检查、Office 真渲染复核，以及可扩展的本地模板库",
   "//publish": "2026-09-18 用户拍板改发 npm（dsh-web 维护者建议）+ 采用**无 scope** 包名 `dsh-ppt-studio`（现已可用；生态里 40+ 条社区插件同样是 dsh-* 无 scope 名，scope 名只用于个人用户名）。原先这里是 private:true（不发布 npm，只发 GitHub Release 资产）——那条路仍保留为离线/归档通道，见 docs/06 与 README §10。",
   "repository": { "type": "git", "url": "git+https://github.com/zbsph/dsh-ppt-studio.git" },
@@ -11,8 +11,11 @@
   "type": "module",
   "main": "./lib/index.js",
   "//lib": "lib/ 是**提交**的构建产物（src 的纯拷贝）：商店（创意工坊）对无 npm 包的条目生成的命令是 `dsh plugin add <repo URL>`，git 安装只拿得到已提交内容，lib 不入库则插件挂不上。守卫：npm run check:lib + smoke 断言。",
-  "//dsh": "profile bundle 声明（2026-09-14）：让 `dsh plugin --profile <p> add <本包>` 装完即挂载——launcher 在 profile 里跑完 pnpm 后核对 dsh.profile.bundles，声明了 dsh.bundle 的依赖自动入栈。",
+  "//dsh": "profile bundle 声明（2026-09-14）：让 `dsh plugin --profile <p> add <本包>` 装完即挂载——launcher 在 profile 里跑完 pnpm 后核对 dsh.profile.bundles，声明了 dsh.bundle 的依赖自动入栈。dsh.engines.dsh（2026-09-24，DSH 0.1.7 新增字段）：本包从 1.0.7 起只支持 DSH >= 0.1.7-rc.1——不是挑剔版本，而是 0.1.7 把「预设 = 磁盘目录」换成了「预设 = 向 agentPresets 注册表声明」（旧版扫 <dshHome>/.agent-presets/；0.1.7 上游原文：the harness discovers no preset on disk），适配后的交付方式在 0.1.6 及以前没有任何效果。写上范围，让旧宿主上的用户拿到明确信号，而不是「装上却永远看不到那个预设」。",
   "dsh": {
+    "engines": {
+      "dsh": ">=0.1.7-rc.1"
+    },
     "bundle": {
       "patch": "./cordis.patch.yml"
     }

@@ -11,11 +11,21 @@
 # A service row here MUST sit inside a group carrying an `isolate` realm.
 # Without one it publishes into the root realm, where it is process-global —
 # another preset publishing the same name collides, and a host reader would
-# resolve one preset's instance for every session; `dsh-agent-presets` rejects
-# that at mount. `true` means an entry-local realm: this standing mount's own
-# private instance, apart from every other preset's. (A shared label does NOT
-# pool instances — `provide()` throws on the second registration under the
-# same realm symbol; labels join REALMS, and are not what this file needs.)
+# resolve one preset's instance for every session; the agent-preset registry
+# rejects that at mount. `true` means an entry-local realm: this standing
+# mount's own private instance, apart from every other preset's. (A shared
+# label does NOT pool instances — `provide()` throws on the second registration
+# under the same realm symbol; labels join REALMS, and are not what this file
+# needs.)
+#
+# 【本文件在 DSH 0.1.7 上怎么被用（2026-09-24 适配）】
+# 它是一份 **Loader 方言的条目数组**，由 `lib/preset-delivery.js` 读出来、作为
+# `plugins` 交给 `ctx.agentPresets.register({id:'ppt', name, description, order, plugins})`。
+# 0.1.6 及以前是靠把本文件**写到 `<dshHome>/.agent-presets/ppt/`** 让宿主扫到——那条路
+# 在 0.1.7 已被上游删除（原文："the harness discovers no preset on disk"），所以现在是**声明**。
+# 两个必须守住的细节（都在 preset-delivery.js 里有源码级依据）：
+#   · `!!js` 会被 Loader 求值（`{__jsExpr}`），自己读 YAML 时必须**保真**，否则平台开关会失真；
+#   · 相对模块名会被解析到**注册表所在层**（= dsh-web-app 包目录），不是本目录——本文件里没有相对名。
 
 # ── identity ────────────────────────────────────────────────────────────────
 
@@ -279,18 +289,20 @@
   name: '@deepseek-ai/dsh-plugin-manager/tools'
   disabled: true
 
-# ── 为什么这里**没有**本插件的插件行（2026-09-18 实测事故后删除）────────────────────
-# 曾经的写法是本文件末尾加一行 `- id: ppt-studio / name: '@dsh-external/dsh-ppt-studio'`，
-# 让「预设行」把插件挂进该预设。**在本 DSH 版本上这条路走不通，而且失败方式极其隐蔽**：
-#   ① `@deepseek-ai/dsh-agent-presets` 的 PresetTree.import 对本行这类**裸包名**一律从
-#      `harnessBase` 解析——注释原文："the mount records the host composition's base instead,
-#      which is inside the installed harness"。**不是**预设目录，也**不是** profile 目录
-#      ⇒ 装在 profile 里的本包，这一行永远解析不到；
-#   ② 解析不到 ⇒ 该预设被标 `broken`；而前端选择器只渲染**健康**预设：
-#      `presetOptions() = presets.filter(p => p.broken === void 0)`（dsh-client-ui-agent-preset）
-#      ⇒ 「PPT 工作室」**根本不出现在新建会话的预设列表里**（只在预设"管理"区可见）；
-#   ③ 于是用户既选不到这个预设、profile 里又没有 bundle ⇒ **两边都看不到任何工具**，
-#      而现象与"门控把它挡掉了"一模一样，极难归因（本机 245 个会话里 0 个 preset=ppt）。
-# 结论：本插件**只能**作为 profile bundle 挂载（`dsh plugin add`，见 README §10）；
-# 预设只负责"身份"（名字/描述/人格），由插件的**会话级门控**决定该预设是否有 ppt_* 能力面。
-# 安装器（scripts/install.mjs）仍会清理历史遗留的行块——老版本装过的机器升级时不会留着它。
+# ── 为什么这里**没有**本插件的插件行（2026-09-24 按 DSH 0.1.7 重写说明）──────────────
+# 本文件是「PPT 工作室」预设的组合真相：装配时由 lib/preset-delivery.js 声明给 agentPresets 注册表。
+# **里面不放本插件的插件行**——插件已经由 profile bundle（cordis.patch.yml）挂载过；这里再来一行
+# 会在同一进程把它挂第二次（预设组合里那一次注册进**预设作用域**，与 profile 那一次重复）。
+# 插件自身有装配防重，但纪律是"一处挂载"，所以随包预设恒为"干净组合"。
+#
+# 曾经验证过两条**都走不通**的路（留档，别再试）：
+#   ① 用**裸包名** `dsh-ppt-studio` 写一行（0.1.6 实测事故）：预设的行由注册表在**它自己 ctx 的
+#      baseUrl** 下 mount（源码 `mountPreset(scope.ctx.extend({ baseUrl: record.context.baseUrl }), …)`，
+#      而 `register()` 里 `context = this.ctx`）——那是 `dsh-web-app` 的包目录，**不是** profile、
+#      也不是预设目录 ⇒ 解析不到 ⇒ 预设被判 `broken` ⇒ 前端选择器只渲染健康预设
+#      （`presetOptions() = presets.filter(p => p.broken === void 0)`）⇒ 用户根本选不到；
+#   ② 把插件行写成**相对路径**（0.1.6 的 `--isolate` 就是这么做，靠预设目录内的 junction 解析）：
+#      0.1.7 上预设目录**不再被扫描**、"组合文件所在目录"这个概念随之消失 ⇒ 同样解析不到。
+# 结论：**默认（全局）装法**是本版本唯一受支持的装配路径（`scripts/install.mjs` 的默认分支，
+# 也是 `dsh plugin add` 那一条）。真要"只在「PPT 工作室」里生效"，得把插件行放进**预设声明本身**
+# 并给它一个安装期算出的**绝对 `file://` 名字**——这块尚未实现，`--isolate` 会明确拒绝而不是静默失败。
