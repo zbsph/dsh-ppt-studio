@@ -16,19 +16,31 @@
 
 ### 1.2 一条命令
 
+**npm（推荐）**：包名就叫 `dsh-ppt-studio`，装的人不需要 npm 账号（公开包匿名可下载）。
+
+```powershell
+dsh plugin --profile web add dsh-ppt-studio
+# 装完重启 dsh web
+```
+
+升级用 `dsh plugin --profile web add dsh-ppt-studio@latest`（不带 `@latest` 时 pnpm 可能认为已满足当前范围而跳过）。
+
+**或者从 Releases 装 tgz**（离线 / 归档通道；内容与同版本 npm 包一致）：
+
 从 [Releases 页面](https://github.com/zbsph/dsh-ppt-studio/releases) 复制**最新那条** `.tgz` 资产的完整链接，然后：
 
 ```powershell
 dsh plugin --profile web add <粘贴那条资产 URL>
-# 装完重启 dsh web
 ```
 
-本插件声明了 `dsh.bundle.patch`（仓库根的 `cordis.patch.yml`），所以**装完就挂上了**：不用手工建链接，不用跑安装器，也不用 npm 账号（包是公开的，装的人不需要账号）。
+本插件声明了 `dsh.bundle.patch`（仓库根的 `cordis.patch.yml`），所以**装完就挂上了**：不用手工建链接，不用跑安装器。
 
-资产名形如 `dsh-ppt-studio-1.0.4-20260919-0226-b805e912.tgz`：版本、构建时间、构建内容的前 8 位哈希。页面会保留历次构建，所以**按上传时间取最新那条**。懒得翻页面就用这行拿名字：
+> npm 包与同版本的 Release 资产是**同一份字节**：发布时先冻结提交、两条通道各跑一次 `npm pack`（同一棵树 ⇒ 同一个 tgz），所以两条命令装到的内容一致。
+
+资产名形如 `dsh-ppt-studio-1.1.0-20260926-0204-8f428210.tgz`：版本、构建时间、构建内容的前 8 位哈希。页面会保留历次构建，所以**按上传时间取最新那条**。懒得翻页面就用这行拿名字：
 
 ```powershell
-gh release view v1.0.4 --json assets --jq '.assets | sort_by(.createdAt) | last | .name'
+gh release view v1.1.0 --json assets --jq '.assets | sort_by(.createdAt) | last | .name'
 ```
 
 也可以直接装仓库地址，产物和 tgz 一样（`lib/` 已入库）：
