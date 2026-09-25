@@ -46,6 +46,10 @@ jobs:
     name: publish (OIDC)
     runs-on: ubuntu-latest # Trusted Publishing 目前只支持云托管 runner（self-hosted 不支持）
     timeout-minutes: 30
+    # 本工作流**不 checkout**（只需读 Release 资产）；没有 .git 时 gh 必须靠 GH_REPO 才知道是哪个仓库
+    # —— 2026-09-26 预检实测：不设它，第一步 `gh release view` 就报 `fatal: not a git repository`。
+    env:
+      GH_REPO: ${{ github.repository }}
     steps:
       - name: 解析 tag
         id: t
@@ -63,8 +67,10 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '24'
-          registry-url: 'https://registry.npmjs.org'
           package-manager-cache: false # 发布构建不使用缓存
+      # 故意**不给** setup-node 传 registry-url：2026-09-26 预检实测，传了它会额外注入
+      #   NPM_CONFIG_USERCONFIG=/…/.npmrc 以及一个名为 NODE_AUTH_TOKEN 的占位凭据，正是会把 OIDC 顶掉的东西。
+      # 本工作流不需要 .npmrc（npm 默认 registry 就是 registry.npmjs.org，且不装依赖）。
       # 注意：本工作流**不注入任何 npm 长期凭据**——一旦注入，认证就走传统 token，OIDC 反而不生效。
 
       - name: 门禁：npm >= 11.15.0（stage/publish 的 Trusted Publishing 前提；OIDC 认证本身需 >= 11.5.1）
@@ -111,6 +117,14 @@ jobs:
           NPM_CONFIG_PROVENANCE: 'true'
         run: |
           set -uo pipefail
+          # 双保险：即使运行环境注入占位/长期 npm 凭据（见上面 setup-node 的注释），也在发布前清掉——
+          # 有它就走传统 token 认证，OIDC 反而不生效。这里只打印"有没有"，绝不打印凭据值。
+          unset NODE_AUTH_TOKEN || true
+          echo "registry = $(npm config get registry)"
+          echo "userconfig = ${NPM_CONFIG_USERCONFIG:-（未设置）}"
+          if [ -f "${NPM_CONFIG_USERCONFIG:-/nonexistent}" ]; then
+            echo "userconfig 里的 _authToken 行数 = $(grep -c '_authToken' "$NPM_CONFIG_USERCONFIG" || true)"
+          fi
           if npm publish ./dist/*.tgz 2>&1 | tee publish.log; then
             echo "✓ 已发布"
           else

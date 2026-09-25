@@ -2490,9 +2490,11 @@ const publishYml = readFileSync(join(root, '.github', 'workflows', 'publish.yml'
 ok('npm 发布通道：`.github/workflows/publish.yml` 由 release(published) 触发，并留 workflow_dispatch 兜底',
   /types:\s*\[published\]/.test(publishYml) && /^\s*workflow_dispatch:/m.test(publishYml),
   /types:\s*\[published\]/.test(publishYml) ? '触发 = release:published + 手动兜底' : '缺少 release:published 触发')
-ok('npm 发布通道：OIDC 前提齐（id-token: write），且**不注入**任何 npm 长期凭据（注入了就走传统 token，OIDC 反而不生效）',
-  /id-token:\s*write/.test(publishYml) && !/NODE_AUTH_TOKEN\s*[:=]/.test(publishYml),
-  `id-token: write=${/id-token:\s*write/.test(publishYml)}｜注入长期凭据=${/NODE_AUTH_TOKEN\s*[:=]/.test(publishYml)}`)
+// 断言口径：禁的是"在 YAML 里给它赋值"（`NODE_AUTH_TOKEN: …`）——注释里出现这个名字是在解释为什么不能赋值，不算违规。
+const noInjectedToken = !/^\s*-?\s*NODE_AUTH_TOKEN\s*[:=]/m.test(publishYml) && /unset NODE_AUTH_TOKEN/.test(publishYml) && !/^\s*registry-url\s*:/m.test(publishYml)
+ok('npm 发布通道：OIDC 前提齐（id-token: write），且不注入 npm 长期凭据（不写 NODE_AUTH_TOKEN、不给 setup-node 传 registry-url、发布前 unset 兜底）',
+  /id-token:\s*write/.test(publishYml) && noInjectedToken,
+  `id-token: write=${/id-token:\s*write/.test(publishYml)}｜无注入凭据=${noInjectedToken}｜registry-url=${/registry-url\s*:/.test(publishYml)}`)
 ok('npm 发布通道：全自动档用 `npm publish`（不是 stage-only），且带 npm >= 11.15.0 门禁',
   /npm publish/.test(publishYml) && !/npm stage publish/.test(publishYml) && /11\.15\.0/.test(publishYml),
   `npm publish=${/npm publish/.test(publishYml)}｜stage-only=${/npm stage publish/.test(publishYml)}｜版本门禁=${/11\.15\.0/.test(publishYml)}`)
