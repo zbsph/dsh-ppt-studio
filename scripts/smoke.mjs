@@ -2427,7 +2427,10 @@ ok('bundle：已转为公开发布 npm（无 private + publishConfig.access=publ
   await writeFile(join(prof, 'package.json'),
     JSON.stringify({ name: 'dsh-profile-desktop', private: true, dependencies: {}, dsh: { profile: { bundles: [] } } }, null, 2), 'utf8')
   await writeFile(join(prof, 'pnpm-workspace.yaml'), 'packages:\n  - .\n\nnodeLinker: hoisted\nautoInstallPeers: false\n', 'utf8')
+  // 两个平台名都造：安装器在 win32 找 `runtime/bin/node.cmd`、在 POSIX 找 `runtime/bin/node`。
+  // 【2026-09-26 修】只造 .cmd 时，ubuntu CI 上桩被判"内置工具链不完整" ⇒ 第一条断言红。
   await writeFile(join(stub, 'runtime', 'bin', 'node.cmd'), '@echo off\r\n', 'utf8')
+  await writeFile(join(stub, 'runtime', 'bin', 'node'), '#!/bin/sh\n', 'utf8')
   await writeFile(join(stub, 'runtime', 'pnpm', 'bin', 'pnpm.mjs'), '// stub\n', 'utf8')
   const script = join(root, 'scripts', 'install-desktop.mjs')
   const runD = (extra) => spawnSync(process.execPath,
