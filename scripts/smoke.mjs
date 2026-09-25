@@ -2482,6 +2482,24 @@ ok('制作手册零指向答疑手册：craft/data/copy 正文不出现 `ppt-stu
   crossBookPointers.length === 0,
   crossBookPointers.length ? `仍指向：${crossBookPointers.join('、')}` : '三本均无指向')
 
+// ── 51. npm 全自动发布通道（2026-09-26：Trusted Publishing / OIDC）─────────────────────
+// 要防的事故形状：本包的发布件是 Release 资产 tgz，而「registry 字节 == Release 资产字节」是不变量。
+// 谁把 CI 改成重新打包、去掉 id-token、注入传统 npm 凭据、或退回 stage-only，都会**静默**破坏这条通道——
+// 症状只在下一次发版时出现（而且那时已经晚了：npm 的版本不可覆盖）。所以把前提钉成机器断言。
+const publishYml = readFileSync(join(root, '.github', 'workflows', 'publish.yml'), 'utf8')
+ok('npm 发布通道：`.github/workflows/publish.yml` 由 release(published) 触发，并留 workflow_dispatch 兜底',
+  /types:\s*\[published\]/.test(publishYml) && /^\s*workflow_dispatch:/m.test(publishYml),
+  /types:\s*\[published\]/.test(publishYml) ? '触发 = release:published + 手动兜底' : '缺少 release:published 触发')
+ok('npm 发布通道：OIDC 前提齐（id-token: write），且**不注入**任何 npm 长期凭据（注入了就走传统 token，OIDC 反而不生效）',
+  /id-token:\s*write/.test(publishYml) && !/NODE_AUTH_TOKEN\s*[:=]/.test(publishYml),
+  `id-token: write=${/id-token:\s*write/.test(publishYml)}｜注入长期凭据=${/NODE_AUTH_TOKEN\s*[:=]/.test(publishYml)}`)
+ok('npm 发布通道：全自动档用 `npm publish`（不是 stage-only），且带 npm >= 11.15.0 门禁',
+  /npm publish/.test(publishYml) && !/npm stage publish/.test(publishYml) && /11\.15\.0/.test(publishYml),
+  `npm publish=${/npm publish/.test(publishYml)}｜stage-only=${/npm stage publish/.test(publishYml)}｜版本门禁=${/11\.15\.0/.test(publishYml)}`)
+ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz + gh release download），CI 里不得二次打包',
+  /endswith\("\.tgz"\)/.test(publishYml) && /gh release download/.test(publishYml) && !/npm pack/.test(publishYml),
+  `等资产=${/endswith\("\.tgz"\)/.test(publishYml)}｜下载资产=${/gh release download/.test(publishYml)}｜二次打包=${/npm pack/.test(publishYml)}`)
+
 // 37.10 【必须是最后一条断言】引用计数自证：文档里 "smoke … N 断言" 必须等于本次真实断言总数。
 // 历史形状：加断言后 README×3 + docs/02 + docs/06×2 + 手册 全靠人工同步，迟早漏一处。
 // 只扫"当前状态"文档（README / 技术报告 / 评审测试矩阵 / 使用手册）；docs/01/03/04 里的历史数字是记录，不动。

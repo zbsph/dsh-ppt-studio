@@ -2,7 +2,7 @@
 
 在 DeepSeek Harness 里说需求，它把 PPT 做出来：先定大纲和版式，再逐页制作，每页过一遍自动检查，最后交付一个能用 PowerPoint 打开、继续改的 `.pptx`。
 
-当前版本 **1.0.4**，安装包 **866 kB**（1.0.3 及更早的版本是 35 MB，因为随包带着 4 套没人用过的导入模板，1.0.4 把它们删了）。
+当前版本 **1.1.0**，安装包约 **880 kB**（1.0.3 及更早的版本是 35 MB，因为随包带着 4 套没人用过的导入模板，1.0.4 把它们删了）。
 
 装上之后，**这个 profile 的所有会话都能用**，不需要专门切到某个预设。预设「PPT 工作室」提供的是人格和身份，不是"开关"。
 
@@ -16,24 +16,24 @@
 
 ### 1.2 一条命令
 
-从 [Releases 页面](https://github.com/zbsph/dsh-ppt-studio/releases) 复制**最新那条** `.tgz` 资产的完整链接，然后：
-
 ```powershell
-dsh plugin --profile web add <粘贴那条资产 URL>
+dsh plugin --profile web add dsh-ppt-studio
 # 装完重启 dsh web
 ```
 
-本插件声明了 `dsh.bundle.patch`（仓库根的 `cordis.patch.yml`），所以**装完就挂上了**：不用手工建链接，不用跑安装器，也不用 npm 账号（资产是公开的，装的人不需要账号）。
+本插件声明了 `dsh.bundle.patch`（仓库根的 `cordis.patch.yml`），所以**装完就挂上了**：不用手工建链接，不用跑安装器，装的人也不需要任何账号（公开包）。
 
-资产名形如 `dsh-ppt-studio-1.1.0-20260926-0238-72517e53.tgz`：版本、构建时间、构建内容的前 8 位哈希。页面会保留历次构建，所以**按上传时间取最新那条**。懒得翻页面就用这行拿名字：
+想走归档通道（离线、或不想依赖 npm）也一样可以：从 [Releases 页面](https://github.com/zbsph/dsh-ppt-studio/releases) 复制**最新那条** `.tgz` 资产的完整链接即可。两条通道是**同一份字节**（可用 `sha256` 逐字节核对）：
+
+```powershell
+dsh plugin --profile web add <粘贴那条资产 URL>
+```
+
+资产名形如 `dsh-ppt-studio-1.1.0-20260926-0258-9303cc5c.tgz`：版本、构建时间、构建内容的前 8 位哈希。页面会保留历次构建，所以**按上传时间取最新那条**。懒得翻页面就用这行拿名字：
 
 ```powershell
 gh release view v1.1.0 --json assets --jq '.assets | sort_by(.createdAt) | last | .name'
 ```
-
-> **npm 上还没有这个包**。包名 `dsh-ppt-studio` 已经占好（未被别人使用），首次发布被 npm 的 2FA 写入策略挡下
-> （`E403 … Two-factor authentication or granular access token with bypass 2fa enabled is required`），需要账号持有人提供验证码或建一个可绕过 2FA 的 token。
-> **在发布成功之前，别用 `dsh plugin add dsh-ppt-studio` —— 那会 404。** 等上架后这里会换成 npm 命令，两条通道的内容是同一份字节。
 
 也可以直接装仓库地址，产物和 tgz 一样（`lib/` 已入库）：
 
@@ -430,7 +430,7 @@ ppt_visual                  # Office 真渲染复核（有 Office 时；audit �
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + LF 守卫 + smoke（262 断言）+ 预设漂移自检
+npm test                        # build + LF 守卫 + smoke（266 断言）+ 预设漂移自检
 npm run check:eol               # 发行字节守卫：跟踪的文本文件必须全 LF（--fix 就地修）
 npm run fresh                   # 用户视角终验：干净克隆 npm test + 真装一遍
 npm run test:bundle             # 安装路径自证：隔离 DSH_HOME + 真 dsh plugin add + dump-config
@@ -450,24 +450,23 @@ npm run sync -- --local   # 日常迭代：不发 GitHub，本机跑刚构建的
 npm run sync              # 发版：上传资产 + 本机与 GitHub 拉齐 + 用户视角终验
 ```
 
-**发版四步，顺序不能换**。`npm run sync` 在"本地有未推送提交"或"tag 不指向 HEAD"时会拒绝继续。
+**发版三步 + npm 自动发布（顺序不能换）**。`npm run sync` 在"本地有未推送提交"或"tag 不指向 HEAD"时会拒绝继续。
 
 ```bash
 git push origin main                                    # ① 推提交
 gh release create v<版本> --target "$(git rev-parse HEAD)" --title ... --notes-file ...   # ② tag 显式指到这一提交
 npm run sync                                            # ③ 构建 → 上传资产 → git 前置检查 + 用户视角终验
-npm publish "<③ 产出的那个 tgz>"                          # ④ 发 npm（用同一个 tgz，保证两条通道同一份字节）
 ```
+
+**④ 不用你做**：资产一上传，`.github/workflows/publish.yml` 就被 `release: published` 唤醒 → 等 Release 资产出现 → **下载那个 tgz**（不重新打包，保证两条通道同一份字节）→ 用 **OIDC（Trusted Publishing）** 发到 npm → 发后自证 `registry dist.integrity == 本地 tgz 的 sha512`。**零长期 token，也不需要点任何按钮。**
 
 `gh release create` 不指定 `--target` 时会按默认分支 HEAD 建 tag，本地没推就把 tag 建在旧提交上。v1.0.1 第一次发布就是这么错的：资产哈希全绿，而 GitHub 上的 tag 指向 v1.0.0 的代码。所以加了机器判据。`--skip-fresh` 能跳过终验，但状态文件里会留 `freshInstall: null`，不把"没验"伪装成"验过"。
 
-**npm 通道的现状（2026-09-26）**：包名是**无 scope** 的 `dsh-ppt-studio`（`private` 已去掉，`publishConfig.access=public`），**但还没有发布成功**：
-- ✅ 账号已注册、`npm login` 已通（`npm whoami` = `zbsph`）；
-- ✅ 包名未被占用（`npm view dsh-ppt-studio` → 404），构件已备好（就是第 ③ 步产出的那个 tgz，sha 与 Release 资产一致）；
-- ❌ 首次 `npm publish` 返回 **E403**：`Two-factor authentication or granular access token with bypass 2fa enabled is required to publish packages` —— 账号开了 2FA，而 `npm login` 的普通凭据不能写。需要发布时给 `--otp=<6 位码>`，或建一个勾了 **Bypass 2FA** 的 granular token。
-
-所以**现在不要**用 `dsh plugin --profile web add dsh-ppt-studio`（会 404）；先用 §1.2 的资产 URL。发布成功后，这里会改成 npm 命令。
-> 最早那次卡点是 npm **网站**对这个出口 IP 返回 403（注册/建 token 走不通，registry API 一直正常）；2026-09-26 换出口后网站这关过了，卡点才转到 2FA 写入策略。
+**npm 通道的现状（2026-09-26）**：`dsh-ppt-studio@1.1.0` **已发布**（`dist-tags.latest`、public、发布者 `zbsph`、`fileCount` 179）；registry 的 tarball 与 GitHub Release 资产**逐字节相同**（sha256 `9303cc5c…`，`dist.integrity` 等于本地重算的 sha512）。
+- 首版是 `npm publish <发版 tgz>` 直发完成的；**从下一版起改走 Trusted Publishing（OIDC）全自动通道** —— npm 已公告 Bypass-2FA 直发将于 2027-01 移除。
+- 通道的**一次性人工前提**（npmjs.com 上那条 Trusted Publisher 连接）与失败排查清单写在 `docs/05-迭代流程.md`「发布-同步纪律」；通道**前提本身**由 `npm test` 的 smoke §51 四条断言钉住。
+- 手动补发 / 重发：GitHub → Actions → *Publish to npm* → *Run workflow*（填 tag）。
+> 留档：最早的卡点是 npm **网站**对出口 IP 返回 403（registry API 一直正常）；换出口后卡点转为 2FA 写入策略；最终按"直发一发版 + OIDC 常态化"两步走通。
 
 **`lib/` 为什么提交**：`dsh plugin add <仓库 URL>` 只能拿到 git 里已提交的内容，而 `exports` 指向 `./lib/index.js`。lib 不入库，git 装出来的包就缺入口文件、挂不上。代价是"改了 src 忘了 build 就提交"会静默发旧代码，所以配了守卫：`npm run check:lib` 加 smoke 里一条同义断言（lib 必须逐字节等于 src，且不能被 `.gitignore` 忽略、必须被 git 跟踪）。改码流程就是改 `src/` → `node scripts/build.mjs` → 连 `lib/` 一起提交。
 

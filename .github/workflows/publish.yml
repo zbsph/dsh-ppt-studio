@@ -1,0 +1,138 @@
+name: Publish to npm
+
+# 为什么有这个文件（2026-09-26 起：npm 全自动发布通道）
+#   npm 包 `dsh-ppt-studio` 用 **Trusted Publishing（OIDC）** 发布——没有任何长期 token：
+#   凭据由 GitHub Actions 在运行期签发、只对这条 workflow 有效；公开仓库 + 公开包时
+#   provenance 也会自动生成，无需 `--provenance`。
+#
+# 为什么触发用 `release: published`（而不是 tag push / release created）
+#   本包的发布件（tgz）由本机 `npm run sync` 在**发版之后**才上传到 Release，而 tag/release
+#   都发生在它之前。事件触发时资产往往还不存在 ⇒ 这里用"等资产出现"（最多 15 分钟）把顺序
+#   问题变成可控等待。要补发/重发就用 workflow_dispatch 手动指定 tag。
+#
+# 为什么下载 Release 资产、而不是在 CI 里重新打包
+#   本仓库的不变量是「registry 里的字节 == GitHub Release 资产的字节」。CI 里重新打包会因
+#   文件时间戳与命名差异产出**不同字节**，直接破坏这条不变量 ⇒ 只发布下载下来的那一个文件。
+#
+# 一次性人工前提（npmjs.com）
+#   本包 → Settings → Trusted publishing → Add trusted publisher → GitHub Actions：
+#     Organization or user = zbsph ｜ Repository = dsh-ppt-studio
+#     Workflow filename   = **publish.yml**（只填文件名、区分大小写、必须与本文件名一致）
+#     Allowed actions     = 必须包含 `npm publish`（只给 stage 权限时下面的发布步骤会以
+#                           E_STAGE_REQUIRED 失败）
+#   npm 保存该配置时**不校验**，字段错只会在首次发布时以 ENEEDAUTH 暴露（官方明文）；
+#   且已建立的连接**不可编辑**，要改只能删除后重建。
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: '要发布的 Release tag（留空 = 最新的非草稿、非预发布 tag）'
+        required: false
+        type: string
+
+permissions:
+  contents: read # 读 Release 与其资产
+  id-token: write # OIDC：Trusted Publishing 与 provenance 都依赖它
+
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: publish (OIDC)
+    runs-on: ubuntu-latest # Trusted Publishing 目前只支持云托管 runner（self-hosted 不支持）
+    timeout-minutes: 30
+    steps:
+      - name: 解析 tag
+        id: t
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG='${{ inputs.tag }}'
+          [ -n "$TAG" ] || TAG='${{ github.event.release.tag_name }}'
+          [ -n "$TAG" ] || TAG="$(gh release list --exclude-drafts --exclude-pre-releases --limit 1 --json tagName --jq '.[0].tagName')"
+          [ -n "$TAG" ] || { echo "::error::无法确定要发布的 tag"; exit 1; }
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "使用 tag：$TAG"
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false # 发布构建不使用缓存
+      # 注意：本工作流**不注入任何 npm 长期凭据**——一旦注入，认证就走传统 token，OIDC 反而不生效。
+
+      - name: 门禁：npm >= 11.15.0（stage/publish 的 Trusted Publishing 前提；OIDC 认证本身需 >= 11.5.1）
+        run: |
+          set -euo pipefail
+          v="$(npm -v)"; echo "npm $v"
+          node -e 'const v=process.argv[1].split(".").map(Number);if(v[0]<11||(v[0]===11&&v[1]<15)){console.error("npm >= 11.15.0 required, got "+process.argv[1]);process.exit(1)}' "$v"
+
+      - name: 等 Release 资产出现（tgz 由本机 `npm run sync` 在本事件之后上传）
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -uo pipefail
+          TAG='${{ steps.t.outputs.tag }}'
+          for i in $(seq 1 60); do
+            n="$(gh release view "$TAG" --json assets --jq '[.assets[] | select(.name | endswith(".tgz"))] | length')"
+            if [ "$n" = "1" ]; then echo "✓ 资产已就绪（第 $i 次探测）"; exit 0; fi
+            echo "…等待 .tgz（第 $i/60 次，当前 $n 个）"
+            sleep 15
+          done
+          echo "::error::15 分钟内没等到 $TAG 的 .tgz 资产（本机 npm run sync 是否失败？）——修好后用 workflow_dispatch 重跑本工作流"
+          exit 1
+
+      - name: 下载该 tag 的 Release 资产（不二次打包 ⇒ registry 字节 == Release 字节）
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          gh release download "${{ steps.t.outputs.tag }}" --pattern '*.tgz' --dir dist
+          n="$(ls dist/*.tgz | wc -l)"
+          [ "$n" = "1" ] || { echo "::error::该 Release 的 tgz 资产应为恰好 1 个，实际 $n 个"; exit 1; }
+          sha256sum dist/*.tgz | tee dist/SHA256SUMS
+
+      - name: 记录 Release 侧登记的 digest（供事后核对同字节）
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release view "${{ steps.t.outputs.tag }}" --json assets --jq '.assets[] | "\(.name)  \(.digest)  \(.size)"'
+
+      - name: 发布到 npm（OIDC 认证，无 token；provenance 自动生成）
+        env:
+          NPM_CONFIG_PROVENANCE: 'true'
+        run: |
+          set -uo pipefail
+          if npm publish ./dist/*.tgz 2>&1 | tee publish.log; then
+            echo "✓ 已发布"
+          else
+            echo "::error::npm publish 失败。按可能性排查：① 信任关系只勾了 stage 权限（须在 npmjs.com 删除并重建连接、勾上 npm publish）；② 页面上的仓库/工作流文件名与本文件不一致（区分大小写）；③ runner 不是云托管；④ package.json 的 repository.url 与仓库不匹配。"
+            grep -iE 'E_STAGE_REQUIRED|EOTP|ENEEDAUTH|EPUBLISHCONFLICT|403' publish.log || true
+            exit 1
+          fi
+
+      - name: 发后自证：registry 的 integrity == 本地 tgz 的 sha512（两条通道同一份字节）
+        run: |
+          set -uo pipefail
+          V="$(tar -xzOf dist/*.tgz package/package.json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>console.log(JSON.parse(s).version))')"
+          LOCAL="sha512-$(node -e 'const c=require("node:crypto"),f=require("node:fs");process.stdout.write(c.createHash("sha512").update(f.readFileSync(process.argv[1])).digest("base64"))' dist/*.tgz)"
+          echo "包版本 = $V"
+          echo "本地 sha512 = $LOCAL"
+          for i in $(seq 1 20); do
+            REG="$(npm view "dsh-ppt-studio@$V" dist.integrity 2>/dev/null || true)"
+            if [ -n "$REG" ]; then
+              echo "registry integrity = $REG"
+              if [ "$REG" = "$LOCAL" ]; then echo "✓ registry 字节 == Release 资产字节"; exit 0; fi
+              echo "::error::integrity 不一致：registry=$REG 本地=$LOCAL（两条通道不再同字节）"
+              exit 1
+            fi
+            echo "…等 registry 元数据（$i/20）"
+            sleep 15
+          done
+          echo "::error::已发布但 5 分钟内查不到 registry 元数据"; exit 1
