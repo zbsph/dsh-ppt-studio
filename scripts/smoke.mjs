@@ -2407,6 +2407,46 @@ ok('bundle：已转为公开发布 npm（无 private + publishConfig.access=publ
   await rm(fx, { recursive: true, force: true })
 }
 
+// ── 41c. 桌面端（Electron 应用）安装器 —— 桌面端**不能**用一句 `dsh plugin add` ──────────────
+// 两条硬事实（2026-09-26 实测）：
+//   ① `@deepseek-ai/dsh` 的 `lib/bin.js` 对 `desktop` profile 的**启动与 plugin 两条路**都
+//      `program.error('profile "desktop" is managed exclusively by the Electron application')`，无旁路；
+//   ② 桌面端自带 pnpm 11.7.0 + `nodeLinker: hoisted` 下装 tarball URL 会
+//      `ERR_PNPM_MISSING_TARBALL_INTEGRITY`（隔离复现：去掉 nodeLinker 或换 pnpm 11.21 即成功）。
+// ⇒ 必须有自己的安装通道（scripts/install-desktop.mjs）。这里用**桩工具链 + 临时 DSH_HOME** 跑
+// `--dry-run`：只验探测/规划/**不写盘**，既不碰真桌面端也不跑 pnpm（CI 上同样可跑）。
+{
+  const { spawnSync } = await import('node:child_process')
+  const fx = join(root, 'examples', 'smoke', '.tmp-desktop')
+  await rm(fx, { recursive: true, force: true })
+  const prof = join(fx, 'home', 'profiles', 'desktop')
+  const stub = join(fx, 'app', 'resources')
+  await mkdir(join(stub, 'runtime', 'bin'), { recursive: true })
+  await mkdir(join(stub, 'runtime', 'pnpm', 'bin'), { recursive: true })
+  await mkdir(prof, { recursive: true })
+  await writeFile(join(prof, 'package.json'),
+    JSON.stringify({ name: 'dsh-profile-desktop', private: true, dependencies: {}, dsh: { profile: { bundles: [] } } }, null, 2), 'utf8')
+  await writeFile(join(prof, 'pnpm-workspace.yaml'), 'packages:\n  - .\n\nnodeLinker: hoisted\nautoInstallPeers: false\n', 'utf8')
+  await writeFile(join(stub, 'runtime', 'bin', 'node.cmd'), '@echo off\r\n', 'utf8')
+  await writeFile(join(stub, 'runtime', 'pnpm', 'bin', 'pnpm.mjs'), '// stub\n', 'utf8')
+  const script = join(root, 'scripts', 'install-desktop.mjs')
+  const runD = (extra) => spawnSync(process.execPath,
+    [script, '--prefix', join(fx, 'home'), '--app-dir', stub, '--dry-run', ...extra], { encoding: 'utf8' })
+  const before = readFileSync(join(prof, 'package.json'), 'utf8')
+  const planLocal = runD([])
+  const localOk = planLocal.status === 0 && /打包本目录 → 装 profile 内 file: 规格/.test(String(planLocal.stdout ?? ''))
+  const planUrl = runD(['--spec', 'https://example.invalid/x.tgz'])
+  const urlOk = planUrl.status === 0 && /直接装 URL/.test(String(planUrl.stdout ?? ''))
+  const untouched = readFileSync(join(prof, 'package.json'), 'utf8') === before
+  ok('桌面端：安装器认得 desktop profile / 内置工具链 / nodeLinker，且 `--dry-run` **不写盘**',
+    localOk && urlOk && untouched, `本包规格=${localOk}｜URL 规格=${urlOk}｜profile 未被改动=${untouched}`)
+  const noProfile = spawnSync(process.execPath,
+    [script, '--prefix', join(fx, 'nope'), '--app-dir', stub, '--dry-run'], { encoding: 'utf8' })
+  ok('桌面端：profile 不存在时**明确失败**（不静默继续）',
+    noProfile.status === 1 && /桌面 profile 不存在/.test(String(noProfile.stderr ?? '')), `exit=${noProfile.status}`)
+  await rm(fx, { recursive: true, force: true })
+}
+
 // ── 42. 答疑手册 vs 制作手册的触发纪律（2026-09-15 真实反馈）────────────────────
 // 事故形状：模型在 PPT 任务**开工时**先加载 `ppt-studio-manual`（提问式手册）——因为它的
 // description/whenToUse 写着"如何开始 / DSL 语法速查 / 或模型不确定某一 DSL 写法时加载"，

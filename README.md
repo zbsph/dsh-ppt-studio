@@ -12,7 +12,7 @@
 
 ### 1.1 需要什么
 
-一台能跑 `dsh web` 的机器。宿主版本要求 **DSH `>= 0.1.7-rc.1`**（本包 1.0.7 起；基线在 `0.1.7-rc.2` 上验的，`0.1.7-rc.1` 也验过）。Office、Edge/Chrome、python-pptx 都是**可选增强**：没有它们插件照常工作，只是真渲染、截图、兜底引擎这些能力自动降级，交付说明里会写明。
+一台能跑 `dsh web` 的机器，或者 **DeepSeek Harness 桌面端**（桌面端见 §1.7，装法不同）。宿主版本要求 **DSH `>= 0.1.7-rc.1`**（本包 1.0.7 起；`0.1.7-rc.1` 命令行版验过，`0.1.7-rc.2` 命令行版与**桌面端**都验过）。Office、Edge/Chrome、python-pptx 都是**可选增强**：没有它们插件照常工作，只是真渲染、截图、兜底引擎这些能力自动降级，交付说明里会写明。
 
 ### 1.2 一条命令
 
@@ -95,6 +95,41 @@ node D:\plugins\package\scripts\install.mjs
 
 > 想要"只在某个预设里生效"需要把插件行写进**预设声明本身**，并给它一个安装期算出的绝对 `file://` 名字。
 > 这块还没做——宁可明确拒绝，也不静默失败。
+
+### 1.7 桌面端（DeepSeek Harness 应用）
+
+桌面版把 harness 打在自己的应用目录里，**profile 是独立的 `desktop`**（`~/.dsh/profiles/desktop`），
+所以你之前给 `web` profile 装的那份不会自动出现在桌面端。
+
+装法不同，因为桌面端有两条限制：
+
+- **命令行不让你碰 `desktop` profile**。`dsh plugin --profile desktop ...` 会直接报
+  `profile "desktop" is managed exclusively by the Electron application`，
+  启动和插件管理都是这样，没有绕过开关。
+- **桌面端自带的 pnpm 装不了 tarball 网址**。它内置 pnpm 11.7.0，而桌面 profile 用的是
+  `nodeLinker: hoisted`；这个组合下 `pnpm add <https…tgz>` 会报
+  `ERR_PNPM_MISSING_TARBALL_INTEGRITY`。同样的 URL 换成 pnpm 11.21 或去掉 `nodeLinker` 都能装上。
+
+所以桌面端用专门的安装器（它只调用**应用自带的** pnpm 和 Node，不会用系统 Node 去重编 profile 里的原生模块）：
+
+```powershell
+# 从发布包解压后（或直接对源码目录）
+node D:\plugins\package\scripts\install-desktop.mjs
+# 自定义：--prefix <你的 .dsh 目录> / --app-dir <应用目录> / --spec <URL|tgz|目录>
+# 先看看它会做什么、不动盘：--dry-run
+# 卸载：--uninstall
+```
+
+它会：把本包打成一个 tgz 放进 `<profile>/.dsh-plugins/`，以相对 `file:` 规格装进 profile
+（这样不会因为外部目录被删而让桌面端下次装依赖时失败），再把包名补进 `dsh.profile.bundles`
+（桌面端启动只认这个列表）。装完**必须重启桌面端**——bundle 层在启动时组合，不热更。
+
+> 显式给 `--spec <https…tgz>` 时，安装器会先按原样试；撞上上面那个缺陷就自动回退
+> （有可用的系统 pnpm 就用它，否则下载到 profile 内走 `file:`）。
+> 两条路都实测过。安装失败时它会**把 profile 文件还原回原样**，不会留半个状态给你。
+
+重启后确认：新建会话的预设选择器里能看到「PPT 工作室」；在会话里调一次 `ppt_state`，
+`presetDelivery` 字段会写明预设声明成功与否。
 
 ---
 
@@ -391,7 +426,7 @@ ppt_visual                  # Office 真渲染复核（有 Office 时；audit �
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + LF 守卫 + smoke（260 断言）+ 预设漂移自检
+npm test                        # build + LF 守卫 + smoke（262 断言）+ 预设漂移自检
 npm run check:eol               # 发行字节守卫：跟踪的文本文件必须全 LF（--fix 就地修）
 npm run fresh                   # 用户视角终验：干净克隆 npm test + 真装一遍
 npm run test:bundle             # 安装路径自证：隔离 DSH_HOME + 真 dsh plugin add + dump-config
