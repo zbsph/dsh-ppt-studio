@@ -14,12 +14,18 @@
 
 一台能跑 `dsh web` 的机器，或者 **DeepSeek Harness 桌面端**（桌面端见 §1.7，装法不同）。宿主版本要求 **DSH `>= 0.1.7-rc.1`**（本包 1.0.7 起；`0.1.7-rc.1` 命令行版验过，`0.1.7-rc.2` 命令行版与**桌面端**都验过）。Office、Edge/Chrome、python-pptx 都是**可选增强**：没有它们插件照常工作，只是真渲染、截图、兜底引擎这些能力自动降级，交付说明里会写明。
 
-### 1.2 一条命令
+### 1.2 一条命令（默认走 npm）
+
+**npm 是本插件的默认安装途径**（web 端与桌面端都支持）：包名就是 `dsh-ppt-studio`，不需要账号、不需要配 registry，升级只需再跑一次同名命令。
+
+**web 端**：
 
 ```powershell
 dsh plugin --profile web add dsh-ppt-studio
 # 装完重启 dsh web
 ```
+
+**桌面端**：在「插件管理」里填同一个包名 `dsh-ppt-studio`（详见 §1.7）。
 
 本插件声明了 `dsh.bundle.patch`（仓库根的 `cordis.patch.yml`），所以**装完就挂上了**：不用手工建链接，不用跑安装器，装的人也不需要任何账号（公开包）。
 
@@ -105,16 +111,20 @@ node D:\plugins\package\scripts\install.mjs
 桌面版把 harness 打在自己的应用目录里，**profile 是独立的 `desktop`**（`~/.dsh/profiles/desktop`），
 所以你之前给 `web` profile 装的那份不会自动出现在桌面端。
 
-装法不同，因为桌面端有两条限制：
+**默认装法同样是 npm**：在桌面端的「插件管理」里填包名 `dsh-ppt-studio` 即可（它内部就是 `pnpm add`，
+装完会把这个包写进 profile 的 `dependencies` 与 `dsh.profile.bundles`）。装完**必须重启桌面端**——
+bundle 层在启动时组合，不热更。这就是"一句话无脑安装"在桌面端的形态。
+
+两条历史限制仍然存在，但它们只影响**归档通道**（不想用 npm 的时候）：
 
 - **命令行不让你碰 `desktop` profile**。`dsh plugin --profile desktop ...` 会直接报
-  `profile "desktop" is managed exclusively by the Electron application`，
-  启动和插件管理都是这样，没有绕过开关。
+  `profile "desktop" is managed exclusively by the Electron application`；桌面端的插件安装走插件管理入口。
 - **桌面端自带的 pnpm 装不了 tarball 网址**。它内置 pnpm 11.7.0，而桌面 profile 用的是
   `nodeLinker: hoisted`；这个组合下 `pnpm add <https…tgz>` 会报
   `ERR_PNPM_MISSING_TARBALL_INTEGRITY`。同样的 URL 换成 pnpm 11.21 或去掉 `nodeLinker` 都能装上。
 
-所以桌面端用专门的安装器（它只调用**应用自带的** pnpm 和 Node，不会用系统 Node 去重编 profile 里的原生模块）：
+所以只有当你要用 `.tgz` 资产（离线、或不经过 registry）时才需要专门的安装器——它只调用**应用自带的**
+pnpm 和 Node，不会用系统 Node 去重编 profile 里的原生模块：
 
 ```powershell
 # 从发布包解压后（或直接对源码目录）
@@ -125,8 +135,7 @@ node D:\plugins\package\scripts\install-desktop.mjs
 ```
 
 它会：把本包打成一个 tgz 放进 `<profile>/.dsh-plugins/`，以相对 `file:` 规格装进 profile
-（这样不会因为外部目录被删而让桌面端下次装依赖时失败），再把包名补进 `dsh.profile.bundles`
-（桌面端启动只认这个列表）。装完**必须重启桌面端**——bundle 层在启动时组合，不热更。
+（这样不会因为外部目录被删而让桌面端下次装依赖时失败），再把包名补进 `dsh.profile.bundles`。
 
 > 显式给 `--spec <https…tgz>` 时，安装器会先按原样试；撞上上面那个缺陷就自动回退
 > （有可用的系统 pnpm 就用它，否则下载到 profile 内走 `file:`）。
@@ -430,7 +439,7 @@ ppt_visual                  # Office 真渲染复核（有 Office 时；audit �
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + LF 守卫 + smoke（266 断言）+ 预设漂移自检
+npm test                        # build + LF 守卫 + smoke（270 断言）+ 预设漂移自检
 npm run check:eol               # 发行字节守卫：跟踪的文本文件必须全 LF（--fix 就地修）
 npm run fresh                   # 用户视角终验：干净克隆 npm test + 真装一遍
 npm run test:bundle             # 安装路径自证：隔离 DSH_HOME + 真 dsh plugin add + dump-config

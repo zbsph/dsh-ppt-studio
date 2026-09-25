@@ -103,6 +103,27 @@ async function releaseRouteWhenZero() {
   }
 }
 
+/**
+ * 调用 `webServer.register` 并**归一化**它的返回值与异常。
+ *
+ * 真契约（2026-09-26 实测 DSH 0.1.7-rc.2，源码 `dsh-host-webserver/lib/index.js:177-184`）：
+ * register 是**同步**方法 —— 成功返回 disposer **函数**，重复注册**同步抛错**（不是 Promise！）。
+ * 历史实现写的是 `ws.register({...}).then(...)`：
+ *   对同步返回的函数调 `.then` 立即 TypeError，而它是在 `apply()` 里**同步抛出**的
+ *   ⇒ **整个插件条目激活失败**（桌面端实测："1 entry did not activate ppt-studio"），
+ *   用户连 `ppt_state` 都调不到。假对象当时写成 async，给这个 bug 背了书（smoke §29 已改真契约）。
+ *
+ * 这里吃三种返回形态：同步函数 / Promise<函数> / `{dispose()}` 对象；同步抛错归一成 `{ thrown }`
+ * （不向外抛：预览只是附加能力，不该让插件整体装不上）。
+ */
+function attemptRegister(ws, makeRoute) {
+  try {
+    return { value: ws.register(makeRoute()) }
+  } catch (error) {
+    return { thrown: error }
+  }
+}
+
 /** 注册预览路由（返回 disposer；无 webServer 环境返回 null）。 */
 export function registerPreviewRoute(ctx) {
   const ws = ctx.get('webServer')
@@ -118,7 +139,7 @@ export function registerPreviewRoute(ctx) {
     return ctx.effect(() => () => { ROUTE_REG.count--; void releaseRouteWhenZero() }, 'ppt-studio: preview route (ref)')
   }
   let cancelled = false
-  const unregPromise = ws.register({
+  const reg = attemptRegister(ws, () => ({
     kind: 'prefix',
     path: '/ppt-preview', // prefix 语义：path 不带尾斜杠（实测：带斜杠不命中）
     async handler(req, res) {
@@ -142,10 +163,17 @@ export function registerPreviewRoute(ctx) {
         res.end('preview error')
       }
     },
-  }).then(async (u) => {
-    if (cancelled) { try { await u() } catch { /* 幂等 */ } ; return null }
-    ROUTE_REG.unreg = u
-    return u
+  }))
+  if (reg.thrown) {
+    // 重复注册（并发装配的另一路已抢先注册）⇒ 按上方表判据语义：只计数，不再注册。
+    ROUTE_REG.count++
+    return ctx.effect(() => () => { ROUTE_REG.count--; void releaseRouteWhenZero() }, 'ppt-studio: preview route (dup)')
+  }
+  const unregPromise = Promise.resolve(reg.value).then(async (u) => {
+    const dispose = typeof u === 'function' ? u : (u && typeof u.dispose === 'function' ? () => u.dispose() : null)
+    if (cancelled) { if (dispose) { try { await dispose() } catch { /* 幂等 */ } } ; return null }
+    ROUTE_REG.unreg = dispose
+    return dispose
   }).catch(() => null)
   ROUTE_REG.count++
   // 同上：cb 立即执行、返回值是 disposer —— 清理逻辑必须包在**返回的函数**里。

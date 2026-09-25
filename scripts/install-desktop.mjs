@@ -2,7 +2,12 @@
 /**
  * dsh-ppt-studio 桌面端安装器（DSH Electron 应用）
  *
- * ── 为什么需要单独一个安装器（2026-09-26 实测，两条都是硬事实）──────────────────────
+ * ── 何时用它：**只在归档通道**（2026-09-26 起）──────────────────────────────────────
+ * **默认安装途径是 npm**：桌面端在「插件管理」里填包名 `dsh-ppt-studio` 即可（内部就是 `pnpm add`，
+ * 会写进 profile 的 `dependencies` + `dsh.profile.bundles`）。本脚本是**离线/归档备选**——
+ * 只有当你要用 GitHub Release 的 `.tgz` 资产、或干脆不经过 registry 时才需要它。
+ *
+ * ── 为什么"用资产 URL 装"在桌面端还得有单独一个安装器（2026-09-26 实测，两条都是硬事实）────
  * ① **独立 CLI 拒绝桌面 profile**：`@deepseek-ai/dsh` 的 `lib/bin.js` 写死了
  *      if (profile.toLowerCase() === "desktop") program.error('profile "desktop" is managed exclusively by the Electron application')
  *    启动与 `plugin` 两条路都过这道守卫，且**没有环境变量旁路**
@@ -12,7 +17,7 @@
  *      [ERR_PNPM_MISSING_TARBALL_INTEGRITY] … its lockfile entry has no "integrity" field
  *    隔离复现：同一份 pnpm/工作区，**去掉 nodeLinker** 就成功；**换 pnpm 11.21** 也成功。
  *    ⇒ 这是 pnpm 11.7 在 hoisted + tarball-URL 组合上的缺陷，不是本插件的代码问题；
- *      但它让"用发布资产 URL 装"这条**我们唯一公开的安装通道**在桌面端直接不可用。
+ *      但它让"用发布资产 URL 装"这条归档通道在桌面端直接不可用（npm 通道不受影响）。
  *
  * ── 本脚本怎么做 ────────────────────────────────────────────────────────────────
  *   1) 只用**应用自带的 pnpm/Node**（`resources/runtime/…`）——和应用的插件管理器同一套工具链，

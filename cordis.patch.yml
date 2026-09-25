@@ -1,8 +1,10 @@
 # DSH profile bundle patch —— 「PPT 工作室」插件行（package.json 的 dsh.bundle.patch 指向本文件）
 #
-# 安装（一条命令，不需要 npm 账号）：
-#     dsh plugin --profile web add dsh-ppt-studio                     # npm（2026-09-18 起，推荐：短、可升级）
-#     dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio/releases/download/<tag>/<资产名>.tgz   # 离线/归档通道
+# **默认安装途径 = npm（2026-09-26 起；web 与桌面端都支持）**，一条命令、不需要账号：
+#     dsh plugin --profile web add dsh-ppt-studio                 # web
+#     （桌面端：在「插件管理」里填同一个包名 dsh-ppt-studio）
+# 归档/离线备选（同一份字节，sha256 可核对）：
+#     dsh plugin --profile web add https://github.com/zbsph/dsh-ppt-studio/releases/download/<tag>/<资产名>.tgz
 # `dsh plugin` 会在 profile 目录里跑 pnpm，然后核对 package.json 的 dsh.profile.bundles：
 # **声明了 dsh.bundle.patch 的依赖自动入栈**（本文件即由 package.json 的 dsh.bundle.patch 指向）。
 #

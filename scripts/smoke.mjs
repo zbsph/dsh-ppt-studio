@@ -1135,10 +1135,15 @@ const routeCalls = []
 const fakePrefixes = new Map()
 const fakeWs = {
   prefixes: fakePrefixes, // 真实语义：webServer 暴露前缀表（hasRoute 判据）
-  register: async (r) => {
+  // 【2026-09-26 修正：假对象曾给真 bug 背书】真契约是**同步**的（DSH 0.1.7-rc.2
+  // `dsh-host-webserver/lib/index.js:177-184`）：成功返回 disposer **函数**，重复注册**同步抛错**。
+  // 旧假对象写成 `async`（返回 Promise），于是"对返回值调 .then"在真宿主上 TypeError、整个插件条目
+  // 激活失败（桌面端实测），而在这里全绿。见 docs/05「假对象必须复刻真契约」。
+  register: (r) => {
+    if (fakePrefixes.has(r.path)) throw new Error(`webserver: duplicate ${r.kind} route "${r.path}"`)
     routeCalls.push(r.path)
     fakePrefixes.set(r.path, { kind: r.kind, path: r.path, handler: r.handler })
-    return async () => { fakePrefixes.delete(r.path) } // 卸载也是 async（真实语义）
+    return () => { fakePrefixes.delete(r.path) } // 同步 disposer（真契约）
   },
 }
 // Cordis 语义（2026-09-14 用真库探针实测，见 docs/02 §2.12）：`ctx.effect(cb)` **立即执行 cb**，
@@ -2502,6 +2507,110 @@ const newestAsset = /sort_by\(\.createdAt\)\s*\|\s*last/.test(publishYml)
 ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz + 按上传时间取最新 + gh release download），CI 里不得二次打包',
   /endswith\("\.tgz"\)/.test(publishYml) && newestAsset && /gh release download/.test(publishYml) && !/npm pack/.test(publishYml),
   `等资产=${/endswith\("\.tgz"\)/.test(publishYml)}｜取最新=${newestAsset}｜下载资产=${/gh release download/.test(publishYml)}｜二次打包=${/npm pack/.test(publishYml)}`)
+
+// ── 52. 真实 webServer 契约（2026-09-26 桌面端事故的回归）───────────────────────────────
+// 宿主警告原文（用户桌面端实测）："1 entry did not activate ppt-studio (dsh-ppt-studio):
+// TypeError: ws.register(...).then is not a function at registerPreviewRoute"。
+// 机理：真库 register 是**同步**的（返回 disposer 函数），而历史实现对返回值调 .then；异常从 apply 同步
+// 抛出 ⇒ 整个插件条目激活失败，用户连 ppt_state 都调不到。两条防线各钉一条断言。
+{
+  delete globalThis.__pptRouteReg
+  const dupPrefixes = new Map()
+  const dupWs = { prefixes: dupPrefixes, register: () => { throw new Error('webserver: duplicate prefix route "/ppt-preview"') } }
+  const dupCtx = { get: () => dupWs, effect: (cb) => { const c = cb(); return () => { if (typeof c === 'function') c() } } }
+  let dupThrew = null
+  let dupDisposer = null
+  try { dupDisposer = rpr(dupCtx) } catch (e) { dupThrew = e }
+  let dupDisposeOk = true
+  try { dupDisposer?.() } catch { dupDisposeOk = false }
+  ok('§52 预览路由：`webServer.register` **同步抛错**（重复注册）时不得把异常扔出，返回的 disposer 可安全调用',
+    dupThrew === null && typeof dupDisposer === 'function' && dupDisposeOk,
+    `threw=${dupThrew ? String(dupThrew.message) : 'null'}｜disposer=${typeof dupDisposer}｜dispose 安全=${dupDisposeOk}`)
+
+  // 反向：连 `ctx.get('webServer')` 都抛错（最坏情况）时，apply 仍必须完成能力面装配。
+  const indexMod2 = await import('../lib/index.js')
+  let pTools = 0, pCmds = 0, pSkills = 0
+  const pSkillsSvc = { register: () => { pSkills++ } }
+  const pRegistry = { register: () => Promise.resolve(async () => {}) }
+  const pipeCtx = {
+    tools: { register: () => { pTools++ } },
+    commands: { register: () => { pCmds++ } },
+    skills: pSkillsSvc,
+    get: (k) => {
+      if (k === 'webServer') throw new Error('webserver: get 抛错（最坏情况）')
+      return k === 'skills' ? pSkillsSvc : k === 'agentPresets' ? pRegistry : undefined
+    },
+    agentPresets: pRegistry,
+    // 最坏情况：连 inject 都抛错（webServer 这一路）——装配仍必须完成
+    inject: (deps, fn) => {
+      if (deps.includes('webServer')) throw new Error('inject 抛错（最坏情况）')
+      if (deps.includes('agentPresets')) fn({ get: (k) => (k === 'agentPresets' ? pRegistry : undefined) })
+    },
+    on: () => {},
+    effect: (fn) => { fn(); return () => {} },
+    logger: () => ({ info: () => {}, warn: () => {} }),
+  }
+  delete globalThis.__pptCoreReg
+  delete globalThis.__pptRouteReg
+  let applyThrew = null
+  try { indexMod2.apply(pipeCtx, { presetIds: ['ppt'] }) } catch (e) { applyThrew = e }
+  ok('§52 装配韧性：全局管道抛错时 apply 仍完成装配（22 工具 / 命令面 / 4 技能）——附加能力坏掉只该降级',
+    applyThrew === null && pTools === 22 && pCmds >= 1 && pSkills === 4,
+    `threw=${applyThrew ? String(applyThrew.message) : 'null'}｜tools=${pTools} cmds=${pCmds} skills=${pSkills}`)
+
+  // ③ 真宿主实测的组合顺序：webServer 比本插件**晚激活**。此时直接 `ctx.get('webServer')` 拿不到服务，
+  // 路由会被静默跳过（诊断原文 `预览路由=skipped(no webServer)`）⇒ 预览链接必然 404。
+  // 修法 = 与 agentPresets 同一姿势走 `inject` 等它出现。这条断言钉住"最终真的挂上了"。
+  const injPrefixes = new Map()
+  const injWs = {
+    prefixes: injPrefixes,
+    register: (r) => { injPrefixes.set(r.path, r); return () => { injPrefixes.delete(r.path) } }, // 真契约：同步返回函数
+  }
+  const injChild = { get: (k) => (k === 'webServer' ? injWs : undefined), effect: (cb) => { const c = cb(); return () => { if (typeof c === 'function') c() } } }
+  let iTools = 0, iCmds = 0, iSkills = 0
+  const iSkillsSvc = { register: () => { iSkills++ } }
+  const iRegistry = { register: () => Promise.resolve(async () => {}) }
+  const injCtx = {
+    tools: { register: () => { iTools++ } },
+    commands: { register: () => { iCmds++ } },
+    skills: iSkillsSvc,
+    // 关键：本 ctx **查不到** webServer（模拟"服务还没注册"）
+    get: (k) => (k === 'skills' ? iSkillsSvc : k === 'agentPresets' ? iRegistry : undefined),
+    agentPresets: iRegistry,
+    inject: (deps, fn) => {
+      if (deps.includes('webServer')) fn(injChild)
+      else if (deps.includes('agentPresets')) fn({ get: (k) => (k === 'agentPresets' ? iRegistry : undefined) })
+    },
+    on: () => {},
+    effect: (fn) => { fn(); return () => {} },
+    logger: () => ({ info: () => {}, warn: () => {} }),
+  }
+  delete globalThis.__pptCoreReg
+  delete globalThis.__pptRouteReg
+  let injThrew = null
+  try { indexMod2.apply(injCtx, { presetIds: ['ppt'] }) } catch (e) { injThrew = e }
+  await new Promise((r) => setTimeout(r, 10))
+  ok('§52 预览路由：`webServer` 比插件晚激活时（真宿主实测的组合顺序）走 `inject` 仍要真的挂上路由',
+    injThrew === null && iTools === 22 && injPrefixes.has('/ppt-preview'),
+    `threw=${injThrew ? String(injThrew.message) : 'null'}｜tools=${iTools}｜路由已挂=${injPrefixes.has('/ppt-preview')}`)
+}
+
+// ── 53. 安装通道事实：npm 是**默认**通道（web 与桌面端都支持）────────────────────────────
+// 用户 2026-09-26 拍板："把 npm 安装作为默认安装途径，实现一句话无脑安装"。
+// 这条事实同时在三处出现（README=用户读 / docs/05=维护者读 / 答疑手册=模型读），这里钉住口径一致：
+// README 的第一条安装命令必须是 npm 包名，且要排在归档资产 URL **之前**；手册用同一条命令（`<p>` 占位）。
+{
+  const readmeAuth = readFileSync(join(root, 'README.md'), 'utf8')
+  const npmCmd = 'dsh plugin --profile web add dsh-ppt-studio'
+  const manualCmd = 'dsh plugin --profile <p> add dsh-ppt-studio'
+  const npmAt = readmeAuth.indexOf(npmCmd)
+  const assetAt = readmeAuth.indexOf('dsh plugin --profile web add <粘贴那条资产 URL>')
+  const manualText53 = readFileSync(join(root, 'skills', 'ppt-studio-manual', 'SKILL.md'), 'utf8')
+  const docs05Text = readFileSync(join(root, 'docs', '05-迭代流程.md'), 'utf8')
+  ok('§53 安装通道：README 以 **npm 包名**为第一条安装命令（排在归档资产 URL 之前），答疑手册与 docs/05 同口径',
+    npmAt > 0 && assetAt > npmAt && manualText53.includes(manualCmd) && docs05Text.includes(npmCmd),
+    `README npm 位置=${npmAt}｜资产 URL 位置=${assetAt}｜手册=${manualText53.includes(manualCmd)}｜docs/05=${docs05Text.includes(npmCmd)}`)
+}
 
 // 37.10 【必须是最后一条断言】引用计数自证：文档里 "smoke … N 断言" 必须等于本次真实断言总数。
 // 历史形状：加断言后 README×3 + docs/02 + docs/06×2 + 手册 全靠人工同步，迟早漏一处。
