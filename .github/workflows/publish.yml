@@ -81,28 +81,30 @@ jobs:
           TAG='${{ steps.t.outputs.tag }}'
           for i in $(seq 1 60); do
             n="$(gh release view "$TAG" --json assets --jq '[.assets[] | select(.name | endswith(".tgz"))] | length')"
-            if [ "$n" = "1" ]; then echo "✓ 资产已就绪（第 $i 次探测）"; exit 0; fi
-            echo "…等待 .tgz（第 $i/60 次，当前 $n 个）"
+            [ -n "$n" ] || n=0
+            if [ "$n" -ge 1 ]; then echo "✓ 资产已就绪（第 $i 次探测，共 $n 条 tgz）"; exit 0; fi
+            echo "…等待 .tgz（第 $i/60 次，当前 0 条）"
             sleep 15
           done
           echo "::error::15 分钟内没等到 $TAG 的 .tgz 资产（本机 npm run sync 是否失败？）——修好后用 workflow_dispatch 重跑本工作流"
           exit 1
 
-      - name: 下载该 tag 的 Release 资产（不二次打包 ⇒ registry 字节 == Release 字节）
+      - name: 取最新那条 tgz（同一 tag 上可能有历次重建，按上传时间取最新——与 README §1.2 同一口径）
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          TAG='${{ steps.t.outputs.tag }}'
+          echo "该 Release 的全部资产（创建时间 / 名字 / digest / 大小）："
+          gh release view "$TAG" --json assets --jq '.assets[] | "\(.createdAt)  \(.name)  \(.digest)  \(.size)"'
+          NAME="$(gh release view "$TAG" --json assets --jq '[.assets[] | select(.name | endswith(".tgz"))] | sort_by(.createdAt) | last | .name')"
+          [ -n "$NAME" ] && [ "$NAME" != "null" ] || { echo "::error::该 Release 里没有 .tgz 资产"; exit 1; }
+          echo "选中资产：$NAME"
           mkdir -p dist
-          gh release download "${{ steps.t.outputs.tag }}" --pattern '*.tgz' --dir dist
+          gh release download "$TAG" --pattern "$NAME" --dir dist
           n="$(ls dist/*.tgz | wc -l)"
-          [ "$n" = "1" ] || { echo "::error::该 Release 的 tgz 资产应为恰好 1 个，实际 $n 个"; exit 1; }
+          [ "$n" = "1" ] || { echo "::error::应下载到恰好 1 个 tgz，实际 $n 个"; exit 1; }
           sha256sum dist/*.tgz | tee dist/SHA256SUMS
-
-      - name: 记录 Release 侧登记的 digest（供事后核对同字节）
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh release view "${{ steps.t.outputs.tag }}" --json assets --jq '.assets[] | "\(.name)  \(.digest)  \(.size)"'
 
       - name: 发布到 npm（OIDC 认证，无 token；provenance 自动生成）
         env:

@@ -2496,9 +2496,10 @@ ok('npm 发布通道：OIDC 前提齐（id-token: write），且**不注入**任
 ok('npm 发布通道：全自动档用 `npm publish`（不是 stage-only），且带 npm >= 11.15.0 门禁',
   /npm publish/.test(publishYml) && !/npm stage publish/.test(publishYml) && /11\.15\.0/.test(publishYml),
   `npm publish=${/npm publish/.test(publishYml)}｜stage-only=${/npm stage publish/.test(publishYml)}｜版本门禁=${/11\.15\.0/.test(publishYml)}`)
-ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz + gh release download），CI 里不得二次打包',
-  /endswith\("\.tgz"\)/.test(publishYml) && /gh release download/.test(publishYml) && !/npm pack/.test(publishYml),
-  `等资产=${/endswith\("\.tgz"\)/.test(publishYml)}｜下载资产=${/gh release download/.test(publishYml)}｜二次打包=${/npm pack/.test(publishYml)}`)
+const newestAsset = /sort_by\(\.createdAt\)\s*\|\s*last/.test(publishYml)
+ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz + 按上传时间取最新 + gh release download），CI 里不得二次打包',
+  /endswith\("\.tgz"\)/.test(publishYml) && newestAsset && /gh release download/.test(publishYml) && !/npm pack/.test(publishYml),
+  `等资产=${/endswith\("\.tgz"\)/.test(publishYml)}｜取最新=${newestAsset}｜下载资产=${/gh release download/.test(publishYml)}｜二次打包=${/npm pack/.test(publishYml)}`)
 
 // 37.10 【必须是最后一条断言】引用计数自证：文档里 "smoke … N 断言" 必须等于本次真实断言总数。
 // 历史形状：加断言后 README×3 + docs/02 + docs/06×2 + 手册 全靠人工同步，迟早漏一处。
