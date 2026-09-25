@@ -12,7 +12,7 @@
 
 ### 1.1 需要什么
 
-一台能跑 `dsh web` 的机器。宿主版本要求 **DSH `>= 0.1.7-rc.1`**（本包 1.0.7 起；基线就是在 `0.1.7-rc.1` 上验的）。Office、Edge/Chrome、python-pptx 都是**可选增强**：没有它们插件照常工作，只是真渲染、截图、兜底引擎这些能力自动降级，交付说明里会写明。
+一台能跑 `dsh web` 的机器。宿主版本要求 **DSH `>= 0.1.7-rc.1`**（本包 1.0.7 起；基线在 `0.1.7-rc.2` 上验的，`0.1.7-rc.1` 也验过）。Office、Edge/Chrome、python-pptx 都是**可选增强**：没有它们插件照常工作，只是真渲染、截图、兜底引擎这些能力自动降级，交付说明里会写明。
 
 ### 1.2 一条命令
 
@@ -269,7 +269,7 @@ v1.0.0 修订前旧引擎的结构 bug（graphicFrame 里嵌了 `<a:xfrm>`，Pow
 
 ## 6. 环境要求与已知边界
 
-**环境**：DSH web `0.1.7-rc.1`（Windows 主机实测；COM/Edge 探测路径按 Windows 写的，macOS/Linux 未验证）。路径与中间层一律 UTF-8，也兼容 WPS 导出的 UTF-16 文件。
+**环境**：DSH web `0.1.7-rc.2`（Windows 主机实测；COM/Edge 探测路径按 Windows 写的，macOS/Linux 未验证）。路径与中间层一律 UTF-8，也兼容 WPS 导出的 UTF-16 文件。
 
 **支持的元素**：text / shape / line / image / table / chart。
 
