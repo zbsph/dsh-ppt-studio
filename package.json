@@ -2,7 +2,7 @@
   "name": "dsh-ppt-studio",
   "version": "1.1.0",
   "description": "在 DeepSeek Harness 里做 PPT：说需求 → 逐页制作 → 导出可编辑的 .pptx。含布局检查、Office 真渲染复核，以及可扩展的本地模板库",
-  "//publish": "2026-09-18 定：发 npm，**无 scope** 包名 `dsh-ppt-studio`；**2026-09-26 实际首发 v1.1.0**（用户注册账号后跑通 `npm login`，本机 `npm whoami` = `zbsph`）。发布纪律：**用发版时那个 tgz 发布**（`npm publish \"<.sync-state.json 里 localTgz 指向的文件>\"`）——这样 registry 上的字节与 GitHub Release 资产**逐字节相同**；**别在 main 前进后跑裸 `npm publish`**（那会按当前工作区打包，同名版本内容却与 Release 资产不同）。GitHub Release 资产仍保留为离线/归档通道，两条通道内容一致，见 docs/06 与 README §1.2。",
+  "//publish": "2026-09-18 定：发 npm，**无 scope** 包名 `dsh-ppt-studio`。**状态（2026-09-26）：尚未发布** —— `npm login` 已通（`npm whoami` = `zbsph`）、包名未被占用（`npm view` 404）、构件已备好（发版那个 tgz，sha 与 Release 资产一致），但首次 `npm publish` 返回 **E403**：账号开了 2FA，普通登录凭据不能写入，需 `--otp=<6 位码>` 或勾了 Bypass 2FA 的 granular token。发布纪律：**用发版时那个 tgz**（`npm publish \"<.sync-state.json 里 localTgz 指向的文件>\"`），保证 registry 字节与 GitHub Release 资产**逐字节相同**；**别在 main 前进后跑裸 `npm publish`**（会按当前工作区重新打包）。成功后才做：核对 `npm view dsh-ppt-studio version dist.integrity`，并在隔离 DSH_HOME 里 `dsh plugin add dsh-ppt-studio` 真装一遍。见 docs/06 与 docs/03 的 1.1.0 条目。",
   "repository": { "type": "git", "url": "git+https://github.com/zbsph/dsh-ppt-studio.git" },
   "homepage": "https://github.com/zbsph/dsh-ppt-studio#readme",
   "bugs": { "url": "https://github.com/zbsph/dsh-ppt-studio/issues" },
