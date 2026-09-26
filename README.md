@@ -462,7 +462,7 @@ ppt_visual                  # Office 真渲染复核（有 Office 时；audit �
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + LF 守卫 + smoke（292 断言）+ 预设漂移自检
+npm test                        # build + LF 守卫 + smoke（295 断言）+ 预设漂移自检
 npm run check:eol               # 发行字节守卫：跟踪的文本文件必须全 LF（--fix 就地修）
 npm run fresh                   # 用户视角终验：干净克隆 npm test + 真装一遍
 npm run test:bundle             # 安装路径自证：隔离 DSH_HOME + 真 dsh plugin add + dump-config

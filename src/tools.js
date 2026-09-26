@@ -27,6 +27,7 @@ import { buildPreview } from './preview-server.js'
 import { findPowerPoint, renderPptxToPng } from './msrender.js'
 import { runPythonExport, findPython } from './pptxPy.js'
 import { detectCapabilities, probeOfficeSkills } from './capabilities.js'
+import { runLibreOfficeRender, runOfficeStructureCheck } from './office-qa.js'
 import { imageInfo } from './imgmeta.js'
 import { loadProjectDiag, loadSessionDiag } from './state.js'
 
@@ -165,6 +166,21 @@ async function loadCtx(dir) {
 }
 
 /**
+ * 第三方结构自证（一行；2026-09-26 第二轮 ②）：用官方 `check_office.py` 独立检查产物的 ZIP/XML/rels 完整性与页数。
+ * 为什么值得每次跑：我们自己的 parity 是"自己写、自己查"，而这一条是**外部**检查——两者同时绿才算真绿。
+ * 本部署没有官方资产时**如实说"未执行"**（web/headless 就是这种情况），不假装跑过。
+ */
+function officialQaNote(file, slides) {
+  const qa = runOfficeStructureCheck(file, { count: slides ?? 0 })
+  if (!qa.available) return `\nℹ 第三方结构自证：未执行（${qa.reason}）`
+  if (qa.ok) {
+    return `\n✅ 第三方结构自证（官方 check_office.py）：ZIP/XML/rels 完整`
+      + `${qa.summary?.slides !== undefined ? `、${qa.summary.slides} 页` : ''}——独立于我们自己的 parity 回读`
+  }
+  return `\n✗ 第三方结构自证失败：${qa.reason}——**请勿交付**，并把本行反馈插件团队`
+}
+
+/**
  * 兜底路径的"环境说明"（2026-09-26，第二轮）：**用了哪个解释器** + 本部署有没有更强的替代通道。
  * 为什么写在这里而不是提示段：兜底是罕见路径，说明只该在真的降级时出现（能力自适应），
  * 且必须如实——官方 `office-pptx` 技能在我们这里只当"读取/补充"，不改变"pptd 才是主通道"。
@@ -284,7 +300,7 @@ export function registerTools(ctx) {
 
   reg({
     name: 'ppt_visual',
-    description: 'Office 真渲染通道（v0.8.0）：用本机 PowerPoint COM 把 .pptx 逐页渲染成 PNG（1920×1080）——① 理解用户原稿（参考任务先看后做）② 成品视觉审核（导出后对 pptx 审核真实观感）。pages="15" / "15,18" 只渲染指定页（保持原页号命名；A5 反馈二）——看一页不再等整册。无 Office 时不可用（自动降级 HTML 预览+结构断言）。渲染后请逐页 read_image 查看；视觉理解写入设计摘要/交付说明',
+    description: 'Office 真渲染通道（v0.8.0；2026-09-26 起带 LibreOffice 降级）：优先用本机 PowerPoint COM 把 .pptx 逐页渲染成 PNG（1920×1080）——① 理解用户原稿（参考任务先看后做）② 成品视觉审核（导出后对 pptx 审核真实观感）。pages="15" / "15,18" 只渲染指定页（保持原页号命名；A5 反馈二）——看一页不再等整册。**本机无 Office 时自动降级到捆绑 LibreOffice kit**（桌面端有；报告里会标注引擎与缺字诊断，且明说"不能当逐像素等于 PowerPoint 的判据"）——两条都没有时明确报告不可用。渲染后请逐页 read_image 查看；视觉理解写入设计摘要/交付说明',
     parameters: {
       pptx: { type: 'string', required: true, description: '源/成品 .pptx 绝对路径（用户原稿或 out.pptx）' },
       out: { type: 'string', description: '输出目录（相对当前目录或绝对；缺省 <pptx 同目录>/..-rendered）' },
@@ -293,20 +309,42 @@ export function registerTools(ctx) {
     output: markdownResult(),
     async execute(args) {
       try {
-        if (!findPowerPoint()) {
-          return '⚠ 本机无 Microsoft Office（PowerPoint COM 不可用）：Office 真渲染通道不可用。可继续使用 HTML 预览（ppt_preview）+ 结构断言；本步骤不影响其他工作流。'
-        }
         const pagesSel = typeof args.pages === 'string' ? parsePagesArg(args.pages) : null
         const outDir = args.out ?? join(dirname(args.pptx), 'rendered')
-        const r = await renderPptxToPng(args.pptx, outDir, { pages: pagesSel ? [...pagesSel] : undefined })
-        if (!r.pages) throw new Error('渲染结果为空（请检查 pptx 是否可打开）')
-        return [
-          `✓ Office 真渲染完成（${r.pages} 页${pagesSel ? `，页码 [${[...pagesSel].sort((a, b) => a - b).join(', ')}]` : ''} → ${outDir}）：`,
-          '',
-          ...r.files.map((f) => `  - ${f}`),
-          '',
-          '下一步：逐页 read_image 查看（理解原稿/审核成品观感）。',
-        ].join('\n')
+        if (findPowerPoint()) {
+          const r = await renderPptxToPng(args.pptx, outDir, { pages: pagesSel ? [...pagesSel] : undefined })
+          if (!r.pages) throw new Error('渲染结果为空（请检查 pptx 是否可打开）')
+          return [
+            `✓ Office 真渲染完成（引擎：PowerPoint COM，${r.pages} 页${pagesSel ? `，页码 [${[...pagesSel].sort((a, b) => a - b).join(', ')}]` : ''} → ${outDir}）：`,
+            '',
+            ...r.files.map((f) => `  - ${f}`),
+            '',
+            '下一步：逐页 read_image 查看（理解原稿/审核成品观感）。',
+          ].join('\n')
+        }
+        // 无 Office ⇒ 试**捆绑 LibreOffice kit**（2026-09-26 第二轮 ②）：不依赖 Office/COM 的真渲染。
+        // 用途：没有 Office 的机器（CI、纯 web 部署）也能做视觉抽检；但**引擎不同**，
+        // 排版/字体与 PowerPoint 不是一套 ⇒ 绝不能当"逐像素等于 PowerPoint"的判据（交付说明要标注）。
+        const lo = runLibreOfficeRender(args.pptx, outDir, { pages: pagesSel ? [...pagesSel].sort((a, b) => a - b).join(',') : '', dpi: 144 })
+        if (lo.available && lo.ok) {
+          return [
+            `✓ LibreOffice 真渲染完成（本机无 Office → 降级到捆绑 LibreOffice kit；${lo.files.length} 张 → ${outDir}）：`,
+            '',
+            ...(lo.images.length
+              ? lo.images.map((i) => `  - 原第 ${i.page} 页 → ${i.path}（${i.width}×${i.height}）`)
+              : lo.files.map((f) => `  - ${f}`)),
+            '',
+            '⚠ 引擎差异：LibreOffice 的排版/字体与 PowerPoint 不是同一套引擎，此结果**不能**当"逐像素等于 PowerPoint"的判据——请在交付说明里标注"视觉审阅基于 LibreOffice 渲染"。',
+            ...(lo.missingFonts.length ? [`⚠ 缺字诊断 ${lo.missingFonts.length} 项：${JSON.stringify(lo.missingFonts).slice(0, 240)}`] : []),
+            '',
+            '下一步：逐页 read_image 查看。',
+          ].join('\n')
+        }
+        if (!lo.available) {
+          return `⚠ 真渲染通道不可用：本机无 Microsoft Office，且本部署没有 LibreOffice kit（${lo.reason}）。`
+            + '可继续使用 HTML 预览（ppt_preview）+ 结构断言；本步骤不影响其他工作流。'
+        }
+        return `✗ 真渲染都失败了：无 Office；LibreOffice kit 也失败：${lo.reason}\n（可降级：ppt_preview HTML 预览 + ppt_verify 结构断言）`
       } catch (error) {
         return `✗ Office 真渲染失败：${error?.message ?? String(error)}\n（可降级：ppt_preview HTML 预览 + ppt_verify 结构断言）`
       }
@@ -671,7 +709,7 @@ export function registerTools(ctx) {
           const py = findPython()
           if (!py.has) return `⚠ python-pptx 引擎不可用（未检测到带 python-pptx 的解释器）：${py.cmd ? '请给它 pip install python-pptx' : '未找到 python 解释器，也没探测到捆绑 Python'}。可改用默认 pptd 引擎。`
           const r = await runPythonExport(ctx0, outName)
-          return `✓ 已导出（python-pptx 引擎）：${r.file}\n图表已降级为表格（引擎 A 才支持矢量拼绘图表）。${await fallbackNote(ctx0, r)}${await withAudit(r.file)}${engineNote}`
+          return `✓ 已导出（python-pptx 引擎）：${r.file}\n图表已降级为表格（引擎 A 才支持矢量拼绘图表）。${await fallbackNote(ctx0, r)}${officialQaNote(r.file, ctx0.pages?.length)}${await withAudit(r.file)}${engineNote}`
         }
         try {
           const r = await exportPptx(ctx0, { out: outName, engine: 'pptd' })
@@ -706,7 +744,7 @@ export function registerTools(ctx) {
           const renderNote = riskyPages.length
             ? `\nP8 真渲染抽查：建议优先覆盖含 table/chart/image/custGeom 的页 → 第 ${riskyPages.join('、')} 页（每类至少一页；audit 档导出自动全页真渲染）`
             : ''
-          return `✓ 已导出（pptd 引擎，${r.slides} 页）：${r.file}${fit}${phNote}${renamedNote}${parityNote}${renderNote}${floorNote}${chartNote}${await withAudit(r.file)}${engineNote}`
+          return `✓ 已导出（pptd 引擎，${r.slides} 页）：${r.file}${fit}${phNote}${renamedNote}${parityNote}${renderNote}${floorNote}${chartNote}${officialQaNote(r.file, r.slides)}${await withAudit(r.file)}${engineNote}`
         } catch (error) {
           // 自动回退链（C1 决定）：auto 且 pptd 硬失败 → 有 python-pptx 则兜底并醒目标注降级（绝不静默）
           if (eff.allowFallback) {
@@ -714,7 +752,7 @@ export function registerTools(ctx) {
             if (py.has) {
               try {
                 const r2 = await runPythonExport(ctx0, outName)
-                return `⚠ pptd 引擎失败，已自动降级 python-pptx（图表降级为表格）：${error?.message ?? error}\n✓ 已导出（python-pptx 兜底）：${r2.file}\n建议排查 pptd 失败原因（见上）或改用质量更高的模式。${await fallbackNote(ctx0, r2)}${await withAudit(r2.file)}`
+                return `⚠ pptd 引擎失败，已自动降级 python-pptx（图表降级为表格）：${error?.message ?? error}\n✓ 已导出（python-pptx 兜底）：${r2.file}\n建议排查 pptd 失败原因（见上）或改用质量更高的模式。${await fallbackNote(ctx0, r2)}${officialQaNote(r2.file, ctx0.pages?.length)}${await withAudit(r2.file)}`
               } catch (e2) {
                 return `✗ pptd 失败（${error?.message ?? error}）且 python-pptx 兜底也失败：${e2?.message ?? e2}`
               }

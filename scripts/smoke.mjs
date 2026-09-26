@@ -2877,6 +2877,41 @@ ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz
     foundRes === join(synth, 'install', 'resources'),
     `${String(foundRes).replace(synth, '<合成树>')}`)
   await rm(synth, { recursive: true, force: true })
+  // 官方 QA 通道（②）：用**合成资产树 + 桩 checker**验证契约（与桌面端是否安装无关，机器无关）
+  const qaMod = await import('../lib/office-qa.js')
+  const qaSynth = join(smokeDir, '.tmp-qa-probe')
+  await rm(qaSynth, { recursive: true, force: true })
+  const qaSkills = join(qaSynth, 'runtime', 'office-skills')
+  await mkdir(join(qaSkills, 'scripts'), { recursive: true })
+  await writeFile(join(qaSynth, 'app.asar'), 'x', 'utf8') // 让 resourcesFrom 认这棵树
+  const prevRes = process.env.PPT_STUDIO_RESOURCES_DIR
+  process.env.PPT_STUDIO_RESOURCES_DIR = qaSynth
+  const anyPy = capMod.findAnyPython()
+  const qaDummy = join(qaSynth, 'dummy.pptx')
+  await writeFile(qaDummy, 'not-a-real-pptx', 'utf8') // 桩 checker 不读内容，但我们的入口会先做存在性检查
+  if (anyPy !== null) {
+    await writeFile(join(qaSkills, 'scripts', 'check_office.py'),
+      'import json\nprint(json.dumps({"format":"pptx","verdict":"pass","checks":[],"summary":{"slides":3}}))\n', 'utf8')
+    const qa1 = qaMod.runOfficeStructureCheck(qaDummy, { count: 3 })
+    ok('§56 官方 QA：有资产 + 有 Python 时真的跑 `check_office.py` 并解析 JSON 判定（pass ⇒ ok，带回 summary）',
+      qa1.available === true && qa1.ok === true && qa1.summary?.slides === 3, JSON.stringify(qa1).slice(0, 150))
+    await writeFile(join(qaSkills, 'scripts', 'check_office.py'),
+      'import json\nprint(json.dumps({"format":"pptx","verdict":"fail","checks":[{"id":"package","status":"fail","detail":"boom"}]}))\n', 'utf8')
+    const qa2 = qaMod.runOfficeStructureCheck(qaDummy, { count: 3 })
+    ok('§56 官方 QA：`verdict=fail` 必须判失败，并把失败项带回（不吞诊断）',
+      qa2.available === true && qa2.ok === false && /boom/.test(String(qa2.reason)), String(qa2.reason).slice(0, 150))
+  } else {
+    const qa0 = qaMod.runOfficeStructureCheck(qaDummy, {})
+    ok('§56 官方 QA：本机没有任何 Python ⇒ 明确报"不可用 + 原因"（不假装跑过）', qa0.available === false && qa0.reason.length > 0, String(qa0.reason).slice(0, 90))
+    ok('§56 官方 QA：无 Python 时 `officeQaStatus()` 也不该声称可用', qaMod.officeQaStatus().available === false, JSON.stringify(qaMod.officeQaStatus()))
+  }
+  const qa3 = qaMod.runLibreOfficeRender(qaDummy, join(qaSynth, 'out'))
+  ok('§56 官方 QA：资产树里没有 LibreOffice kit ⇒ 渲染通道明确报"不可用 + 原因"，不假装跑过',
+    qa3.available === false && typeof qa3.reason === 'string' && qa3.reason.length > 0, String(qa3.reason).slice(0, 90))
+  if (prevRes === undefined) delete process.env.PPT_STUDIO_RESOURCES_DIR
+  else process.env.PPT_STUDIO_RESOURCES_DIR = prevRes
+  await rm(qaSynth, { recursive: true, force: true })
+
   const captured56 = new Map()
   const idxMod56 = await import('../lib/index.js')
   idxMod56.statusToolFor({ effect: (cb) => { cb(); return () => {} }, tools: { register: (d) => captured56.set(d.name, d) }, get: () => undefined }, 'profile')

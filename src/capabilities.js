@@ -19,6 +19,7 @@
  * 例如宿主装好 runtime 之后），并返回 `null` 而不是抛错。
  */
 import { existsSync } from 'node:fs'
+import { spawnSync } from 'node:child_process'
 import { dirname, join } from 'node:path'
 import { dshHome } from './home.js'
 
@@ -37,6 +38,13 @@ function isWin() {
  * 必须一路上溯才能找到 `<install>/resources`。找不到返回 null（web/CLI 上就该是 null）。
  */
 export function resourcesFrom(startDir) {
+  // 显式覆盖缝（测试/非常规布局）：`PPT_STUDIO_RESOURCES_DIR=<install>/resources`。
+  // 只用它来**定位**资源，不改变任何判定语义；指向不合法时忽略并继续正常上溯。
+  const override = process.env.PPT_STUDIO_RESOURCES_DIR
+  if (typeof override === 'string' && override.trim() !== '') {
+    const cand = join(override)
+    if (existsSync(join(cand, 'app.asar')) || existsSync(join(cand, 'app.asar.unpacked')) || existsSync(join(cand, 'runtime', 'office-skills'))) return cand
+  }
   let dir = startDir
   for (let i = 0; i < 8; i++) {
     const cand = join(dir, 'resources')
@@ -118,6 +126,23 @@ export function findOfficeAssets() {
   if (!existsSync(skillsDir)) return null
   const checker = join(skillsDir, 'scripts', 'check_office.py')
   return { skillsDir, checker: existsSync(checker) ? checker : null }
+}
+
+/**
+ * 任意可用的 Python（**只为跑官方 `check_office.py`**：它只用标准库，任何 python3 都行）。
+ * 顺序：捆绑 Python > PATH 上的 `python` / `py` / `python3`。探不到返回 null。
+ * 与 `pptxPy.findPython()` 的区别：那个要求 `import pptx`，这个不要求。
+ */
+export function findAnyPython() {
+  const bundled = findBundledPython()
+  if (bundled !== null) return { path: bundled.path, source: `bundled:${bundled.source}` }
+  for (const cmd of ['python', 'py', 'python3']) {
+    try {
+      const r = spawnSync(cmd, ['-c', 'print(1)'], { encoding: 'utf8', timeout: 15000 })
+      if (r.status === 0 && String(r.stdout).includes('1')) return { path: cmd, source: 'path' }
+    } catch { /* try next */ }
+  }
+  return null
 }
 
 /**
