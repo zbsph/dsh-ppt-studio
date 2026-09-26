@@ -407,6 +407,24 @@ ok('v0.3.2：D4 导入探测跨页带 → 建议 safeArea 注释（未启用）'
 const bandPageYaml = await (await import('node:fs/promises')).readFile(join(bandDeck, 'imported', 'pages', 'slide_01.yaml'), 'utf8')
 ok('v0.4：导入保样式——text color/fontFamily/italic 回环', bandPageYaml.includes('fontFamily') && bandPageYaml.includes('2E4B9F'), bandPageYaml.split('\n').filter((l) => l.includes('fontFamily') || l.includes('color') || l.includes('italic')).join(' | '))
 ok('v0.4：import-styles.json 生成（含样式清单）', (await import('node:fs/promises')).stat(join(bandDeck, 'imported', 'import-styles.json')).then(() => true).catch(() => false))
+// ── 16b. 启发 B（审计半，2026-09-26 第二轮）：重建有损审计 ────────────────────────────────
+// 为什么必须钉：我们的导出来自 DSL 中间层，**不支持**阴影/动画/超链接/切换/SmartArt 等；
+// "整册重渲"对既有精美 PPT 是有损的，而这件事此前**不可见**（用户以为无损）。审计要放进导入产物与输出行。
+// 判据来源：`ppt_import` 落盘 `<outDir>/loss-audit.json`（独立文件，理由见 import-pptx.js 注释）。
+const { lossAuditLine } = await import('../lib/pptd/loss-audit.js')
+const lossAuditJson = JSON.parse(await (await import('node:fs/promises')).readFile(join(bandDeck, 'imported', 'loss-audit.json'), 'utf8'))
+ok('启发B：ppt_import 落盘 loss-audit.json（7 类齐全且每类 count === evidence.length）',
+  lossAuditJson.version === 1
+    && lossAuditJson.categories.map((c) => c.id).join(',') === 'animation,effect,hyperlink,transition,smartart,media,gradient'
+    && lossAuditJson.categories.every((c) => c.count === c.evidence.length),
+  `version=${lossAuditJson.version}｜类别=${lossAuditJson.categories.map((c) => c.id).join(',')}`)
+ok('启发B：自产导出回环审计 **0 命中**（防误报：空 a:effectLst / 主题 effectStyleLst 不算阴影）',
+  lossAuditJson.clean === true && lossAuditJson.total === 0 && String(bandImp.lossLine).includes('未发现'),
+  `clean=${lossAuditJson.clean} total=${lossAuditJson.total}`)
+ok('启发B：干净源稿的输出行**不制造噪声**（无 ⚠、无 ppt_splice 建议）',
+  !String(bandImp.lossLine).includes('ppt_splice') && !String(bandImp.lossLine).includes('⚠'), String(bandImp.lossLine).slice(0, 90))
+ok('启发B：输出行由报告生成（lossLine === lossAuditLine(落盘 JSON)），不是手写文案',
+  bandImp.lossLine === lossAuditLine(lossAuditJson), String(bandImp.lossLine).slice(0, 90))
 ok('v0.4：theme 聚合建议块写入 deck.yaml', bandDeckYaml.includes('# 建议主题') && bandDeckYaml.includes('textStyles'))
 const mnErr = validatePage({ elements: [{ elementId: 'l', elementType: 'line', points: [[10, 10], [100, 10], [200, 10]] }] }, 'test.yaml')
 ok('v0.4：多点折线显式报错（P2-3，不再静默截断）', mnErr !== null && mnErr.messages.some((m) => m.includes('仅支持 2 点')), mnErr?.messages?.join('; '))
@@ -2976,9 +2994,22 @@ ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz
   ok('§57 成品内容自证：文本/表格内容在产物里**逐条**能反查到（含 <>& 引号与 \\n 多行）——"预览对、成品丢字"这类抓得到',
     (p57.textExp ?? 0) >= 8 && (p57.textMissing ?? ['x']).length === 0 && p57.ok === true,
     `textExp=${p57.textExp}｜缺失=${JSON.stringify(p57.textMissing ?? null)}｜ok=${p57.ok}`)
-  ok('§57 成品内容自证：图表"该画几个图形"与产物一致（此前 parity **完全没数图表**）',
-    p57.chartShapesExp === 2 && p57.chartShapesOut === 2,
-    `期望=${p57.chartShapesExp} 实际=${p57.chartShapesOut}`)
+  // 默认走原生（用户 2026-09-26 拍板）：包里必须出现图表部件 + 内嵌数据工作簿，且数据与 deck **逐格**一致
+  ok('§57 成品内容自证：图表默认 = **原生可编辑图表部件**（`ppt/charts/*.xml` + 内嵌数据工作簿），数据与 deck 逐格一致',
+    p57.chartsExp === 1 && p57.chartsOut === 1 && p57.chartEmbedsOut === 1 && p57.chartSheetsChecked === 1
+      && (p57.chartDataMismatch ?? ['x']).length === 0 && (p57.chartRelsMissing ?? ['x']).length === 0 && p57.ok === true,
+    `部件=${p57.chartsOut}/${p57.chartsExp}｜工作簿=${p57.chartEmbedsOut}｜已比对工作表=${p57.chartSheetsChecked}｜数据不符=${JSON.stringify(p57.chartDataMismatch ?? null)}`)
+  // 显式 render: vector 的降级路必须**还在**（形状计数自证不丢，且该页不产图表部件）
+  await writeFile(join(work57, 'pages', '02.yaml'), ['pageType: content', 'elements:',
+    '  - elementId: vbar', '    elementType: chart', '    bounds: [40, 40, 500, 300]',
+    '    chart: {type: bar, data: {cols: ["季度", "值"], rows: [["Q1", 12], ["Q2", 18]]}, render: vector}', ''].join('\n'), 'utf8')
+  const deckText57 = await (await import('node:fs/promises')).readFile(join(work57, 'deck.yaml'), 'utf8')
+  await writeFile(join(work57, 'deck.yaml'), deckText57.replace('  - pages/01.yaml', '  - pages/01.yaml\n  - pages/02.yaml'), 'utf8')
+  const r57v = await exportPptx(await resolveDeck(work57), { out: join(work57, 'out-v.pptx') })
+  const p57v = r57v.parity ?? {}
+  ok('§57 成品内容自证：`chart.render=vector` 仍走矢量拼绘（形状计数自证不丢，且该页不产图表部件）',
+    p57v.chartShapesExp === 2 && p57v.chartShapesOut === 2 && p57v.chartsOut === 1 && r57v.slides === 2,
+    `形状=${p57v.chartShapesOut}/${p57v.chartShapesExp}｜全册图表部件=${p57v.chartsOut}（只第 1 页有原生）｜页数=${r57v.slides}`)
   await rm(work57, { recursive: true, force: true })
 }
 

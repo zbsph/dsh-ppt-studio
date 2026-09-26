@@ -9,6 +9,7 @@ import { existsSync } from 'node:fs'
 import { join, basename } from 'node:path'
 import { zipRead, decodeXml } from '../zips.js'
 import { parseXml, children, first, allText } from '../xmljs.js'
+import { auditLoss, lossAuditLine, LOSS_AUDIT_FILE } from './loss-audit.js'
 
 const EMU = 12700
 const px = (emu) => Math.round(emu / EMU)
@@ -152,11 +153,22 @@ export async function importPptx(pptxPath, outDir) {
     elements: pages.flatMap((p) => p.elements.map((el) => ({ page: p.index + 1, id: el.elementId, ...(el._styleRaw ?? {}) }))),
   }
   await writeFile(join(outDir, 'import-styles.json'), JSON.stringify(stylesJson, null, 2))
+  // 启发 B（审计半）：重建有损审计——源稿里 DSL/导出无法保真的特性（动画/阴影/超链接/切换/
+  // SmartArt/不可嵌入媒体/主题渐变）。单独成文 loss-audit.json（理由见下方 return 注释），
+  // 工具输出用 lossAuditLine 给一行结论，支撑"只改某几页 ⇒ 优先 ppt_splice"的选择。
+  const lossAudit = auditLoss(files, { source: basename(pptxPath) })
+  await writeFile(join(outDir, LOSS_AUDIT_FILE), JSON.stringify(lossAudit, null, 2))
   const bgCount = pages.filter((p) => p.background).length
   const styleCount = Object.keys(stats.colors).length
   return {
     outDir, pages: pages.length, media: [...mediaNames], size: { width, height },
     reference: refPreviews?.length ? { previews: refPreviews, source: 'source.pptx' } : null,
+    // 启发 B：损失审计报告 + 一行结论（tools.js 的 ppt_import 只加这一行输出）。
+    // JSON 独立成 loss-audit.json（而非塞进 import-styles.json）：① 语义相反——styles 记"我们保住了什么"，
+    // audit 记"我们保不住什么"，混在一起会让"改版求一致直接复用 styles"的既有使用者读到无关字段；
+    // ② 生命周期不同：audit 是决策输入（改哪几页 / 要不要 splice），styles 是素材账本；
+    // ③ 独立文件名便于模型/用户直接定位与断言（smoke 无需解析既有 schema，向后兼容、零破坏）。
+    lossAudit, lossLine: lossAuditLine(lossAudit),
     warnings: ['chart 降级为文本占位；未映射 prst 形状近似为矩形（import-styles.json 有记录）',
       ...(missingMedia.length ? [`⚠ 原稿 ${missingMedia.length} 个媒体引用未提取（${missingMedia.join('、')}——rels 指向包外/特殊格式）：已在 media/ 生成 1×1 白色占位图，导出可用；建议人工替换或删除对应页面元素`] : []),
       ...(existsSync(join(outDir, 'source.pptx')) ? ['已保留原始 pptx ⊳ source.pptx（零失真真相层；参考双轨 v0.9.1）'] : []),

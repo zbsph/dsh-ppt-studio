@@ -29,7 +29,11 @@
  *       # line    → points: [[x,y],...] | {x1,y1,x2,y2}, arrow: bool, line:{color,width}
  *       # image   → src(相对 deck 目录), fit: cover|contain|fill
  *       # table   → cols: [...], rows: [[...]], header: bool
- *       # chart   → chart: {type: bar|line|pie, data:{cols,rows}, series:[{name,x,y}] , colors:[...]}
+ *       # chart   → chart: {type: bar|line|pie, data:{cols,rows}, series:[{name,x,y}] , colors:[...],
+ *       #                    render: native|vector（默认 native = 原生可编辑图表 + 内嵌数据工作簿）,
+ *       #                    legend: bool|top|bottom|left|right（默认 auto：多系列/饼图显示，单系列不显示）,
+ *       #                    labels: bool（默认 auto：饼图显示百分比+分类名，其余不显示）,
+ *       #                    axes: bool（默认 true；饼图忽略）}
  */
 import { readFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
@@ -400,6 +404,49 @@ function validateChart(el, path, errors) {
   if (!d || !Array.isArray(d.cols) || d.cols.length === 0) errors.push(`${path}.chart.data.cols: non-empty array`)
   if (!d || !Array.isArray(d.rows)) errors.push(`${path}.chart.data.rows: array`)
   if (c.series && !Array.isArray(c.series)) errors.push(`${path}.chart.series: array`)
+  // 第三轮（chart 默认原生可编辑）：以下字段**全可选有默认**，旧 deck（不写 render）行为 = native。
+  if (c.render !== undefined && !CHART_RENDER.includes(c.render)) {
+    errors.push(`${path}.chart.render: ${CHART_RENDER.join('|')}（默认 native = PowerPoint 里可"编辑数据"的原生图表；vector = 矢量拼绘降级）`)
+  }
+  if (c.legend !== undefined && typeof c.legend !== 'boolean' && !CHART_LEGEND_POS.includes(c.legend)) {
+    errors.push(`${path}.chart.legend: true|false|${CHART_LEGEND_POS.join('|')}（默认 auto：多系列与饼图显示图例，单系列不显示）`)
+  }
+  if (c.labels !== undefined && typeof c.labels !== 'boolean') {
+    errors.push(`${path}.chart.labels: boolean（数据标签；默认 auto：饼图显示百分比+分类名，柱/线不显示）`)
+  }
+  if (c.axes !== undefined && typeof c.axes !== 'boolean') {
+    errors.push(`${path}.chart.axes: boolean（坐标轴/网格线/刻度标签；默认 true；饼图忽略）`)
+  }
+  // 矢量降级不画图例/数据标签/坐标轴 ⇒ 显式要求这些字段时**报错**而不是静默忽略
+  // （本仓库的既有纪律：B1 修复"元素级样式被静默忽略"就是同类问题）。
+  if (c.render === 'vector') {
+    for (const k of ['legend', 'labels', 'axes']) {
+      if (c[k] !== undefined) errors.push(`${path}.chart.${k}: 仅 render=native（原生图表）生效；矢量拼绘不画图例/数据标签/坐标轴——请改用 render=native 或删掉 ${k}`)
+    }
+  }
+}
+
+/** 图表渲染通路（第三轮）：native = 原生 DrawingML 图表部件（默认）；vector = 旧的矢量拼绘降级。 */
+export const CHART_RENDER = ['native', 'vector']
+/** 图例位置（对应 OOXML legendPos t/b/l/r）。 */
+export const CHART_LEGEND_POS = ['top', 'bottom', 'left', 'right']
+
+/**
+ * 图表可选字段的**默认值**（schema 层唯一真相；预览 svgCharts 与导出 export-pptx 都读它 ⇒ 三层同源）。
+ * `legend`/`labels` 为 'auto' 时由 `resolveChart()`（svgCharts.js）按"实际系列数/图表类型"落地：
+ *   · legend auto = 多系列或饼图 → 'bottom'，单系列 → false（单系列图例是噪音）
+ *   · labels auto = 饼图 → true（百分比+分类名），柱/线 → false（每个数据点都标数字会糊成一团）
+ * @param {object} chart
+ * @returns {{render:'native'|'vector', legend:boolean|'top'|'bottom'|'left'|'right'|'auto', labels:boolean|'auto', axes:boolean}}
+ */
+export function chartOptions(chart) {
+  const c = chart ?? {}
+  return {
+    render: CHART_RENDER.includes(c.render) ? c.render : 'native',
+    legend: typeof c.legend === 'boolean' || CHART_LEGEND_POS.includes(c.legend) ? c.legend : 'auto',
+    labels: typeof c.labels === 'boolean' ? c.labels : 'auto',
+    axes: c.axes !== false,
+  }
 }
 
 function validBounds(b) {

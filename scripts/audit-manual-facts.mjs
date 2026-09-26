@@ -91,8 +91,10 @@ const tableKeys = src.schema.match(/table: \['cols', 'rows', 'header'\]/)
 check('table 只有 cols/rows/header（手册"没有逐列对齐字段"成立）', !!tableKeys, `schema.js ELEMENT_KEYS: ${tableKeys?.[0] ?? '未找到'}`)
 
 const chartKeys = src.schema.match(/chart: \['chart'\]/)
-const chartNoLabels = !/legend|dataLabels|labels\s*:/.test(src.schema.match(/function validateChart[\s\S]*?\n\}/)?.[0] ?? '')
-check('chart 没有分类名/数值/图例字段（手册"标签要自己补"成立）', !!chartKeys && chartNoLabels, `schema.js ELEMENT_KEYS.chart=${chartKeys?.[0] ?? '?'}；validateChart 只校验 type/data.cols/data.rows/series`)
+// 事实更正（2026-09-26 第三轮：chart 默认 native）：schema 现在**有**可选视觉字段（render/legend/labels/axes）——
+// 默认 native 时图表**自带**坐标轴/网格/图例/数据标签；只有 `render: vector` 才回到"作者自己补标签"。
+const chartHasRender = /CHART_RENDER\s*=\s*\['native',\s*'vector'\]/.test(src.schema)
+check('chart 的可选视觉字段 = render/legend/labels/axes（手册须按 native/vector 两路描述）', !!chartKeys && chartHasRender, `schema.js ELEMENT_KEYS.chart=${chartKeys?.[0] ?? '?'}；CHART_RENDER 常量=${chartHasRender}`)
 
 const trunc = Number((src.svgCharts.match(/c\.length\s*>\s*(\d+)/) ?? [])[1])
 const claimedTrunc = [...all.matchAll(/超过\s*(\d+)\s*字截断/g)].map((m) => Number(m[1]))

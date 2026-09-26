@@ -1,7 +1,8 @@
 /**
  * PPTD → PPTX 导出器（主引擎）：生成最小可打开的 OOXML。
  * - 元素：text / shape(rect,ellipse,triangle) / line(箭头) / image / table
- *   / chart（矢量拼绘：bar=矩形、line=连接线+圆点、pie=饼形）
+ *   / chart（第三轮起**默认原生可编辑图表**：ppt/charts/chartN.xml + 内嵌数据工作簿，
+ *     PowerPoint 里可"编辑数据"/换类型；`chart.render: 'vector'` 保留矢量拼绘降级：bar=矩形、line=连线+圆点、pie=饼形）
  * - 文本自动 fit：与 verify 同一度量与阈值（overflow > 1px 才缩），按比例缩字号；
  *   下限语义（2026-09-06 用户拍板）：theme.minFontSize 显式 = 用户给出的字号下限（严格遵守，且不超过原字号）；
  *   未设置 = 无强制下限（仅 60% 原字号防荒谬保底），绝不升字；到下限仍溢出记 floorHit。
@@ -15,7 +16,8 @@ import { join, isAbsolute } from 'node:path'
 import { createHash } from 'node:crypto'
 import { zipWrite } from '../zips.js'
 import { normalizePage } from './layout.js'
-import { chartData, chartColors, chartIssue } from './svgCharts.js'
+import { chartData, chartColors, chartIssue, resolveChart } from './svgCharts.js'
+import { auditNativeCharts, chartFrameXml, chartPartNames, embeddedWorkbook, nativeChartRels, nativeChartXml } from './nativeChart.js'
 
 const EMU = 12700
 const xm = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -73,7 +75,9 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
     const shapes = []
     const media = []
     const mediaSeen = new Map()
-    const counts = { table: 0, image: 0, chart: 0 }
+    const counts = { table: 0, image: 0, chart: 0, chartNative: 0, chartVector: 0 }
+    // 原生图表：收集本页要产出的图表部件（rId / 部件名在"媒体发现完之后"才分配，见下方 relBase）
+    const chartRefs = []
     const addMedia = (srcPath) => {
       if (mediaSeen.has(srcPath)) return mediaSeen.get(srcPath)
       const rId = `rId${media.length + 2}`
@@ -102,7 +106,17 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
           counts.chart++
           const issue = chartIssue(el.chart)
           if (issue) report.chartInfos.push(`第 ${page.index + 1} 页（${page.name}）${el.id}: ${issue}`)
-          shapes.push(...chartSp(el))
+          // 第三轮：默认原生可编辑图表；`render: 'vector'` 才走旧的矢量拼绘（形状计数自证照旧）
+          if (resolveChart(el.chart).opts.render === 'vector') {
+            counts.chartVector++
+            shapes.push(...chartSp(el))
+          } else {
+            counts.chartNative++
+            const k = chartRefs.length
+            chartRefs.push({ el, pageNo: page.index + 1, pageName: page.name })
+            // rId 先占位：媒体是在本循环里陆续发现的，图表关系必须排在媒体（与讲稿）之后
+            shapes.push(chartFrameXml(el, nid(), `__CHART_RID_${k}__`))
+          }
           break
         }
       }
@@ -115,13 +129,28 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
       bg.xml = bg.xml.replace('BGPLACEHOLDER', bg.rId)
     }
 
+    // ── 关系编号（媒体之后）：讲稿 → 图表 ──────────────────────────────────
+    // 不产图表的工程：编号与旧实现**逐字节一致**（rId1=slideLayout，rId2..=media，notesRel=media+2）。
+    const notes = typeof page.page.notes === 'string' && page.page.notes.trim() ? page.page.notes.trim() : null
+    const relBase = media.length + 2
+    const notesRId = notes ? `rId${relBase}` : null
+    chartRefs.forEach((c, k) => {
+      c.rId = `rId${relBase + (notes ? 1 : 0) + k}`
+    })
+    for (let k = 0; k < chartRefs.length; k++) {
+      const idx = shapes.findIndex((s) => typeof s === 'string' && s.includes(`__CHART_RID_${k}__`))
+      if (idx >= 0) shapes[idx] = shapes[idx].replace(`__CHART_RID_${k}__`, chartRefs[k].rId)
+    }
+
     slides.push({
       page,
       shapes,
       media,
       counts,
+      chartRefs,
       // 讲稿：只有非空字符串才产备注页（空/未写 = 与旧行为完全一致，不生成部件）
-      notes: typeof page.page.notes === 'string' && page.page.notes.trim() ? page.page.notes.trim() : null,
+      notes,
+      notesRId,
       notesNo: 0,
       spTree: `<p:spTree>${spTreeHeader()}${shapes.join('')}</p:spTree>`,
       bg,
@@ -131,8 +160,21 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
   let notesCount = 0
   for (const s of slides) if (s.notes) s.notesNo = ++notesCount
 
+  // ── 原生图表编号（跨页递增，chart1..chartN）与部件生成 ──────────────────────
+  // 每张原生图表 = 一个 chartN.xml + 一个内嵌工作簿（Microsoft_Excel_SheetN.xlsx），与 python-pptx 产物同构。
+  const nativeCharts = []
+  for (const s of slides) {
+    for (const c of s.chartRefs ?? []) {
+      const chartNo = nativeCharts.length + 1
+      const names = chartPartNames(chartNo)
+      c.chartNo = chartNo
+      c.names = names
+      nativeCharts.push({ id: c.el.id, chart: c.el.chart, pageNo: c.pageNo, pageName: c.pageName, chartNo, names })
+    }
+  }
+
   const files = {}
-  files['[Content_Types].xml'] = contentTypes(slides)
+  files['[Content_Types].xml'] = contentTypes(slides, nativeCharts)
   files['_rels/.rels'] = rootRels()
   files['docProps/core.xml'] = coreProps(ctx)
   files['docProps/app.xml'] = appProps(ctx)
@@ -147,13 +189,19 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
     files['ppt/notesMasters/notesMaster1.xml'] = notesMasterXml()
     files['ppt/notesMasters/_rels/notesMaster1.xml.rels'] = notesMasterRels()
   }
+  // 图表部件三件套（chartN.xml / chartN.xml.rels / 内嵌 xlsx）
+  for (const ch of nativeCharts) {
+    files[ch.names.chart] = nativeChartXml({ chart: ch.chart, chartNo: ch.chartNo })
+    files[ch.names.rels] = nativeChartRels(ch.chartNo)
+    files[ch.names.embed] = embeddedWorkbook(ch.chart)
+  }
 
   for (let i = 0; i < slides.length; i++) {
     const s = slides[i]
     const n = i + 1
     files[`ppt/slides/slide${n}.xml`] = slideXml(s)
-    // 备注页关系：rId 取媒体之后的下一个空闲号（媒体用 rId2..rId(1+media)）
-    const notesRel = s.notes ? `<Relationship Id="rId${s.media.length + 2}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/notesSlide" Target="../notesSlides/notesSlide${s.notesNo}.xml"/>` : ''
+    // 备注页关系：rId 取媒体之后的下一个空闲号（媒体用 rId2..rId(1+media)）——见页面循环里的统一分配
+    const notesRel = s.notesRId ? `<Relationship Id="${s.notesRId}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/notesSlide" Target="../notesSlides/notesSlide${s.notesNo}.xml"/>` : ''
     if (s.notes) {
       files[`ppt/notesSlides/notesSlide${s.notesNo}.xml`] = notesSlideXml(s.notes)
       // 关键：notesSlide **必须自带 rels**（→ notesMaster + 回指本页幻灯）。
@@ -170,6 +218,7 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
       '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout" Target="../slideLayouts/slideLayout1.xml"/>',
       ...s.media.map((m) => `<Relationship Id="${m.rId}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="../media/${m.part}"/>`),
       notesRel,
+      ...(s.chartRefs ?? []).map((c) => `<Relationship Id="${c.rId}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/chart" Target="../charts/chart${c.chartNo}.xml"/>`),
       '</Relationships>',
     ].join('')
     files[`ppt/slides/_rels/slide${n}.xml.rels`] = srels
@@ -214,6 +263,7 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
   // "预览层对、成品层丢字/串行/表格漏格"这一类抓不到。官方 office 技能同款纪律：
   // "Reopen the file to check the requested edits." 本检查**从产物反推内容**，不是读中间层。
   const textMissing = []
+  const chartFramesMissing = []
   let textExp = 0
   let chartShapesExp = 0
   let chartShapesOut = 0
@@ -240,10 +290,34 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
         if (!txt.includes(xm(w))) textMissing.push(`第 ${pageNo} 页/${id}: ${w.slice(0, 24)}`)
       }
       if (el.elementType === 'chart') {
-        // 图表是**矢量拼绘**（形状不是图表对象）⇒ 内容级判据只能是"该画的图形个数对不对"。
-        chartShapesExp += chartShapeCountOf(el)
-        const re = new RegExp(`name="${escapeRe(xm(id))}-`, 'g')
-        chartShapesOut += (txt.match(re) ?? []).length
+        if (resolveChart(el.chart).opts.render === 'vector') {
+          // 矢量拼绘（形状不是图表对象）⇒ 内容级判据只能是"该画的图形个数对不对"。
+          chartShapesExp += chartShapeCountOf(el)
+          const re = new RegExp(`name="${escapeRe(xm(id))}-`, 'g')
+          chartShapesOut += (txt.match(re) ?? []).length
+        } else {
+          // 原生图表：判据在包级（部件数 + externalData 关系 + 内嵌工作簿数据 == deck 数据），见下面的 auditNativeCharts。
+          // 幻灯片级还要自证"这个图表帧真的在产物里"（防止 graphicFrame 被静默丢弃/参数写错）。
+          const frameOk = txt.includes(`name="${xm(id)}"`) && txt.includes('drawingml/2006/chart')
+          if (!frameOk) chartFramesMissing.push(`第 ${pageNo} 页/${id}: slide XML 里没有图表帧（graphicFrame + graphicData uri=.../chart）`)
+        }
+      }
+    }
+  }
+  // 原生图表部件自证（第三轮）：声明的 chart 元素数 == ppt/charts/*.xml 数；
+  // 每个图表帧的 rId 真的指向 chartN.xml；chartN 的 externalData 关系真的指向存在的内嵌工作簿；
+  // 内嵌工作簿 `xl/worksheets/sheet1.xml` 取值 == deck 数据（逐格比对）。
+  const chartAudit = auditNativeCharts(files, nativeCharts.map((c) => ({ id: `${c.id}（第 ${c.pageNo} 页）`, chart: c.chart, chartPart: c.names.chart })))
+  const chartRelMissing = []
+  // 图表帧 → slide rels → chartN.xml 的链路自证（逐条从产物反查）
+  for (let i = 0; i < slides.length; i++) {
+    for (const c of slides[i].chartRefs ?? []) {
+      const srels = String(files[`ppt/slides/_rels/slide${i + 1}.xml.rels`] ?? '')
+      if (!srels.includes(`Id="${c.rId}"`) || !srels.includes(`../charts/chart${c.chartNo}.xml`)) {
+        chartRelMissing.push(`第 ${i + 1} 页/${c.el.id}: slide rels 缺 ${c.rId} → chart${c.chartNo}.xml`)
+      }
+      if (!String(files[`ppt/slides/slide${i + 1}.xml`]).includes(`r:id="${c.rId}"`)) {
+        chartRelMissing.push(`第 ${i + 1} 页/${c.el.id}: 图表帧没有引用 ${c.rId}`)
       }
     }
   }
@@ -253,10 +327,15 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
     notesExp, notesOut,
     mediaExp: mediaExpSet.size, mediaOut,
     textExp, textMissing, chartShapesExp, chartShapesOut,
+    chartFramesMissing,
+    chartsExp: chartAudit.chartsExp, chartsOut: chartAudit.chartsOut,
+    chartEmbedsOut: chartAudit.embedsOut, chartSheetsChecked: chartAudit.sheetsChecked,
+    chartDataMismatch: chartAudit.dataMismatch, chartRelsMissing: [...chartAudit.relsMissing, ...chartRelMissing],
     ok: tablesExp === tablesOut && imagesExp === imagesOut && illegal === 0 &&
       lineProof.exp === lineProof.out && lineProof.wrong.length === 0 &&
       notesExp === notesOut && notesRelOk && mediaExpSet.size === mediaOut &&
-      textMissing.length === 0 && chartShapesExp === chartShapesOut,
+      textMissing.length === 0 && chartShapesExp === chartShapesOut &&
+      chartFramesMissing.length === 0 && chartAudit.ok && chartRelMissing.length === 0,
   }
 
   // out：绝对路径原样使用；相对路径相对 deck 目录（反馈 E1 ★）
@@ -265,6 +344,10 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
   report.file = outPath
   report.slides = slides.length
   report.engine = engine
+  // 原生图表清单（可观测，便于 smoke/验证脚本核对"第几个 chartN 是哪一页的哪个元素"）
+  if (nativeCharts.length) {
+    report.nativeCharts = nativeCharts.map((c) => ({ id: c.id, page: c.pageNo, chartNo: c.chartNo, part: c.names.chart, embed: c.names.embed }))
+  }
   // 改名必须**可见**（不静默）：非 ASCII/空格或重名时部件名变了，报告里说明改成了什么。
   if (renamedMedia.size) report.mediaRenamed = [...renamedMedia].map(([src, part]) => `${src} → ppt/media/${part}`)
   return report
@@ -589,7 +672,13 @@ function chartSp(el) {
 }
 
 // ── package parts ─────────────────────────────────────────────────────────
-function contentTypes(slides) {
+/**
+ * `[Content_Types].xml`。
+ * `nativeCharts`（第三轮）：每个 `ppt/charts/chartN.xml` 一条 Override（`drawingml.chart+xml`），
+ * 并补 `<Default Extension="xlsx">`（内嵌数据工作簿是 `ppt/embeddings/*.xlsx`）。
+ * 无原生图表的工程**逐字节不变**（老工程/回归样例零变化）。
+ */
+function contentTypes(slides, nativeCharts = []) {
   const notes = slides.filter((s) => s.notes)
   const overrides = [
     '<Override PartName="/ppt/presentation.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml"/>',
@@ -601,6 +690,7 @@ function contentTypes(slides) {
     ...(notes.length ? ['<Override PartName="/ppt/notesMasters/notesMaster1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.notesMaster+xml"/>'] : []),
     ...slides.map((_, i) => '<Override PartName="/ppt/slides/slide' + (i + 1) + '.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>'),
     ...notes.map((s) => '<Override PartName="/ppt/notesSlides/notesSlide' + s.notesNo + '.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.notesSlide+xml"/>'),
+    ...nativeCharts.map((c) => '<Override PartName="/' + c.names.chart + '" ContentType="application/vnd.openxmlformats-officedocument.drawingml.chart+xml"/>'),
   ]
   return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
     + '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
@@ -608,6 +698,7 @@ function contentTypes(slides) {
     + '<Default Extension="png" ContentType="image/png"/><Default Extension="jpeg" ContentType="image/jpeg"/>'
     + '<Default Extension="jpg" ContentType="image/jpeg"/><Default Extension="gif" ContentType="image/gif"/>'
     + '<Default Extension="webp" ContentType="image/webp"/>'
+    + (nativeCharts.length ? '<Default Extension="xlsx" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>' : '')
     + overrides.join('') + '</Types>'
 }
 

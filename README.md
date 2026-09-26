@@ -2,7 +2,7 @@
 
 在 DeepSeek Harness 里说需求，它把 PPT 做出来：先定大纲和版式，再逐页制作，每页过一遍自动检查，最后交付一个能用 PowerPoint 打开、继续改的 `.pptx`。
 
-当前版本 **1.1.2**，安装包约 **890 kB**（1.0.3 及更早的版本是 35 MB，因为随包带着 4 套没人用过的导入模板，1.0.4 把它们删了）。
+当前版本 **1.1.4**，安装包约 **890 kB**（1.0.3 及更早的版本是 35 MB，因为随包带着 4 套没人用过的导入模板，1.0.4 把它们删了）。
 
 **隔离是默认的**：装好之后，这套能力**只出现在「PPT 工作室」预设里**，其他预设与"没装插件"完全一样（§1.6）。
 新建会话时选「PPT 工作室」即可；预设提供的是"完整工作台"——人格 + 22 个工具 + `/ppt` 命令 + 4 本手册 + 工作流提示段。
@@ -462,7 +462,7 @@ ppt_visual                  # Office 真渲染复核（有 Office 时；audit �
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + LF 守卫 + smoke（298 断言）+ 预设漂移自检
+npm test                        # build + LF 守卫 + smoke（303 断言）+ 预设漂移自检
 npm run check:eol               # 发行字节守卫：跟踪的文本文件必须全 LF（--fix 就地修）
 npm run fresh                   # 用户视角终验：干净克隆 npm test + 真装一遍
 npm run test:bundle             # 安装路径自证：隔离 DSH_HOME + 真 dsh plugin add + dump-config

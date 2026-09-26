@@ -34,7 +34,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 | "字号可以 11pt 吗" | **可以**（下限 = 用户指令）：用户给了下限（如"不得小于14号"）→ 写入 theme.minFontSize 并严格遵守；用户没给 → 不设任何强制下限（插件无默认）。 |
 | "为什么导出会缩字" | verify 已报溢出 → 先清零（扩容器/精简文案/显式 `\n`）；verify 通过 ⇒ 导出不缩字 |
 | "预览链接 404" | 路由在 PPT 工作室会话挂载时注册——确认当前是 PPT 工作室会话（不是默认会话） |
-| "图表能画什么" | bar/line/pie。引擎 A（pptd）=**矢量拼绘**（是图形、不是图表对象：无"编辑数据"、改数字不重算）；引擎 B（python-pptx 兜底）=**原生可编辑图表**（带内嵌工作簿） |
+| "图表能画什么" | bar/line/pie，默认**原生可编辑图表**（自带轴/网格/图例/数据标签，可"编辑数据"，数据在内嵌工作簿）；`chart.render: vector` 回到矢量拼绘（标签自己补） |
 | "用别人的模板做" | `ppt_import`（带参考层：source.pptx + 真渲染整页 + 全量色板）→ 先 read_image 看 `reference/previews/*.png` 真身再动手 |
 | "要 100% 像模板" | `ppt_patch`（手术模式：只换文字/表格内容，XML 原样） |
 | "网页预览对，打开 pptx 线条不对" | 旧引擎三个连线编码 bug（四个症状：斜线镜像 / × 少一笔 / 箭头消失 / 水平线变斜），**均已修复**——看 `ppt_export` 报告的"线方向 N/N"自证；修复前导出的产物重新 `ppt_export` |
@@ -97,7 +97,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 ## 7. 开发维护（仅改插件时用）
 
 - 改码：`src/` → `node scripts/build.mjs` → **重启 host**（插件经 agent preset 会话装配；`dev_reload_package` 只覆盖注入器装配包，且注入器 junction 已存在时会指向旧安装根）。
-- 回归：`node scripts/smoke.mjs`（298 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
+- 回归：`node scripts/smoke.mjs`（303 断言）→ `node scripts/preflight-1.0.mjs`（发布预检）→ `node scripts/regression-real.mjs`。
 - 跨层验证纪律：**预览层与成品层必须互相验证**——`ppt_render`+`ppt_verify` 只管 HTML/估算层，OOXML 层靠 `ppt_export` 的 parity 自证（表/图/线方向）+ `ppt_visual` 真渲染抽检；只跑单层会漏掉"预览对、成品错"（2026-09-14 连线方向事故）。
 - 文档链：改需求/决策 → docs/01；改机制 → docs/02；每次 → docs/03；验收 → docs/04；发布前 → docs/06。
 - 装配：**默认装法是 npm 包名**（`dsh plugin --profile <p> add dsh-ppt-studio`，profile 级、随 profile 启动装配；**桌面端**在插件管理里填同一个包名 `dsh-ppt-studio`；GitHub Release 的资产 URL 与 `scripts/install*.mjs` 是离线/归档备选）。装完**必须重启 host**。排查：`dsh plugin --profile web list` → `dsh --profile web --dump-config` 找 `ppt-studio` 行。preset 插件行只在"离线 junction"场景用，与 bundle 装法**互斥**。

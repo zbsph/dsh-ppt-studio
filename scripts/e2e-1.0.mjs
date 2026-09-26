@@ -77,8 +77,8 @@ if (m.measured) {
 const exp = await exportPptx(ctx, { out: join(fx, 'fx-pro.pptx'), engine: 'pptd' })
 const z = zipRead(await readFile(exp.file))
 const slides = [...z.keys()].filter((k) => /^ppt\/slides\/slide\d+\.xml$/.test(k))
-const chartParts = [...z.keys()].filter((k) => k.startsWith('ppt/charts/'))
-ok('⑤ export = 12 张 slide + 无 chart 部件（矢量拼绘）', slides.length === seedPages && chartParts.length === 0, `${slides.length} slides`)
+const chartParts = [...z.keys()].filter((k) => k.startsWith('ppt/charts/') && k.endsWith('.xml') && !k.includes('_rels'))
+ok('⑤ export = 12 张 slide + 1 个**原生图表部件**（chart 默认 native；矢量降级见 smoke §57）', slides.length === seedPages && chartParts.length === 1, `${slides.length} slides / chart=${chartParts.length}`)
 // 连线方向自证（2026-09-14 真实反馈：预览对、PowerPoint 里线镜像/× 掉一笔）
 ok('⑤ export parity 自证：表/图/线方向全绿（线逐条从 OOXML 反推端点）',
   exp.parity?.ok === true && exp.parity.linesExp > 0 && exp.parity.linesExp === exp.parity.linesOut && exp.parity.linesWrong === 0,
