@@ -83,7 +83,7 @@ elements:
 - elementId: img
   elementType: image
   bounds: [60, 100, 400, 300]
-  src: media/pic.png          # 相对 deck 根
+  src: media/pic.png          # 相对 deck 根；子目录与中文/空格名都可以（media/子目录/图.png）
   fit: cover                  # cover|contain|fill
 - elementId: tbl
   elementType: table

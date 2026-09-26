@@ -2,7 +2,7 @@
 
 在 DeepSeek Harness 里说需求，它把 PPT 做出来：先定大纲和版式，再逐页制作，每页过一遍自动检查，最后交付一个能用 PowerPoint 打开、继续改的 `.pptx`。
 
-当前版本 **1.1.1**，安装包约 **890 kB**（1.0.3 及更早的版本是 35 MB，因为随包带着 4 套没人用过的导入模板，1.0.4 把它们删了）。
+当前版本 **1.1.2**，安装包约 **890 kB**（1.0.3 及更早的版本是 35 MB，因为随包带着 4 套没人用过的导入模板，1.0.4 把它们删了）。
 
 装上之后，**这个 profile 的所有会话都能用**，不需要专门切到某个预设。预设「PPT 工作室」提供的是人格和身份，不是"开关"。
 
@@ -325,6 +325,9 @@ v1.0.0 修订前旧引擎的结构 bug（graphicFrame 里嵌了 `<a:xfrm>`，Pow
 - line 只有两个点，多点折线要拆成首尾相接的多条。
 - chart 支持 bar/line/pie；图表里的分类名、数值、单位、图例需要你自己用文本元素补上（DSL 里没有这些字段）。
 - 背景支持 hex、主题引用、纯色、图片（cover/contain/fill）。
+- 图片 `src` 是相对 deck 根的路径：`media/子目录/图.png`、中文或带空格的文件名都可以（预览会正确处理）。
+  两个**不同目录下的同名文件**也没问题——导出会自动给包内部件名加哈希避免互相覆盖（PPT 里的图片内容不受影响，导出输出里会说明改了什么）。
+  `src` 写 http(s) 网址时**只有预览能显示**，导出会写 1×1 白色占位并醒目警告（插件不联网取图）。
 
 **这些不做，都有替代路径**：
 
@@ -439,7 +442,7 @@ ppt_visual                  # Office 真渲染复核（有 Office 时；audit �
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + LF 守卫 + smoke（270 断言）+ 预设漂移自检
+npm test                        # build + LF 守卫 + smoke（276 断言）+ 预设漂移自检
 npm run check:eol               # 发行字节守卫：跟踪的文本文件必须全 LF（--fix 就地修）
 npm run fresh                   # 用户视角终验：干净克隆 npm test + 真装一遍
 npm run test:bundle             # 安装路径自证：隔离 DSH_HOME + 真 dsh plugin add + dump-config

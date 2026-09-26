@@ -6,7 +6,7 @@
  * - URL 为同源相对路径（/ppt-preview/<token>/pages/deck.html）：GUI 页面本身就在 host 上，
  *   点击/iframe 均同源，不依赖端口探测。
  */
-import { mkdir, rm, copyFile, readFile, stat } from 'node:fs/promises'
+import { mkdir, rm, copyFile, cp, readFile, stat } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { join, dirname, extname, normalize } from 'node:path'
 import { homedir } from 'node:os'
@@ -44,13 +44,14 @@ export async function buildPreview(dir) {
     await copyFile(join(dir, 'preview', f), join(root, 'pages', f))
   }
   await copyFile(join(dir, 'preview', 'deck.html'), join(root, 'pages', 'deck.html'))
-  // media（含页面背景图；html 以 ../media/ 引用）
+  // media（含页面背景图与**子目录**；html 以 ../media/ 引用）
+  // 2026-09-26 修复：旧实现只 `readdir` 顶层再逐个 `copyFile` —— 目录条目会被当文件拷，Windows 上直接
+  //   `EPERM: operation not permitted, copyfile '<deck>\media\sub' -> '<preview>\media\sub'`
+  //   ⇒ `buildPreview` 整体抛出、`ppt_preview` 直接失败（**不是"缺图"**），预览根还留下半成品。
+  //   DSL 允许 `media/子目录/x.png`（schema 对 image.src 只校验是字符串、未禁止子目录），文档也从未声明"平铺"，
+  //   所以这里改成整目录镜像。`cp(recursive)` 保留相对路径 ⇒ 路由层（previewFileFor + join）本就能服务子路径。
   if (existsSync(join(dir, 'media'))) {
-    const mediaDir = join(root, 'media')
-    await mkdir(mediaDir, { recursive: true })
-    for (const name of await import('node:fs/promises').then((f) => f.readdir(join(dir, 'media')))) {
-      await copyFile(join(dir, 'media', name), join(mediaDir, name))
-    }
+    await cp(join(dir, 'media'), join(root, 'media'), { recursive: true })
   }
   tokens.set(token, root)
   // 持久化映射（跨进程/重启后链接仍可用）：.meta.json 记录源目录
@@ -149,10 +150,8 @@ export function registerPreviewRoute(ctx) {
         const m = u.pathname.match(/^\/ppt-preview\/([a-zA-Z0-9-]+)\/(.*)$/)
         if (!m) return notFound(res)
         const root = await resolveToken(m[1])
-        const rel = normalize(m[2]).replace(/^([/\\])+/, '')
-        if (!root || rel.includes('..')) return notFound(res)
-        const file = join(root, rel)
-        if (!existsSync(file)) return notFound(res)
+        const file = root ? previewFileFor(root, m[2]) : null
+        if (!file || !existsSync(file)) return notFound(res)
         const st = await stat(file)
         if (st.isDirectory()) return notFound(res)
         const buf = await readFile(file)
@@ -184,6 +183,30 @@ export function registerPreviewRoute(ctx) {
     cancelled = true
     unregPromise.then(() => releaseRouteWhenZero())
   }, 'ppt-studio: preview route')
+}
+
+/**
+ * 把 `/ppt-preview/<token>/` 之后的**原始请求路径**解析成预览根内的文件；越界或畸形编码返回 null。
+ * 抽成导出函数是为了可单测（smoke §54 直接断言，不必起 HTTP）。
+ *
+ * 2026-09-26 修复两件事：
+ *  ① **必须 `decodeURIComponent` 一次**：浏览器会把 `media/中文 图.png` 编码成 `%E4%B8%AD…%20…` 再请求，
+ *     而 `new URL().pathname` **保留编码形式** ⇒ 旧实现拼出的磁盘路径里含 `%E4%B8%AD`，`existsSync` 必失败。
+ *     实测：图片已正确拷进预览根，预览仍 404（导出正常）——中文/空格文件名是中文用户的常态。
+ *  ② 穿越判定改为**按路径段**看 `..`：旧实现 `rel.includes('..')` 会顺带误杀 `a..b.png` 这类合法文件名。
+ */
+export function previewFileFor(root, rawRel) {
+  let decoded = String(rawRel ?? '')
+  try { decoded = decodeURIComponent(decoded) } catch { return null } // 畸形百分号编码 → 当作不存在
+  if (decoded.includes('\0')) return null
+  // 任何 `..` **路径段**一律拒绝（保守策略：浏览器发出的请求路径本已规范化，代价为零）。
+  // 注意必须**先判再 normalize**——`path.normalize` 会把 `media/../x` 折叠成 `x`，折叠后就看不出越级意图了。
+  // 旧实现用 `rel.includes('..')`，会顺带误杀 `a..b.png` 这类合法文件名；这里只拦真正的上级目录段。
+  if (decoded.split(/[/\\]+/).some((seg) => seg === '..')) return null
+  const norm = normalize(decoded).replace(/^([/\\])+/, '')
+  if (!norm) return null
+  if (norm.split(/[/\\]+/).some((seg) => seg === '..')) return null // 归一化后仍越界（双保险）
+  return join(root, norm)
 }
 
 function notFound(res) {

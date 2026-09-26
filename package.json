@@ -1,6 +1,6 @@
 {
   "name": "dsh-ppt-studio",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "在 DeepSeek Harness 里做 PPT：说需求 → 逐页制作 → 导出可编辑的 .pptx。含布局检查、Office 真渲染复核，以及可扩展的本地模板库",
   "//publish": "2026-09-18 定：发 npm，**无 scope** 包名 `dsh-ppt-studio`。**状态（2026-09-26）：已发布** —— `dsh-ppt-studio@1.1.0` 在 npm 上（`dist-tags.latest`、public，发布者 `zbsph`），registry 的 tarball 与 GitHub Release 资产**逐字节相同**（sha256 `9303cc5c…`）。首个版本是 `npm publish <发版 tgz>` 直发的；**从下一版起改走 Trusted Publishing（OIDC）全自动通道**：`.github/workflows/publish.yml` 由 release 事件触发 → 下载 Release 资产 → OIDC `npm publish` → 发后自证 integrity —— 零长期 token、零手工（npm 已公告：Bypass-2FA 直发 2027-01 移除）。发布纪律不变：**用发版时那个 tgz**（`.sync-state.json` 的 `localTgz`），**别在 main 前进后跑裸 `npm publish`**（会按当前工作区重新打包 ⇒ 破坏'两条通道同一份字节'）。手动补发入口：Actions → Publish to npm → Run workflow。见 README §10 与 docs/05「发布-同步纪律」。",
   "repository": { "type": "git", "url": "git+https://github.com/zbsph/dsh-ppt-studio.git" },

@@ -2612,6 +2612,89 @@ ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz
     `README npm 位置=${npmAt}｜资产 URL 位置=${assetAt}｜手册=${manualText53.includes(manualCmd)}｜docs/05=${docs05Text.includes(npmCmd)}`)
 }
 
+// ── 54. 媒体链路：预览与成品必须对齐（2026-09-26 审计修复的三处真缺陷）──────────────────────
+// ① 不同目录**同名**媒体：旧实现 addMedia 按完整路径去重、但包内部件名与 rels Target 都取 basename
+//    ⇒ 两张不同的图塌成同一个部件（后写覆盖先写）——**成品静默用错图**，而图数量 parity 依旧 2/2、ok=true。
+// ② 非 ASCII/空格文件名：预览 handler 不解 percent-encoding ⇒ 图已拷进预览根却 404（导出正常）。
+// ③ `media/子目录/`：旧 buildPreview 把目录条目当文件 copyFile ⇒ EPERM 整体失败（不是"缺图"）。
+// 另附带一条守门：ASCII 且唯一的部件名**必须保持原名**（既有工程产物零变化）。
+{
+  const { registerTools: regTools54 } = await import('../lib/tools.js')
+  const { previewFileFor } = await import('../lib/preview-server.js')
+  const fsp = await import('node:fs/promises')
+  const mlWork = join(smokeDir, '.tmp-media-link')
+  await fsp.rm(mlWork, { recursive: true, force: true })
+  await fsp.mkdir(join(mlWork, 'pages'), { recursive: true })
+  await fsp.mkdir(join(mlWork, 'media', 'a'), { recursive: true })
+  await fsp.mkdir(join(mlWork, 'media', 'b'), { recursive: true })
+  const pngA = readFileSync(join(root, 'examples', 'smoke', 'media-test.png'))
+  const pngB = readFileSync(join(root, 'templates', 'academic-white', 'preview.png'))
+  await fsp.writeFile(join(mlWork, 'media', 'a', 'logo.png'), pngA)
+  await fsp.writeFile(join(mlWork, 'media', 'b', 'logo.png'), pngB) // 同名、内容不同
+  await fsp.writeFile(join(mlWork, 'media', '中文 图.png'), pngA) // 非 ASCII + 空格
+  await fsp.writeFile(join(mlWork, 'media', 'plain.png'), pngA) // ASCII 且唯一 → 必须保持原名
+  await fsp.writeFile(join(mlWork, 'deck.yaml'), ['version: 1', 'title: media-link', 'size: [960, 540]', 'theme:', '  colors: {primary: "#2563EB"}', 'pages:', '  - pages/01.yaml', ''].join('\n'))
+  const imgEl = (id, x, src) => [`  - elementId: ${id}`, '    elementType: image', `    bounds: [${x}, 40, 200, 200]`, `    src: ${src}`]
+  await fsp.writeFile(join(mlWork, 'pages', '01.yaml'), ['pageType: content', 'elements:', ...imgEl('a', 20, 'media/a/logo.png'), ...imgEl('b', 240, 'media/b/logo.png'), ...imgEl('cn', 460, 'media/中文 图.png'), ...imgEl('plain', 680, 'media/plain.png'), ''].join('\n'))
+
+  const expML = await exportPptx(await resolveDeck(mlWork), { out: join(mlWork, 'out.pptx') })
+  const zipML = zipRead(readFileSync(expML.file))
+  const parts = [...zipML.keys()].filter((k) => k.startsWith('ppt/media/'))
+  const bufOf = (k) => Buffer.from(zipML.get(k))
+  const sameA = parts.filter((k) => bufOf(k).equals(pngA)).length
+  const sameB = parts.filter((k) => bufOf(k).equals(pngB)).length
+  const relsML = String(zipML.get('ppt/slides/_rels/slide1.xml.rels'))
+  const targets = [...relsML.matchAll(/Target="\.\.\/media\/([^"]+)"/g)].map((m) => m[1])
+  ok('§54 导出：不同目录**同名**媒体各占一个部件（不再一张图顶掉另一张），且 rels Target 与包内条目一一对应',
+    parts.length === 4 && sameA === 3 && sameB === 1 && targets.length === 4 && targets.every((t) => zipML.has('ppt/media/' + t)),
+    `部件=${JSON.stringify(parts)}｜A内容×${sameA}｜B内容×${sameB}｜rels=${JSON.stringify(targets)}`)
+  ok('§54 导出：ASCII 且唯一的部件名**保持原名**（既有产物零变化），改名只有 2 个且原因可见',
+    parts.includes('ppt/media/plain.png') && parts.includes('ppt/media/logo.png')
+      && (expML.mediaRenamed ?? []).length === 2 && (expML.mediaPlaceholders ?? []).length === 0,
+    `plain 原名=${parts.includes('ppt/media/plain.png')}｜改名=${JSON.stringify(expML.mediaRenamed ?? [])}`)
+  ok('§54 导出：媒体 parity 自证（不同 srcPath 数 == 包内媒体部件数）——这条才抓得到"两张图塌成一个部件"',
+    expML.parity?.mediaExp === 4 && expML.parity?.mediaOut === 4 && expML.parity?.ok === true,
+    `mediaExp=${expML.parity?.mediaExp} mediaOut=${expML.parity?.mediaOut} ok=${expML.parity?.ok}`)
+
+  // 预览：子目录必须被递归镜像；非 ASCII 名必须能解析（percent-decode）
+  const pvML = await buildPreview(mlWork)
+  const nested = existsSync(join(pvML.previewRoot, 'media', 'a', 'logo.png'))
+  const cnCopied = existsSync(join(pvML.previewRoot, 'media', '中文 图.png'))
+  const encoded = encodeURIComponent('media/中文 图.png').replace(/%2F/gi, '/')
+  const pEnc = previewFileFor(pvML.previewRoot, encoded)
+  const pNested = previewFileFor(pvML.previewRoot, 'media/a/logo.png')
+  ok('§54 预览：`media/子目录/` 递归镜像 + 非 ASCII 名可服务（旧实现是 EPERM 整体失败 + 中文名 404）',
+    nested && cnCopied && pEnc === join(pvML.previewRoot, 'media', '中文 图.png') && existsSync(pEnc) && existsSync(pNested),
+    `子目录已镜像=${nested}｜中文已镜像=${cnCopied}｜编码路径解析=${existsSync(pEnc)}`)
+  const trav1 = previewFileFor(pvML.previewRoot, 'media/../secret.txt')
+  const trav2 = previewFileFor(pvML.previewRoot, '../outside.html')
+  const malformed = previewFileFor(pvML.previewRoot, '%E4%B8%AD%ZZ.png')
+  const dotted = previewFileFor(pvML.previewRoot, 'media/a..b.png')
+  ok('§54 预览：`..` 越级与畸形 percent-encoding 仍被拦，而文件名里的 `..` 不被误杀（安全边界没被 decode 破坏）',
+    trav1 === null && trav2 === null && malformed === null && dotted !== null,
+    `media/../secret.txt=${trav1 === null ? '拦' : trav1}｜../outside.html=${trav2 === null ? '拦' : trav2}｜畸形=${malformed === null ? '拦' : malformed}｜a..b.png=${dotted !== null ? '放行' : '误杀'}`)
+
+  // 门禁（局部）：真跑 ppt_verify handler，验证"只审部分页"不再打印与整册通过同形的门禁行
+  const gWork = join(smokeDir, '.tmp-verify-scope')
+  await fsp.rm(gWork, { recursive: true, force: true })
+  await fsp.mkdir(join(gWork, 'pages'), { recursive: true })
+  await fsp.writeFile(join(gWork, 'deck.yaml'), ['version: 1', 'title: scope', 'size: [960, 540]', 'theme:', '  colors: {primary: "#2563EB"}', '  textStyles:', '    body: {fontSize: 16, color: "$primary"}', 'pages:', '  - pages/01.yaml', '  - pages/02.yaml', ''].join('\n'))
+  await fsp.writeFile(join(gWork, 'pages', '01.yaml'), ['pageType: content', 'elements:', '  - elementId: bad', '    elementType: shape', '    kind: rect', '    bounds: [900, 520, 100, 60]', '    fill: "#2563EB"', ''].join('\n'))
+  await fsp.writeFile(join(gWork, 'pages', '02.yaml'), ['pageType: content', 'elements:', '  - elementId: ok1', '    elementType: text', '    bounds: [40, 40, 300, 40]', '    content: {text: "干净页", style: "$body"}', ''].join('\n'))
+  const captured = new Map()
+  regTools54({ effect: (cb) => { cb(); return () => {} }, tools: { register: (def) => { captured.set(def.name, def) } }, get: () => undefined })
+  const vTool = captured.get('ppt_verify')
+  const fullOut = String(await vTool.execute({ dir: gWork }, {}))
+  const partOut = String(await vTool.execute({ dir: gWork, pages: '2' }, {}))
+  ok('§54 门禁（局部）：pages= 只审部分页时门禁行必须带范围，不得与整册"✓ 通过"同形（工具自述要防的正是静默漏检）',
+    /✗ \d+ 个错误/.test(fullOut)
+      && /门禁（局部）：/.test(partOut) && /其余 1 页\*\*本次未检查\*\*/.test(partOut) && !/门禁：✓ 通过/.test(partOut),
+    `整册=「${(fullOut.match(/门禁[^\n]*/) ?? [''])[0].slice(0, 60)}」｜局部=「${(partOut.match(/门禁[^\n]*/) ?? [''])[0].slice(0, 80)}」`)
+
+  await fsp.rm(mlWork, { recursive: true, force: true })
+  await fsp.rm(gWork, { recursive: true, force: true })
+}
+
 // 37.10 【必须是最后一条断言】引用计数自证：文档里 "smoke … N 断言" 必须等于本次真实断言总数。
 // 历史形状：加断言后 README×3 + docs/02 + docs/06×2 + 手册 全靠人工同步，迟早漏一处。
 // 只扫"当前状态"文档（README / 技术报告 / 评审测试矩阵 / 使用手册）；docs/01/03/04 里的历史数字是记录，不动。

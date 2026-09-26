@@ -3,7 +3,7 @@
  * /ppt                                    → 状态查询
  * /ppt on|off                             → 强制进入/退出工作流
  * /ppt free|mid|strict                    → 强制协作模式
- * /ppt fidelity strict|auto|free [--page N / --dir D]
+ * /ppt fidelity strict|auto|free [--dir D]     （--page 未实现 → 明确拒绝，见分支内注释）
  * /ppt review none|points|every
  * /ppt engine pptd|python-pptx|pptxgenjs
  * /ppt quality quick|standard|audit
@@ -59,18 +59,19 @@ async function handle(invocation) {
     if (cmd === 'fidelity') {
       const v = (args.split(' ')[0] ?? '').toLowerCase()
       if (!['strict', 'auto', 'free'].includes(v)) return err('fidelity 取值 strict|auto|free')
+      const pageN = argValue(args, '--page')
+      if (pageN !== undefined && pageN !== '') {
+        // 2026-09-26：`--page` 此前是**空操作却回执"已记录"**（算了 idx 不用、`for (…){ void p }` 空循环、
+        // saveProject 无语义写入），而页级 fidelity 在 DSL/schema/项目 state 里**根本不存在**
+        // （docs/01 §5 C5：「页级覆盖字段未做（待定）」）。按本文件既有的诚实先例处理：
+        // engine 分支对未实现的 pptxgenjs 就是"明确拒绝，不装作成功"。这里一并不再改任何状态。
+        return err(`页级 fidelity 未实现：--page ${pageN} 不会改变任何东西（页级字段在 DSL 与 state 里都不存在，见 docs/01 §5 C5）。
+  · 现在只有**会话级**：/ppt fidelity ${v}
+  · 若确实要"某几页 strict、其余 free"，请明确提出——那是新特性（需先定 DSL 字段与门禁语义），不在修复范围。`)
+      }
       state.fidelity = v
       await save()
-      const pageN = argValue(args, '--page')
-      if (pageN && dir) {
-        const proj = await loadProject(dir)
-        proj.spec = proj.spec ?? {}
-        const idx = Number(pageN) - 1
-        for (const p of (proj.spec.pages ?? [])) { void p }
-        await saveProject(dir, proj)
-        return ok(`✓ 会话忠实度=${v}${pageN ? `（--page ${pageN} 已记录，页面级 fidelity 由模型写入 spec.pages）` : ''}`)
-      }
-      return ok(`✓ 内容忠实度=${v}`)
+      return ok(`✓ 会话忠实度=${v}（记录/展示用：当前版本它不改变门禁与流程，只回显在工作流提示与状态行）`)
     }
     if (cmd === 'review') {
       const v = (args.split(' ')[0] ?? '').toLowerCase()

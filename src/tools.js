@@ -541,7 +541,7 @@ export function registerTools(ctx) {
           const ctx1 = await loadCtx(dir)
           const r = await renderDeck(ctx1, {})
           const v = verifyDeck(r.layout)
-          const errors = v.text.split('\n').filter((l) => l.includes('[✗]')).length
+          const errors = v.errors.length
           const addedNote = added.length
             ? `\n已写入声明：${added.map((a) => `第${a.page}页 +${a.added}对`).join('，')}`
             : '\n未发现可自动声明的警告级重叠（全部已声明/内容互压/豁免）。'
@@ -559,13 +559,15 @@ export function registerTools(ctx) {
           layout = r.layout
         }
         let localNote = ''
+        let pageScope = null
         if (pagesSel) {
           const before = (layout.pages ?? []).length
           layout = { ...layout, pages: (layout.pages ?? []).filter((p) => pagesSel.has(p.index + 1)) }
-          localNote = `\n\n> 局部校验：仅审阅第 [${[...pagesSel].sort((a, b) => a - b).join(', ')}] 页（共 ${before} 页；其余页本次未检查）`
+          pageScope = { sel: [...pagesSel].sort((a, b) => a - b), covered: pagesSel.size, total: before }
+          localNote = `\n\n> 局部校验：仅审阅第 [${pageScope.sel.join(', ')}] 页（共 ${before} 页；其余页本次未检查）`
         }
         const v = verifyDeck(layout)
-        const errors = v.text.split('\n').filter((l) => l.includes('[✗]')).length
+        const errors = v.errors.length
         // M2：实测交叉（D3：实测=终审、估算=预检）
         let measuredText = ''
         let measuredErrors = 0
@@ -585,7 +587,16 @@ export function registerTools(ctx) {
         }
         const gate = errors + measuredErrors
         const head = v.text
-        return `# 数字审阅${localNote}\n${head}${measuredText}\n\n---\n门禁：${gate === 0 ? '✓ 通过' : `✗ ${gate} 个错误（必须清零${measuredErrors ? `，含 M2 实测 ${measuredErrors} 个` : ''}`}\n${pptxSnapshotText}${degradeNote}`
+        // 门禁行必须带**审阅范围**（2026-09-26 修复"局部审阅假绿"）：pages= 生效时，旧实现把
+        // `layout.pages` 先过滤再计数，于是"只审 1 页且该页干净"会打印与整册通过**完全同形**的
+        // `门禁：✓ 通过`——而本工具自述写着"不改写 layout.json（防部分校验静默漏检其余页）"
+        // （tools.js 的 pages 参数说明 / docs/02 §174）⇒ 用户与模型会得出"整册通过"的错误结论。
+        const gateText = gate === 0
+          ? (pageScope
+            ? `✓ 选中的 ${pageScope.covered} 页通过 —— 其余 ${Math.max(0, pageScope.total - pageScope.covered)} 页**本次未检查**（要整册结论请去掉 pages 重跑）`
+            : '✓ 通过')
+          : `✗ ${gate} 个错误（必须清零${measuredErrors ? `，含 M2 实测 ${measuredErrors} 个` : ''}）`
+        return `# 数字审阅${localNote}\n${head}${measuredText}\n\n---\n门禁${pageScope ? '（局部）' : ''}：${gateText}\n${pptxSnapshotText}${degradeNote}`
       } catch (error) {
         return `✗ 验证失败：\n${errText(error)}`
       }
@@ -654,10 +665,16 @@ export function registerTools(ctx) {
           const phNote = r.mediaPlaceholders?.length
             ? `\n\n⚠ 缺失媒体 ${r.mediaPlaceholders.length} 个（${r.mediaPlaceholders.join('、')}）已用 1×1 白色占位导出——请替换真实图片或删除页面引用（可重新 ppt_import 提取或人工补图）`
             : ''
+          // 媒体部件改名必须可见（2026-09-26）：同名冲突/非 ASCII 名会让包内部件名变化——内容不变，
+          // 但用户至少要能看到"发生过什么"，而不是只看到 parity 数字。
+          const renamedNote = r.mediaRenamed?.length
+            ? `\n\nℹ 媒体部件改名 ${r.mediaRenamed.length} 个（原因：不同目录同名，或文件名含非 ASCII/空格；` +
+              `PPT 里的图片内容与位置不变，改的只是包内部件名）：\n${r.mediaRenamed.map((x) => `   - ${x}`).join('\n')}`
+            : ''
           const parityNote = r.parity
             ? (r.parity.ok
-              ? `\n✅ 元素 parity 回读：表 ${r.parity.tablesExp}/${r.parity.tablesOut} · 图 ${r.parity.imagesExp}/${r.parity.imagesOut} · 线方向 ${r.parity.linesExp ?? 0}/${r.parity.linesOut ?? 0}（逐条从 OOXML 反推端点自证） · 结构合法（无 PowerPoint 弃帧类嵌套 xfrm）`
-              : `\n✗ 元素 parity 不一致：表 期望${r.parity.tablesExp}/实际${r.parity.tablesOut} · 图 期望${r.parity.imagesExp}/实际${r.parity.imagesOut} · 线 期望${r.parity.linesExp ?? 0}/实际${r.parity.linesOut ?? 0}/方向错${r.parity.linesWrong ?? 0} · 非法帧 ${r.parity.illegalFrames}——请勿交付，附本输出反馈插件团队`)
+              ? `\n✅ 元素 parity 回读：表 ${r.parity.tablesExp}/${r.parity.tablesOut} · 图 ${r.parity.imagesExp}/${r.parity.imagesOut} · 媒体部件 ${r.parity.mediaExp ?? '?'}/${r.parity.mediaOut ?? '?'} · 线方向 ${r.parity.linesExp ?? 0}/${r.parity.linesOut ?? 0}（逐条从 OOXML 反推端点自证） · 结构合法（无 PowerPoint 弃帧类嵌套 xfrm）`
+              : `\n✗ 元素 parity 不一致：表 期望${r.parity.tablesExp}/实际${r.parity.tablesOut} · 图 期望${r.parity.imagesExp}/实际${r.parity.imagesOut} · 媒体 期望${r.parity.mediaExp ?? '?'}/实际${r.parity.mediaOut ?? '?'} · 线 期望${r.parity.linesExp ?? 0}/实际${r.parity.linesOut ?? 0}/方向错${r.parity.linesWrong ?? 0} · 非法帧 ${r.parity.illegalFrames}——请勿交付，附本输出反馈插件团队`)
             : ''
           // P8（测试反馈）：真渲染抽查策略——含复杂元素的页必须覆盖（P1 事故的直接防线）
           const riskyPages = (ctx0.pages ?? []).map((p, i) => {
@@ -667,7 +684,7 @@ export function registerTools(ctx) {
           const renderNote = riskyPages.length
             ? `\nP8 真渲染抽查：建议优先覆盖含 table/chart/image/custGeom 的页 → 第 ${riskyPages.join('、')} 页（每类至少一页；audit 档导出自动全页真渲染）`
             : ''
-          return `✓ 已导出（pptd 引擎，${r.slides} 页）：${r.file}${fit}${phNote}${parityNote}${renderNote}${floorNote}${chartNote}${await withAudit(r.file)}${engineNote}`
+          return `✓ 已导出（pptd 引擎，${r.slides} 页）：${r.file}${fit}${phNote}${renamedNote}${parityNote}${renderNote}${floorNote}${chartNote}${await withAudit(r.file)}${engineNote}`
         } catch (error) {
           // 自动回退链（C1 决定）：auto 且 pptd 硬失败 → 有 python-pptx 则兜底并醒目标注降级（绝不静默）
           if (eff.allowFallback) {

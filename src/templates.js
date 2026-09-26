@@ -211,9 +211,12 @@ export async function registerTemplate(dir, opts = {}, { targetDir = userTemplat
     const ctx3 = await resolveDeck(tplDir)
     const r3 = await renderDeck(ctx3, { out: '_cleanup-tmp' })
     const v3 = verifyDeck(r3.layout)
+    // 结构化消费（2026-09-26）：旧实现 `line.match(/\[✗\] (\w+)/)` 用的是 `\w+`，而所有门禁码都带连字符
+    // （out-of-page / text-overflow / theme-conformance…）⇒ 直方图里全是截断码（`out×3`、`text×2`），
+    // 而这份报告是模型读的。改用 verifyDeck 新增的结构化 errors。
     const detail = {}
-    for (const line of v3.text.split('\n').filter((l) => l.includes('[✗]'))) {
-      const code = (line.match(/\[✗\] (\w+)/) ?? [])[1] ?? 'other'
+    for (const f of v3.errors) {
+      const code = f.code ?? 'other'
       detail[code] = (detail[code] ?? 0) + 1
     }
     cleanup = { declared: cleanup.declared, outSafe, remainingErrors: Object.values(detail).reduce((a, b) => a + b, 0), detail }
