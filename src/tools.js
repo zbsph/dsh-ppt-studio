@@ -733,8 +733,8 @@ export function registerTools(ctx) {
             : ''
           const parityNote = r.parity
             ? (r.parity.ok
-              ? `\n✅ 元素 parity 回读：表 ${r.parity.tablesExp}/${r.parity.tablesOut} · 图 ${r.parity.imagesExp}/${r.parity.imagesOut} · 媒体部件 ${r.parity.mediaExp ?? '?'}/${r.parity.mediaOut ?? '?'} · 线方向 ${r.parity.linesExp ?? 0}/${r.parity.linesOut ?? 0}（逐条从 OOXML 反推端点自证） · 结构合法（无 PowerPoint 弃帧类嵌套 xfrm）`
-              : `\n✗ 元素 parity 不一致：表 期望${r.parity.tablesExp}/实际${r.parity.tablesOut} · 图 期望${r.parity.imagesExp}/实际${r.parity.imagesOut} · 媒体 期望${r.parity.mediaExp ?? '?'}/实际${r.parity.mediaOut ?? '?'} · 线 期望${r.parity.linesExp ?? 0}/实际${r.parity.linesOut ?? 0}/方向错${r.parity.linesWrong ?? 0} · 非法帧 ${r.parity.illegalFrames}——请勿交付，附本输出反馈插件团队`)
+              ? `\n✅ 元素 parity 回读：表 ${r.parity.tablesExp}/${r.parity.tablesOut} · 图 ${r.parity.imagesExp}/${r.parity.imagesOut} · 媒体部件 ${r.parity.mediaExp ?? '?'}/${r.parity.mediaOut ?? '?'} · 线方向 ${r.parity.linesExp ?? 0}/${r.parity.linesOut ?? 0} · **文本内容 ${r.parity.textExp ?? 0}/${r.parity.textExp ?? 0}** · 图表图形 ${r.parity.chartShapesExp ?? 0}/${r.parity.chartShapesOut ?? 0}（均逐条从 OOXML 反推自证） · 结构合法（无 PowerPoint 弃帧类嵌套 xfrm）`
+              : `\n✗ 元素 parity 不一致：表 期望${r.parity.tablesExp}/实际${r.parity.tablesOut} · 图 期望${r.parity.imagesExp}/实际${r.parity.imagesOut} · 媒体 期望${r.parity.mediaExp ?? '?'}/实际${r.parity.mediaOut ?? '?'} · 线 期望${r.parity.linesExp ?? 0}/实际${r.parity.linesOut ?? 0}/方向错${r.parity.linesWrong ?? 0} · 文本缺 ${(r.parity.textMissing ?? []).length} 处${(r.parity.textMissing ?? []).length ? `（${r.parity.textMissing.slice(0, 3).join('；')}${r.parity.textMissing.length > 3 ? '…' : ''}）` : ''} · 图表图形 期望${r.parity.chartShapesExp ?? 0}/实际${r.parity.chartShapesOut ?? 0} · 非法帧 ${r.parity.illegalFrames}——请勿交付，附本输出反馈插件团队`)
             : ''
           // P8（测试反馈）：真渲染抽查策略——含复杂元素的页必须覆盖（P1 事故的直接防线）
           const riskyPages = (ctx0.pages ?? []).map((p, i) => {

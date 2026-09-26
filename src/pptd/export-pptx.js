@@ -209,14 +209,54 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
   const mediaExpSet = new Set()
   for (const s of slides) for (const m of s.media) mediaExpSet.add(m.srcPath)
   const mediaOut = Object.keys(files).filter((k) => /^ppt\/media\//.test(k)).length
+  // 内容级回读（2026-09-26 第二轮 启发 A）：**产物里到底有没有我们打算写的那句话、那格数据**。
+  // 为什么必须补：此前 parity 只有**计数**（表/图/线/媒体）+ audit 的页数/尺寸/字号 ⇒
+  // "预览层对、成品层丢字/串行/表格漏格"这一类抓不到。官方 office 技能同款纪律：
+  // "Reopen the file to check the requested edits." 本检查**从产物反推内容**，不是读中间层。
+  const textMissing = []
+  let textExp = 0
+  let chartShapesExp = 0
+  let chartShapesOut = 0
+  for (let i = 0; i < slides.length; i++) {
+    const slot = (ctx.pages ?? [])[i]
+    if (slot === undefined) continue
+    // `ctx.pages[i]` = `{ file, ref, page, name, index }`，元素在 `slot.page.elements`（DSL 原文：`elementId`）
+    const elements = slot.page?.elements ?? []
+    const pageNo = (slot.index ?? i) + 1
+    const raw = files[`ppt/slides/slide${i + 1}.xml`]
+    const txt = typeof raw === 'string' ? raw : String(raw ?? '')
+    for (const el of elements) {
+      const id = String(el.elementId ?? el.id ?? '?')
+      const want = []
+      if (el.elementType === 'text') {
+        for (const line of String(el.content?.text ?? '').split('\n')) if (line.trim() !== '') want.push(line)
+      } else if (el.elementType === 'table') {
+        for (const v of [...(el.cols ?? []), ...((el.rows ?? []).flat())]) {
+          if (v !== null && v !== undefined && String(v) !== '') want.push(String(v))
+        }
+      }
+      for (const w of want) {
+        textExp++
+        if (!txt.includes(xm(w))) textMissing.push(`第 ${pageNo} 页/${id}: ${w.slice(0, 24)}`)
+      }
+      if (el.elementType === 'chart') {
+        // 图表是**矢量拼绘**（形状不是图表对象）⇒ 内容级判据只能是"该画的图形个数对不对"。
+        chartShapesExp += chartShapeCountOf(el)
+        const re = new RegExp(`name="${escapeRe(xm(id))}-`, 'g')
+        chartShapesOut += (txt.match(re) ?? []).length
+      }
+    }
+  }
   report.parity = {
     tablesExp, tablesOut, imagesExp, imagesOut, illegalFrames: illegal,
     linesExp: lineProof.exp, linesOut: lineProof.out, linesWrong: lineProof.wrong.length,
     notesExp, notesOut,
     mediaExp: mediaExpSet.size, mediaOut,
+    textExp, textMissing, chartShapesExp, chartShapesOut,
     ok: tablesExp === tablesOut && imagesExp === imagesOut && illegal === 0 &&
       lineProof.exp === lineProof.out && lineProof.wrong.length === 0 &&
-      notesExp === notesOut && notesRelOk && mediaExpSet.size === mediaOut,
+      notesExp === notesOut && notesRelOk && mediaExpSet.size === mediaOut &&
+      textMissing.length === 0 && chartShapesExp === chartShapesOut,
   }
 
   // out：绝对路径原样使用；相对路径相对 deck 目录（反馈 E1 ★）
@@ -462,6 +502,24 @@ function tableFrame(el) {
 }
 
 // ── chart（矢量拼绘）───────────────────────────────────────────────────────
+/** 正则元字符转义（元素 id 可能含 `(`、`.` 等；用于"这个图表的形状有没有真的写进产物"）。 */
+function escapeRe(s) {
+  return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+/**
+ * 一个 chart 元素**应当**在产物里画出多少个形状（与下面的 `chartSp` 一一对应；改 chartSp 必须同步改这里）。
+ * bar：每个数值一根矩形；line：每系列 (点数−1) 条连接线 + 每个点一个圆点；pie：每个正数一个扇区。
+ */
+function chartShapeCountOf(el) {
+  const data = chartData(el.chart)
+  const kind = el.chart?.type
+  if (kind === 'bar') return data.series.reduce((n, s) => n + s.values.length, 0)
+  if (kind === 'line') return data.series.reduce((n, s) => n + Math.max(0, s.values.length - 1) + s.values.length, 0)
+  if (kind === 'pie') return (data.series[0]?.values ?? []).filter((v) => v > 0).length
+  return 0
+}
+
 function chartSp(el) {
   const x = el.bounds.x
   const y = el.bounds.y

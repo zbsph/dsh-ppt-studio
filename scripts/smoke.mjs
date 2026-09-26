@@ -2952,6 +2952,36 @@ ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz
     `assembly=${out56.assembly?.isolation}｜capabilities=${Object.keys(out56.capabilities ?? {}).join(',')}`)
 }
 
+// ── 57. 成品内容自证（2026-09-26 第二轮 启发 A）：从**产物**反推"该写的字/该画的图形在不在" ──────
+// 为什么必须补：此前 parity 只有计数（表/图/线/媒体）+ audit 的页数/尺寸/字号 ⇒
+// "预览层对、成品层丢字/串行/表格漏格"这一类抓不到；图表更是**一条 parity 都没有**。
+{
+  const work57 = join(smokeDir, '.tmp-content-proof')
+  await rm(work57, { recursive: true, force: true })
+  await mkdir(join(work57, 'pages'), { recursive: true })
+  await writeFile(join(work57, 'deck.yaml'), ['version: 1', 'title: content-proof', 'size: [960, 540]', 'theme:',
+    '  colors: {primary: "#2563EB", text: "#1F2937"}', '  textStyles:',
+    '    body: {fontSize: 16, color: "$text"}', 'pages:', '  - pages/01.yaml', ''].join('\n'), 'utf8')
+  await writeFile(join(work57, 'pages', '01.yaml'), ['pageType: content', 'elements:',
+    '  - elementId: t1', '    elementType: text', '    bounds: [40, 40, 700, 60]',
+    '    content: {text: "第一行 <a&b> \\"引号\\"", style: "$body"}',
+    '  - elementId: tb', '    elementType: table', '    bounds: [40, 120, 400, 90]',
+    '    cols: ["指标", "值"]', '    rows: [["营收 <2026>", "1,234"], ["毛利 & 净利", "56%"]]',
+    '  - elementId: ch57', '    elementType: chart', '    bounds: [40, 240, 500, 200]',
+    '    chart: {type: bar, data: {cols: ["季度", "值"], rows: [["Q1", 12], ["Q2", 18]]}}',
+    '  - elementId: t2', '    elementType: text', '    bounds: [560, 40, 360, 40]',
+    '    content: {text: "第二行\\n第三行", style: "$body"}', ''].join('\n'), 'utf8')
+  const r57 = await exportPptx(await resolveDeck(work57), { out: join(work57, 'out.pptx') })
+  const p57 = r57.parity ?? {}
+  ok('§57 成品内容自证：文本/表格内容在产物里**逐条**能反查到（含 <>& 引号与 \\n 多行）——"预览对、成品丢字"这类抓得到',
+    (p57.textExp ?? 0) >= 8 && (p57.textMissing ?? ['x']).length === 0 && p57.ok === true,
+    `textExp=${p57.textExp}｜缺失=${JSON.stringify(p57.textMissing ?? null)}｜ok=${p57.ok}`)
+  ok('§57 成品内容自证：图表"该画几个图形"与产物一致（此前 parity **完全没数图表**）',
+    p57.chartShapesExp === 2 && p57.chartShapesOut === 2,
+    `期望=${p57.chartShapesExp} 实际=${p57.chartShapesOut}`)
+  await rm(work57, { recursive: true, force: true })
+}
+
 // 37.10 【必须是最后一条断言】引用计数自证：文档里 "smoke … N 断言" 必须等于本次真实断言总数。
 // 历史形状：加断言后 README×3 + docs/02 + docs/06×2 + 手册 全靠人工同步，迟早漏一处。
 // 只扫"当前状态"文档（README / 技术报告 / 评审测试矩阵 / 使用手册）；docs/01/03/04 里的历史数字是记录，不动。
