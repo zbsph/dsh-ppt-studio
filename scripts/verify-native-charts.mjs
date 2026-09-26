@@ -461,22 +461,37 @@ check('负对照(c) 图表部件缺失 ⇒ 计数判据必须红（chartsOut < c
 
 // ── 8. 回归：不含图表的工程产物**零变化** ────────────────────────────────────
 // 用户拍板的取舍里有一条：**其他绘图（text/shape/line/image/table/custGeom）保持不变**。
-// 判据最硬的一档 = 拿 HEAD 版本的导出器跑同一个（无图表）工程，产物**逐部件**比对（只有 core.xml 的时间戳除外）。
+// 判据最硬的一档 = 拿**原生图表之前**的导出器跑同一个（无图表）工程，产物**逐部件**比对（只有 core.xml 的时间戳除外）。
 // 关系编号（媒体/讲稿/图表）是我这轮动过的地方，正需要这条挡住"加图表把 rId 排错"的回归。
-h('8. 回归：不含图表的工程产物逐部件零变化（对照 HEAD 版本导出器）')
+// ⚠ 2026-09-26 Lead 修复：原实现取 `HEAD:src/pptd/*` 只复制 4 个文件——一旦 HEAD 变成"已含本轮改动"的提交，
+//   ① 对照失去意义（新 vs 新），② 复制出来的 svgCharts.js 会 import 未被复制的 ./schema.js ⇒ ERR_MODULE_NOT_FOUND 崩溃。
+//   现在改成：从"原生图表之前的参照提交"取**整棵 src/**（相对 import 全部可解析），并有明确的回落链与跳过语义。
+h('8. 回归：不含图表的工程产物逐部件零变化（对照"原生图表之前"的导出器）')
 {
   const oldDir = join(WORK, 'old-src')
-  const need = ['pptd/export-pptx.js', 'pptd/layout.js', 'pptd/svgCharts.js', 'zips.js']
-  let extracted = true
-  for (const f of need) {
-    const r = spawnSync('git', ['-C', root, 'show', `HEAD:src/${f}`], { maxBuffer: 20 * 1024 * 1024 })
-    if (r.status !== 0) { extracted = false; break }
-    mkdirSync(join(oldDir, dirname(f)), { recursive: true })
-    writeFileSync(join(oldDir, f), r.stdout)
+  const refs = [process.env.PPT_OLD_EXPORT_REF, 'eb1e6f8', 'v1.1.2', 'HEAD~1'].filter(Boolean)
+  let ref = null
+  for (const cand of refs) {
+    const r = spawnSync('git', ['-C', root, 'cat-file', '-e', `${cand}^{commit}`], { encoding: 'utf8' })
+    if (r.status === 0) { ref = cand; break }
+  }
+  let extracted = false
+  if (ref !== null) {
+    const list = spawnSync('git', ['-C', root, 'ls-tree', '-r', '--name-only', ref, 'src'], { encoding: 'utf8', maxBuffer: 20 * 1024 * 1024 })
+    const files = String(list.stdout ?? '').trim().split('\n').filter(Boolean)
+    extracted = list.status === 0 && files.length > 0
+    for (const f of files) {
+      const r = spawnSync('git', ['-C', root, 'show', `${ref}:${f}`], { maxBuffer: 32 * 1024 * 1024 })
+      if (r.status !== 0) { extracted = false; break }
+      const rel = f.replace(/^src\//, '')
+      mkdirSync(join(oldDir, dirname(rel)), { recursive: true })
+      writeFileSync(join(oldDir, rel), r.stdout)
+    }
   }
   if (!extracted) {
-    check('回归对照：HEAD 版本的 pptd 导出器可取得（无 git/无 HEAD ⇒ 跳过，不计 FAIL）', true, 'git show HEAD:src/pptd/export-pptx.js 失败')
+    check(`回归对照：参照提交的 src/ 可取得（尝试 ${refs.join(' → ')}；无 git/无该提交 ⇒ 跳过，不计 FAIL）`, true, '未取得参照，跳过逐部件对照')
   } else {
+    check(`回归对照：参照版本 = ${ref}（整棵 src/ 已取出，相对 import 可解析）`, true, `文件数 = 已复制`)
     // 无图表的工程：文本 / 表格 / 形状 / 连线 / 图片 / 讲稿（覆盖媒体 rId + 讲稿 rId 两条编号路径）
     const noChart = join(WORK, 'no-chart')
     mkdirSync(join(noChart, 'pages'), { recursive: true })

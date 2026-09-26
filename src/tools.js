@@ -665,7 +665,7 @@ export function registerTools(ctx) {
 
   reg({
     name: 'ppt_export',
-    description: '导出 .pptx。engine 缺省 auto（=pptd 自研主引擎，图表矢量拼绘；hard 失败时自动回退 python-pptx 并醒目标注降级）；python-pptx 仅显式指定（其图表为原生可编辑图表 + 内嵌数据工作簿）。out 支持绝对路径（原样使用）或文件名（相对 deck 目录）。audit 质量档自动追加回读断言（页数/尺寸/最小字号）',
+    description: '导出 .pptx。engine 缺省 auto（=pptd 自研主引擎；**图表默认原生可编辑**：`ppt/charts/*.xml` + 内嵌数据工作簿，`chart.render: vector` 可回到矢量拼绘；hard 失败时自动回退 python-pptx 并醒目标注降级）；python-pptx 仅显式指定（其图表同为原生可编辑图表 + 内嵌数据工作簿）。out 支持绝对路径（原样使用）或文件名（相对 deck 目录）。audit 质量档自动追加回读断言（页数/尺寸/最小字号）',
     parameters: {
       dir: dirSchema,
       engine: { type: 'string', enum: ['auto', 'pptd', 'python-pptx'], description: '缺省 auto（=pptd）；python-pptx 需 python 环境' },
@@ -709,7 +709,7 @@ export function registerTools(ctx) {
           const py = findPython()
           if (!py.has) return `⚠ python-pptx 引擎不可用（未检测到带 python-pptx 的解释器）：${py.cmd ? '请给它 pip install python-pptx' : '未找到 python 解释器，也没探测到捆绑 Python'}。可改用默认 pptd 引擎。`
           const r = await runPythonExport(ctx0, outName)
-          return `✓ 已导出（python-pptx 引擎）：${r.file}\n图表为**原生可编辑图表**（带内嵌数据工作簿；引擎 A 的图表是矢量拼绘、不可改数据）。${await fallbackNote(ctx0, r)}${officialQaNote(r.file, ctx0.pages?.length)}${await withAudit(r.file)}${engineNote}`
+          return `✓ 已导出（python-pptx 引擎）：${r.file}\n图表为**原生可编辑图表**（带内嵌数据工作簿；与 pptd 默认通路一致——只有 chart.render=vector 才是不可改数据的矢量拼绘）。${await fallbackNote(ctx0, r)}${officialQaNote(r.file, ctx0.pages?.length)}${await withAudit(r.file)}${engineNote}`
         }
         try {
           const r = await exportPptx(ctx0, { out: outName, engine: 'pptd' })
