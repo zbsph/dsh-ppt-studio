@@ -2210,27 +2210,36 @@ ok('bundle：已转为公开发布 npm（无 private + publishConfig.access=publ
     `package=${rootPkg.name}｜patch=${insertRow?.name ?? '(缺)'}｜预设行=${presetRowName ?? '无（正确：随包预设不含插件行）'}`)
 }
 
-// 回滚后的装配形状（2026-09-18 第二次修订）：`apply()` 在**它被装入的那一层**注册全部能力面
-// （工具 / `/ppt` 命令 / `ppt_state` / 4 本技能）⇒ 装上插件，**所有会话**都能用。
-// 为什么放弃按预设隔离（两件都实测过，代码见 src/index.js 顶部）：
-//   ① 空白会话**切换**预设时 `agent-presets.swap` 会 `recompose(agent.ctx, id)`，但那一刻该 agent 已存在，
-//      我们的 `agent/created` 监听者才刚在这次组合中注册 ⇒ **不会**为它触发 ⇒ 切过去永远没有工具；
-//   ② 技能注册表分层、技能工具在**预设层**读，而我们只能注册到 agent 子层或 profile 根 ⇒ 技能永不出现。
+// 第四次修订（2026-09-26）**按预设隔离**：`apply()` 按"作用域档"分两种——
+//   · profile 档（`config.scope` 缺省/`auto`/`profile`）＝ 全局管道 + 预设声明；缺省档还追加一行
+//     **自定位行**（本包入口的绝对 `file://`），让本包被自己的预设再挂一次 ⇒ 预设档。
+//   · preset 档（`config.scope === 'preset'`，由自定位行挂载）＝ 22 工具 / `/ppt` 命令 / 4 技能 /
+//     语义路由 / 提示段**全部注册在预设作用域** ⇒ 只对该预设的会话可见（其他预设零影响）。
+// 安全网：声明失败、注册表不可见、或"声明成功但预设档实例未装配" ⇒ **自动回落全局能力面**。
+// 历史两次失败的正确结论（2026-09-26 源码 + 真宿主实测）：① 只对"插件自己按 agent 动态门控"成立；
+// ② 只对**裸包名/相对名**成立——绝对 `file://` 行不受 baseUrl 影响，正是它的解药。
 {
   const indexMod = await import('../lib/index.js')
+  const presetMod = await import('../lib/preset-delivery.js')
   let tools = 0, cmds = 0, skills = 0, listeners = 0
   const handlers = new Map()
-  const skillsSvc = { register: () => { skills++ } }
+  const skillsSvc = { register: () => { skills++ }, get: () => undefined }
   // 预设注册表 stub（**按 DSH 0.1.7 的真实契约**）：`register()` 对重复 id **抛错**
   // （真源码：`if (this.definitions.has(definition.id)) throw new Error(\`Duplicate agent preset: ${def.id}\`)`），
   // 并返回注销函数。于是"双挂载会不会把同一个预设声明两次"在这里是可判定的。
   const declared = []
   const seenIds = new Set()
+  // 真实时序：预设档实例是在 `register()` **期间**被挂载并 apply 的 ⇒ 隔离信号晚于 `apply()` 起点。
+  // 只有本开关打开时 stub 才在 register 里置位信号（用于"隔离生效"场景），别处一律不置位（走回落）。
+  let publishSignalOnRegister = false
   const registry = {
     register: (def) => {
       if (seenIds.has(def.id)) return Promise.reject(new Error(`Duplicate agent preset: ${def.id}`))
       seenIds.add(def.id)
       declared.push(def)
+      if (publishSignalOnRegister) {
+        globalThis.__pptScopeApplied = { at: Date.now(), presetId: def.id, pid: process.pid }
+      }
       return Promise.resolve(async () => { seenIds.delete(def.id) })
     },
   }
@@ -2247,65 +2256,134 @@ ok('bundle：已转为公开发布 npm（无 private + publishConfig.access=publ
     effect: (fn) => { fn(); return () => {} },
     logger: () => ({ info: () => {}, warn: () => {} }),
   })
-  // 装配防重计数是**进程级**（globalThis）：本节要自己从 0 起算，否则会被前面的用例带偏
-  delete globalThis.__pptCoreReg
-  indexMod.apply(makeCtx(), { presetIds: ['ppt'] })
+  // 装配防重 / 隔离信号都是**进程级**（globalThis）：本节要自己从 0 起算，否则会被前面的用例带偏。
   const flush = () => new Promise((r) => setTimeout(r, 0))
+  const grace = () => new Promise((r) => setTimeout(r, 600)) // 健康判定宽限 400ms + 余量
+  const resetAll = () => {
+    delete globalThis.__pptCoreReg
+    delete globalThis.__pptScopeApplied
+    declared.length = 0
+    seenIds.clear()
+  }
+
+  // ── 自定位行：隔离的载体（本包入口的**绝对 file:// URL**，预设行按注册表 baseUrl 解析 ⇒ 只有绝对名不受影响）
+  const selfRow = presetMod.selfPresetRow()
+  ok('§40 自定位行：指向本包入口的绝对 `file://` URL，且 `config.scope=preset` / `autoPreset=false`',
+    typeof selfRow?.name === 'string' && selfRow.name.startsWith('file:///') && /\/lib\/index\.js$/.test(selfRow.name)
+      && selfRow?.config?.scope === 'preset' && selfRow?.config?.autoPreset === false,
+    JSON.stringify(selfRow))
+  ok('§40 自定位行：入口文件真实存在（拿不到入口就不追加该行——宁可不隔离，也不加一行注定 broken 的）',
+    selfRow !== null && existsSync(fileURLToPath(selfRow.name)), String(selfRow?.name))
+
+  // ── 缺省档（auto）：声明 20 行（19 + 自定位行）→ 预设档实例未出现 ⇒ 自动回落全局 ────────────
+  resetAll()
+  indexMod.apply(makeCtx(), { presetIds: ['ppt'] })
   await flush() // 声明走的是异步队列（inject → register），让它落地
-  ok('回滚：apply 在**装入层**注册工具与命令面（22 工具 + /ppt 命令）——"装上即可用"',
-    tools === 22 && cmds >= 1, `tools=${tools} cmds=${cmds}`)
-  ok('回滚：4 本内嵌技能注册在**同一层**（技能注册表分层，技能工具在父层读——注册到子层就永远看不见）',
-    skills === 4, `skills=${skills}（应=4）`)
-  ok('回滚：隔离代码已移除（不再导出 mountForAgent，也不再用 roster 决定装配）',
-    indexMod.mountForAgent === undefined && tools === 22, `mountForAgent=${typeof indexMod.mountForAgent}｜tools=${tools}`)
-  // ── 0.1.7 的**真适配**：预设靠"向注册表声明"交付（写目录那条路已被上游删除）────────────
-  // 判据分三层：① 真的调到 register 了；② 声明形状对（id/名/序/行数/内容）；③ 双挂载不会声明两次。
-  const d0 = declared[0]
-  ok('0.1.7：预设靠 `agentPresets.register()` **声明**（不再写目录——上游已无目录发现路径）',
-    declared.length === 1 && d0?.id === 'ppt', `声明次数=${declared.length}｜id=${d0?.id ?? '(无)'}`)
-  ok('0.1.7：声明形状取自包内 `agent-presets/ppt/`（名字/简介/序号 + 19 条 standard 组合行）',
-    d0?.name === 'PPT 工作室' && d0?.order === 2 && d0?.plugins?.length === 19
-      && typeof d0?.description === 'string' && d0.description.length > 10,
-    `name=${d0?.name ?? '(无)'}｜order=${d0?.order}｜rows=${d0?.plugins?.length}｜desc=${d0?.description?.length ?? 0} 字`)
-  // `!!js` 必须**保真**成 Loader 认的 `{__jsExpr}`：降级成普通字符串会让
-  // `Boolean(<非空字符串>) === true` ⇒ Windows 上 pwsh 行被误停用（= 没有 shell）。
-  const rowOf = (def, id) => def?.plugins?.find((r) => r.id === id)
-  const bashD = rowOf(d0, 'tool-bash')?.disabled
-  const pwshD = rowOf(d0, 'tool-pwsh')?.disabled
-  ok('0.1.7：`!!js` 表达式保真为 `{__jsExpr}`（降级成字符串 ⇒ Windows 上 pwsh 行会被误停用）',
-    bashD?.__jsExpr === "process.platform === 'win32'" && pwshD?.__jsExpr === "process.platform !== 'win32'",
-    `bash=${JSON.stringify(bashD)}｜pwsh=${JSON.stringify(pwshD)}`)
-  const first = { tools, cmds, skills }
-  indexMod.apply(makeCtx(), { presetIds: ['ppt'] }) // 第二次装配（双挂载场景）
-  await flush()
-  ok('回滚：同进程第二次装配被防重拦下（首个生效 + 计数），不重复注册',
-    tools === first.tools && cmds === first.cmds && skills === first.skills,
-    `二次后 tools=${tools}（应=${first.tools}）cmds=${cmds} skills=${skills}｜refcount=${globalThis.__pptCoreReg?.count ?? '?'}`)
-  ok('0.1.7：双挂载也**不会重复声明**预设（真注册表对重复 id 直接 throw ⇒ 声明只发一次）',
-    declared.length === 1, `声明次数=${declared.length}（应=1）`)
-  ok('回滚：apply 装的全局管道仍在（预览路由/语义路由/提示段注入靠这些监听器）',
-    listeners >= 2, `listeners=${listeners}`)
+  ok('§40 缺省档：声明 20 行 = 19 条 standard 组合行 + 第 20 行自定位行（"只在预设里可见"靠它）',
+    declared.length === 1 && declared[0]?.plugins?.length === 20 && declared[0]?.plugins?.at(-1)?.id === 'ppt-studio-scope',
+    `声明=${declared.length} 次｜行数=${declared[0]?.plugins?.length}｜末行=${declared[0]?.plugins?.at(-1)?.id ?? '(无)'}`)
+  ok('§40 缺省档：健康判定期间**不注册**能力面（隔离生效时 profile 档必须零能力面）',
+    tools === 0 && cmds === 0 && skills === 0 && listeners === 0,
+    `tools=${tools} cmds=${cmds} skills=${skills} listeners=${listeners}`)
+  await grace()
+  ok('§40 自动回落：声明成功但预设档实例未装配 ⇒ 回落注册全局能力面（**功能不丢**，只是没隔离）',
+    tools === 22 && cmds >= 1 && skills === 4 && listeners >= 2
+      && presetMod.presetDeliveryStatus().isolation === 'profile-fallback',
+    `tools=${tools} cmds=${cmds} skills=${skills} listeners=${listeners}｜isolation=${presetMod.presetDeliveryStatus().isolation}`)
   let promptOk = false
   try {
     const h = handlers.get('system-prompt/assemble')
     const out = h ? await h({ sections: [] }, { agent: { session: { id: 'no-such-session-xyz' } } }, async () => ({ sections: [] })) : null
     promptOk = Boolean(out)
   } catch { promptOk = false }
-  ok('回滚：提示段注入不按预设门控（读不到会话状态时原样返回，不抛）', promptOk, promptOk ? '原样返回 ✓' : '未注册/抛错')
-  // 注册表缺失时必须**只告警不抛**（极简部署没有 agentPresets）：插件仍要完整可用
+  ok('§40 回落档：提示段注入仍在（读不到会话状态时原样返回，不抛）', promptOk, promptOk ? '原样返回 ✓' : '未注册/抛错')
+
+  // ── 隔离生效：预设档实例置位信号 ⇒ profile 档零能力面 ─────────────────────────────
+  resetAll()
+  const isoBase = { tools, cmds, skills, listeners }
+  publishSignalOnRegister = true // 忠实模拟：预设档实例在 register() 期间装配 ⇒ 信号晚于 apply 起点
+  indexMod.apply(makeCtx(), {})
+  await grace()
+  publishSignalOnRegister = false
+  ok('§40 隔离生效：预设档实例已装配 ⇒ profile 档**一个能力面都不注册**（其他预设零影响）',
+    tools === isoBase.tools && cmds === isoBase.cmds && skills === isoBase.skills && listeners === isoBase.listeners
+      && presetMod.presetDeliveryStatus().isolation === 'preset',
+    `增量 tools=${tools - isoBase.tools} cmds=${cmds - isoBase.cmds} skills=${skills - isoBase.skills} listeners=${listeners - isoBase.listeners}｜isolation=${presetMod.presetDeliveryStatus().isolation}`)
+
+  // ── 预设档（由自定位行挂载）：能力面 + 路由全在预设作用域；**不声明**预设 ─────────────────
+  resetAll()
+  const tierBase = { tools, cmds, skills, listeners }
+  indexMod.apply(makeCtx(), { scope: 'preset', autoPreset: false, presetIds: ['ppt'] })
+  await flush()
+  ok('§40 预设档：22 工具 + `/ppt` 命令 + 4 技能 + 2 监听器**全部注册在预设作用域**（隔离的实现主体）',
+    tools - tierBase.tools === 22 && cmds - tierBase.cmds >= 1 && skills - tierBase.skills === 4 && listeners - tierBase.listeners === 2,
+    `增量 tools=${tools - tierBase.tools} cmds=${cmds - tierBase.cmds} skills=${skills - tierBase.skills} listeners=${listeners - tierBase.listeners}`)
+  ok('§40 预设档：**不声明**预设（否则注册表对重复 id 直接 throw ⇒ 预设消失）',
+    declared.length === 0, `声明次数=${declared.length}`)
+  ok('§40 预设档：置位"预设档实例已装配"信号（profile 档据此判定隔离生效）',
+    typeof globalThis.__pptScopeApplied?.at === 'number' && globalThis.__pptScopeApplied.at > 0,
+    JSON.stringify(globalThis.__pptScopeApplied))
+
+  // ── 传统档（scope=profile）：不隔离、能力面全局，声明回到 19 行（不含自定位行）──────────────
+  resetAll()
+  const trBase = { tools, skills }
+  indexMod.apply(makeCtx(), { scope: 'profile' })
+  await grace()
+  ok('§40 传统档：能力面注册在装入层（全局可见），且声明**不含**自定位行（19 行）',
+    tools - trBase.tools === 22 && skills - trBase.skills === 4 && declared.length === 1
+      && declared[0]?.plugins?.length === 19 && declared[0]?.plugins?.at(-1)?.id !== 'ppt-studio-scope'
+      && presetMod.presetDeliveryStatus().isolation === 'profile',
+    `增量 tools=${tools - trBase.tools} skills=${skills - trBase.skills}｜行数=${declared[0]?.plugins?.length}｜isolation=${presetMod.presetDeliveryStatus().isolation}`)
+
+  // ── 注册表不可见：只告警不抛 + **立即**回落（不留"装上了却什么都没有"的窗口）──────────────
+  resetAll()
+  const noRegBase = { tools, skills }
   let noRegThrew = false
-  delete globalThis.__pptCoreReg
   try {
     indexMod.apply({
-      tools: { register: () => {} }, commands: { register: () => {} }, skills: skillsSvc,
-      get: () => undefined, inject: () => {}, on: () => {}, effect: (fn) => { fn(); return () => {} },
+      tools: { register: () => { tools++ } }, commands: { register: () => { cmds++ } }, skills: skillsSvc,
+      get: () => undefined, inject: () => {}, on: (ev, fn) => { listeners++; handlers.set(ev, fn) },
+      effect: (fn) => { fn(); return () => {} },
       logger: () => ({ info: () => {}, warn: () => {} }),
     }, {})
-    await flush()
+    // 真实场景：本部署**没有** agentPresets 服务 ⇒ `inject(['agentPresets'], cb)` 的回调**永不触发**
+    // （不是"触发并给 undefined"）⇒ 声明既不成功也不失败 ⇒ 必须靠兜底超时回落（否则零能力面）。
+    await new Promise((r) => setTimeout(r, 3400))
   } catch { noRegThrew = true }
-  ok('0.1.7：注册表不可用时只告警不抛（预设没了也不能让插件挂不上）',
-    noRegThrew === false, noRegThrew ? '装配抛错了' : '静默降级 ✓')
-  delete globalThis.__pptCoreReg
+  ok('§40 注册表不可见：只告警不抛，并靠**兜底超时**回落全局能力面（极简部署仍完整可用）',
+    // 注意：这个假 ctx 连 `skills` 服务都没有（`get` 恒 undefined）⇒ 技能数应为 0，不是 4。
+    noRegThrew === false && tools - noRegBase.tools === 22 && cmds >= 1
+      && presetMod.presetDeliveryStatus().isolation === 'profile-fallback',
+    `抛错=${noRegThrew}｜增量 tools=${tools - noRegBase.tools} cmds=${cmds}｜isolation=${presetMod.presetDeliveryStatus().isolation}`)
+
+  // ── 防重（按作用域）：同一 ctx 重复 apply 只装配一次 ───────────────────────────────
+  resetAll()
+  const dedupeCtx = makeCtx()
+  const ddBase = { tools }
+  indexMod.apply(dedupeCtx, {})
+  indexMod.apply(dedupeCtx, {})
+  await grace()
+  ok('§40 防重：同一作用域重复 apply 只装配一次（profile 与 preset 是两个不同作用域，各自只该装配一次）',
+    tools - ddBase.tools === 22 && declared.length === 1 && [...(globalThis.__pptCoreReg?.keys ?? [])].join() === 'profile',
+    `增量 tools=${tools - ddBase.tools}（应 22）｜声明=${declared.length}｜keys=${[...(globalThis.__pptCoreReg?.keys ?? [])].join()}`)
+  resetAll()
+  // ── 0.1.7 的**真适配**：预设靠"向注册表声明"交付（写目录那条路已被上游删除）────────────
+  // 判据分三层：① 真的调到 register 了；② 声明形状对（id/名/序/行数/内容）；③ 双挂载不会声明两次。
+  const declDirect = presetMod.presetDeclaration()
+  ok('§40 预设组合：名字/简介/序号取自包内 `agent-presets/ppt/`（19 条 standard 组合行；选择器里显示的就是这些）',
+    declDirect.name === 'PPT 工作室' && declDirect.order === 2 && declDirect.plugins.length === 19
+      && typeof declDirect.description === 'string' && declDirect.description.length > 10,
+    `name=${declDirect.name}｜order=${declDirect.order}｜行数=${declDirect.plugins.length}｜desc=${declDirect.description.length} 字`)
+  // `!!js` 必须**保真**成 Loader 认的 `{__jsExpr}`：降级成普通字符串会让
+  // `Boolean(<非空字符串>) === true` ⇒ Windows 上 pwsh 行被误停用（= 没有 shell）。
+  const rowOf = (def, id) => def?.plugins?.find((r) => r.id === id)
+  const bashD = rowOf(declDirect, 'tool-bash')?.disabled
+  const pwshD = rowOf(declDirect, 'tool-pwsh')?.disabled
+  ok('§40 预设组合：`!!js` 表达式保真为 `{__jsExpr}`（降级成字符串 ⇒ Windows 上 pwsh 行会被误停用）',
+    bashD?.__jsExpr === "process.platform === 'win32'" && pwshD?.__jsExpr === "process.platform !== 'win32'",
+    `bash=${JSON.stringify(bashD)}｜pwsh=${JSON.stringify(pwshD)}`)
+  ok('§40 隔离代码历史：`mountForAgent` 那套"插件自己按 agent 门控"仍不恢复（实现改走预设作用域）',
+    indexMod.mountForAgent === undefined, `mountForAgent=${typeof indexMod.mountForAgent}`)
 }
 
 // ── 41. 安装器 + 预设**声明**（2026-09-24 为 DSH 0.1.7-rc.1 重写）──────────────────────
@@ -2560,7 +2638,9 @@ ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz
   delete globalThis.__pptCoreReg
   delete globalThis.__pptRouteReg
   let applyThrew = null
-  try { indexMod2.apply(pipeCtx, { presetIds: ['ppt'] }) } catch (e) { applyThrew = e }
+  // 本节测的是**管道韧性**（附加能力坏掉只该降级），与隔离无关 ⇒ 用传统档（`scope: 'profile'`）
+  // 让能力面直接落在装入层；隔离路径的判定见 §40。
+  try { indexMod2.apply(pipeCtx, { scope: 'profile', presetIds: ['ppt'] }) } catch (e) { applyThrew = e }
   ok('§52 装配韧性：全局管道抛错时 apply 仍完成装配（22 工具 / 命令面 / 4 技能）——附加能力坏掉只该降级',
     applyThrew === null && pTools === 22 && pCmds >= 1 && pSkills === 4,
     `threw=${applyThrew ? String(applyThrew.message) : 'null'}｜tools=${pTools} cmds=${pCmds} skills=${pSkills}`)
@@ -2595,7 +2675,7 @@ ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz
   delete globalThis.__pptCoreReg
   delete globalThis.__pptRouteReg
   let injThrew = null
-  try { indexMod2.apply(injCtx, { presetIds: ['ppt'] }) } catch (e) { injThrew = e }
+  try { indexMod2.apply(injCtx, { scope: 'profile', presetIds: ['ppt'] }) } catch (e) { injThrew = e }
   await new Promise((r) => setTimeout(r, 10))
   ok('§52 预览路由：`webServer` 比插件晚激活时（真宿主实测的组合顺序）走 `inject` 仍要真的挂上路由',
     injThrew === null && iTools === 22 && injPrefixes.has('/ppt-preview'),

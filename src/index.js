@@ -1,29 +1,32 @@
 /**
  * dsh-ppt-studio —— PPT 工作室插件（host）。
  *
- * 装配模型（2026-09-24 **第三次修订：适配 DSH 0.1.7-rc.1**）：
- *   `apply()` 做四件事——① 装配防重；② **全局管道**（/ppt-preview 路由、预设**声明**、语义路由）；
- *   ③ 工作流提示段注入（`system-prompt/assemble`）；④ **在本 ctx 注册全部能力面**：
- *   22 个 `ppt_*` 工具 / `/ppt` 命令面 / `ppt_state` / 4 本内嵌技能。
- *   ⇒ **装上插件，所有会话都能用**（= 1.0.0 的行为）。
+ * 装配模型（2026-09-26 **第四次修订：按预设隔离**）：
+ *   `apply()` 按**作用域档**分两种：
+ *     · **profile 档**（装它的那一层，`config.scope` 缺省/`auto`/`profile`）：
+ *       全局管道（`/ppt-preview` 路由）+ 预设**声明**（想隔离时追加一行**自定位行**）；
+ *       隔离生效时**不注册任何能力面**——本档只负责"让预设存在 + 判定健康 + 出问题时兜底"。
+ *     · **preset 档**（由自定位行挂进「PPT 工作室」预设的那一份，`config.scope === 'preset'`）：
+ *       22 个 `ppt_*` 工具 / `/ppt` 命令面 / `ppt_state` / 4 本内嵌技能 / 语义路由 / 工作流提示段，
+ *       **全部注册在预设作用域** ⇒ 只对该预设的会话可见（用户要求：其他预设完全不受影响）。
+ *   ⇒ 「PPT 工作室」预设第一次成为**真正的开关**（此前它只提供人格，工具全局可见）。
  *
- * 0.1.7 的那一处真适配是**预设交付**：宿主不再扫描 `<dshHome>/.agent-presets/`（上游原文
- * "the harness discovers no preset on disk"），预设改为向 `agentPresets` 注册表**声明**。
- * 详见 src/preset-delivery.js 顶部（含 `!!js` 保真与相对名解析这两条源码级细节）。
+ * 为什么这次能做成而 2026-09-18 那次失败（详细判据见 git 历史与 docs/03）：
+ *   ① 当年想"插件自己在运行时按 agent 门控"：空白会话切预设时 agent 已存在，
+ *      `agent/created` 监听者不会为它触发 ⇒ 工具永不出现。**现在不经过 agent 生命周期**：
+ *      预设的常驻组合在**声明时**就挂载（`dsh-agent-preset-registry` 声明即挂载），
+ *      切换预设时宿主把 agent 的 scope 父指针 `rebind` 到新预设代 ⇒ 可见性自动跟随。
+ *   ② 当年"预设行挂载"被"行按 harness base 解析"封死（裸包名/相对名解析不到 ⇒ 预设 broken）。
+ *      **绝对值 `file://` 行不受 baseUrl 影响**（Loader 对非 `.` 开头的名字原样 `import(name)`）
+ *      ⇒ 用 `import.meta.url` 现算本包入口路径即可，且升级换代不会陈旧。
+ *   两条都在 2026-09-26 用真实宿主 + 隔离 DSH_HOME 实测通过（工具/技能/提示段可见性矩阵、
+ *   切换预设、负面对照）。
  *
- * 为什么放弃了"只让「PPT 工作室」预设看到"（两件事，都有实测与源码依据）：
- *   ① **切换预设拿不到**：空白会话切预设时 `agent-presets.swap` 确实会 `recompose(agent.ctx, id)`，
- *      但那一刻该 agent **已经存在**，而我们的 `agent/created` 监听者是在这次组合里才注册的
- *      ⇒ 它永远不会为这个已有 agent 触发 ⇒ "先建会话再切到该预设"永远看不到工具
- *      （用户实测：只有一开始就建在该预设上才有工具）。
- *   ② **技能在父层读不到**：技能注册表分层，技能工具在**预设层**读；我们只能注册到 `agent.ctx`（子层）
- *      或 profile 根 ⇒ 预设层读不到 ⇒ 技能永不出现。而"用预设行挂载"这条路同样封死
- *      （行里的裸包名按 **harness base** 解析，不是 profile ⇒ 预设被判 `broken` ⇒ 选择器不显示它）。
- *   ⇒ 在这版 DSH 上，"按预设隔离"无法可靠交付。宁可**功能完整、行为可预期**，也不要"看起来隔离、
- *      实际一半会话没能力面"。隔离代码留在 git 历史（`4ea7037` 起的提交）里，等 DSH 提供稳定的
- *      "预设已组合/已切换"信号再恢复。
- *
- * 「PPT 工作室」预设仍然存在并自交付：它负责**身份/人格**（名字、简介、standard 能力面副本）。
+ * 向后兼容与降级（`scope: 'auto'` 是缺省值）：
+ *   · 预设声明失败、注册表不可见（headless/sdk/minimal 等无 `agentPresets` 的部署）、
+ *     或"声明成功但预设档实例没装配" ⇒ **自动回落到全局能力面**（功能完整，只是没隔离），
+ *     并把原因写进 `ppt_state` 的 `presetDelivery.isolation`。
+ *   · `config.scope === 'profile'` = 传统档，一律全局（给明确不需要隔离的用户）。
  */
 import { registerTools, defineTool } from './tools.js'
 import { registerCommands } from './commands.js'
@@ -33,7 +36,7 @@ import { registerPreviewRoute, previewRoot } from './preview-server.js'
 import { userTemplatesDir } from './templates.js'
 import { dshHome, pptStudioDir } from './home.js'
 import { registerManualSkill, manualSkillStatus } from './skill.js'
-import { declareAgentPreset, presetDeliveryStatus } from './preset-delivery.js'
+import { declareAgentPreset, presetDeliveryStatus, notePresetStatus } from './preset-delivery.js'
 import { existsSync, statSync, mkdirSync, appendFileSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
@@ -47,8 +50,9 @@ function loggerOf(ctx) {
 
 /**
  * 按需诊断日志（**默认关闭**）：`PPT_STUDIO_DEBUG=1`，或存在 `<dshHome>/ppt-studio/debug.on` 时启用。
- *
- * 为什么需要它（2026-09-18 的真实排查困境）：本插件的"不生效"有三种完全不同的原因——
+ * 为什么落到**文件**而不是只打日志：
+ *   桌面端"装上了但工具不可见"这类事故，现象是"会话里一个工具都没有"——那时连诊断工具本身都没挂上，
+ *   三者在 UI 上长得一模一样：
  *   ① 插件没被加载（装法/装配问题）；② 加载了，但门控判成"这个 agent 不属于本插件"；
  *   ③ 门控放行，但能力面挂到 agent 作用域时失败。
  * 三者在 UI 上**长得一模一样**（都看不到工具），而会话里一个工具都没有时**什么都问不了**
@@ -70,71 +74,88 @@ function diag(event, detail = '') {
   } catch { /* 诊断永不抛 */ }
 }
 
-export function apply(ctx, config = {}) {
-  diag('apply', `baseUrl=${String(ctx?.baseUrl ?? '(无)').slice(0, 90)}`
-    + `｜agentPresets=${(() => { try { return ctx.get('agentPresets') ? '可见' : '不可见' } catch { return '取用抛错' } })()}`
-    + `｜presetIds=${JSON.stringify(config?.presetIds ?? ['ppt'])}｜pid=${process.pid}`)
-  // ── 装配防重（2026-09-14 新增 profile bundle 安装路径后必需）────────────────────────
-  // 同一个包可能在**同一进程**里被挂两次：
-  //   ① profile bundle 行（包的 cordis.patch.yml，`dsh plugin add` 装完即挂）；
-  //   ② 预设内的插件行（`--isolate` 模式把本包挂进「PPT 工作室」预设的组合里）。
-  // 首个挂载真正装配，后续只计数（注册仍归各自 ctx.effect 所有，owner ctx 卸载即释放）。
-  // 第二条在本版本上更重要：预设声明会随第二次装配**重复注册**，而注册表对重复 id 直接
-  // throw（`Duplicate agent preset`）——防重同时挡住了这个双挂载事故。
-  const CORE = globalThis.__pptCoreReg ?? { count: 0 }
-  globalThis.__pptCoreReg = CORE
-  if (CORE.count > 0) {
-    CORE.count++
-    try {
-      loggerOf(ctx)?.warn?.('[ppt-studio] 本包在同一进程被挂载了两次（profile bundle 行 + 预设内的插件行？）——'
-        + '已按"首个生效"跳过本次装配。两者是替代关系，建议二选一：`dsh plugin --profile <p> remove <包>` 或改用 `--isolate` 安装（见 README §0.7）。')
-    } catch { /* 无 logger 时静默 */ }
-    ctx.effect(() => () => { CORE.count-- }, 'ppt-studio: duplicate mount (ref)')
-    return
-  }
-  CORE.count++
-  // 注意 Cordis 语义：`ctx.effect(cb)` **立即执行 cb**，并用 cb 的**返回值**当 disposer。
-  // 所以计数递减必须写成"返回一个函数"（写成 `() => { count-- }` 会当场递减，等于没防重——
-  // 这个错误由 smoke 的行为断言当场抓到）。
-  ctx.effect(() => () => { CORE.count-- }, 'ppt-studio: core mount (ref)')
+/** 作用域档：`profile` = 装它的那一层（默认档：声明预设 + 全局管道）；`preset` = 由自定位行挂进「PPT 工作室」的那一份。 */
+const TIER_PROFILE = 'profile'
+const TIER_PRESET = 'preset'
 
-  // ── 全局管道（与会话无关）──────────────────────────────────────────────────────
-  // 2026-09-26 桌面端事故（宿主警告原文："1 entry did not activate ppt-studio (dsh-ppt-studio):
-  // TypeError: ws.register(...).then is not a function"）：`registerPreviewRoute` 里一处"对同步返回值
-  // 调 .then"的 TypeError 从 apply **同步抛出** ⇒ 整个插件条目激活失败，用户连 ppt_state 都调不到
-  // （能看到的只有那一行宿主警告）。根因已在 preview-server.js 修掉；这里再兜一层，理由与下方 faces 一致：
-  // 全局管道是**附加能力**，坏掉只该降级（预览链接/预设声明失效），绝不该让整个能力面消失。
-  const pipeline = []
-  const pipeStep = (label, fn) => {
-    try { return fn() } catch (e) { pipeline.push(`${label}: ${String(e?.message ?? e)}`); return undefined }
-  }
-  // 诊断要把"跳过了"和"注册了"分开记：`registerPreviewRoute` 在拿不到 webServer 时返回 null
-  // （极简装配、或组合顺序排在 webServer 之前都会这样）——这与"注册失败"是两回事。
-  let routeState = 'pending(inject)'
-  pipeStep('previewRoute', () => {
-    // webServer 可能比本插件**晚激活**：2026-09-26 真宿主实测（隔离 DSH_HOME + `dsh --profile web`，
-    // 插件自己的落盘诊断原文 `预览路由=skipped(no webServer)`）——直接 `ctx.get('webServer')` 在那种
-    // 组合顺序下拿不到服务，路由会被**静默跳过**，用户点预览链接必然 404。
-    // 与 agentPresets 同一姿势：用 `inject` 等它出现再注册，服务消失时子 ctx 一并释放。
-    if (typeof ctx.inject === 'function') {
-      ctx.inject(['webServer'], (child) => {
-        const disposer = registerPreviewRoute(child)
-        routeState = disposer ? 'active' : 'skipped(子 ctx 无 webServer)'
-        diag('previewRoute', `inject 就绪 → ${routeState}`)
-        return disposer ?? undefined
-      })
-    } else {
-      routeState = registerPreviewRoute(ctx) ? 'active' : 'skipped(宿主无 inject)'
+/**
+ * 挂载防重（2026-09-26 改为**按作用域**分档）。
+ *
+ * 为什么必须改：本包现在会**有意**在同一进程里挂两次——profile 档（声明预设、全局管道）
+ * + 预设档（由自定位行挂进「PPT 工作室」，能力面注册在预设作用域）。旧的"首个生效"守卫会让
+ * 第二个实例**整个不装配**（且是静默的：用户只会看到"预设里什么都没有"）。
+ * 键的取法：profile 档固定一把；预设档按 **ctx 身份**取（`WeakMap` 发号）——这样预设被重挂
+ * （新 generation）时新实例能装配，而同一 ctx 的重复 apply 仍被挡住。键随各自 ctx 释放而回收。
+ */
+const MOUNTS = { get current() { return mounts() } }
+
+/** 每次调用重取（**不要**在模块顶层捕获）：既有的测试/诊断习惯是 `delete globalThis.__pptCoreReg` 重置，
+ * 捕获常量会让那种重置失效（smoke 有 4 处这么用）。 */
+function mounts() {
+  const m = (globalThis.__pptCoreReg ??= { count: 0, keys: new Set(), ids: new WeakMap(), nextId: 1 })
+  m.keys ??= new Set()
+  m.ids ??= new WeakMap()
+  m.nextId ??= 1
+  return m
+}
+
+function scopeKeyOf(ctx) {
+  if (ctx === null || typeof ctx !== 'object') return 'anon'
+  const m = mounts()
+  let id = m.ids.get(ctx)
+  if (id === undefined) { id = m.nextId++; m.ids.set(ctx, id) }
+  return id
+}
+
+function claimMount(ctx, tier) {
+  const m = mounts()
+  const key = tier === TIER_PRESET ? `preset#${scopeKeyOf(ctx)}` : 'profile'
+  if (m.keys.has(key)) return { claimed: false, key }
+  m.keys.add(key)
+  m.count++
+  // Cordis 语义：`ctx.effect(cb)` 立即执行 cb，用 cb 的**返回值**当 disposer ⇒ 这里必须"返回一个函数"。
+  ctx.effect(() => () => { const cur = mounts(); cur.keys.delete(key); cur.count-- }, `ppt-studio: mount (${key})`)
+  return { claimed: true, key }
+}
+
+/**
+ * 隔离生效信号：**预设档实例真的装配了**才会置位（进程内）。
+ * 为什么不用"审计注册表"判定健康：`dsh-agent-preset-registry` 的 docstring 明确警告
+ * `diagnostic()/list()` **不得在宿主行自己的激活过程中调用**（它会 `await loader.await()` 等整棵树落定
+ * ⇒ 与我们自己的激活互相等待 = 死锁风险）。而 `register()` 自身 `await record.ready`
+ * ⇒ 它 resolve 时预设行**已经 import 并 apply 过**，所以"声明成功"几乎等价于"预设档实例已装配"；
+ * 这里再用信号确认一次（400ms 宽限），拿不到就回落——宁可没隔离，也不能没能力。
+ */
+const SCOPE_SIGNAL_GRACE_MS = 400
+/** 声明迟迟不落地（注册表在本部署里根本不存在 ⇒ `inject` 回调永不触发）时的兜底：到点直接回落。 */
+const SCOPE_SETTLE_TIMEOUT_MS = 3000
+
+/** 同 mounts()：每次重取，便于测试用 `delete globalThis.__pptScopeApplied` 重置。 */
+function scopeSignal() {
+  return (globalThis.__pptScopeApplied ??= { at: 0, presetId: '', pid: 0 })
+}
+
+function publishScopeApplied(config) {
+  const s = scopeSignal()
+  s.at = Date.now()
+  s.presetId = String(config?.presetIds?.[0] ?? 'ppt')
+  s.pid = process.pid
+}
+
+function awaitScopeSignal(timeoutMs, since) {
+  const deadline = Date.now() + timeoutMs
+  return new Promise((resolve) => {
+    const tick = () => {
+      if (scopeSignal().at >= since) return resolve(true)
+      if (Date.now() >= deadline) return resolve(false)
+      setTimeout(tick, 25)
     }
+    tick()
   })
-  // 声明「PPT 工作室」预设（0.1.7 起：注册表声明，不再写预设目录——目录已无发现路径）。
-  // 失败只告警不抛；状态经 ppt_state 的 presetDelivery 暴露，避免"预设没出现"只能翻日志。
-  pipeStep('agentPreset', () => declareAgentPreset(ctx, config))
-  if (pipeline.length) loggerOf(ctx)?.warn?.(`[ppt-studio] 全局管道部分失败（已降级，能力面仍可用）：${pipeline.join('；')}`)
-  diag('pipeline', `预览路由=${routeState}｜预设声明=${pipeline.some((l) => l.startsWith('agentPreset')) ? '失败' : 'OK'}`
-    + (pipeline.length ? `｜失败=${pipeline.join('; ')}` : ''))
+}
 
-  // 语义路由：user/message → 激活/退出（auto 模式）。只写会话状态文件，不暴露任何能力面。
+/** 语义路由：user/message → 激活/退出（auto 模式）。只写会话状态文件，不暴露任何能力面。 */
+function registerRouting(ctx) {
   ctx.on('session/event', async (session, event) => {
     if (event.type !== 'user/message') return
     const data = event.data ?? {}
@@ -161,7 +182,8 @@ export function apply(ctx, config = {}) {
     } catch { /* 防缺失目录等异常 */ }
   })
 
-  // 工作流提示词注入（**不按预设门控**——见下"回滚"说明）
+  // 工作流提示词注入：**只在注册它的那一层生效**——隔离生效时这一层就是**预设作用域**，
+  // 于是其他预设的会话连提示段都不会被注入（用户要求"其他预设完全不受影响"）。
   ctx.on('system-prompt/assemble', async (assembly, context, next) => {
     const assembled = await next()
     const agent = context.agent
@@ -176,27 +198,141 @@ export function apply(ctx, config = {}) {
     sections.push(workflowSection(state.taskType ?? 'unknown', state))
     return { ...assembled, sections }
   })
+}
 
-  // ── 能力面：注册在**本 ctx**（= 装它的那一层）——2026-09-18 第二轮回滚 ──────────────────
-  // 背景（用户实测 + DSH 源码实锤，两件事一起推翻了"按预设隔离"这条路）：
-  //   ① **切换预设拿不到能力面**：空白会话切预设（`agent-presets.swap`）确实会
-  //      `recompose(agent.ctx, id)` 重新组合，但那一刻**该 agent 已经存在**——我们的
-  //      `agent/created` 监听者是在这次组合中才注册的，**永远不会**为这个已有 agent 触发。
-  //      于是"先建会话再切过去"= 工具永远不出现（用户原话：只有一开始就是该预设才有工具）。
-  //   ② **技能在预设层读不到**：注册表是**分层**的（`dsh-skill` 的 preset 层），而技能工具
-  //      （`tool-skill`）在**预设层**读；我们注册进 `agent.ctx`（子层）⇒ 父层读不到 ⇒ 技能永远不出现。
-  //      在 profile bundle 装法下我们的 ctx 就是 profile 根，**够不到预设层**，
-  //      而预设行又无法解析本包（行按 harness base 解析，见 preset 模板末尾说明）⇒ 这条路封死。
-  // 结论：本 DSH 版本上"只让某个预设看到工具/技能"**无法可靠交付**。按用户指示回滚到
-  // 「装上插件 → 所有会话都能用」这一久经验证的行为（= 1.0.0 的行为），并把预设保留为**身份/人格**。
+/** 能力面：22 个 `ppt_*` 工具 / `/ppt` 命令面 / `ppt_state` / 4 本内嵌技能，注册进**本 ctx 所在的作用域**。 */
+function registerFaces(ctx, tier) {
   const faces = []
   const step = (label, fn) => { try { fn() } catch (e) { faces.push(`${label}: ${String(e?.message ?? e)}`) } }
   step('tools', () => registerTools(ctx))
   step('commands', () => registerCommands(ctx))
-  step('ppt_state', () => statusToolFor(ctx))
+  step('ppt_state', () => statusToolFor(ctx, tier))
   step('skills', () => registerManualSkill(ctx))
   if (faces.length) loggerOf(ctx)?.warn?.(`[ppt-studio] 部分能力面注册失败：${faces.join('；')}`)
-  diag('faces', `tools/commands/ppt_state/skills 已注册在 apply ctx（回滚为全局可见）｜失败=${faces.length ? faces.join(';') : '无'}`)
+  return faces
+}
+
+export function apply(ctx, config = {}) {
+  const tier = config?.scope === TIER_PRESET ? TIER_PRESET : TIER_PROFILE
+  // `scope` 缺省 = 'auto'：**想隔离**（追加自定位行 + 预设档实例），但不健康时自动回落全局。
+  // 只有显式 `scope: 'profile'` 才是"一律全局"（传统档，给明确不需要隔离的用户）。
+  const wantIsolation = config?.scope !== TIER_PROFILE
+  diag('apply', `tier=${tier}｜scope=${String(config?.scope ?? 'auto')}｜baseUrl=${String(ctx?.baseUrl ?? '(无)').slice(0, 90)}`
+    + `｜agentPresets=${(() => { try { return ctx.get('agentPresets') ? '可见' : '不可见' } catch { return '取用抛错' } })()}`
+    + `｜presetIds=${JSON.stringify(config?.presetIds ?? ['ppt'])}｜pid=${process.pid}`)
+
+  const claim = claimMount(ctx, tier)
+  if (!claim.claimed) {
+    try {
+      loggerOf(ctx)?.warn?.(`[ppt-studio] 同一作用域重复装配已跳过（key=${claim.key}）——`
+        + 'profile 档与预设档是两个不同作用域，各自只该装配一次。')
+    } catch { /* 无 logger 时静默 */ }
+    return
+  }
+
+  // ── 预设档：能力面 + 语义路由 + 提示段**全部注册在预设作用域** ──────────────────────
+  // 这一份实例是"预设常驻组合"的成员，它的 ctx 就是预设层 ⇒ 只对该预设的会话可见。
+  if (tier === TIER_PRESET) {
+    publishScopeApplied(config)
+    registerRouting(ctx)
+    const faces = registerFaces(ctx)
+    diag('faces', `【preset 档】tools/commands/ppt_state/skills 注册在**预设作用域**`
+      + `（只对「${String(config?.presetIds?.[0] ?? 'ppt')}」预设的会话可见）｜失败=${faces.length ? faces.join('; ') : '无'}`)
+    return
+  }
+
+  // ── profile 档：全局管道（HTTP 预览路由只此一处）+ 预设声明 ─────────────────────────
+  // 2026-09-26 桌面端事故（宿主警告原文："1 entry did not activate ppt-studio (dsh-ppt-studio):
+  // TypeError: ws.register(...).then is not a function"）：`registerPreviewRoute` 里一处"对同步返回值
+  // 调 .then"的 TypeError 从 apply **同步抛出** ⇒ 整个插件条目激活失败，用户连 ppt_state 都调不到
+  // （能看到的只有那一行宿主警告）。根因已在 preview-server.js 修掉；这里再兜一层，理由与 faces 一致：
+  // 全局管道是**附加能力**，坏掉只该降级（预览链接/预设声明失效），绝不该让整个能力面消失。
+  const pipeline = []
+  const pipeStep = (label, fn) => {
+    try { return fn() } catch (e) { pipeline.push(`${label}: ${String(e?.message ?? e)}`); return undefined }
+  }
+  // 诊断要把"跳过了"和"注册了"分开记：`registerPreviewRoute` 在拿不到 webServer 时返回 null
+  // （极简装配、或组合顺序排在 webServer 之前都会这样）——这与"注册失败"是两回事。
+  let routeState = 'pending(inject)'
+  pipeStep('previewRoute', () => {
+    // webServer 可能比本插件**晚激活**：2026-09-26 真宿主实测（隔离 DSH_HOME + `dsh --profile web`，
+    // 插件自己的落盘诊断原文 `预览路由=skipped(no webServer)`）——直接 `ctx.get('webServer')` 在那种
+    // 组合顺序下拿不到服务，路由会被**静默跳过**，用户点预览链接必然 404。
+    // 与 agentPresets 同一姿势：用 `inject` 等它出现再注册，服务消失时子 ctx 一并释放。
+    if (typeof ctx.inject === 'function') {
+      ctx.inject(['webServer'], (child) => {
+        const disposer = registerPreviewRoute(child)
+        routeState = disposer ? 'active' : 'skipped(子 ctx 无 webServer)'
+        diag('previewRoute', `inject 就绪 → ${routeState}`)
+        return disposer ?? undefined
+      })
+    } else {
+      routeState = registerPreviewRoute(ctx) ? 'active' : 'skipped(宿主无 inject)'
+    }
+  })
+
+  // 声明「PPT 工作室」预设（0.1.7 起：注册表声明，不再写预设目录——目录已无发现路径）。
+  // 想隔离时**追加自定位行**：预设的常驻组合会再挂本包一次（预设档实例），能力面因此落进预设作用域；
+  // 本档只留"声明 + 全局管道 + 健康判定 + 兜底"。失败只告警不抛。
+  const isolationSince = Date.now()
+  let isolationSettled = false
+  let declarationSettled = false
+  const engageFallback = (why) => {
+    if (isolationSettled) return
+    isolationSettled = true
+    try {
+      loggerOf(ctx)?.warn?.(`[ppt-studio] 预设隔离未生效（${why}）⇒ 自动回落到**全局能力面**：`
+        + '功能完整，但其他预设的会话也会看到 ppt_* 工具与技能。诊断见 ppt_state 的 presetDelivery。')
+      notePresetStatus({ isolation: 'profile-fallback', reason: `隔离未生效（${why}）⇒ 已回落全局能力面` })
+    } catch { /* 忽略 */ }
+    registerRouting(ctx)
+    const faces = registerFaces(ctx, TIER_PROFILE)
+    diag('fallback', `隔离未生效（${why}）→ 能力面注册在 profile 根｜失败=${faces.length ? faces.join('; ') : '无'}`)
+    if (pipeline.length) loggerOf(ctx)?.warn?.(`[ppt-studio] 全局管道部分失败（已降级，能力面仍可用）：${pipeline.join('；')}`)
+  }
+
+  pipeStep('agentPreset', () => declareAgentPreset(ctx, config, {
+    selfRow: wantIsolation,
+    onSettled: (health) => {
+      declarationSettled = true
+      if (!wantIsolation) return
+      void (async () => {
+        // 声明失败 / 注册表不可见 ⇒ 立刻回落（不留"装上了却什么都没有"的窗口）。
+        if (!health.ok) { engageFallback(health.reason); return }
+        // 声明成功 ⇒ 预设已被挂载过一次；再用「预设档实例已装配」信号确认（400ms 宽限）。
+        const seen = await awaitScopeSignal(SCOPE_SIGNAL_GRACE_MS, isolationSince)
+        if (seen) {
+          isolationSettled = true
+          notePresetStatus({ isolation: 'preset', reason: `隔离生效：能力面注册在「PPT 工作室」预设作用域（其他预设零影响）｜pid=${scopeSignal().pid}` })
+          diag('isolation', `隔离生效：预设档实例已装配（pid=${scopeSignal().pid}）→ profile 档不注册任何能力面`)
+          return
+        }
+        engageFallback('声明成功但预设档实例未装配')
+      })()
+    },
+  }))
+  // **兜底超时**（2026-09-26 实测发现的真漏洞）：`ctx.inject(['agentPresets'], cb)` 在"该服务在本部署里
+  // 根本不存在"时**回调永不触发**（不是"触发并给 undefined"）⇒ 声明既不成功也不失败 ⇒ 只按 `onSettled`
+  // 判定的话，这些部署（极简/sdk/无注册表）会"装上了却**零能力面**"。所以再加一道时间兜底：
+  // 超时仍未见声明落地 ⇒ 立刻回落全局能力面。代价：这类部署启动后最多晚 SCOPE_SETTLE_TIMEOUT_MS 才有工具。
+  if (wantIsolation) {
+    setTimeout(() => {
+      if (declarationSettled || isolationSettled) return
+      engageFallback(`agentPresets 注册表在 ${SCOPE_SETTLE_TIMEOUT_MS}ms 内不可见（inject 回调未触发）`)
+    }, SCOPE_SETTLE_TIMEOUT_MS)
+  }
+  if (pipeline.length) loggerOf(ctx)?.warn?.(`[ppt-studio] 全局管道部分失败（已降级，能力面仍可用）：${pipeline.join('；')}`)
+  diag('pipeline', `预览路由=${routeState}｜预设声明=${pipeline.some((l) => l.startsWith('agentPreset')) ? '失败' : 'OK'}`
+    + `｜隔离=${wantIsolation ? '待判定（自定位行）' : '未启用（scope=profile）'}`
+    + (pipeline.length ? `｜失败=${pipeline.join('; ')}` : ''))
+
+  // ── 传统档（`scope: 'profile'`）：不隔离，能力面直接注册在装它的那一层 ────────────────
+  if (!wantIsolation) {
+    notePresetStatus({ isolation: 'profile' })
+    registerRouting(ctx)
+    const faces = registerFaces(ctx, TIER_PROFILE)
+    diag('faces', `【profile 档·传统】tools/commands/ppt_state/skills 注册在 apply ctx（全局可见）｜失败=${faces.length ? faces.join('; ') : '无'}`)
+  }
 }
 
 /**
@@ -207,16 +343,23 @@ export function apply(ctx, config = {}) {
  *      已经存在——我们的 `agent/created` 监听者是这次组合才注册的，**不会**为它触发 ⇒ 工具永不出现
  *      （用户实测：只有一开始就是该预设才有工具）；
  *   ② 技能注册表是**分层**的，技能工具在**预设层**读，而我们只能注册到 `agent.ctx`（子层）或
- *      profile 根 ⇒ 父层读不到 ⇒ 技能永不出现；而"预设行挂载"这条路又被
- *      "行按 harness base 解析"封死（见 agent-presets/ppt/agent.cordis.yml 末尾说明）。
+ *      profile 根 ⇒ 父层读不到 ⇒ 技能永不出现。
  * 代码留在 git 历史里（提交 4ea7037 起）。
  *
- * 【2026-09-24 补注（0.1.7-rc.1）】当时封死"预设行挂载"的那条判据**依然成立**：注册表 mount 预设时
+ * 【2026-09-24 补注（0.1.7-rc.1）】当时"预设行挂载"这条路也被判封死：注册表 mount 预设时
  * 用 `scope.ctx.extend({ baseUrl: <注册表所在 ctx 的 baseUrl> })`（= harness base），裸包名
- * `dsh-ppt-studio` 在那里解析不到 ⇒ 预设会被判 broken。所以现在的 `--isolate` 走的是
- * 另一条路：**不挂 profile bundle**，把插件行写进预设声明的 `plugins` 里，并给插件行
- * `autoPreset:false`（预设已由该声明本身提供，插件不能再声明一次）。本注释里的
- * `mountForAgent` 是"插件自己在运行时按 agent 门控"那套，与上面这条不同，仍然不恢复。
+ * `dsh-ppt-studio` 在那里解析不到 ⇒ 预设会被判 broken。
+ *
+ * 【2026-09-26 最终结论（0.1.7-rc.2，源码 + 真宿主实测）】**上面两条都不是"隔离不可行"，而是
+ * "实现姿势不对"**：
+ *   · ① 只对"插件自己按 agent 动态门控"成立；走**预设行挂载**不经过 agent 生命周期，切换预设时
+ *     宿主把 agent 的 scope 父指针 `rebind` 到新预设代，可见性自动跟随。
+ *   · ② 只对**裸包名/相对名**成立；**绝对 `file://` 行**不看 baseUrl（Loader 对非 `.` 开头的名字
+ *     原样 `import(name)`）⇒ 用 `import.meta.url` 现算本包入口即可，升级换代不陈旧。
+ *   · 技能分层的方向是对的**但不是障碍**：读路径按"查看方 scope 的链"合并（含 agent 自己那层），
+ *     所以注册进**预设作用域**正是技能能被该预设看到的**充要姿势**。
+ * 于是本文件重新实现了隔离（preset 档 + 自定位行 + 健康自证 + 自动回落）；`mountForAgent` 那套
+ * "自己按 agent 门控"的写法仍不恢复。
  */
 
 function extractText(data) {
@@ -227,7 +370,7 @@ function extractText(data) {
 }
 
 /** 调试工具（agent 可见）：当前工作流状态。 */
-export function statusToolFor(ctx) {
+export function statusToolFor(ctx, tier = TIER_PROFILE) {
   return ctx.effect(() => ctx.tools.register(defineTool({
     name: 'ppt_state',
     description: '查看/更新 PPT 工作流会话状态（档位/激活）。debug/自优化用',
@@ -274,7 +417,10 @@ export function statusToolFor(ctx) {
         templates: userTemplatesDir(),
         preview: previewRoot(),
       }
-      return JSON.stringify({ session: sid, state, manualSkill: delivery, presetDelivery: presetDeliveryStatus(), paths }, null, 2)
+      // 装配自检（2026-09-26，第四次修订）：本次实例处在哪个作用域、隔离是否生效、预设是否健康——
+      // "其他预设看到不该看的东西 / 预设里什么都没有"这两类事故都靠这几个字段定位。
+      const assembly = { tier, isolation: presetDeliveryStatus().isolation }
+      return JSON.stringify({ session: sid, state, manualSkill: delivery, presetDelivery: presetDeliveryStatus(), assembly, paths }, null, 2)
     },
   })), 'ppt-studio: ppt_state')
 }

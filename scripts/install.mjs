@@ -70,19 +70,21 @@ const legacyPkgDir = join(profileDir, 'node_modules', '@dsh-external', 'dsh-ppt-
 const legacyPresetDir = join(prefix, '.agent-presets', 'ppt')
 
 if (args.includes('--isolate')) {
-  console.error(`✗ --isolate 在 DSH 0.1.7 上不再可用（本安装器拒绝写出一个永远不会被读到的预设）
+  console.error(`✗ --isolate 在 DSH 0.1.7 上不再可用（**隔离现在是默认行为**，不需要这个开关）
 
-  原因（两处，都有源码依据）：
-    · 宿主不再扫描 \`<dshHome>/.agent-presets/\`——上游原文 "the harness discovers no preset on disk"，
-      预设改为向 agentPresets 注册表声明；旧写法写完等于没写，且**静默**。
-    · 预设的行现在由注册表在它自己 ctx 的 baseUrl 下 mount（= dsh-web-app 包目录，不是 profile、
-      不是预设目录）⇒ 预设里的裸包名 \`dsh-ppt-studio\` 解析不到 ⇒ 预设被判 broken ⇒ 选择器看不到它。
+  原因：
+    · 插件声明「PPT 工作室」预设时会追加一行**自定位行**（本包入口的绝对 \`file://\` 名字）
+      ⇒ 预设的常驻组合把插件再挂一次，那一次的工具/技能/提示段只落在**预设作用域**
+      ⇒ 只有该预设的会话看得到，**其他预设完全不受影响**（2026-09-26 真宿主实测通过）。
+    · 所以"默认装法"与"隔离装法"已经合并：直接跑本脚本（不带 --isolate）即可。
+    · 0.1.6 时代的 \`--isolate\` 靠"预设目录内 junction + 相对路径行"实现；0.1.7 删除了目录发现，
+      且预设行按注册表所在 ctx 的 baseUrl 解析（= harness 包目录）⇒ 那条路必然产出 broken 预设，
+      本安装器不再写它（也不再写 \`<dshHome>/.agent-presets/\`）。
 
   可选做法：
-    · 默认（全局）安装：直接跑本脚本不带 --isolate —— 「PPT 工作室」预设会由插件自己声明，
-      该 profile 的**所有会话**都能用 ppt_* 工具（这也是当前发布的装配形状）。
-    · 真要"只在「PPT 工作室」里生效"：需要把插件行放进**预设声明**里、并用安装期算出的绝对
-      \`file://\` 名字（见 README §10「隔离安装」）。这条路尚未实现——宁可明确拒绝，也不静默失败。`)
+    · 默认安装：直接跑本脚本 —— 隔离即默认，一条命令。
+    · 想回到"所有预设都能用"：把 profile 里 \`ppt-studio\` 行的 config 改成 \`scope: 'profile'\`
+      （见 README §1.6「隔离 / 传统档」）。`)
   process.exit(1)
 }
 
@@ -96,7 +98,7 @@ if (!existsSync(join(root, 'lib', 'index.js'))) {
 }
 
 const steps = []
-steps.push(`装配模式：**全局**（profile bundle：该 profile 的所有会话都能用）`)
+steps.push(`装配模式：profile bundle（**隔离默认**：能力面只出现在「PPT 工作室」预设里；把装配行的 scope 改成 'profile' 可回到全局）`)
 
 // ── 1) 包本体可达性 + bundle 装配 ─────────────────────────────────────────────
 const profilePkgFile = join(profileDir, 'package.json')

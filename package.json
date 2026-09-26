@@ -71,6 +71,7 @@
     "test:preset": "node scripts/check-preset.mjs",
     "test:e2e": "node scripts/e2e-1.0.mjs",
     "test:bundle": "node scripts/verify-bundle-install.mjs",
+    "test:scope": "node scripts/verify-preset-scope.mjs",
     "check:lib": "node scripts/check-lib-freshness.mjs",
     "audit:facts": "node scripts/audit-manual-facts.mjs",
     "probe:effect": "node scripts/probe-effect-semantics.mjs",
