@@ -2822,6 +2822,71 @@ ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz
     `DSH_HOME=${process.env.DSH_HOME}`)
 }
 
+// ── 56. 兜底增强（2026-09-26，第二轮）：能力探测 + 优先用捆绑 Python ─────────────────────
+// 背景：官方三个 office 技能（`office-docx/pptx/xlsx`）只在桌面端具备，它们假定的运行时
+// （捆绑 Python + LibreOffice kit）也只在桌面端；于是兜底路径必须**先探测再说话**。
+// 本节钉四件事：① 探测契约与磁盘一致（不编造）；② 候选根的顺序（env > 安装副本 > carrier）；
+// ③ python-pptx 兜底**优先**用捆绑 Python；④ `ppt_state` 把能力与装配状态一次暴露。
+{
+  const capMod = await import('../lib/capabilities.js')
+  const caps = capMod.detectCapabilities()
+  ok('§56 能力探测：契约形状完整（平台 / 捆绑 Python·Node / LibreOffice kit / office 资产 / primary-runtime 候选）',
+    ['platform', 'bundledPython', 'bundledNode', 'libreofficeKit', 'officeSkillsAssets', 'primaryRuntime'].every((k) => k in caps)
+      && Array.isArray(caps.primaryRuntime) && caps.primaryRuntime.length >= 1 // 候选根数**随部署变化**（桌面 3 个 / CLI 1 个），别写死
+      && caps.primaryRuntime.every((r) => typeof r.root === 'string' && typeof r.source === 'string' && r.present === existsSync(r.root)),
+    `platform=${caps.platform}｜python=${caps.bundledPython ? '有' : '无'}｜kit=${caps.libreofficeKit ? '有' : '无'}｜候选根=${caps.primaryRuntime.length}`)
+  ok('§56 能力探测：探测不到就给 null（**不编造**），给出的路径都真实存在',
+    (caps.bundledPython === null || existsSync(caps.bundledPython.path))
+      && (caps.libreofficeKit === null || existsSync(caps.libreofficeKit.cli))
+      && (caps.officeSkillsAssets === null || existsSync(caps.officeSkillsAssets.skillsDir)),
+    `python=${caps.bundledPython?.path ?? '(无)'}｜kit=${caps.libreofficeKit?.cli ?? '(无)'}｜office=${caps.officeSkillsAssets?.skillsDir ?? '(无)'}`)
+  const cands = capMod.pythonCandidates()
+  const order = cands.map((c) => (c.source.startsWith('env') ? 'env' : c.source.startsWith('installed') ? 'installed' : 'carrier'))
+  ok('§56 候选顺序：env 缝（若设置）> 安装副本（`dsh-runtimes/dsh-primary-runtime`）> carrier（`resources/runtime`）',
+    // 顺序要**单调**；carrier 只在桌面端存在、env 只在 SDK/容器部署设置 ⇒ 不要求三者齐全。
+    cands.length >= 1
+      && cands.every((c, i) => i === 0 || ({ env: 0, installed: 1, carrier: 2 })[order[i - 1]] <= ({ env: 0, installed: 1, carrier: 2 })[order[i]])
+      && order[0] === ((process.env.DSH_PRIMARY_RUNTIME || process.env.DSH_BUNDLED_PRIMARY_RUNTIME) ? 'env' : 'installed')
+      && cands.every((c) => typeof c.root === 'string' && typeof c.node === 'string'),
+    order.join(' > '))
+  const bundled = capMod.findBundledPython()
+  const found = (await import('../lib/pptxPy.js')).findPython()
+  ok('§56 解释器优先级：探测到捆绑 Python 就必须优先用它（`source=bundled:…`），否则才退回 PATH',
+    bundled === null
+      ? found.source !== 'bundled'
+      : (found.has === true && found.cmd === bundled.path && String(found.source).startsWith('bundled:')),
+    `bundled=${bundled?.path ?? '(无)'}｜findPython=${JSON.stringify(found)}`)
+  const fakeNone = await capMod.probeOfficeSkills({ get: () => undefined })
+  const fakeAll = await capMod.probeOfficeSkills({
+    get: (k) => (k === 'skills' ? { get: async () => ({ provider: 'dsh-office', source: 'bundled', content: 'x' }) } : undefined),
+  })
+  ok('§56 官方 office 技能探测：服务缺失 ⇒ available=false（带原因）；三本都在 ⇒ available=true',
+    fakeNone.available === false && typeof fakeNone.reason === 'string' && fakeNone.found.length === 0
+      && fakeAll.available === true && fakeAll.found.length === 3,
+    `无服务=${fakeNone.available}（${String(fakeNone.reason).slice(0, 24)}）｜齐全=${fakeAll.available}（${fakeAll.found.join(',')}）`)
+  // resources 上溯：桌面端里插件可能跑在深层子进程 node 中 ⇒ 必须能从任意深度找回 `<install>/resources`。
+  // 用一棵合成目录树验证（与真实安装无关，机器无关）。
+  const synth = join(smokeDir, '.tmp-resources-probe')
+  await rm(synth, { recursive: true, force: true })
+  const deep = join(synth, 'install', 'resources', 'runtime', 'primary-runtime', 'dependencies', 'node', 'bin')
+  await mkdir(deep, { recursive: true })
+  await writeFile(join(synth, 'install', 'resources', 'app.asar'), 'x', 'utf8')
+  await writeFile(join(deep, 'node.exe'), 'x', 'utf8')
+  const foundRes = capMod.resourcesFrom(deep)
+  ok('§56 resources 上溯：从深层子进程 node 的目录能找回 `<install>/resources`（以 app.asar 为锚点）',
+    foundRes === join(synth, 'install', 'resources'),
+    `${String(foundRes).replace(synth, '<合成树>')}`)
+  await rm(synth, { recursive: true, force: true })
+  const captured56 = new Map()
+  const idxMod56 = await import('../lib/index.js')
+  idxMod56.statusToolFor({ effect: (cb) => { cb(); return () => {} }, tools: { register: (d) => captured56.set(d.name, d) }, get: () => undefined }, 'profile')
+  const out56 = JSON.parse(await captured56.get('ppt_state').execute({}, { agent: { session: { id: 'probe-56' } } }))
+  ok('§56 ppt_state：一次看全"装配作用域 + 隔离是否生效 + 能力（含 office 技能）+ 路径"',
+    out56.assembly?.isolation !== undefined && out56.capabilities?.platform !== undefined
+      && out56.capabilities?.officeSkills?.available !== undefined && out56.paths?.pptStudio !== undefined,
+    `assembly=${out56.assembly?.isolation}｜capabilities=${Object.keys(out56.capabilities ?? {}).join(',')}`)
+}
+
 // 37.10 【必须是最后一条断言】引用计数自证：文档里 "smoke … N 断言" 必须等于本次真实断言总数。
 // 历史形状：加断言后 README×3 + docs/02 + docs/06×2 + 手册 全靠人工同步，迟早漏一处。
 // 只扫"当前状态"文档（README / 技术报告 / 评审测试矩阵 / 使用手册）；docs/01/03/04 里的历史数字是记录，不动。
