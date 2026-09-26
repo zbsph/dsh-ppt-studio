@@ -6,6 +6,7 @@ import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { rm, mkdir } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
+import { homedir } from 'node:os'
 import zlib from 'node:zlib'
 import { resolveDeck } from '../lib/pptd/schema.js'
 import { renderDeck } from '../lib/pptd/render-html.js'
@@ -16,6 +17,16 @@ import { zipRead, decodeXml } from '../lib/zips.js'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const smokeDir = join(root, 'examples', 'smoke')
+
+// ── 全局用户目录隔离（2026-09-26，方案 B 第二批）──────────────────────────────────────────
+// 为什么：`state.js` / `preview-server.js` 的用户目录此前是**模块常量** `homedir()/.dsh`（忽略 DSH_HOME），
+// 而 `templates.js` / `index.js`(diag) 是调用时求值 ⇒ 本机 `npm test` 会把 smoke 模板与预览缓存写进
+// 开发机**真实**的 `~/.dsh/ppt-studio/`（实测复现、清理过两次），与下面那句"不碰真实目录"的承诺冲突。
+// 现在四处都统一到 `src/home.js`（调用时求值）⇒ 这里把 DSH_HOME 指到构建目录内的临时 home，
+// **整轮 smoke 的用户层读写都关在里面**，真实用户目录一个字节都不碰。位置必须在任何用户目录解析之前。
+const PREV_SMOKE_HOME = process.env.DSH_HOME
+const SMOKE_HOME = join(smokeDir, '.tmp-home')
+process.env.DSH_HOME = SMOKE_HOME
 
 let pass = 0
 let fail = 0
@@ -437,13 +448,10 @@ ok('v0.6.2：随包模板每套都自包含（元数据齐 + 有预览图）',
   builtins.map((t) => `${t.id}:${t.preview ? 'png' : 'MISSING'}`).join(' '))
 
 // ── 17b. v1.0.6 用户自建模板库：两层目录 + 入库（.pptx）/ 物化 / 删除 ──
-// DSH_HOME 指到临时目录：`userTemplatesDir()` 是**按调用求值**的，所以这里能安全地隔离，
-// 不碰开发机/CI 上真实的 `~/.dsh/ppt-studio/templates`。
+// 用户层目录现在是**整轮隔离**的（见文件顶部：DSH_HOME → `examples/smoke/.tmp-home`），
+// 所以这里不必再单独切换 DSH_HOME，也不会碰到开发机/CI 上真实的 `~/.dsh/ppt-studio/templates`。
 {
-  const libHome = join(root, 'examples', '.tmp-tpl-home')
-  await rm(libHome, { recursive: true, force: true })
-  const prevHome = process.env.DSH_HOME
-  process.env.DSH_HOME = libHome
+  const libHome = SMOKE_HOME
   try {
     const libUserDir = tplMod.userTemplatesDir()
     ok('v1.0.6：用户模板层在插件包之外（升级重新物化包也丢不了）',
@@ -474,9 +482,8 @@ ok('v0.6.2：随包模板每套都自包含（元数据齐 + 有预览图）',
       !!libRefuse && /随包/.test(libRefuse.message) && existsSync(join(tplMod.TEMPLATES_DIR, 'business-blue', 'template.yaml')),
       libRefuse?.message?.slice(0, 46) ?? '(没拦住)')
   } finally {
-    if (prevHome === undefined) delete process.env.DSH_HOME
-    else process.env.DSH_HOME = prevHome
-    await rm(libHome, { recursive: true, force: true })
+    // 这里**不**恢复 DSH_HOME、也不删 SMOKE_HOME：隔离是本轮 smoke 的全局前提（见文件顶部），
+    // 整轮结束后统一恢复与清理。
   }
 }
 let tplAllOk = true
@@ -555,7 +562,7 @@ ok('v0.7：内置模板正式页（首母版副本）0 错误', tplV0.text.split
 // 收纳清洗升级：registerTemplate 声明出界元素 + 剩余错误分类（bandDeck safeArea 外元素）
 const reg2 = await tplMod.registerTemplate(bandDeck, { id: `smoke-wash-${Date.now().toString(36)}`, name: '洗涤测试' }, {})
 ok('v0.7：收纳清洗——出界声明/重叠声明/剩余分类进入 meta', typeof reg2.meta.cleanup === 'string' && reg2.meta.cleanup.includes('剩余'), reg2.meta.cleanup ?? '')
-await (await import('node:fs/promises')).rm(join(tplMod.TEMPLATES_DIR, reg2.id), { recursive: true, force: true })
+await (await import('node:fs/promises')).rm(join(tplMod.userTemplatesDir(), reg2.id), { recursive: true, force: true })
 
 // ── 18. v0.5.1：外部模板收纳（ppt_template_add）——导入工程 → 模板库 ──────
 const regId = `smoke-tpl-${Date.now().toString(36)}`
@@ -567,7 +574,7 @@ const regWS = await tplMod.templateWorkspace(regId)
 const ctxReg = await resolveDeck(regWS.dir)
 ok('v0.5.1：收纳模板工作区可校验（theme/页面保留）', ctxReg.theme.colors.primary === '#2563EB' && ctxReg.pages.length === 3, `pages=${ctxReg.pages.length}`)
 // 清理测试模板
-await (await import('node:fs/promises')).rm(join(tplMod.TEMPLATES_DIR, regId), { recursive: true, force: true })
+await (await import('node:fs/promises')).rm(join(tplMod.userTemplatesDir(), regId), { recursive: true, force: true })
 
 // ── 19. v0.6.0：对话内预览（ppt_preview）——预览根构建 + 同源相对 URL ────
 const { buildPreview } = await import('../lib/preview-server.js')
@@ -669,7 +676,7 @@ if (previewSrc) {
 const dualCtx = await resolveDeck(dualWS)
 ok('v0.9.0：带 referenceTemplate 的 deck 通过校验（非渲染字段）', dualCtx.pages.length === 1 && dualCtx.deck.referenceTemplate?.id === dualId)
 // 清理双轨测试模板 + 假 source
-await (await import('node:fs/promises')).rm(join(tplMod.TEMPLATES_DIR, dualId), { recursive: true, force: true }).catch(() => {})
+await (await import('node:fs/promises')).rm(join(tplMod.userTemplatesDir(), dualId), { recursive: true, force: true }).catch(() => {})
 await rm(dualSrc, { force: true }).catch(() => {})
 await rm(dualWS, { recursive: true, force: true })
 
@@ -2695,6 +2702,46 @@ ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz
   await fsp.rm(gWork, { recursive: true, force: true })
 }
 
+// ── 55. 用户目录口径统一 + 测试隔离（2026-09-26，方案 B 第二批）──────────────────────────
+// 事故形状：`state.js` / `preview-server.js` 的用户目录曾是**模块常量** `homedir()/.dsh`（忽略 DSH_HOME），
+// 而 `templates.js` / `index.js`(diag) 是调用时求值 ⇒ ① 设了 DSH_HOME 的隔离部署里，会话状态与预览
+// 逃出隔离目录（实测：状态文件落在真实 `~/.dsh`）；② 本机 `npm test` 把 smoke 模板与预览缓存写进
+// 开发机真实 `~/.dsh/ppt-studio/`（实测复现、清理过两次）。修法 = 统一到 `src/home.js`（调用时求值）。
+{
+  const homeMod = await import('../lib/home.js')
+  const stateMod = await import('../lib/state.js')
+  const { previewRoot } = await import('../lib/preview-server.js')
+  const { userTemplatesDir } = await import('../lib/templates.js')
+  const prevHome55 = process.env.DSH_HOME
+  const probeHome = join(smokeDir, '.tmp-home-probe')
+  process.env.DSH_HOME = probeHome
+  const set55 = { home: homeMod.dshHome(), studio: homeMod.pptStudioDir(), session: stateMod.sessionDir(), preview: previewRoot(), tpl: userTemplatesDir() }
+  delete process.env.DSH_HOME
+  const unset55 = { home: homeMod.dshHome(), studio: homeMod.pptStudioDir(), session: stateMod.sessionDir(), preview: previewRoot(), tpl: userTemplatesDir() }
+  process.env.DSH_HOME = prevHome55
+  ok('§55 用户目录：`dshHome()` 认 DSH_HOME（设/未设两种），未设时回落 `~/.dsh` —— 普通用户行为零变化',
+    set55.home === probeHome && unset55.home === join(homedir(), '.dsh'),
+    `设=${set55.home}｜未设=${unset55.home}`)
+  ok('§55 用户目录：state / preview / templates / diag 四个消费方**同源**（都挂在同一个 ppt-studio 根下，不再各写一套）',
+    set55.studio === join(probeHome, 'ppt-studio') && unset55.studio === join(homedir(), '.dsh', 'ppt-studio')
+      && [set55.session, set55.preview, set55.tpl].every((p) => p.startsWith(set55.studio))
+      && [unset55.session, unset55.preview, unset55.tpl].every((p) => p.startsWith(unset55.studio)),
+    `studio=${set55.studio}｜session=${set55.session}｜preview=${set55.preview}｜templates=${set55.tpl}`)
+
+  // 真写一遍：会话状态必须落在**当前** DSH_HOME 下，且真实家目录里不出现这个 probe 文件
+  const sid55 = `probe-${Date.now().toString(36)}`
+  await stateMod.saveSession(sid55, { routing: 'auto', probe55: true })
+  const inIso = join(SMOKE_HOME, 'ppt-studio', `session-${sid55}.json`)
+  const inReal = join(homedir(), '.dsh', 'ppt-studio', `session-${sid55}.json`)
+  const back55 = await stateMod.loadSession(sid55)
+  ok('§55 会话状态：写进当前 DSH_HOME 下的 `<home>/ppt-studio/`，真实家目录不出现该文件（此前漏掉的正是这一半）',
+    existsSync(inIso) && back55.probe55 === true && !existsSync(inReal),
+    `隔离内=${existsSync(inIso)}｜真实家目录=${existsSync(inReal)}｜读回 probe=${back55.probe55}`)
+  ok('§55 测试隔离：整轮 smoke 的 DSH_HOME 指向构建目录内的临时 home（本轮所有用户层写入都被关在里面）',
+    process.env.DSH_HOME === SMOKE_HOME && SMOKE_HOME.startsWith(root) && SMOKE_HOME.includes('.tmp-'),
+    `DSH_HOME=${process.env.DSH_HOME}`)
+}
+
 // 37.10 【必须是最后一条断言】引用计数自证：文档里 "smoke … N 断言" 必须等于本次真实断言总数。
 // 历史形状：加断言后 README×3 + docs/02 + docs/06×2 + 手册 全靠人工同步，迟早漏一处。
 // 只扫"当前状态"文档（README / 技术报告 / 评审测试矩阵 / 使用手册）；docs/01/03/04 里的历史数字是记录，不动。
@@ -2720,6 +2767,12 @@ for (const rel of countFiles) {
 }
 ok('文档计数自证：所有"smoke … N 断言 / N/N"都等于本次真实断言数（加断言必须同步 6 处引用）',
   staleCounts.length === 0, staleCounts.length ? `过期引用：${staleCounts.join('、')}` : `全部 = ${liveTotal}`)
+
+// 收尾：恢复 DSH_HOME 并清掉整轮隔离目录（用户层产物都在里面，见文件顶部的全局隔离说明）。
+try { await rm(SMOKE_HOME, { recursive: true, force: true }) } catch { /* 忽略 */ }
+try { await rm(join(smokeDir, '.tmp-home-probe'), { recursive: true, force: true }) } catch { /* 忽略 */ }
+if (PREV_SMOKE_HOME === undefined) delete process.env.DSH_HOME
+else process.env.DSH_HOME = PREV_SMOKE_HOME
 
 console.log(`\n==== 结果：${pass} 通过 / ${fail} 失败 ====`)
 process.exit(fail > 0 ? 1 : 0)

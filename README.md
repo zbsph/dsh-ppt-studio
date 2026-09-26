@@ -60,12 +60,22 @@ dsh --profile web --dump-config      # 组合树里应出现 ppt-studio 插件�
 ### 1.4 升级 / 卸载
 
 ```powershell
-# 升级：拿新的资产 URL 再跑一次 add，不需要先卸载
-dsh plugin --profile web add <新的资产 URL>
+# 升级：再跑一次同名命令即可（走 npm），不需要先卸载
+dsh plugin --profile web add dsh-ppt-studio
+# 桌面端：在「插件管理」里对 dsh-ppt-studio 重新安装 / 升级，然后重启应用
 
 # 卸载
 dsh plugin --profile web remove dsh-ppt-studio
 ```
+
+> **刚发布的版本可能装不上（会静默装回旧版）**。宿主给 pnpm 带了供应链策略（`minimumReleaseAge`，实测窗口约 12 小时）：
+> 新版本在窗口期内**不是**合法候选，于是按名字安装会**静默解析回旧的成熟版本**（命令成功、无警告、界面却仍显示旧版本号）。
+> 要第一时间用上刚发布的版本，两条路：
+> 1. 用 `.tgz` 装（tarball 规格不经过 registry 版本解析）：把 `dsh-ppt-studio-<版本>-….tgz` 放到一个**稳定目录**，
+>    在插件管理里填它的绝对路径（**桌面端不要用 https 资产 URL**，会撞 `ERR_PNPM_MISSING_TARBALL_INTEGRITY`，见 §1.7）；
+> 2. 等窗口过去（约 12 小时）再按名字升级。
+>
+> 另外别把 tgz 装在会被清理的临时目录里（例如发版脚本的 `_artifacts/`）：那条 `file:` 依赖一旦悬空，下次装依赖会直接失败。
 
 从 v1.0.2 或更早升上来的注意一件事：那时的包名是 `@dsh-external/dsh-ppt-studio`。旧包会作为独立依赖留在 profile 里，和新包一起被挂载两次。先摘掉它：
 
@@ -212,7 +222,7 @@ ppt_template_remove id=我的模板                # 删掉（只能删你自己
 ppt_templates                                # 看清单：你的 + 随包的分别列出
 ```
 
-你的模板库在 `~/.dsh/ppt-studio/templates/`（Windows：`C:\Users\<你>\.dsh\ppt-studio\templates`）。它**不在插件包里**，所以升级插件不会丢；随包那 4 套是只读的，删不掉（删了升级也会回来，不如不删）。入库之后，你自己的模板和随包模板在清单里同等可选，而且按上面的政策，**你给的模板优先级最高**——要用它就直接说。
+你的模板库在 `<DSH_HOME>/ppt-studio/templates/`（没设 `DSH_HOME` 时就是 `~/.dsh/ppt-studio/templates/`；Windows：`C:\Users\<你>\.dsh\ppt-studio\templates`）。它**不在插件包里**，所以升级插件不会丢；随包那 4 套是只读的，删不掉（删了升级也会回来，不如不删）。入库之后，你自己的模板和随包模板在清单里同等可选，而且按上面的政策，**你给的模板优先级最高**——要用它就直接说。
 
 > **1.0.4 变更**：随包不再带 4 套"从真实 PPT 导入"的重型模板（实用毕业设计论文答辩、极简实用部门工作总结、深蓝质感论文答辩、简约商务）。它们合计 46.2 MB，占安装包 96%，实际从未被用过。想找回来：从 [v1.0.3 的资产](https://github.com/zbsph/dsh-ppt-studio/releases/tag/v1.0.3) 里取 `package/templates/<id>/`，或从 git 历史取 `git show v1.0.3:templates/<id>/...`（注意 `previews/` 是 Office 渲染产物，没进 git，只在资产里）。放回 `templates/` 就能用。
 
@@ -442,7 +452,7 @@ ppt_visual                  # Office 真渲染复核（有 Office 时；audit �
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + LF 守卫 + smoke（276 断言）+ 预设漂移自检
+npm test                        # build + LF 守卫 + smoke（280 断言）+ 预设漂移自检
 npm run check:eol               # 发行字节守卫：跟踪的文本文件必须全 LF（--fix 就地修）
 npm run fresh                   # 用户视角终验：干净克隆 npm test + 真装一遍
 npm run test:bundle             # 安装路径自证：隔离 DSH_HOME + 真 dsh plugin add + dump-config

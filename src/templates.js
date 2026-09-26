@@ -7,9 +7,9 @@
 import { readFile, readdir, rm } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { join, dirname, resolve, sep } from 'node:path'
-import { homedir } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import YAML from 'yaml'
+import { pptStudioDir } from './home.js'
 
 export const TEMPLATES_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', 'templates')
 
@@ -22,11 +22,11 @@ export const TEMPLATES_DIR = join(dirname(fileURLToPath(import.meta.url)), '..',
  *   **用户自己攒的模板会被整目录覆盖掉**。用户层目录在 node_modules 之外，升级不碰。
  *
  * **每次调用求值**（故意不做成模块常量）：测试/CI 可以把 `DSH_HOME` 指到临时目录来验证这一层，
- * 而常量会在 import 时就定死、无法覆盖。
+ * 而常量会在 import 时就定死、无法覆盖。2026-09-26 起该口径由 `src/home.js` 统一提供
+ * （state/preview/diag 也都改成了调用时求值，不再各自实现）。
  */
 export function userTemplatesDir() {
-  const home = process.env.DSH_HOME || join(homedir(), '.dsh')
-  return join(home, 'ppt-studio', 'templates')
+  return join(pptStudioDir(), 'templates')
 }
 
 /** 按 id 找模板目录：**用户层优先**（同名时用户覆盖随包），再找随包层。找不到返回 null。 */

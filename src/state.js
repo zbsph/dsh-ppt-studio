@@ -1,14 +1,16 @@
 /**
  * ppt-studio 状态：会话级（路由/档位）+ 项目级（state.json）。
- * 会话状态持久化到 ~/.dsh/ppt-studio/session-<id>.json，供 resume 恢复。
+ * 会话状态持久化到 `<dshHome>/ppt-studio/session-<id>.json`，供 resume 恢复。
+ * **路径每次调用求值**（认 `DSH_HOME`）——见 src/home.js 顶部的口径统一说明；
+ * 此处原为模块常量 `homedir()/.dsh`，会让隔离 DSH_HOME 的测试/便携部署把状态写进真实家目录。
  */
 import { readFile, writeFile, mkdir, access } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
-import { homedir } from 'node:os'
+import { pptStudioDir } from './home.js'
 
-const ROOT = join(homedir(), '.dsh', 'ppt-studio')
-export const SESSION_DIR = ROOT
+/** 会话状态目录（调用时求值）。 */
+export function sessionDir() { return pptStudioDir() }
 
 export const DEFAULT_SESSION = () => ({
   routing: 'auto',            // auto | on | off（语义判断开关）
@@ -25,7 +27,7 @@ export const DEFAULT_SESSION = () => ({
   deckDir: null,
 })
 
-const sessionPath = (sessionId) => join(ROOT, `session-${sanitize(sessionId)}.json`)
+const sessionPath = (sessionId) => join(sessionDir(), `session-${sanitize(sessionId)}.json`)
 
 export async function loadSession(sessionId) {
   return (await loadSessionDiag(sessionId)).state
@@ -44,7 +46,7 @@ export async function loadSessionDiag(sessionId) {
 }
 
 export async function saveSession(sessionId, state) {
-  await mkdir(ROOT, { recursive: true })
+  await mkdir(sessionDir(), { recursive: true })
   await writeFile(sessionPath(sessionId), JSON.stringify(state, null, 2))
 }
 
