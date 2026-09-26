@@ -1956,6 +1956,36 @@ if (pyEnv.has) {
 } else {
   ok('python-pptx 兜底：生成脚本真跑出 .pptx，且 python-pptx 能把它读回（无 python-pptx：跳过）', true)
 }
+// 43.3 原生图表（2026-09-26 第二轮 ③）：兜底引擎的图表必须是**原生可编辑图表**
+// ——包里要有 `ppt/charts/*.xml`（图表部件）**与** `ppt/embeddings/*.xlsx`（内嵌数据工作簿，数据随文件走）。
+// 旧行为是"图表降级为表格"（用户拿到成品看不见图、也改不了数据），这条断言挡住回退。
+if (pyEnv.has) {
+  const chartDeck = join(pyDeck, 'charts')
+  await mkdir(join(chartDeck, 'pages'), { recursive: true })
+  await writeFile(join(chartDeck, 'deck.yaml'), ['version: 1', 'title: chart-py', 'size: [960, 540]', 'theme:',
+    '  colors: {primary: "#2563EB", text: "#1F2937"}', '  textStyles:',
+    '    body: {fontSize: 16, color: "$text"}', 'pages:', '  - pages/01.yaml', ''].join('\n'), 'utf8')
+  await writeFile(join(chartDeck, 'pages', '01.yaml'), ['pageType: content', 'elements:',
+    '  - elementId: bar', '    elementType: chart', '    bounds: [60, 60, 400, 260]',
+    '    chart: {type: bar, data: {cols: ["季度", "营收"], rows: [["Q1", 12], ["Q2", 18]]}}',
+    '  - elementId: pie', '    elementType: chart', '    bounds: [500, 60, 300, 260]',
+    '    chart: {type: pie, data: {cols: ["份额", "值"], rows: [["甲", 60], ["乙", 40]]}}', ''].join('\n'), 'utf8')
+  let pass433 = false
+  let info433 = ''
+  try {
+    const outC = join(chartDeck, 'out-charts.pptx')
+    await runPythonExport(await resolveDeck(chartDeck), outC)
+    const { zipRead } = await import('../lib/zips.js')
+    const keys = [...zipRead(readFileSync(outC)).keys()]
+    const charts = keys.filter((k) => k.includes('/charts/') && k.endsWith('.xml') && !k.includes('_rels')).length
+    const embeds = keys.filter((k) => k.includes('embeddings')).length
+    pass433 = charts === 2 && embeds === 2
+    info433 = `chart 部件=${charts} 内嵌工作簿=${embeds}（期望各 2）`
+  } catch (e) { info433 = String(e.message).slice(0, 220) }
+  ok('python-pptx 兜底：图表是**原生可编辑图表**（`ppt/charts/*.xml` + 内嵌数据工作簿各就位，不再降级为表格）', pass433, info433)
+} else {
+  ok('python-pptx 兜底：图表是原生可编辑图表（无 python-pptx：跳过）', true)
+}
 await rm(pyDeck, { recursive: true, force: true })
 
 // ── 44. 表格字号：audit 档的最小字号断言不得被表格自己架空（2026-09-18 新增）──────────────

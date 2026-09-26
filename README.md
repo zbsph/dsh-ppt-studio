@@ -287,7 +287,7 @@ bar / line / pie，**矢量拼绘**：我们在 pptx 里画的是**普通形状*
 **不是 PowerPoint 的图表对象**。所以成品里：移动/缩放/改色/改字号照常（它们就是形状），但**没有"编辑数据"**、不能切换图表类型，
 改一个数字也不会让柱子高度或扇形角度跟着变（图形和文字是各自独立的对象）。
 另外 `chart` 只画**图形本身**，分类名/数值/单位/图例要用文本元素自己写（DSL 里没有这些字段）——改了数字记得同时改形状或回来改 DSL 重导。
-用 python-pptx 兜底引擎时图表降级成表格（报告里会标注）。要"用户自己能改数据"的原生图表，见 docs/04 的「原生图表」路线项。复杂图表也可以直接用图片或形状拼。
+用 python-pptx 兜底引擎时图表是**原生可编辑图表**（带内嵌数据工作簿：PowerPoint 里能"编辑数据"、能换图表类型）——正好补上引擎 A 矢量图表不可改数据的短板。复杂图表也可以直接用图片或形状拼；引擎 A 要不要也改成原生图表，见 docs/04 的「原生图表」路线项。
 
 **讲稿能进 pptx 吗？**
 能。页面写 `notes:`（多行用 `|` 块标量），导出就成了 PowerPoint 备注页，`ppt_import` 也能读回来改。没写 `notes:` 的页不会产生备注部件，老工程导出结果不变。翻页和计时属于放映设置，不在插件范围内。
@@ -462,7 +462,7 @@ ppt_visual                  # Office 真渲染复核（有 Office 时；audit �
 
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
-npm test                        # build + LF 守卫 + smoke（295 断言）+ 预设漂移自检
+npm test                        # build + LF 守卫 + smoke（296 断言）+ 预设漂移自检
 npm run check:eol               # 发行字节守卫：跟踪的文本文件必须全 LF（--fix 就地修）
 npm run fresh                   # 用户视角终验：干净克隆 npm test + 真装一遍
 npm run test:bundle             # 安装路径自证：隔离 DSH_HOME + 真 dsh plugin add + dump-config

@@ -665,7 +665,7 @@ export function registerTools(ctx) {
 
   reg({
     name: 'ppt_export',
-    description: '导出 .pptx。engine 缺省 auto（=pptd 自研主引擎，图表矢量拼绘；hard 失败时自动回退 python-pptx 并醒目标注降级）；python-pptx 仅显式指定（其图表降级为表格）。out 支持绝对路径（原样使用）或文件名（相对 deck 目录）。audit 质量档自动追加回读断言（页数/尺寸/最小字号）',
+    description: '导出 .pptx。engine 缺省 auto（=pptd 自研主引擎，图表矢量拼绘；hard 失败时自动回退 python-pptx 并醒目标注降级）；python-pptx 仅显式指定（其图表为原生可编辑图表 + 内嵌数据工作簿）。out 支持绝对路径（原样使用）或文件名（相对 deck 目录）。audit 质量档自动追加回读断言（页数/尺寸/最小字号）',
     parameters: {
       dir: dirSchema,
       engine: { type: 'string', enum: ['auto', 'pptd', 'python-pptx'], description: '缺省 auto（=pptd）；python-pptx 需 python 环境' },
@@ -709,7 +709,7 @@ export function registerTools(ctx) {
           const py = findPython()
           if (!py.has) return `⚠ python-pptx 引擎不可用（未检测到带 python-pptx 的解释器）：${py.cmd ? '请给它 pip install python-pptx' : '未找到 python 解释器，也没探测到捆绑 Python'}。可改用默认 pptd 引擎。`
           const r = await runPythonExport(ctx0, outName)
-          return `✓ 已导出（python-pptx 引擎）：${r.file}\n图表已降级为表格（引擎 A 才支持矢量拼绘图表）。${await fallbackNote(ctx0, r)}${officialQaNote(r.file, ctx0.pages?.length)}${await withAudit(r.file)}${engineNote}`
+          return `✓ 已导出（python-pptx 引擎）：${r.file}\n图表为**原生可编辑图表**（带内嵌数据工作簿；引擎 A 的图表是矢量拼绘、不可改数据）。${await fallbackNote(ctx0, r)}${officialQaNote(r.file, ctx0.pages?.length)}${await withAudit(r.file)}${engineNote}`
         }
         try {
           const r = await exportPptx(ctx0, { out: outName, engine: 'pptd' })
@@ -752,7 +752,7 @@ export function registerTools(ctx) {
             if (py.has) {
               try {
                 const r2 = await runPythonExport(ctx0, outName)
-                return `⚠ pptd 引擎失败，已自动降级 python-pptx（图表降级为表格）：${error?.message ?? error}\n✓ 已导出（python-pptx 兜底）：${r2.file}\n建议排查 pptd 失败原因（见上）或改用质量更高的模式。${await fallbackNote(ctx0, r2)}${officialQaNote(r2.file, ctx0.pages?.length)}${await withAudit(r2.file)}`
+                return `⚠ pptd 引擎失败，已自动降级 python-pptx（其图表为原生可编辑图表 + 内嵌数据工作簿）：${error?.message ?? error}\n✓ 已导出（python-pptx 兜底）：${r2.file}\n建议排查 pptd 失败原因（见上）或改用质量更高的模式。${await fallbackNote(ctx0, r2)}${officialQaNote(r2.file, ctx0.pages?.length)}${await withAudit(r2.file)}`
               } catch (e2) {
                 return `✗ pptd 失败（${error?.message ?? error}）且 python-pptx 兜底也失败：${e2?.message ?? e2}`
               }

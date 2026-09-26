@@ -1,6 +1,6 @@
 /**
  * python-pptx 引擎：把中间层（deck.yaml）映射为 python-pptx 脚本（兜底引擎）。
- * 覆盖 text / shape / image / table；chart 降级为表格+说明。
+ * 覆盖 text / shape / image / table / **chart（原生可编辑图表 + 内嵌数据工作簿）**。
  * 需要 python 环境 + python-pptx（运行前探测，缺失则报错提示）。
  */
 import { readFile } from 'node:fs/promises'
@@ -8,6 +8,7 @@ import { join, isAbsolute } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import YAML from 'yaml'
 import { normalizePage, measureText } from './pptd/layout.js'
+import { chartData, chartColors } from './pptd/svgCharts.js'
 import { findBundledPython } from './capabilities.js'
 
 export function genPythonScript(ctx) {
@@ -17,6 +18,10 @@ export function genPythonScript(ctx) {
   py.push('from pptx.dml.color import RGBColor')
   py.push('from pptx.enum.shapes import MSO_SHAPE, MSO_CONNECTOR')
   py.push('from pptx.enum.text import PP_ALIGN, MSO_ANCHOR')
+  // 原生图表（2026-09-26 第二轮 ③）：python-pptx 会自己写 `ppt/charts/chartN.xml` + **内嵌数据工作簿**
+  // `ppt/embeddings/*.xlsx`，于是成品里的图表可"编辑数据/换类型"、数据随文件走。
+  py.push('from pptx.chart.data import CategoryChartData')
+  py.push('from pptx.enum.chart import XL_CHART_TYPE')
   py.push('import json, sys')
   py.push('')
   // OUT 由 runPythonExport 替换成字面量路径（见文件末尾的 replace）。
@@ -127,7 +132,54 @@ export function genPythonScript(ctx) {
           break
         }
         case 'chart': {
-          py.push(`# chart 降级：引擎 B 以表格表达（引擎 A 支持矢量拼绘）`)
+          // 原生可编辑图表（2026-09-26 第二轮 ③）——**不再降级为表格**。
+          // 旧行为是"图表以表格表达"，用户拿到成品看不见图、也改不了数据；现在交给 python-pptx
+          // 生成原生图表：`ppt/charts/chartN.xml` + 内嵌工作簿一起落盘 ⇒ PowerPoint 里可"编辑数据"、
+          // 可切换图表类型、坐标轴/图例/数据标签都由图表自己算。
+          const cdata = chartData(el.chart)
+          const ccolors = chartColors(el.chart)
+          const kindOf = { bar: 'COLUMN_CLUSTERED', line: 'LINE_MARKERS', pie: 'PIE' }
+          const kind = kindOf[el.chart?.type] ?? 'COLUMN_CLUSTERED'
+          const series = cdata.series.length ? cdata.series : [{ name: '系列1', values: [] }]
+          py.push(`chart_data = CategoryChartData()`)
+          py.push(`chart_data.categories = ${pyLit(cdata.categories)}`)
+          for (const s of series) {
+            const vals = s.values.map((v) => (Number.isFinite(v) ? String(v) : '0'))
+            // 单元素元组必须带尾逗号，否则 `(12)` 是整数而不是序列
+            py.push(`chart_data.add_series(${pyLit(s.name ?? '系列')}, (${vals.join(', ')}${vals.length === 1 ? ',' : ''}))`)
+          }
+          py.push(`gf = slide.shapes.add_chart(XL_CHART_TYPE.${kind}, Emu(${x}*12700), Emu(${y}*12700), Emu(${w}*12700), Emu(${h}*12700), chart_data)`)
+          py.push(`chart = gf.chart`)
+          py.push(`chart.has_legend = ${series.length > 1 ? 'True' : 'False'}`)
+          if (series.length > 1) py.push(`chart.legend.include_in_layout = False`)
+          py.push(`plot = chart.plots[0]`)
+          if (el.chart?.type === 'pie') {
+            py.push(`plot.has_data_labels = True`)
+            py.push(`plot.data_labels.show_percentage = True`)
+            py.push(`plot.data_labels.show_value = False`)
+          } else {
+            // `vary_by_categories=False` 是必须的：python-pptx 默认模板会按分类上色，
+            // 于是单系列图例列成分类名、每根柱子不同色（2026-09-26 实测），与我们的观感预期不符。
+            py.push(`plot.vary_by_categories = False`)
+            py.push(`plot.has_data_labels = True`)
+            py.push(`plot.data_labels.number_format = '0'`)
+            py.push(`plot.data_labels.number_format_is_linked = False`)
+          }
+          // 上色是**观感项**：任何 API 差异都不该让整册导出失败 ⇒ 整块 try/except 包住。
+          py.push(`try:`)
+          if (el.chart?.type === 'pie') {
+            py.push(`    _pie = ${pyLit(ccolors)}`)
+            py.push(`    for i, pt in enumerate(plot.points):`)
+            py.push(`        pt.format.fill.solid(); pt.format.fill.fore_color.rgb = rgb(_pie[i % len(_pie)])`)
+          } else {
+            py.push(`    _cols = ${pyLit(ccolors)}`)
+            py.push(`    for i, s in enumerate(chart.series):`)
+            py.push(`        _c = rgb(_cols[i % len(_cols)])`)
+            py.push(`        s.format.fill.solid(); s.format.fill.fore_color.rgb = _c`)
+            if (el.chart?.type === 'line') py.push(`        s.format.line.color.rgb = _c`)
+          }
+          py.push(`except Exception:`)
+          py.push(`    pass`)
           break
         }
       }
