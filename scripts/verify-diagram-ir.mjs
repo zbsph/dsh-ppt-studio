@@ -1,0 +1,151 @@
+#!/usr/bin/env node
+/**
+ * 阶段 B 图编译核心自证：`node scripts/verify-diagram-ir.mjs`
+ *
+ * 守四件事（docs/12 §3/§5/§8）：
+ *   ① IR 校验的反例必须报红（未知类型要**优雅降级**而不是崩）；
+ *   ② 布局不变量：确定性 / 纯函数 / 节点不叠 / 落在画布内 / 连线真的锚在节点边上 / 容器严格包住成员；
+ *   ③ 引擎产出**零冲突**：物化后过一遍真实门禁（verifyDeck）必须 0 错误、且**不需要任何 expectedOverlaps**；
+ *   ④ 无 `diagram` 的页面零影响：元素列表与从前逐字节一致（物化只追加、不改既有）。
+ */
+import { mkdirSync, writeFileSync, rmSync } from 'node:fs'
+import { join } from 'node:path'
+import { tmpdir } from 'node:os'
+import { validateDiagram, layoutDiagram, styleProfileFrom, DIAGRAM_TYPES } from '../lib/pptd/diagram-ir.js'
+import { validatePage, resolveDeck } from '../lib/pptd/schema.js'
+import { renderDeck } from '../lib/pptd/render-html.js'
+import { verifyDeck } from '../lib/verify.js'
+import { contains, onSide, rectOf, intersects } from '../lib/pptd/relations.js'
+
+let pass = 0
+let fail = 0
+const failures = []
+function ok(name, cond, detail = '') {
+  if (cond) { pass++; console.log(`✓ ${name}${detail ? ` — ${detail}` : ''}`) }
+  else { fail++; failures.push(name); console.log(`✗ ${name}${detail ? ` — ${detail}` : ''}`) }
+}
+const H = (t) => console.log(`\n=== ${t} ===`)
+
+const STYLE = styleProfileFrom({ colors: { primary: '#2563EB', accent: '#F59E0B', text: '#1F2937', bg: '#F8FAFC' }, spacing: { base: 28 }, textStyles: { body: { fontSize: 14 } } })
+const BOX = { x: 60, y: 60, w: 840, h: 300 }
+const IR = () => ({
+  type: 'flow', direction: 'LR', title: '数据链路',
+  nodes: [{ id: 'n1', label: '采集' }, { id: 'n2', label: '清洗' }, { id: 'n3', label: '计算' }, { id: 'n4', label: '应用', emphasis: 'accent' }],
+  edges: [{ from: 'n1', to: 'n2', label: '实时' }, { from: 'n2', to: 'n3' }, { from: 'n3', to: 'n4', style: 'dashed' }],
+  groups: [{ id: 's1', label: '第一段', members: ['n1', 'n2'] }, { id: 's2', label: '第二段', members: ['n3', 'n4'] }],
+})
+
+// ── 1. IR 校验（反例必须报红） ────────────────────────────────────────────
+H('1. validateDiagram：反例必须报红，未知类型要优雅降级')
+{
+  const err = (d) => validateDiagram(d, { file: 'p.yaml' }).join('｜')
+  ok('合法 IR ⇒ 0 错误', validateDiagram(IR(), { file: 'p.yaml' }).length === 0)
+  ok('未知 type ⇒ 报错并说明"优雅降级"', /尚未实现/.test(err({ type: 'nope', nodes: [{ id: 'a' }] })) && /优雅降级/.test(err({ type: 'nope', nodes: [{ id: 'a' }] })))
+  ok('缺 nodes / nodes 为空 ⇒ 报错', /nodes/.test(err({ type: 'flow' })) && /nodes/.test(err({ type: 'flow', nodes: [] })))
+  ok('节点 id 重复 / 缺 id ⇒ 报错', /duplicate/.test(err({ type: 'flow', nodes: [{ id: 'a' }, { id: 'a' }] })) && /required/.test(err({ type: 'flow', nodes: [{}] })))
+  ok('边指向不存在的节点 ⇒ 报错（防呆）', /不是已声明的节点 id/.test(err({ type: 'flow', nodes: [{ id: 'a' }], edges: [{ from: 'a', to: 'ghost' }] })))
+  ok('分组成员不存在 ⇒ 报错', /不是已声明的节点 id/.test(err({ type: 'flow', nodes: [{ id: 'a' }], groups: [{ id: 'g', members: ['ghost'] }] })))
+  ok('direction / emphasis / style 非法值 ⇒ 各自报错', /LR\|TB/.test(err({ type: 'flow', direction: 'XX', nodes: [{ id: 'a' }] })) && /primary\|accent\|plain/.test(err({ type: 'flow', nodes: [{ id: 'a', emphasis: 'z' }] })) && /solid\|dashed/.test(err({ type: 'flow', nodes: [{ id: 'a' }], edges: [{ from: 'a', to: 'a', style: 'z' }] })))
+  ok('bounds 形状错 ⇒ 报错', /\[x, y, w, h\]/.test(err({ type: 'flow', nodes: [{ id: 'a' }], bounds: [1, 2] })))
+  ok('未知类型布局：不产元素 + 有 note（绝不产半成品图）', (() => { const o = layoutDiagram({ type: 'nope', nodes: [{ id: 'a' }] }, { bounds: BOX, style: STYLE }); return o.elements.length === 0 && o.notes.length === 1 })())
+  ok('画布无效 ⇒ 不产元素 + 有 note', (() => { const o = layoutDiagram(IR(), { bounds: { x: 0, y: 0, w: 0, h: 0 }, style: STYLE }); return o.elements.length === 0 && o.notes.length === 1 })())
+}
+
+// ── 2. 布局不变量 ────────────────────────────────────────────────────────
+H('2. 布局不变量：确定性 / 纯函数 / 不叠 / 落边 / 包住')
+{
+  const a = layoutDiagram(IR(), { bounds: BOX, style: STYLE, idPrefix: 'd1_' })
+  const b = layoutDiagram(IR(), { bounds: BOX, style: STYLE, idPrefix: 'd1_' })
+  ok('确定性：同输入两次输出深度相等', JSON.stringify(a) === JSON.stringify(b))
+  const src = IR()
+  const before = JSON.stringify(src)
+  layoutDiagram(src, { bounds: BOX, style: STYLE })
+  ok('纯函数：不改输入 IR', JSON.stringify(src) === before)
+
+  const nodes = a.elements.filter((e) => e.elementType === 'shape' && !String(e.elementId).includes('_g_'))
+  let overlap = null
+  for (let i = 0; i < nodes.length && !overlap; i++) for (let j = i + 1; j < nodes.length; j++) if (intersects(rectOf(nodes[i]), rectOf(nodes[j]), 1)) overlap = `${nodes[i].elementId}×${nodes[j].elementId}`
+  ok('节点之间互不重叠', overlap === null, overlap ?? `${nodes.length} 个节点`)
+  ok('所有节点落在画布内', nodes.every((e) => { const r = rectOf(e); return r.x >= BOX.x - 0.5 && r.y >= BOX.y - 0.5 && r.right <= BOX.x + BOX.w + 0.5 && r.bottom <= BOX.y + BOX.h + 0.5 }))
+
+  const byId = new Map(a.elements.map((e) => [e.elementId, e]))
+  const edges = a.elements.filter((e) => e.elementType === 'line')
+  ok('连线两端**真的**落在节点边上（attach 与 points 一致，箭头必然落边）',
+    edges.length === 3 && edges.every((l) => onSide(l.attach.from.side, l.points[0], rectOf(byId.get(l.attach.from.ref))) && onSide(l.attach.to.side, l.points[l.points.length - 1], rectOf(byId.get(l.attach.to.ref)))),
+    edges.map((l) => l.elementId).join(','))
+
+  const containers = a.elements.filter((e) => String(e.elementId).includes('_g_'))
+  ok('容器严格包住其声明成员（几何反验证会过）',
+    containers.length === 2 && containers.every((c) => (c.contains ?? []).filter((m) => byId.get(m)?.elementType === 'shape').every((m) => contains(rectOf(c), rectOf(byId.get(m))))),
+    containers.map((c) => `${c.elementId}:${(c.contains ?? []).length}`).join('｜'))
+  ok('容器之间互不重叠（多组时 pad 自动收窄到节点间隙以内）', !intersects(rectOf(containers[0]), rectOf(containers[1]), 1))
+
+  ok('结构关系自动产出：groups 的 id 与容器元素 id **不同名**（共用命名空间）',
+    a.groups.length === 2 && a.groups.every((g) => !a.elements.some((e) => e.elementId === g.id)) && a.groups.every((g) => g.id.startsWith('d1_grp_')),
+    a.groups.map((g) => g.id).join(','))
+  ok('产出的每个元素都过 schema 校验（引擎不产非法元素）',
+    validatePage({ pageType: 'content', elements: a.elements, groups: a.groups }, 'gen.yaml') === null)
+  ok('每个族都有 maturity 标记，且只实现已声明的族', Object.entries(DIAGRAM_TYPES).every(([, m]) => ['beta', 'stable'].includes(m)), JSON.stringify(DIAGRAM_TYPES))
+  ok('TB 方向也能产出自洽布局', (() => {
+    const o = layoutDiagram({ ...IR(), direction: 'TB' }, { bounds: BOX, style: STYLE })
+    const ns = o.elements.filter((e) => e.elementType === 'shape' && !e.elementId.includes('_g_'))
+    return ns.length === 4 && new Set(ns.map((e) => Math.round(rectOf(e).x))).size === 1 && ns.every((e, i, arr) => i === 0 || rectOf(e).y > rectOf(arr[i - 1]).y)
+  })())
+}
+
+// ── 3. 物化 + 真实门禁（零冲突，且不需要任何声明） ────────────────────────
+H('3. 物化（resolveDeck）→ 真实门禁 0 错误 / 0 声明')
+{
+  const dir = join(tmpdir(), `pptd-ir-verify-${Date.now()}`)
+  rmSync(dir, { recursive: true, force: true })
+  mkdirSync(join(dir, 'pages'), { recursive: true })
+  writeFileSync(join(dir, 'deck.yaml'), ['version: 1', 'title: ir', 'size: [960, 540]', 'theme:',
+    '  colors: {primary: "#2563EB", accent: "#F59E0B", text: "#1F2937", bg: "#F8FAFC"}', '  textStyles:',
+    '    body: {fontSize: 14, color: "$text"}', '  spacing: {base: 28}', '  safeArea: {top: 40, bottom: 40, left: 40, right: 40}',
+    'pages:', '  - pages/01.yaml', ''].join('\n'))
+  const irYaml = ['pageType: content', 'diagram:', `  type: ${IR().type}`, `  direction: ${IR().direction}`,
+    '  nodes:', ...IR().nodes.map((n) => `    - {id: ${n.id}, label: ${n.label}${n.emphasis ? `, emphasis: ${n.emphasis}` : ''}}`),
+    '  edges:', ...IR().edges.map((e) => `    - {from: ${e.from}, to: ${e.to}${e.label ? `, label: ${e.label}` : ''}${e.style ? `, style: ${e.style}` : ''}}`),
+    '  groups:', ...IR().groups.map((g) => `    - {id: ${g.id}, label: ${g.label}, members: [${g.members.join(', ')}]}`), ''].join('\n')
+  writeFileSync(join(dir, 'pages', '01.yaml'), irYaml)
+  const ctx = await resolveDeck(dir)
+  const page = ctx.pages[0].page
+  ok('物化：IR 展开出的元素追加进页面（id 带 d1_ 前缀，便于用户接管）',
+    (page.elements ?? []).length === 16 && page.elements.every((e) => e.elementId.startsWith('d1_')), `${(page.elements ?? []).length} 个元素`)
+  ok('物化：结构关系与逻辑组一起产出（groups 2 条，成员是节点与标签）',
+    (page.groups ?? []).length === 2 && page.groups[0].members.length >= 2, JSON.stringify(page.groups?.map((g) => g.id)))
+  await renderDeck(ctx, { out: 'preview' })
+  const layout = JSON.parse((await import('node:fs')).readFileSync(join(dir, 'preview', 'layout.json'), 'utf8'))
+  const v = verifyDeck(layout)
+  const decl = (page.expectedOverlaps ?? []).length + (page.expectedOutOfSafeArea ?? []).length
+  ok('**引擎产出零冲突**：真实门禁 0 错误（且页面**没有任何声明**——不靠声明掩盖几何问题）',
+    v.errors.length === 0 && decl === 0, `错误 ${v.errors.length}｜声明 ${decl}｜${v.errors.slice(0, 3).map((e) => e.code).join(',')}`)
+  ok('报告出现结构关系行（引擎产出的关系在门禁里可见）', /· 结构关系：组 2｜包含 \d+｜附着 6/.test(v.text), v.text.split('\n').find((l) => l.includes('结构关系'))?.trim())
+  ok('引擎的 attach 断言：门禁报告**没有** attach-override（引擎产出的 points 与解析结果一致）', !v.warns.some((w) => w.code === 'attach-override'))
+  rmSync(dir, { recursive: true, force: true })
+}
+
+// ── 4. 无 diagram 的页面零影响（纪律：不退化） ────────────────────────────
+H('4. 无 diagram 的页面：物化不碰它（逐字节一致的机制保证）')
+{
+  const dir = join(tmpdir(), `pptd-ir-plain-${Date.now()}`)
+  rmSync(dir, { recursive: true, force: true })
+  mkdirSync(join(dir, 'pages'), { recursive: true })
+  writeFileSync(join(dir, 'deck.yaml'), ['version: 1', 'title: plain', 'size: [960, 540]', 'theme:',
+    '  colors: {primary: "#2563EB", text: "#1F2937"}', '  textStyles:', '    body: {fontSize: 16, color: "$text"}',
+    'pages:', '  - pages/01.yaml', ''].join('\n'))
+  const body = ['pageType: content', 'elements:', '  - elementId: t1', '    elementType: text', '    bounds: [40, 40, 400, 40]', '    content: {text: "手写页", style: "$body"}', ''].join('\n')
+  writeFileSync(join(dir, 'pages', '01.yaml'), body)
+  const ctx = await resolveDeck(dir)
+  const page = ctx.pages[0].page
+  ok('没有 diagram ⇒ 元素/组/notes 一个都不多（原样保留手写内容）',
+    page.elements.length === 1 && page.elements[0].elementId === 't1' && page.groups === undefined && page.diagramNotes === undefined,
+    `元素 ${page.elements.length}｜groups ${page.groups === undefined ? 'undefined' : page.groups.length}`)
+  await renderDeck(ctx, { out: 'preview' })
+  const v = verifyDeck(JSON.parse((await import('node:fs')).readFileSync(join(dir, 'preview', 'layout.json'), 'utf8')))
+  ok('无 diagram 的页报告里**不出现**结构关系两段（门控未被引擎绕过）', !v.text.includes('· 结构关系：') && !v.text.includes('· 设计声明复核：'))
+  rmSync(dir, { recursive: true, force: true })
+}
+
+console.log(`\n==== verify-diagram-ir 结果：${pass} 通过 / ${fail} 失败 ====`)
+if (fail) { console.log(`失败项：${failures.join('；')}`); process.exit(1) }

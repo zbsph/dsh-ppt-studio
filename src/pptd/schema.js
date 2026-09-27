@@ -57,6 +57,9 @@ const ELEMENT_KEYS = {
 const STRUCT_KEYS = ['contains', 'badgeOf', 'roleReason']
 /** attach 的边枚举：与 geometry 层的判定共用一份（relations.js），避免两处枚举漂移。 */
 import { ATTACH_SIDES } from './relations.js'
+// 阶段 B：`diagram` 物化（IR → 元素 + 结构关系）。schema → diagram-ir → relations，无循环依赖。
+import { layoutDiagram, styleProfileFrom, validateDiagram } from './diagram-ir.js'
+import { measureText } from './layout.js'
 
 /**
  * shape.kind 白名单（v0.9.1 候选 A：常见 prst 直通）。
@@ -613,6 +616,34 @@ export async function resolveDeck(dir) {
     if (perr) throw perr
     const terr = themeRefCheck(page, theme, ref)
     if (terr.length) throw fail(terr)
+    // ── 阶段 B：`diagram` 物化（IR → 普通元素 + 结构关系）──
+    // 展开在这里 ⇒ normalizePage / 预览 / 导出 / verify **全部零改动**，预览与成品天然同源（docs/12 §5）。
+    // 没有 `diagram` 的页完全不进这段 ⇒ 既有工程逐字节不变。
+    if (page.diagram !== undefined) {
+      const derr = validateDiagram(page.diagram, { file: ref })
+      if (derr.length) throw fail(derr)
+      const prof = styleProfileFrom(theme)
+      const sa = page.safeArea ?? theme.safeArea ?? null
+      const bounds = Array.isArray(page.diagram?.bounds)
+        ? { x: page.diagram.bounds[0], y: page.diagram.bounds[1], w: page.diagram.bounds[2], h: page.diagram.bounds[3] }
+        : (sa
+            ? { x: sa.left ?? 60, y: sa.top ?? 60, w: size.width - (sa.left ?? 60) - (sa.right ?? 60), h: size.height - (sa.top ?? 60) - (sa.bottom ?? 60) }
+            : { x: 60, y: 60, w: size.width - 120, h: size.height - 120 })
+      const out = layoutDiagram(page.diagram, {
+        bounds,
+        style: { ...prof, safeArea: sa ?? { top: 60, bottom: 60, left: 60, right: 60 }, page: { width: size.width, height: size.height } },
+        measure: (t, fs) => {
+          try {
+            const m = measureText(String(t), { fontSize: fs })
+            return typeof m === 'number' ? m : (m?.width ?? String(t).length * fs)
+          } catch { return String(t).length * fs }
+        },
+        idPrefix: `d${pages.length + 1}_`,
+      })
+      if (out.elements.length) page.elements = [...(page.elements ?? []), ...out.elements]
+      if (out.groups.length) page.groups = [...(page.groups ?? []), ...out.groups]
+      if (out.notes.length) page.diagramNotes = out.notes
+    }
     pages.push({ file: join(dir, ref), ref, page, name: (page.title ?? ref.replace(/\.yaml$/, '')).toString(), index: pages.length })
   }
   const resolveColor = (v) => {
