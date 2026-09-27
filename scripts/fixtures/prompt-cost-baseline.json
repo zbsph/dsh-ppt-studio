@@ -1,0 +1,178 @@
+{
+  "measuredAt": "2026-09-27",
+  "estimator": "CJK=1 token/字；其余=4 字节/token",
+  "toolCount": 22,
+  "tools": [
+    {
+      "name": "ppt_verify",
+      "chars": 860,
+      "bytes": 1467,
+      "tokens": 436
+    },
+    {
+      "name": "ppt_patch",
+      "chars": 767,
+      "bytes": 1283,
+      "tokens": 380
+    },
+    {
+      "name": "ppt_visual",
+      "chars": 733,
+      "bytes": 1208,
+      "tokens": 355
+    },
+    {
+      "name": "ppt_template_add",
+      "chars": 795,
+      "bytes": 1211,
+      "tokens": 353
+    },
+    {
+      "name": "ppt_splice",
+      "chars": 677,
+      "bytes": 1071,
+      "tokens": 310
+    },
+    {
+      "name": "ppt_export",
+      "chars": 637,
+      "bytes": 955,
+      "tokens": 279
+    },
+    {
+      "name": "ppt_template_styleaudit",
+      "chars": 573,
+      "bytes": 853,
+      "tokens": 244
+    },
+    {
+      "name": "ppt_crosscheck",
+      "chars": 425,
+      "bytes": 761,
+      "tokens": 233
+    },
+    {
+      "name": "ppt_new",
+      "chars": 524,
+      "bytes": 712,
+      "tokens": 202
+    },
+    {
+      "name": "ppt_shot",
+      "chars": 533,
+      "bytes": 711,
+      "tokens": 199
+    },
+    {
+      "name": "ppt_slice",
+      "chars": 459,
+      "bytes": 657,
+      "tokens": 188
+    },
+    {
+      "name": "ppt_measure",
+      "chars": 407,
+      "bytes": 629,
+      "tokens": 182
+    },
+    {
+      "name": "ppt_templates",
+      "chars": 354,
+      "bytes": 580,
+      "tokens": 172
+    },
+    {
+      "name": "ppt_template_remove",
+      "chars": 352,
+      "bytes": 534,
+      "tokens": 157
+    },
+    {
+      "name": "ppt_preview",
+      "chars": 287,
+      "bytes": 443,
+      "tokens": 129
+    },
+    {
+      "name": "ppt_import",
+      "chars": 318,
+      "bytes": 410,
+      "tokens": 114
+    },
+    {
+      "name": "ppt_render",
+      "chars": 315,
+      "bytes": 399,
+      "tokens": 110
+    },
+    {
+      "name": "ppt_check",
+      "chars": 284,
+      "bytes": 380,
+      "tokens": 107
+    },
+    {
+      "name": "ppt_media",
+      "chars": 254,
+      "bytes": 340,
+      "tokens": 96
+    },
+    {
+      "name": "ppt_schema",
+      "chars": 214,
+      "bytes": 292,
+      "tokens": 83
+    },
+    {
+      "name": "ppt_state",
+      "chars": 249,
+      "bytes": 303,
+      "tokens": 83
+    },
+    {
+      "name": "ppt_status",
+      "chars": 213,
+      "bytes": 283,
+      "tokens": 80
+    }
+  ],
+  "skills": [
+    {
+      "name": "ppt-studio-manual",
+      "chars": 201,
+      "bytes": 403,
+      "tokens": 125
+    },
+    {
+      "name": "ppt-studio-data",
+      "chars": 127,
+      "bytes": 331,
+      "tokens": 107
+    },
+    {
+      "name": "ppt-studio-copy",
+      "chars": 131,
+      "bytes": 319,
+      "tokens": 102
+    },
+    {
+      "name": "ppt-studio-craft",
+      "chars": 121,
+      "bytes": 307,
+      "tokens": 99
+    }
+  ],
+  "workflow": {
+    "tokens": 4409,
+    "chars": 6941,
+    "quickTokens": 575,
+    "quickChars": 836,
+    "note": ""
+  },
+  "totals": {
+    "tools": 4492,
+    "skills": 433,
+    "workflow": 4409,
+    "all": 9334
+  }
+}
