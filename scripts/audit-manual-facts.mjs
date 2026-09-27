@@ -84,8 +84,10 @@ for (const c of ['density', 'hotspot', 'near-align']) {
 const conformanceMode = src.verify.match(/severity: mode === 'strict' \? 'error' : 'warning',\s*\n?\s*code: 'theme-conformance'/)
 check('theme-conformance：strict=error / suggest=warning / off=跳过（手册如此描述）', !!conformanceMode, 'verify.js themeConformance(): severity 随 mode 切换；无 colors 自动跳过')
 
-const lineValidator = src.schema.match(/仅支持 2 点 \[\[x1,y1\],\[x2,y2\]\]/)
-check('line 只支持两点（手册已写明，拆成多条 line）', !!lineValidator, `schema.js validateLine: ${(lineValidator?.[0] ?? '未找到').slice(0, 60)}`)
+// 阶段 A（2026-09-28）事实更新：line 不再"只支持两点"——>2 点折线已支持（导出为 custGeom 开放路径），
+// 非法点列（<2 点/非数字）仍显式报错。手册必须写新事实。
+const lineValidator = src.schema.match(/至少 2 点、每点两个有限数字/)
+check('line 支持 ≥2 点折线（手册已写明；非法点列仍报错）', !!lineValidator, `schema.js validateLine: ${(lineValidator?.[0] ?? '未找到').slice(0, 60)}`)
 
 const tableKeys = src.schema.match(/table: \['cols', 'rows', 'header'\]/)
 check('table 只有 cols/rows/header（手册"没有逐列对齐字段"成立）', !!tableKeys, `schema.js ELEMENT_KEYS: ${tableKeys?.[0] ?? '未找到'}`)
@@ -177,7 +179,15 @@ const dirG = join(tmp, 'g-3pts-line')
 await writeDeck(dirG, ['  - elementId: poly', '    elementType: line', '    points: [[10, 10], [50, 30], [90, 10]]'])
 let badLine = null
 try { await resolveDeck(dirG) } catch (e) { badLine = e }
-check('运行时：三点折线被拒（手册"每条只有两点"成立）', !!badLine && /2 点/.test(badLine.messages?.join(';') ?? ''), (badLine?.messages ?? []).join('; ').slice(0, 120) || '竟然通过了')
+// 阶段 A（2026-09-28）事实更新：三点折线**被接受**（导出为 custGeom 开放路径）；手册已改写。
+// 同时钉住反面：**一点**折线仍必须报错（"≥2 点"这条下限不能丢）。
+const dirG2 = join(tmp, 'g-1pt-line')
+await writeDeck(dirG2, ['  - elementId: dot', '    elementType: line', '    points: [[10, 10]]'])
+let onePt = null
+try { await resolveDeck(dirG2) } catch (e) { onePt = e }
+check('运行时：三点折线被接受、一点折线被拒（手册"≥2 点，>2 点为折线"成立）',
+  badLine === null && !!onePt && /至少 2 点/.test(onePt.messages?.join(';') ?? ''),
+  `三点=${badLine ? `被拒(${(badLine.messages ?? []).join('; ').slice(0, 60)})` : '通过'}｜一点=${onePt ? '被拒' : '竟然通过'}`)
 
 const dirH = join(tmp, 'h-notes')
 await mkdir(join(dirH, 'pages'), { recursive: true })

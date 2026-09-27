@@ -199,5 +199,43 @@ H('6. 几何谓词单测')
   ok('rectOf 兼容数组与对象两种 bounds', rectOf({ bounds: [1, 2, 3, 4] }).right === 4 && rectOf({ bounds: { x: 1, y: 2, w: 3, h: 4 } }).bottom === 6)
 }
 
+// ── 7. schema 层：结构字段校验（A-①） ─────────────────────────────────────
+H('7. schema：结构字段的类型与引用校验（validatePage）')
+{
+  const { validatePage } = await import('../lib/pptd/schema.js')
+  const msg = (p) => { try { const e = validatePage(p, 'x.yaml'); return e ? (e.messages ?? []).join('｜') : '' } catch (err) { return String(err?.message ?? err) } }
+  const shape = (id, extra = {}) => ({ elementId: id, elementType: 'shape', kind: 'rect', bounds: [0, 0, 40, 20], ...extra })
+  const line = (extra = {}) => ({ elementId: 'l', elementType: 'line', points: [[0, 0], [40, 20]], ...extra })
+
+  ok('合法：attach + arrow both + dash + groups 全通过',
+    msg({ elements: [shape('a'), line({ attach: { from: { ref: 'a', side: 'right' } }, arrow: 'both', line: { dash: 'dash' } })], groups: [{ id: 'g', label: '组合', members: ['a', 'l'] }] }) === '')
+  ok('attach.side 非法 ⇒ 报错', /attach\.from\.side/.test(msg({ elements: [shape('a'), line({ attach: { from: { ref: 'a', side: 'up' } } })] })))
+  // 顺序无关（延后校验）：引用**写了但被引用元素在后文**⇒ 合法；引用真不存在 ⇒ 报错
+  const laterRef = { elements: [line({ attach: { to: { ref: 'later', side: 'left' } } }), shape('later')] }
+  const missingRef = { elements: [line({ attach: { to: { ref: 'ghost', side: 'left' } } })] }
+  ok('attach.ref 顺序无关：引用后文元素合法、引用不存在元素报错',
+    msg(laterRef) === '' && /不是本页元素 id/.test(msg(missingRef)),
+    `后文引用=${msg(laterRef) || '通过'}｜不存在=${msg(missingRef) || '竟然通过'}`)
+  ok('attach 放在非 line 元素上 ⇒ 报错', /只对 elementType: line 有效/.test(msg({ elements: [shape('a', { attach: { from: { ref: 'a', side: 'top' } } })] })))
+  ok("arrow 非法值报错、'both' 合法", /arrow/.test(msg({ elements: [line({ arrow: 'front' })] })) && !/arrow/.test(msg({ elements: [line({ arrow: 'both' })] })))
+  ok('line.dash 非法值 ⇒ 报错', /line\.dash/.test(msg({ elements: [line({ line: { dash: 'wavy' } })] })))
+  ok('contains 指向不存在 / 指向自己 ⇒ 各自报错',
+    /不是本页元素 id/.test(msg({ elements: [shape('a', { contains: ['nope'] })] })) && /不能包含自己/.test(msg({ elements: [shape('a', { contains: ['a'] })] })))
+  ok('badgeOf 指向不存在 ⇒ 报错', /不是本页元素 id/.test(msg({ elements: [shape('a', { badgeOf: 'ghost' })] })))
+  ok('roleReason 空串 ⇒ 报错', /roleReason/.test(msg({ elements: [{ elementId: 't', elementType: 'text', bounds: [0, 0, 80, 20], content: { text: 'x' }, role: 'background', roleReason: '   ' }] })))
+
+  ok('groups：成员不存在 ⇒ 报错', /既不是元素也不是组 id/.test(msg({ elements: [shape('a')], groups: [{ id: 'g', members: ['ghost'] }] })))
+  ok('groups：嵌套成环 ⇒ 报错', /嵌套成环/.test(msg({ elements: [shape('a')], groups: [{ id: 'g1', members: ['g2'] }, { id: 'g2', members: ['g1'] }] })))
+  ok('groups：一个元素属两个直接组 ⇒ 报错', /只允许一个直接父组/.test(msg({ elements: [shape('a')], groups: [{ id: 'g1', members: ['a'] }, { id: 'g2', members: ['a'] }] })))
+  ok('groups：id 与元素同名 / 重复组 id ⇒ 报错', /共用同一命名空间/.test(msg({ elements: [shape('a')], groups: [{ id: 'a', members: ['a'] }] })) && /duplicate/.test(msg({ elements: [shape('a')], groups: [{ id: 'g', members: ['a'] }, { id: 'g', members: ['a'] }] })))
+
+  ok('expectedOverlaps.reason 类型错 ⇒ 报错；**缺失不报错**（docs/08：缺失仅警告）',
+    /reason/.test(msg({ elements: [shape('a'), shape('b')], expectedOverlaps: [{ pair: ['a', 'b'], reason: 123 }] }))
+    && !/reason/.test(msg({ elements: [shape('a'), shape('b')], expectedOverlaps: [{ pair: ['a', 'b'] }] })))
+
+  // 非回归：既有的"只写 2 点 + 无结构字段"的 deck 行为完全不变
+  ok('非回归：无新字段的页面校验结果与从前一致（无错误）', msg({ elements: [shape('a'), line({ arrow: true })] }) === '')
+}
+
 console.log(`\n==== verify-diagram-relations 结果：${pass} 通过 / ${fail} 失败 ====`)
 if (fail) { console.log(`失败项：${failures.join('；')}`); process.exit(1) }

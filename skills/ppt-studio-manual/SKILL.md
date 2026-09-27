@@ -48,7 +48,7 @@ DSH 上做 PPT 的工作区：说需求 → 四类任务工作流 → 「数字�
 - 元素通用：`elementId`（页内唯一）、`elementType: text|shape|line|image|table|chart`、`bounds: [x,y,w,h]`（line 可省，由 points 推导）、`role: background|content|decoration`。
 - text：`content: {text, style: "$name" 或内联样式键}`；**样式键必须在 content 内**。
 - shape：`kind: rect|roundRect|ellipse|triangle + prst(箭头/菱形/五边形/flowchart…) + custGeom path`；`fill #hex | {color,alpha} | {type: gradient, stops: [{pos,color,alpha}], angle}`；`line {color,width}`；`rotation`。
-- line：`points: [[x1,y1],[x2,y2]]`（**每条只有两点**，多点折线不支持——时间轴/折线拆成首尾相接的多条 line）；`arrow: true`（箭头在第二个点那一端）。
+- line：`points: [[x1,y1],…]`（≥2 点，>2 点为折线）；`arrow: true|'both'`；`line.dash`；`attach` 可锚到元素边（阶段 A）。
 - image：`src: "media/xx.png"`；`fit: cover|contain|fill`。
 - table：`cols: [列名...]`、`rows: [[..]]`、`header: true|false`。
 - chart：`chart: {type: bar|line|pie, data: {cols: [列名…], rows: [[…]]}, series: [{name,x,y}]（多系列时显式写）, colors}`。

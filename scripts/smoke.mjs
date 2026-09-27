@@ -427,7 +427,12 @@ ok('启发B：输出行由报告生成（lossLine === lossAuditLine(落盘 JSON)
   bandImp.lossLine === lossAuditLine(lossAuditJson), String(bandImp.lossLine).slice(0, 90))
 ok('v0.4：theme 聚合建议块写入 deck.yaml', bandDeckYaml.includes('# 建议主题') && bandDeckYaml.includes('textStyles'))
 const mnErr = validatePage({ elements: [{ elementId: 'l', elementType: 'line', points: [[10, 10], [100, 10], [200, 10]] }] }, 'test.yaml')
-ok('v0.4：多点折线显式报错（P2-3，不再静默截断）', mnErr !== null && mnErr.messages.some((m) => m.includes('仅支持 2 点')), mnErr?.messages?.join('; '))
+// 阶段 A（2026-09-28）行为变更：>2 点折线**支持**（导出为 custGeom 开放路径，docs/08 §6）；
+// 非法点列（<2 点）仍显式报错。原来那条"多点必须报错"的断言已按新事实改写（断言总数不变）。
+const mnBad = validatePage({ elements: [{ elementId: 'l', elementType: 'line', points: [[10, 10]] }] }, 'test.yaml')
+ok('v0.4 + 阶段A：3 点折线被接受、1 点折线显式报错（不再是"多点一律拒绝"）',
+  mnErr === null && mnBad !== null && mnBad.messages.some((m) => m.includes('至少 2 点')),
+  `3点=${mnErr ? `报错(${mnErr.messages?.join('; ')})` : '通过'}｜1点=${mnBad ? '报错' : '通过'}`)
 const { analyzePage, aestheticSuggestions } = await import('../lib/verify.js')
 const size960 = { width: 960, height: 540 }
 const naPage = { elements: [
