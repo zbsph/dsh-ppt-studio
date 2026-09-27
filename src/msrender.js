@@ -22,6 +22,11 @@ const PS1 = `param(
 )
 $ErrorActionPreference = 'Stop'
 $pp = $null
+# 自动化残留清理（2026-09-28）：上一次 COM 渲染异常退出会留下**无窗口**的 POWERPNT，
+# 它会让下一次 Presentations.Open 报 "Failed"（实测偶发）。
+# 只杀"没有主窗口"的实例 —— 用户正在用的 PowerPoint 一定有主窗口，绝不动它（不能为了渲染丢用户的活）。
+Get-Process POWERPNT -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowHandle -eq 0 } | Stop-Process -Force -ErrorAction SilentlyContinue
+Start-Sleep -Milliseconds 400
 try {
   $pp = New-Object -ComObject PowerPoint.Application
   $pp.Visible = -1
@@ -93,19 +98,29 @@ export async function renderPptxToPng(pptx, outDir, { width = 1920, height = 108
     // A5/P5：按页渲染（单参数 JSON 串，避免 PS 数组绑定把 "4,1" 解析成 41）；水印默认开（P9）
     if (pages && pages.length) args.push('-PagesJson', pages.join(','))
     if (noWatermark) args.push('-NoWatermark')
-    const stdout = await new Promise((resolve, reject) => {
-      const child = spawn('powershell.exe', args, { windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] })
-      let out = ''
-      let err = ''
-      child.stdout.on('data', (d) => { out += d })
-      child.stderr.on('data', (d) => { err += d })
-      const killer = setTimeout(() => { child.kill('SIGKILL'); reject(new Error(`PowerPoint 渲染超时（${timeoutMs}ms）`)) }, timeoutMs)
-      child.on('exit', (code) => {
-        clearTimeout(killer)
-        code === 0 ? resolve(out) : reject(new Error(`PowerPoint COM 渲染失败（code ${code}）：${(err || out).slice(0, 500)}`))
+    const stdout = await (async () => {
+      const once = () => new Promise((resolve, reject) => {
+        const child = spawn('powershell.exe', args, { windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] })
+        let out = ''
+        let err = ''
+        child.stdout.on('data', (d) => { out += d })
+        child.stderr.on('data', (d) => { err += d })
+        const killer = setTimeout(() => { child.kill('SIGKILL'); reject(new Error(`PowerPoint 渲染超时（${timeoutMs}ms）`)) }, timeoutMs)
+        child.on('exit', (code) => {
+          clearTimeout(killer)
+          code === 0 ? resolve(out) : reject(new Error(`PowerPoint COM 渲染失败（code ${code}）：${(err || out).slice(0, 500)}`))
+        })
+        child.on('error', (e) => { clearTimeout(killer); reject(e) })
       })
-      child.on('error', (e) => { clearTimeout(killer); reject(e) })
-    })
+      try {
+        return await once()
+      } catch (e) {
+        // 偶发的 COM "Presentations.Open : Failed"（残留实例竞争）：清理已在上面的脚本里做过，
+        // 这里再给一次机会——渲染失败通常是瞬时的，重试成本远低于让用户看到假失败。
+        await new Promise((r) => setTimeout(r, 800))
+        try { return await once() } catch (e2) { throw e2 ?? e }
+      }
+    })()
     const m = stdout.match(/OK:(\d+)/)
     const files = []
     if (m) {

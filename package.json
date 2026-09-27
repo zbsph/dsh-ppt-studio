@@ -87,6 +87,7 @@
     "bench:scale": "node scripts/bench-diagram-scale.mjs",
     "verify:relations": "node scripts/verify-diagram-relations.mjs",
     "verify:ir": "node scripts/verify-diagram-ir.mjs",
+    "render:group": "node scripts/render-group.mjs",
     "eval:skills": "node scripts/eval-skills-score.mjs"
   }
 }
