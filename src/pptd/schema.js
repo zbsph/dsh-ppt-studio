@@ -60,6 +60,7 @@ import { ATTACH_SIDES } from './relations.js'
 // 阶段 B：`diagram` 物化（IR → 元素 + 结构关系）。schema → diagram-ir → relations，无循环依赖。
 import { layoutDiagram, styleProfileFrom, validateDiagram } from './diagram-ir.js'
 import { profileToTheme } from './style-profile.js'
+import { materializeBlock } from './blocks.js'
 import { measureText } from './layout.js'
 
 /**
@@ -604,6 +605,7 @@ export async function resolveDeck(dir) {
   const colors = theme.colors ?? {}
   const textStyles = theme.textStyles ?? {}
   const pages = []
+  const blocksExpanded = new Map() // 阶段 D-②：记录每页展开了哪些块（供报告/自证）
   for (const ref of deck.pages) {
     const file = join(dir, ref)
     if (!existsSync(file)) throw fail(`page file missing: ${ref}`)
@@ -617,6 +619,24 @@ export async function resolveDeck(dir) {
     if (perr) throw perr
     const terr = themeRefCheck(page, theme, ref)
     if (terr.length) throw fail(terr)
+    // ── 阶段 D-②：`blocks`（组合作为可复用块）物化 —— copy 语义、按 at 平移、id 加前缀并重映射内部引用 ──
+    if (page.blocks !== undefined) {
+      if (!Array.isArray(page.blocks)) throw fail(`[${ref}] blocks: 数组（每项 {name, at?: [x, y]}）`)
+      page.blocks.forEach((use, i) => {
+        const name = use?.name
+        if (typeof name !== 'string' || !name) throw fail(`[${ref}] blocks[${i}].name: 必填字符串（deck.blocks 里的块名）`)
+        const block = deck.blocks?.[name]
+        if (!block) throw fail(`[${ref}] blocks[${i}]: deck.blocks 里没有块 "${name}"（现有：${Object.keys(deck.blocks ?? {}).join(', ') || '无'}）`)
+        const at = Array.isArray(use.at) ? use.at : [0, 0]
+        if (!(at.length === 2 && at.every((n) => typeof n === 'number'))) throw fail(`[${ref}] blocks[${i}].at: [x, y] numbers`)
+        const out = materializeBlock(block, { at, prefix: `bk${i + 1}_` })
+        page.elements = [...(page.elements ?? []), ...out.elements]
+        if (out.groups.length) page.groups = [...(page.groups ?? []), ...out.groups]
+        const doc = blocksExpanded.get(ref) ?? []
+        doc.push({ name, at, elements: out.elements.length, groups: out.groups.length })
+        blocksExpanded.set(ref, doc)
+      })
+    }
     // ── 阶段 B：`diagram` 物化（IR → 普通元素 + 结构关系）──
     // 展开在这里 ⇒ normalizePage / 预览 / 导出 / verify **全部零改动**，预览与成品天然同源（docs/12 §5）。
     // 没有 `diagram` 的页完全不进这段 ⇒ 既有工程逐字节不变。

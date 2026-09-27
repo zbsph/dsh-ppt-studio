@@ -297,5 +297,56 @@ H('6. 样式档案：观测 → 归纳 → 喂回引擎（引擎无审美，只�
   rmSync(dir2, { recursive: true, force: true })
 }
 
+// ── 7. 阶段 D-②：组合作为可复用块（copy 语义）────────────────────────────
+H('7. 可复用块：deck.blocks + 页面 blocks[]（前缀 / 平移 / 引用重映射 / copy 语义）')
+{
+  const { materializeBlock } = await import('../lib/pptd/blocks.js')
+  const block = {
+    elements: [
+      { elementId: 'card', elementType: 'shape', kind: 'roundRect', bounds: [0, 0, 200, 110], fill: '#2563EB', contains: ['lab', 'num'] },
+      { elementId: 'lab', elementType: 'text', bounds: [10, 12, 180, 26], content: { text: '指标', fontSize: 14 } },
+      { elementId: 'num', elementType: 'text', bounds: [10, 46, 180, 44], content: { text: '42%', fontSize: 28 } },
+      { elementId: 'ln', elementType: 'line', points: [[0, 110], [200, 110]], attach: { from: { ref: 'card', side: 'bottom' }, to: { ref: 'lab', side: 'top' } }, arrow: true, badgeOf: 'card' },
+    ],
+    groups: [{ id: 'g_card', label: '卡片', members: ['card', 'lab', 'num'] }],
+  }
+  const a = materializeBlock(block, { at: [60, 80], prefix: 'bk1_' })
+  const b = materializeBlock(block, { at: [320, 80], prefix: 'bk2_' })
+  ok('物化：元素 id 全部加前缀，且**内部引用同步重映射**（contains / attach.ref / badgeOf / groups.members）',
+    a.elements.every((e, i) => e.elementId === `bk1_${block.elements[i].elementId}`)
+    && JSON.stringify(a.elements[0].contains) === JSON.stringify(['bk1_lab', 'bk1_num'])
+    && a.elements[3].attach.from.ref === 'bk1_card' && a.elements[3].attach.to.ref === 'bk1_lab' && a.elements[3].badgeOf === 'bk1_card'
+    && a.groups[0].id === 'bk1_g_card' && JSON.stringify(a.groups[0].members) === JSON.stringify(['bk1_card', 'bk1_lab', 'bk1_num']),
+    `contains=${JSON.stringify(a.elements[0].contains)}｜attach=${a.elements[3].attach.from.ref}/${a.elements[3].attach.to.ref}`)
+  ok('平移：同一块放在两处 ⇒ 坐标差 = at 差（bounds 数组与 line.points 都位移）',
+    a.elements[0].bounds[0] === 60 && b.elements[0].bounds[0] === 320
+    && a.elements[3].points[0][0] === 60 && b.elements[3].points[0][0] === 320,
+    `card: ${a.elements[0].bounds[0]} vs ${b.elements[0].bounds[0]}｜line: ${a.elements[3].points[0][0]} vs ${b.elements[3].points[0][0]}`)
+  a.elements[0].fill = '#FF0000' // copy 语义：改一份**不影响**另一份
+  ok('copy 语义：两次展开互不共享对象（改一处不影响另一处）', b.elements[0].fill === '#2563EB' && block.elements[0].fill === '#2563EB')
+  ok('块自带的分组也会展开并加前缀（组 id 与元素 id 共用命名空间，不撞名）',
+    a.groups.length === 1 && a.groups[0].id === 'bk1_g_card' && !a.elements.some((e) => e.elementId === a.groups[0].id))
+
+  // 真实门禁：6 份同款卡片
+  const dir = join(tmpdir(), `pptd-blocks-${Date.now()}`)
+  rmSync(dir, { recursive: true, force: true })
+  mkdirSync(join(dir, 'pages'), { recursive: true })
+  writeFileSync(join(dir, 'deck.yaml'), ['version: 1', 'title: blocks', 'size: [960, 540]', 'theme:',
+    '  colors: {primary: "#2563EB", text: "#1F2937", bg: "#F8FAFC"}', '  textStyles:', '    body: {fontSize: 13, color: "$text"}',
+    'blocks:', '  kpi:', '    elements:',
+    '      - {elementId: card, elementType: shape, kind: roundRect, bounds: [0, 0, 200, 110], fill: "$primary", contains: [lab, num]}',
+    '      - {elementId: lab, elementType: text, bounds: [10, 12, 180, 26], content: {text: "指标", fontSize: 14, color: "$bg", align: center}}',
+    '      - {elementId: num, elementType: text, bounds: [10, 46, 180, 44], content: {text: "42%", fontSize: 28, color: "$bg", align: center}}',
+    '    groups:', '      - {id: g, label: 卡片, members: [card, lab, num]}',
+    'pages:', '  - pages/01.yaml', ''].join('\n'))
+  writeFileSync(join(dir, 'pages', '01.yaml'), ['pageType: content', 'blocks:',
+    ...[[60, 80], [320, 80], [580, 80], [60, 260], [320, 260], [580, 260]].map(([x, y]) => `  - {name: kpi, at: [${x}, ${y}]}`), ''].join('\n'))
+  const ctx = await resolveDeck(dir)
+  await renderDeck(ctx, { out: 'preview' })
+  const v = verifyDeck(JSON.parse((await import('node:fs')).readFileSync(join(dir, 'preview', 'layout.json'), 'utf8')))
+  ok('6 份同款卡片过真实门禁 **0 错误**（块内部结构声明随拷贝一起生效）', v.errors.length === 0, v.errors.slice(0, 3).map((e) => e.code).join(',') || '无')
+  rmSync(dir, { recursive: true, force: true })
+}
+
 console.log(`\n==== verify-diagram-ir 结果：${pass} 通过 / ${fail} 失败 ====`)
 if (fail) { console.log(`失败项：${failures.join('；')}`); process.exit(1) }
