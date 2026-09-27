@@ -147,5 +147,79 @@ H('4. 无 diagram 的页面：物化不碰它（逐字节一致的机制保证�
   rmSync(dir, { recursive: true, force: true })
 }
 
+// ── 5. 阶段 C 族库（第一批：tree / matrix / timeline）───────────────────────
+H('5. 图族库：三族的不变量与真实门禁')
+{
+  const CASES = {
+    tree: {
+      type: 'tree', title: '组织结构',
+      nodes: [{ id: 'ceo', label: '总经理' }, { id: 'a', label: '研发部' }, { id: 'b', label: '市场部' }, { id: 'a1', label: '平台组' }, { id: 'a2', label: '应用组' }, { id: 'b1', label: '品牌组' }],
+      edges: [{ from: 'ceo', to: 'a' }, { from: 'ceo', to: 'b' }, { from: 'a', to: 'a1' }, { from: 'a', to: 'a2' }, { from: 'b', to: 'b1' }],
+      groups: [{ id: 'g_rd', label: '研发体系', members: ['a', 'a1', 'a2'] }],
+    },
+    matrix: {
+      type: 'matrix', title: '优先级矩阵', cols: 3, colLabels: ['高价值', '中价值', '低价值'], rowLabels: ['低成本', '中成本'],
+      nodes: [{ id: 'c1', label: '自动化', emphasis: 'accent' }, { id: 'c2', label: '模板库' }, { id: 'c3', label: '皮肤' }, { id: 'c4', label: '审计' }, { id: 'c5', label: '导出' }, { id: 'c6', label: '动画' }],
+    },
+    timeline: { type: 'timeline', title: '里程碑', nodes: [{ id: 'm1', label: '立项' }, { id: 'm2', label: '地基', emphasis: 'accent' }, { id: 'm3', label: '引擎' }, { id: 'm4', label: '图族' }, { id: 'm5', label: '北极星' }] },
+  }
+  const STYLE_C = { ...STYLE, measureLine: (t, fs) => String(t ?? '').length * fs, safeArea: { top: 40, bottom: 40, left: 40, right: 40 }, page: { width: 960, height: 540 } }
+  const dir = join(tmpdir(), `pptd-fam-${Date.now()}`)
+  rmSync(dir, { recursive: true, force: true })
+  mkdirSync(join(dir, 'pages'), { recursive: true })
+  const refs = []
+  const yamlOf = (d) => {
+    const lines = ['pageType: content', 'diagram:', `  type: ${d.type}`]
+    if (d.title) lines.push(`  title: ${d.title}`)
+    if (d.cols) lines.push(`  cols: ${d.cols}`)
+    if (d.colLabels) lines.push(`  colLabels: [${d.colLabels.join(', ')}]`)
+    if (d.rowLabels) lines.push(`  rowLabels: [${d.rowLabels.join(', ')}]`)
+    lines.push('  nodes:', ...d.nodes.map((n) => `    - {id: ${n.id}, label: ${n.label}${n.emphasis ? `, emphasis: ${n.emphasis}` : ''}}`))
+    if (d.edges) lines.push('  edges:', ...d.edges.map((e) => `    - {from: ${e.from}, to: ${e.to}}`))
+    if (d.groups) lines.push('  groups:', ...d.groups.map((g) => `    - {id: ${g.id}, label: ${g.label}, members: [${g.members.join(', ')}]}`))
+    return `${lines.join('\n')}\n`
+  }
+  // 注意：IR 产出的 line **没有 bounds**（由 points 推导，schema 允许）⇒ rectOf 会返回全 0。
+  // 断言里必须自己按 points 求 AABB，否则会把每条线都误判成"越界"（本轮踩到；真实门禁走的是正确路径）。
+  const rectOfAny = (e) => {
+    if (e.bounds) return rectOf(e)
+    if (Array.isArray(e.points)) {
+      const xs = e.points.map((p) => p[0])
+      const ys = e.points.map((p) => p[1])
+      const x = Math.min(...xs); const y = Math.min(...ys)
+      return { x, y, w: Math.max(...xs) - x, h: Math.max(...ys) - y, right: Math.max(...xs), bottom: Math.max(...ys) }
+    }
+    return rectOf(e)
+  }
+  for (const [name, d] of Object.entries(CASES)) {
+    const a = layoutDiagram(d, { bounds: BOX, style: STYLE_C, idPrefix: 'd1_' })
+    const b = layoutDiagram(d, { bounds: BOX, style: STYLE_C, idPrefix: 'd1_' })
+    ok(`族 ${name}：确定性（同输入两次输出深度相等）`, JSON.stringify(a) === JSON.stringify(b), `${a.elements.length} 个元素`)
+    ok(`族 ${name}：产出的每个元素都过 schema 校验`, validatePage({ pageType: 'content', elements: a.elements, groups: a.groups }, `${name}.yaml`) === null)
+    const nodesC = a.elements.filter((e) => e.elementType !== 'line' && !String(e.elementId).includes('_g_'))
+    ok(`族 ${name}：所有元素落在画布内（含装饰）`,
+      a.elements.every((e) => { const r = rectOfAny(e); return r.x >= BOX.x - 1 && r.y >= BOX.y - 1 && r.x + r.w <= BOX.x + BOX.w + 1 && r.y + r.h <= BOX.y + BOX.h + 1 }),
+      `最外层越界元素：${a.elements.filter((e) => { const r = rectOfAny(e); return r.x < BOX.x - 1 || r.y < BOX.y - 1 || r.x + r.w > BOX.x + BOX.w + 1 || r.y + r.h > BOX.y + BOX.h + 1 }).map((e) => e.elementId).join(',') || '无'}`)
+    ok(`族 ${name}：带 attach 的连线端点都落在被引用元素边上`,
+      a.elements.filter((e) => e.elementType === 'line' && e.attach).every((l) => onSide(l.attach.from.side, l.points[0], rectOf(a.elements.find((x) => x.elementId === l.attach.from.ref))) && onSide(l.attach.to.side, l.points[l.points.length - 1], rectOf(a.elements.find((x) => x.elementId === l.attach.to.ref)))))
+    void nodesC
+    // 真实门禁（每族一页）
+    await writeFileSync(join(dir, 'pages', `f_${name}.yaml`), yamlOf(d))
+    refs.push(`pages/f_${name}.yaml`)
+  }
+  writeFileSync(join(dir, 'deck.yaml'), ['version: 1', 'title: families', 'size: [960, 540]', 'theme:',
+    '  colors: {primary: "#2563EB", accent: "#F59E0B", text: "#1F2937", bg: "#F8FAFC"}', '  textStyles:',
+    '    body: {fontSize: 13, color: "$text"}', '  spacing: {base: 22}', '  safeArea: {top: 40, bottom: 40, left: 40, right: 40}',
+    'pages:', ...refs.map((r) => `  - ${r}`), ''].join('\n'))
+  const ctx = await resolveDeck(dir)
+  await renderDeck(ctx, { out: 'preview' })
+  const v = verifyDeck(JSON.parse((await import('node:fs')).readFileSync(join(dir, 'preview', 'layout.json'), 'utf8')))
+  const declAll = ctx.pages.reduce((n, p) => n + (p.page.expectedOverlaps ?? []).length + (p.page.expectedOutOfSafeArea ?? []).length, 0)
+  ok('**三族一起过真实门禁：0 错误，且三页合计零声明**（不靠声明掩盖几何问题）',
+    v.errors.length === 0 && declAll === 0, `错误 ${v.errors.length}｜声明 ${declAll}｜${v.errors.slice(0, 4).map((e) => `${e.code}:${e.id}`).join(' | ')}`)
+  ok('族清单与成熟度登记齐全（未实现类型仍走优雅降级）', ['tree', 'matrix', 'timeline'].every((k) => DIAGRAM_TYPES[k]) && Object.values(DIAGRAM_TYPES).every((m) => ['beta', 'stable'].includes(m)), JSON.stringify(DIAGRAM_TYPES))
+  rmSync(dir, { recursive: true, force: true })
+}
+
 console.log(`\n==== verify-diagram-ir 结果：${pass} 通过 / ${fail} 失败 ====`)
 if (fail) { console.log(`失败项：${failures.join('；')}`); process.exit(1) }
