@@ -264,7 +264,11 @@ export function layoutDiagram(d, opts = {}) {
     if (!A || !B) return
     let from
     let to
-    if (dir === 'LR') {
+    // 走横还是走竖：**按几何判定**，不按 `dir` 字段。
+    // 反例（layers 族实测 7 条）：带是**横向排列**的，但 type=layers 的默认 dir 是 TB，
+    // 代码按"下→上"路由 ⇒ 拐点落回节点内部、折线 AABB 覆盖整节点。
+    const horizontal = Math.abs((B.x + B.w / 2) - (A.x + A.w / 2)) >= Math.abs((B.y + B.h / 2) - (A.y + A.h / 2))
+    if (horizontal) {
       const forward = B.x >= A.x
       from = { ref: id(e.from), side: forward ? 'right' : 'left', pt: [forward ? A.x + A.w : A.x, A.y + A.h / 2] }
       to = { ref: id(e.to), side: forward ? 'left' : 'right', pt: [forward ? B.x : B.x + B.w, B.y + B.h / 2] }
@@ -276,7 +280,19 @@ export function layoutDiagram(d, opts = {}) {
     const el = {
       elementId: id(`e${i}`),
       elementType: 'line',
-      points: [[round(from.pt[0]), round(from.pt[1])], [round(to.pt[0]), round(to.pt[1])]],
+      // 轴对齐折线：连线若**斜着**跨带/跨列，其 AABB 有宽有高 ⇒ 会与容器、节点判为意外重叠
+      //（layers 族实测 13 条）。改为"出边 → 拐在带/列间隙 → 进边"：拐点落在间隙（那里没有容器也没有节点），
+      // 且竖/横段 AABB 的宽或高为 0 ⇒ 永不触发重叠判定。
+      points: (() => {
+        if (horizontal) {
+          if (Math.abs(from.pt[1] - to.pt[1]) < 1) return [[round(from.pt[0]), round(from.pt[1])], [round(to.pt[0]), round(to.pt[1])]]
+          const sepX = round((from.pt[0] + to.pt[0]) / 2)
+          return [[round(from.pt[0]), round(from.pt[1])], [sepX, round(from.pt[1])], [sepX, round(to.pt[1])], [round(to.pt[0]), round(to.pt[1])]]
+        }
+        if (Math.abs(from.pt[0] - to.pt[0]) < 1) return [[round(from.pt[0]), round(from.pt[1])], [round(to.pt[0]), round(to.pt[1])]]
+        const sepY = round((from.pt[1] + to.pt[1]) / 2)
+        return [[round(from.pt[0]), round(from.pt[1])], [round(from.pt[0]), sepY], [round(to.pt[0]), sepY], [round(to.pt[0]), round(to.pt[1])]]
+      })(),
       arrow: true,
       line: { color: style.ink, width: style.lineWidth, ...(e.style === 'dashed' ? { dash: 'dash' } : {}) },
       attach: { from: { ref: from.ref, side: from.side }, to: { ref: to.ref, side: to.side } },
@@ -359,7 +375,11 @@ export function layoutDiagram(d, opts = {}) {
       ...members.map(id), ...members.map((m) => id(`t_${m}`)),
       ...[...edgeLabelGroup.entries()].filter(([, gi]) => gi === myIdx).map(([lid]) => lid),
     ]
-    const container = { elementId: cid, elementType: 'shape', kind: 'roundRect', bounds: [cb.x, cb.y, cb.w, cb.h], fill: style.neutral, line: { color: style.ink, width: style.lineWidth }, role: 'background', contains: [...new Set(inner)] }
+    // 带用 **`role: decoration`**（完全豁免重叠）而不是"靠 contains 豁免"：
+    // 跨带连线必然有一段竖线走在**节点所在的带内部**，而折线的整体 AABB 有宽有高 ⇒
+    // 单靠 contains 豁免不了它（layers 族实测 9 条）。decoration 是"这是背景带"的正确语义，
+    // 与 swimlane 的做法一致；`contains` 保留（结构关系语义仍然成立，成员严格在带内）。
+    const container = { elementId: cid, elementType: 'shape', kind: 'roundRect', bounds: [cb.x, cb.y, cb.w, cb.h], fill: style.neutral, line: { color: style.ink, width: style.lineWidth }, role: 'decoration', roleReason: '分组带（装饰层：跨带连线穿过属设计意图）', contains: [...new Set(inner)] }
     if (g.label) {
       const lid = id(`gl_${g.id}`)
       elements.push({ elementId: lid, elementType: 'text', bounds: [round(cb.x + 8), round(cb.y + 3), round(Math.min(cb.w - 16, measure(g.label, style.fontSize * 0.85) + 4)), 16], content: { text: g.label, fontSize: Math.max(10, Math.round(style.fontSize * 0.85)), color: style.ink, align: 'left' } })
