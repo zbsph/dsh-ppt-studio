@@ -516,6 +516,17 @@ function decodePng(buf) {
         rgb[o] = palette?.[pi] ?? 0
         rgb[o + 1] = palette?.[pi + 1] ?? 0
         rgb[o + 2] = palette?.[pi + 2] ?? 0
+      } else if (colorType === 0) {
+        // 灰度：PowerPoint 对"只有黑白的幻灯片"会导出灰度 PNG（实测 colorType=0）
+        const v = line[x]
+        rgb[o] = v
+        rgb[o + 1] = v
+        rgb[o + 2] = v
+      } else if (colorType === 4) {
+        const v = line[x * 2]
+        rgb[o] = v
+        rgb[o + 1] = v
+        rgb[o + 2] = v
       } else {
         rgb[o] = line[x * bpp]
         rgb[o + 1] = line[x * bpp + 1]
