@@ -40,10 +40,15 @@ export function observeFromDeck(ctx) {
   const fontSizes = []
   const radii = []
   const bg = norm(ctx?.deck?.theme?.colors?.bg) ?? null
+  // 关键：`$themeRef` 必须先**解析成实际色值**再统计。第一版直接读 `el.fill`，
+  // 于是 `$primary` 这种未解析字符串被归一化成中性色、还挤掉真正的调色板（实测 palette[0] 排错）。
+  const resolve = (v) => {
+    try { return norm(ctx?.resolveColor?.(v)) ?? norm(v) ?? null } catch { return norm(v) ?? null }
+  }
   for (const p of ctx?.pages ?? []) {
     for (const el of p.page?.elements ?? []) {
-      if (typeof el.fill === 'string') fills.push(norm(el.fill) ?? el.fill)
-      if (el.fill && typeof el.fill === 'object' && typeof el.fill.color === 'string') fills.push(norm(el.fill.color))
+      const f = typeof el.fill === 'string' ? resolve(el.fill) : (el.fill?.color ? resolve(el.fill.color) : null)
+      if (f) fills.push(f)
       if (el.line?.width) lineWidths.push(Number(el.line.width))
       if (el.content?.fontSize) fontSizes.push(Number(el.content.fontSize))
       if (typeof el.kind === 'string' && /roundRect|ellipse/.test(el.kind)) radii.push(8)
