@@ -266,6 +266,30 @@ export function deriveRelations(page, opts = {}) {
     errors.push({ code: 'relation-invalid', detail: `${iv.type} 声明不成立：${iv.from} × ${iv.to} —— ${iv.why}` })
   }
 
+  // 1b) 包含关系的**传递闭包**：A ⊇ B ⊇ C ⇒ A × C 也应豁免。
+  // 理由（用户的真实工作方式）：组合是**嵌套**的——"第二层组合把第一层当成一个整体"，
+  // 外层容器不该被迫枚举所有深后代（否则声明清单随嵌套层数爆炸，正是我们一开始想避免的）。
+  // 只沿**有效**的 contains 边传播；语义与 verify 既有的声明闭包（declaredClosure）一致。
+  const childrenOf = new Map()
+  for (const r of relations) {
+    if (r.type !== 'contains' || !r.valid) continue
+    if (!childrenOf.has(r.from)) childrenOf.set(r.from, [])
+    childrenOf.get(r.from).push(r.to)
+  }
+  let closurePairs = 0
+  for (const parent of [...childrenOf.keys()].sort()) {
+    const seen = new Set()
+    const stack = [...childrenOf.get(parent)].sort()
+    while (stack.length) {
+      const id = stack.pop()
+      if (seen.has(id)) continue
+      seen.add(id)
+      const k = key2(parent, id)
+      if (!exempt.has(k)) { exempt.add(k); closurePairs++ }
+      for (const grand of (childrenOf.get(id) ?? []).sort()) if (!seen.has(grand)) stack.push(grand)
+    }
+  }
+
   // 确定性：全部按 id 排序
   relations.sort((x, y) => `${x.type}|${x.from}|${x.to}|${x.end ?? ''}`.localeCompare(`${y.type}|${y.from}|${y.to}|${y.end ?? ''}`))
   const stats = {
@@ -275,6 +299,7 @@ export function deriveRelations(page, opts = {}) {
     badge: relations.filter((r) => r.type === 'badge').length,
     overlapDecl: relations.filter((r) => r.type === 'overlapDecl').length,
     exempt: exempt.size,
+    closurePairs,
   }
   return { groups: g.flat, relations, exempt: [...exempt].sort(), invalid, stats, errors }
 }

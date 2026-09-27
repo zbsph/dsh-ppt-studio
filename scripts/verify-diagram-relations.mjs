@@ -61,9 +61,26 @@ H('1. 正例：合法结构')
   ok('图专属检查在合法页上静默', (() => { const c = checkDiagram(page); return c.errors.length === 0 && c.warnings.length === 0 })(),
     JSON.stringify(checkDiagram(page)))
   ok('summaryLine 形态稳定', /^结构关系：组 3｜包含 2｜附着 2｜徽章 1｜有意重叠 1（自动豁免重叠 2 处，未落盘）$/.test(summaryLine(r)), summaryLine(r))
+  // 1c) 包含关系的**传递闭包**：A ⊇ B ⊇ C ⇒ A×C 也豁免（嵌套组合的关键；外层不必枚举深后代）
+  const chain = {
+    elements: [
+      { id: 'A', elementType: 'shape', bounds: { x: 0, y: 0, w: 400, h: 300 }, contains: ['B'] },
+      { id: 'B', elementType: 'shape', bounds: { x: 20, y: 20, w: 300, h: 200 }, contains: ['C'] },
+      { id: 'C', elementType: 'text', bounds: { x: 40, y: 40, w: 100, h: 30 } },
+    ],
+  }
+  const rc = deriveRelations(chain)
+  ok('包含传递闭包：A ⊇ B ⊇ C ⇒ exempt 含 A × C（嵌套组合不必枚举深后代）',
+    rc.exempt.includes('A × B') && rc.exempt.includes('B × C') && rc.exempt.includes('A × C') && rc.stats.closurePairs >= 1,
+    `exempt=${rc.exempt.join(',')}｜closurePairs=${rc.stats.closurePairs}`)
+  ok('传递闭包只沿**有效**边传播：把 B 的 contains 声明改成不成立 ⇒ A × C 不再豁免',
+    (() => {
+      const bad = JSON.parse(JSON.stringify(chain))
+      bad.elements[1].bounds = { x: 20, y: 20, w: 50, h: 40 } // B 装不下 C ⇒ B→C 不成立
+      const rb = deriveRelations(bad)
+      return !rb.exempt.includes('A × C') && rb.invalid.some((x) => x.type === 'contains' && x.from === 'B')
+    })())
 }
-
-// ── 2. 反例：每条关系都要能被证伪 ────────────────────────────────────────────
 H('2. 反例（宽松判据会在这里漏掉）')
 {
   // contains 不成立：容器缩小到装不下子元素
@@ -73,7 +90,7 @@ H('2. 反例（宽松判据会在这里漏掉）')
   ok('contains 不成立 ⇒ 进 invalid 且产生点名错误',
     r1.invalid.some((x) => x.type === 'contains') && r1.errors.some((e) => e.code === 'relation-invalid' && /contains/.test(e.detail)),
     r1.errors.map((e) => e.detail).join('｜'))
-  ok('contains 不成立 ⇒ 该对被移出豁免集合', !r1.exempt.includes('in_box×zone'), r1.exempt.join(','))
+  ok('contains 不成立 ⇒ 该对被移出豁免集合', !r1.exempt.includes('in_box × zone'), r1.exempt.join(','))
 
   // attach 未落边：终点偏离 6px
   const p2 = goodPage()

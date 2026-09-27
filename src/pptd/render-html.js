@@ -93,7 +93,21 @@ function elementHtml(el, ctx, debug) {
     if (/^(https?:|data:|file:)/.test(src)) return src
     return src.startsWith('./') ? '../' + src.slice(2) : '../' + src
   }
-  const snap = (extra) => ({ id: el.id, kind: el.type, bounds: el.bounds, ...(el.role ? { role: el.role } : {}), ...extra })
+  const snap = (extra) => ({
+    id: el.id,
+    kind: el.type,
+    bounds: el.bounds,
+    ...(el.role ? { role: el.role } : {}),
+    // 阶段 A：**结构声明字段必须进 layout.json**——`ppt_verify` 吃的是 layout.json，
+    // 白名单式快照漏字段会让"结构关系/豁免/图专属检查"在门禁层凭空消失。
+    // （与 normalizePage 同型的坑；150 元素规模基线脚本正是靠这条断言抓到的。）
+    ...(el.contains ? { contains: el.contains } : {}),
+    ...(el.badgeOf ? { badgeOf: el.badgeOf } : {}),
+    ...(el.roleReason ? { roleReason: el.roleReason } : {}),
+    ...(el.attach ? { attach: el.attach } : {}),
+    ...(el.arrow ? { arrow: el.arrow } : {}),
+    ...extra,
+  })
   switch (el.type) {
     case 'text': {
       const s = el.style
