@@ -13,7 +13,7 @@
  *   4 图专属检查：duplicate-element / text-over-text / line-through-box / arrow-not-on-edge（有 attach ⇒ 错误）
  *   5 三条硬纪律：确定性（两次深度相等）、不改输入、豁免不落盘（page 上没有新增字段）
  */
-import { deriveRelations, checkDiagram, summaryLine, rectOf, contains, onSide, segmentCrossesRect } from '../lib/pptd/relations.js'
+import { deriveRelations, checkDiagram, summaryLine, rectOf, contains, onSide, segmentCrossesRect, resolveAttach } from '../lib/pptd/relations.js'
 
 let pass = 0
 let fail = 0
@@ -311,6 +311,54 @@ H('8. verify 集成：结构豁免 / 报告形态 / 门控（非回归）')
   ok('门控（非回归）：普通页 findings 里没有本次新增的任何 code',
     !plainF.some((f) => ['relation-invalid', 'declared-stale', 'duplicate-element', 'line-through-box', 'arrow-not-on-edge', 'group-cycle'].includes(f.code)),
     plainF.map((f) => f.code).join(','))
+}
+
+// ── 9. attach → 坐标解析（A-④ 集成）：attach 优先于手写 points，且**改写必须可见** ──
+H('9. resolveAttach：锚点解析与"改写可见"')
+{
+  const page = {
+    elements: [
+      { id: 'A', elementType: 'shape', bounds: { x: 100, y: 100, w: 100, h: 60 } }, // right 边 x=200，y∈[100,160]
+      { id: 'B', elementType: 'shape', bounds: { x: 400, y: 300, w: 100, h: 60 } }, // left 边 x=400，y∈[300,360]
+    ],
+  }
+  const line = (extra) => ({ id: 'l', elementType: 'line', ...extra })
+
+  // ① 无手写 points：两端锚点直接造出坐标（attach 足以定义一条线）
+  const r1 = resolveAttach(line({ attach: { from: { ref: 'A', side: 'right' }, to: { ref: 'B', side: 'left' } } }), page)
+  ok('无手写 points：attach 两端直接解析出坐标，且落在对应边上',
+    r1.points?.length === 2 && onSide('right', r1.points[0], rectOf(page.elements[0])) && onSide('left', r1.points[1], rectOf(page.elements[1])),
+    JSON.stringify(r1.points))
+
+  // ② 手写 points 已正确 ⇒ 不改写、无提示（不能"每次都报覆盖"）
+  const ok2 = [[200, 130], [400, 330]]
+  const r2 = resolveAttach(line({ points: ok2, attach: { from: { ref: 'A', side: 'right' }, to: { ref: 'B', side: 'left' } } }), page)
+  ok('手写坐标已正确 ⇒ 不改写、notes 为空（不产生噪音提示）',
+    r2.overridden === 0 && r2.notes.length === 0 && JSON.stringify(r2.points) === JSON.stringify(ok2), JSON.stringify(r2))
+
+  // ③ 手写 points 明显错误（偏 40px）⇒ attach 覆盖 + **必须提示**
+  const r3 = resolveAttach(line({ points: [[240, 130], [400, 370]], attach: { from: { ref: 'A', side: 'right' }, to: { ref: 'B', side: 'left' } } }), page)
+  ok('手写坐标错误 ⇒ attach 覆盖、overridden=2 且 notes 各一条（静默覆盖是不可接受的）',
+    r3.overridden === 2 && r3.notes.length === 2 && onSide('right', r3.points[0], rectOf(page.elements[0])) && onSide('left', r3.points[1], rectOf(page.elements[1])),
+    `overridden=${r3.overridden}｜notes=${r3.notes.length}`)
+
+  // ④ 锚点取"最近点并夹紧"：另一端远超边范围 ⇒ 锚点仍落在边上（不飞出去）
+  const r4 = resolveAttach(line({ attach: { from: { ref: 'A', side: 'right' }, to: { ref: 'B', side: 'left' } } }), page)
+  ok('锚点夹紧：另一端在边范围之外时，锚点仍严格落在该边线段上（不飞到延长线）',
+    r4.points[0][1] >= 100 && r4.points[0][1] <= 160 && r4.points[0][0] === 200,
+    JSON.stringify(r4.points[0]))
+
+  // ⑤ 非法 side / ref 不存在 ⇒ 不产坏坐标（保留原 points 并提示）
+  const bad = resolveAttach(line({ points: [[10, 10], [20, 20]], attach: { from: { ref: 'ghost', side: 'right' }, to: { ref: 'B', side: 'up' } } }), page)
+  ok('非法 side / ref 不存在 ⇒ 不解析（坐标原样保留、无 NaN）',
+    JSON.stringify(bad.points) === JSON.stringify([[10, 10], [20, 20]]) && bad.points.every((p) => p.every(Number.isFinite)),
+    JSON.stringify(bad))
+
+  // ⑥ 纯函数：不改输入
+  const src = line({ points: [[240, 130], [400, 370]], attach: { from: { ref: 'A', side: 'right' } } })
+  const before = JSON.stringify(src)
+  resolveAttach(src, page)
+  ok('纯函数：不改输入元素（points 不被原地改写）', JSON.stringify(src) === before)
 }
 
 console.log(`\n==== verify-diagram-relations 结果：${pass} 通过 / ${fail} 失败 ====`)

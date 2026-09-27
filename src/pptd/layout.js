@@ -131,10 +131,16 @@ function boundsOf(el) {
   return { x, y, w: Math.max(1, Math.max(...xs) - x), h: Math.max(1, Math.max(...ys) - y) }
 }
 
+// 阶段 A-④：`attach`（把线段两端锚到元素边）在归一化阶段解析成坐标。
+// 方向是 layout → relations（relations 不依赖 layout），无循环依赖。
+import { resolveAttach } from './relations.js'
+
 /** 归一化一个页面：元素 → 统一对象（含解析样式与文本度量）。 */
 export function normalizePage(page, ctx) {
   const { resolveColor, styleOf } = ctx
   const elements = []
+  // attach 解析要用**原始 DSL 元素**的几何查 ref（此时还没归一化）
+  const srcById = new Map((page.page.elements ?? []).map((e) => [e.elementId, e]))
   for (const el of page.page.elements ?? []) {
     const b = boundsOf(el)
     const base = {
@@ -166,12 +172,18 @@ export function normalizePage(page, ctx) {
         break
       }
       case 'line': {
-        const pts = el.points ? el.points.map((p) => p) : [[el.x1, el.y1], [el.x2, el.y2]]
+        // 阶段 A-④：`attach` **优先于**手写 points —— 解析成坐标，被改写的端点进 attachNotes（另行提示，不静默覆盖）。
+        // 导出侧只认 points（保持纯写盘层）；几何仍由 relations 的反验证兜底。
+        const resolved = el.attach ? resolveAttach(el, srcById) : null
+        const pts = resolved?.points ?? (el.points ? el.points.map((p) => p) : [[el.x1, el.y1], [el.x2, el.y2]])
         const line = { color: resolveColor(el.line?.color ?? '#000'), width: el.line?.width ?? 1, ...(el.line?.dash ? { dash: el.line.dash } : {}) }
         // 阶段 A：`arrow` 必须**原样**透传。原先写作 `!!el.arrow` 会把 `'both'` 压成 `true`
         // ⇒ 两端箭头/虚线折线走到导出层时已经不认得（本轮实测：headEnd 计数 0）。
-        // 同时透传 `attach`（导出层把它解析成坐标；见 export-pptx 的接入点注释）。
-        elements.push({ ...base, type: 'line', points: pts, arrow: el.arrow ?? false, line, ...(el.attach ? { attach: el.attach } : {}) })
+        elements.push({
+          ...base, type: 'line', points: pts, arrow: el.arrow ?? false, line,
+          ...(el.attach ? { attach: el.attach } : {}),
+          ...(resolved?.notes?.length ? { attachNotes: resolved.notes } : {}),
+        })
         break
       }
       case 'image':

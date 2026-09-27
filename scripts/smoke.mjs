@@ -3045,7 +3045,7 @@ ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz
     '  - elementId: chip', '    elementType: shape', '    kind: roundRect', '    bounds: [300, 106, 120, 30]',
     '    fill: "#1F2937"', '    badgeOf: zone', '    roleReason: "标题胶囊"',
     '  - elementId: poly', '    elementType: line', '    points: [[600, 200], [660, 240], [720, 200]]', '    arrow: both',
-    '  - elementId: dash', '    elementType: line', '    points: [[240, 240], [260, 220]]', '    arrow: end',
+    '  - elementId: dash', '    elementType: line', '    points: [[250, 300], [300, 260]]', '    arrow: end',
     '    line: {color: "#1F2937", width: 1, dash: dash}',
     '    attach: {from: {ref: a, side: right}, to: {ref: t1, side: left}}', ''].join('\n')
   await writeFile(join(work58, 'pages', '01.yaml'), page58, 'utf8')
@@ -3071,6 +3071,15 @@ ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz
   ok('§58 groups 随 layout.json 落盘（门禁吃 layout.json，页面级结构不能只在 DSL 里）',
     Array.isArray(layout58.pages[0].groups) && layout58.pages[0].groups.length === 1 && layout58.pages[0].groups[0].id === 'g1')
 
+  // ④ A-④ 集成：手写坐标写错时由 attach 纠正（**不是**静默覆盖——必须留 attachNotes 并在门禁里可见）
+  const dash58 = el58('dash')
+  const a58 = el58('a'); const t1_58 = el58('t1')
+  const onEdge = (pt, r, side) => side === 'right' ? Math.abs(pt[0] - (r.bounds.x + r.bounds.w)) < 2 : Math.abs(pt[0] - r.bounds.x) < 2
+  ok('§58 attach 解析：手写坐标错误时被纠到 a.right / t1.left 上，且 attachNotes 记录了两端改写',
+    onEdge(dash58.points[0], a58, 'right') && onEdge(dash58.points[dash58.points.length - 1], t1_58, 'left')
+    && Array.isArray(dash58.attachNotes) && dash58.attachNotes.length === 2,
+    `points=${JSON.stringify(dash58.points)}｜notes=${dash58.attachNotes?.length}`)
+
   // ③ 结构豁免真的生效 + 报告两段；门控：不用新字段的页行为不变
   const v58 = verifyDeck(layout58)
   ok('§58 结构豁免：容器/子元素/徽章/附着线的重叠全部被结构关系豁免 ⇒ 0 错误',
@@ -3078,6 +3087,9 @@ ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz
   ok('§58 报告形态：「结构关系」计数行 + 「设计声明复核」段都在（豁免必须可见）',
     /· 结构关系：组 1｜包含 4｜附着 2｜徽章 1｜有意重叠 1/.test(v58.text) && v58.text.includes('· 设计声明复核：'),
     v58.text.split('\n').filter((l) => l.includes('结构关系') || l.includes('声明复核')).join('｜'))
+  ok('§58 attach 改写可见：门禁报告出现 attach-override 警告（"attach 优先"可以，静默覆盖不行）',
+    v58.warns.some((w) => w.code === 'attach-override'),
+    v58.warns.map((w) => w.code).join(','))
   // 门控对照：同一页把阶段 A 特性**全部降级**（新字段删掉、折线退回 2 点、groups 清空）——
   // 注意 `usesStructure` 把">2 点折线"也算新特性，只删字段不退回点数会测不到门控（第一次就踩了这个）
   const plain58 = {
@@ -3110,6 +3122,9 @@ ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz
   ok('§58 图进 parity：折线条数单独进 parity（polyLinesExp/Out 对得上且不为 0，wrong=0）',
     (r58.parity?.polyLinesExp ?? 0) === 1 && r58.parity?.polyLinesOut === 1 && r58.parity?.polyLinesWrong === 0,
     `polyLines ${r58.parity?.polyLinesOut}/${r58.parity?.polyLinesExp}｜wrong=${JSON.stringify(r58.parity?.polyLinesWrong ?? null)}`)
+  ok('§58 图进 parity：附着线单独计数，且**导出侧独立复核**端点落在被引用元素的对应边上（0 wrong）',
+    r58.parity?.attachedLinesExp === 1 && r58.parity?.attachedLinesOut === 1 && (r58.parity?.attachedLinesWrong ?? ['x']).length === 0,
+    `attached ${r58.parity?.attachedLinesOut}/${r58.parity?.attachedLinesExp}｜wrong=${JSON.stringify(r58.parity?.attachedLinesWrong ?? null)}`)
   await rm(work58, { recursive: true, force: true })
 }
 

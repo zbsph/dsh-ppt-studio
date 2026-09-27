@@ -14,6 +14,9 @@
  * 关系类型与严格谓词见 docs/08 §2；容差默认值集中在 RELATION_DEFAULTS。
  */
 
+/** attach 的边枚举（schema 与导出/验证共用同一份，避免两处枚举漂移）。 */
+export const ATTACH_SIDES = ['top', 'right', 'bottom', 'left']
+
 /** 容差默认值（docs/08 §2 表；真实稿校准后统一调整这里）。 */
 export const RELATION_DEFAULTS = {
   pad: 0, // contains：子元素距父边的最小内缩
@@ -383,6 +386,106 @@ export function checkDiagram(page, opts = {}) {
   }
 
   return { errors, warnings }
+}
+
+/**
+ * `attach` → 坐标解析（阶段 A-④ 集成的核心，docs/08 §1.1）。
+ *
+ * 语义：**`attach` 优先于手写 `points`**——被改写的端点必须**另行提示**（不能安静地覆盖作者的写法）。
+ * 为什么需要它：作者写"从 A 的右边连到 B 的左边"时不该手算像素；元素一动，手算坐标就错。
+ * 解析后导出侧只认 `points`（导出器保持纯写盘层），几何仍由 relations 的反验证兜底。
+ *
+ * 锚点算法：把"另一端"投影到目标边的线段上并夹到线段范围内（最短连线，视觉上最自然）。
+ * 纯函数、确定性、不改输入。
+ *
+ * @param {object} el 线元素（原始 DSL 或归一化元素均可）
+ * @param {Map|object} pageOrMap 页面（或 id→元素 的 Map），用于查 ref 的几何
+ * @returns {{points: Array<[number,number]>|null, notes: string[], overridden: number}}
+ */
+export function resolveAttach(el, pageOrMap, opts = {}) {
+  const t = { ...RELATION_DEFAULTS, ...(opts.tolerance ?? {}) }
+  const src = Array.isArray(el?.points) ? el.points : null
+  const copy = src ? src.map((p) => [Number(p[0]), Number(p[1])]) : null
+  const a = el?.attach
+  if (!a) return { points: copy, notes: [], overridden: 0 }
+  const els = pageOrMap instanceof Map ? pageOrMap : indexElements(pageOrMap ?? {})
+  const notes = []
+  let overridden = 0
+
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v))
+  /** 目标边上、离 `toward` 最近的锚点（兜底：轴对齐夹紧）。 */
+  const clampOnSide = (rect, side, toward) => {
+    const [tx, ty] = toward
+    if (side === 'left') return [rect.x, clamp(ty, rect.y, rect.bottom)]
+    if (side === 'right') return [rect.right, clamp(ty, rect.y, rect.bottom)]
+    if (side === 'top') return [clamp(tx, rect.x, rect.right), rect.y]
+    if (side === 'bottom') return [clamp(tx, rect.x, rect.right), rect.bottom]
+    return [tx, ty]
+  }
+  /**
+   * 自然锚点：从**另一端**指向目标矩形中心，与该边的交点（保持线的自然方向）。
+   * 交点落在边线段外 ⇒ 返回 null，交回兜底夹紧（等价于落在最近的角）。
+   */
+  const hitSide = (from, toward, rect, side) => {
+    const [x1, y1] = from
+    const [x2, y2] = toward
+    const dx = x2 - x1
+    const dy = y2 - y1
+    const vertical = side === 'left' || side === 'right'
+    const target = side === 'left' ? rect.x : side === 'right' ? rect.right : side === 'top' ? rect.y : rect.bottom
+    const denom = vertical ? dx : dy
+    if (Math.abs(denom) < 1e-9) return null
+    const t = (target - (vertical ? x1 : y1)) / denom
+    const hx = x1 + t * dx
+    const hy = y1 + t * dy
+    if (vertical) return (hy >= rect.y - t.tol && hy <= rect.bottom + t.tol) ? [target, clamp(hy, rect.y, rect.bottom)] : null
+    return (hx >= rect.x - t.tol && hx <= rect.right + t.tol) ? [clamp(hx, rect.x, rect.right), target] : null
+  }
+  /**
+   * 解析一个端点的锚点：
+   * **作者已经写在目标边上（容差内）⇒ 原样保留**（不做无谓改写、不产生噪音提示）；
+   * 否则才按"另一端 → 目标中心"的自然连线求边交点，交点不在边线段上时退化为最近角。
+   */
+  const anchorFor = (rect, side, toward, keep) => {
+    if (Array.isArray(keep) && onSide(side, keep, rect, t.tol)) return [keep[0], keep[1]]
+    const cx = rect.x + rect.w / 2
+    const cy = rect.y + rect.h / 2
+    return hitSide(toward, [cx, cy], rect, side) ?? clampOnSide(rect, side, toward)
+  }
+
+  // 没有手写 points 时，用两端锚点造一条（attach 足以定义一条线）
+  const out = copy && copy.length >= 2 ? copy : [[0, 0], [0, 0]]
+  const last = out.length - 1
+  // 先算 to（用它作为 from 的朝向参考），再算 from —— 两侧同时给出时才互相参考
+  const refFrom = els.get(String(a.from?.ref ?? ''))
+  const refTo = els.get(String(a.to?.ref ?? ''))
+  const anchorOf = (spec, ref, toward, keep) => {
+    if (!spec || !ref) return null
+    const side = String(spec.side)
+    if (!ATTACH_SIDES.includes(side)) return null
+    return anchorFor(rectOf(ref), side, toward, keep)
+  }
+  const towardTo = copy && copy.length >= 2 ? copy[0] : [out[0][0], out[0][1]]
+  const towardFrom = copy && copy.length >= 2 ? copy[last] : [out[last][0], out[last][1]]
+  const toAnchor = anchorOf(a.to, refTo, towardTo, copy ? copy[last] : null)
+  const fromAnchor = anchorOf(a.from, refFrom, toAnchor ?? towardFrom, copy ? copy[0] : null)
+
+  const apply = (idx, anchor, end) => {
+    if (!anchor) return
+    const before = [out[idx][0], out[idx][1]]
+    const d = Math.hypot(before[0] - anchor[0], before[1] - anchor[1])
+    out[idx] = [anchor[0], anchor[1]]
+    // 手写坐标与解析结果不一致（> 容差）⇒ 记为"被改写"并提示（静默覆盖是不可接受的）
+    if (copy && d > t.tol) {
+      overridden++
+      notes.push(`${end} 端手写坐标 [${Math.round(before[0])}, ${Math.round(before[1])}] 与 attach 解析结果 [${Math.round(anchor[0])}, ${Math.round(anchor[1])}] 不一致（相差 ${d.toFixed(1)}px）⇒ 按 attach 覆盖`)
+    }
+  }
+  apply(0, fromAnchor, 'from')
+  apply(last, toAnchor, 'to')
+  // 退化保护：解析后两端重合 ⇒ 无向线，明确报出来（不静默产出零长度线）
+  if (out.length === 2 && out[0][0] === out[1][0] && out[0][1] === out[1][1]) notes.push('解析后两端点重合（零长度线）——请检查 attach 的 ref/side')
+  return { points: out, notes, overridden }
 }
 
 /** 报告用一行摘要（A-③ 集成进 ppt_verify 时会用）。 */

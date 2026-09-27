@@ -281,6 +281,8 @@ export function analyzePage(page, size) {
       findings.push({ severity: 'error', code: e.code, message: e.detail })
     }
     for (const w of dg.warnings) findings.push({ severity: 'warning', code: w.code, message: w.detail })
+    // attach 改写过手写坐标 ⇒ 必须可见（"attach 优先"可以，静默覆盖不行）
+    for (const el of els) for (const n of (el.attachNotes ?? [])) findings.push({ severity: 'warning', code: 'attach-override', message: `${el.id}: ${n}` })
     // 结构关系豁免的对数（供报告"结构关系"行使用）
     findings.structureStats = { ...rel.stats, usedStructure: true }
   }

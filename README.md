@@ -463,7 +463,7 @@ ppt_visual                  # Office 真渲染复核（有 Office 时；audit �
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
 npm run test:fast               # 【每条改动默认跑】廉价跨切面守卫 + 按改动文件选影响面（实测：只改文档 ≈8s）
-npm test                        # 【批次边界/发版】全量门禁：build + LF 守卫 + smoke（313 断言）+ 预设自检（≈5.5min）
+npm test                        # 【批次边界/发版】全量门禁：build + LF 守卫 + smoke（316 断言）+ 预设自检（≈5.5min）
 npm run test:release            # 【发版】全量 + e2e + 隔离矩阵 + 原生图表 + 损失审计 + 安装自证（并行，≈5min）
 npm run test:map:audit          # 防"孤儿分节"：每个 smoke 分节都必须能被影响面选中
 npm run check:eol               # 发行字节守卫：跟踪的文本文件必须全 LF（--fix 就地修）

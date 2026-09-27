@@ -105,6 +105,7 @@ function elementHtml(el, ctx, debug) {
     ...(el.badgeOf ? { badgeOf: el.badgeOf } : {}),
     ...(el.roleReason ? { roleReason: el.roleReason } : {}),
     ...(el.attach ? { attach: el.attach } : {}),
+    ...(el.attachNotes ? { attachNotes: el.attachNotes } : {}),
     ...(el.arrow ? { arrow: el.arrow } : {}),
     ...extra,
   })

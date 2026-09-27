@@ -55,8 +55,8 @@ const ELEMENT_KEYS = {
  * 几何反验证在 `src/pptd/relations.js`（本文件只做类型与引用存在性等**结构**校验）。
  */
 const STRUCT_KEYS = ['contains', 'badgeOf', 'roleReason']
-/** attach 的边枚举（与 relations.onSide 一致）。 */
-const ATTACH_SIDES = ['top', 'right', 'bottom', 'left']
+/** attach 的边枚举：与 geometry 层的判定共用一份（relations.js），避免两处枚举漂移。 */
+import { ATTACH_SIDES } from './relations.js'
 
 /**
  * shape.kind 白名单（v0.9.1 候选 A：常见 prst 直通）。
