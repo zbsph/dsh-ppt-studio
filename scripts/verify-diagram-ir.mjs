@@ -176,6 +176,8 @@ H('5. 图族库：三族的不变量与真实门禁')
     },
     cycle: { type: 'cycle', title: '闭环反馈', nodes: [{ id: 'c1', label: '采集' }, { id: 'c2', label: '分析' }, { id: 'c3', label: '决策' }, { id: 'c4', label: '执行' }, { id: 'c5', label: '复盘' }] },
     funnel: { type: 'funnel', title: '转化漏斗', nodes: [{ id: 'v1', label: '曝光' }, { id: 'v2', label: '点击' }, { id: 'v3', label: '咨询' }, { id: 'v4', label: '成交', emphasis: 'accent' }] },
+    state: { type: 'state', title: '订单状态机', nodes: [{ id: 's0', label: '待提交' }, { id: 's1', label: '待支付' }, { id: 's2', label: '已支付' }, { id: 's3', label: '已发货', emphasis: 'accent' }, { id: 's4', label: '已取消' }], edges: [{ from: 's0', to: 's1', label: '提交' }, { from: 's1', to: 's2', label: '付款' }, { from: 's2', to: 's3', label: '出库' }, { from: 's1', to: 's4', label: '超时' }, { from: 's3', to: 's1', label: '退货' }] },
+
     steps: { type: 'steps', title: '五步法', nodes: [{ id: 's1', label: '定目标' }, { id: 's2', label: '拆任务' }, { id: 's3', label: '排优先级' }, { id: 's4', label: '执行' }, { id: 's5', label: '复盘' }] },
     sequence: {
       type: 'sequence', title: '下单时序',
