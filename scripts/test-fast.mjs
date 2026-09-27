@@ -82,6 +82,7 @@ const run = (name, cmd, env) => {
 
 // ① 廉价跨切面守卫：永远跑（这几条全部加起来的代价约 6s，是快测的固定底座）
 run('build（src → lib）', 'node scripts/build.mjs')
+run('语法体检（src/lib/scripts 全覆盖）', 'node scripts/check-syntax.mjs')
 run('LF 守卫', 'node scripts/check-tracked-lf.mjs')
 run('lib 新鲜度', 'node scripts/check-lib-freshness.mjs')
 run('预设门禁', 'node scripts/check-preset.mjs')

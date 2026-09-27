@@ -67,6 +67,7 @@
     "test:fast": "node scripts/test-fast.mjs",
     "test:release": "node scripts/test-release.mjs",
     "test:map": "node scripts/test-map.mjs",
+    "check:syntax": "node scripts/check-syntax.mjs",
     "test:map:audit": "node scripts/test-map.mjs --audit",
     "check:eol": "node scripts/check-tracked-lf.mjs",
     "fresh": "node scripts/verify-fresh-install.mjs",
