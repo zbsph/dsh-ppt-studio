@@ -142,6 +142,11 @@ export function normalizePage(page, ctx) {
       type: el.elementType,
       bounds: b,
       ...(el.role ? { role: el.role } : {}),
+      // 阶段 A（docs/08 §1）：结构声明字段必须**透传**——归一化是白名单式构造，
+      // 漏在这里会让"结构关系"在导出/校验层凭空消失（几何反验证在 src/pptd/relations.js）。
+      ...(el.contains ? { contains: el.contains } : {}),
+      ...(el.badgeOf ? { badgeOf: el.badgeOf } : {}),
+      ...(el.roleReason ? { roleReason: el.roleReason } : {}),
     }
     switch (el.elementType) {
       case 'text': {
@@ -162,8 +167,11 @@ export function normalizePage(page, ctx) {
       }
       case 'line': {
         const pts = el.points ? el.points.map((p) => p) : [[el.x1, el.y1], [el.x2, el.y2]]
-        const line = { color: resolveColor(el.line?.color ?? '#000'), width: el.line?.width ?? 1 }
-        elements.push({ ...base, type: 'line', points: pts, arrow: !!el.arrow, line })
+        const line = { color: resolveColor(el.line?.color ?? '#000'), width: el.line?.width ?? 1, ...(el.line?.dash ? { dash: el.line.dash } : {}) }
+        // 阶段 A：`arrow` 必须**原样**透传。原先写作 `!!el.arrow` 会把 `'both'` 压成 `true`
+        // ⇒ 两端箭头/虚线折线走到导出层时已经不认得（本轮实测：headEnd 计数 0）。
+        // 同时透传 `attach`（导出层把它解析成坐标；见 export-pptx 的接入点注释）。
+        elements.push({ ...base, type: 'line', points: pts, arrow: el.arrow ?? false, line, ...(el.attach ? { attach: el.attach } : {}) })
         break
       }
       case 'image':
