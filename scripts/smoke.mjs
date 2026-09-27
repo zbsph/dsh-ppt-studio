@@ -3125,6 +3125,11 @@ ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz
   ok('§58 图进 parity：附着线单独计数，且**导出侧独立复核**端点落在被引用元素的对应边上（0 wrong）',
     r58.parity?.attachedLinesExp === 1 && r58.parity?.attachedLinesOut === 1 && (r58.parity?.attachedLinesWrong ?? ['x']).length === 0,
     `attached ${r58.parity?.attachedLinesOut}/${r58.parity?.attachedLinesExp}｜wrong=${JSON.stringify(r58.parity?.attachedLinesWrong ?? null)}`)
+  // ⑤ 能力可发现：能力写进 SCHEMA_REF（ppt_schema 是模型的权威通道）才算"上线"，否则等于藏起来
+  const vocab58 = ['groups:', 'contains:', 'badgeOf:', 'roleReason:', 'attach:', '折线', "arrow: 'both'", 'line.dash', 'notchedRightArrow', 'expectedOverlaps:']
+  const missing58 = vocab58.filter((k) => !scaffoldMod.SCHEMA_REF.includes(k))
+  ok('§58 能力可发现：ppt_schema（SCHEMA_REF）写进了阶段 A 全部新词汇（含折线/双箭头/虚线/notchedRightArrow）——不写则模型不知道能用',
+    missing58.length === 0, missing58.length ? `缺：${missing58.join('、')}` : `${vocab58.length} 个词汇齐备`)
   await rm(work58, { recursive: true, force: true })
 }
 
