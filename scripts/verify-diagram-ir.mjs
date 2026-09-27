@@ -162,6 +162,19 @@ H('5. 图族库：三族的不变量与真实门禁')
       nodes: [{ id: 'c1', label: '自动化', emphasis: 'accent' }, { id: 'c2', label: '模板库' }, { id: 'c3', label: '皮肤' }, { id: 'c4', label: '审计' }, { id: 'c5', label: '导出' }, { id: 'c6', label: '动画' }],
     },
     timeline: { type: 'timeline', title: '里程碑', nodes: [{ id: 'm1', label: '立项' }, { id: 'm2', label: '地基', emphasis: 'accent' }, { id: 'm3', label: '引擎' }, { id: 'm4', label: '图族' }, { id: 'm5', label: '北极星' }] },
+    // C2 批次：泳道 / 左右对比 / 闭环
+    swimlane: {
+      type: 'swimlane', title: '跨部门流程',
+      groups: [{ id: 'l1', label: '业务', members: ['b1', 'b2'] }, { id: 'l2', label: '风控', members: ['r1'] }, { id: 'l3', label: '财务', members: ['f1', 'f2'] }],
+      nodes: [{ id: 'b1', label: '提单' }, { id: 'b2', label: '复核' }, { id: 'r1', label: '评级' }, { id: 'f1', label: '放款' }, { id: 'f2', label: '归档' }],
+      edges: [{ from: 'b1', to: 'b2' }, { from: 'b2', to: 'r1', label: '送审' }, { from: 'r1', to: 'f1' }, { from: 'f1', to: 'f2' }],
+    },
+    compare: {
+      type: 'compare', title: '两种方案',
+      nodes: [{ id: 'a1', label: '自研引擎' }, { id: 'a2', label: '数据可编辑' }, { id: 'a3', label: '无外部依赖' }, { id: 'b1', label: '现成工具' }, { id: 'b2', label: '上手快' }, { id: 'b3', label: '受模板限制' }],
+      groups: [{ id: 'left', label: '方案 A：自研', members: ['a1', 'a2', 'a3'] }, { id: 'right', label: '方案 B：现成', members: ['b1', 'b2', 'b3'] }],
+    },
+    cycle: { type: 'cycle', title: '闭环反馈', nodes: [{ id: 'c1', label: '采集' }, { id: 'c2', label: '分析' }, { id: 'c3', label: '决策' }, { id: 'c4', label: '执行' }, { id: 'c5', label: '复盘' }] },
   }
   const STYLE_C = { ...STYLE, measureLine: (t, fs) => String(t ?? '').length * fs, safeArea: { top: 40, bottom: 40, left: 40, right: 40 }, page: { width: 960, height: 540 } }
   const dir = join(tmpdir(), `pptd-fam-${Date.now()}`)
@@ -217,7 +230,7 @@ H('5. 图族库：三族的不变量与真实门禁')
   const declAll = ctx.pages.reduce((n, p) => n + (p.page.expectedOverlaps ?? []).length + (p.page.expectedOutOfSafeArea ?? []).length, 0)
   ok('**三族一起过真实门禁：0 错误，且三页合计零声明**（不靠声明掩盖几何问题）',
     v.errors.length === 0 && declAll === 0, `错误 ${v.errors.length}｜声明 ${declAll}｜${v.errors.slice(0, 4).map((e) => `${e.code}:${e.id}`).join(' | ')}`)
-  ok('族清单与成熟度登记齐全（未实现类型仍走优雅降级）', ['tree', 'matrix', 'timeline'].every((k) => DIAGRAM_TYPES[k]) && Object.values(DIAGRAM_TYPES).every((m) => ['beta', 'stable'].includes(m)), JSON.stringify(DIAGRAM_TYPES))
+  ok('族清单与成熟度登记齐全（未实现类型仍走优雅降级）', ['tree', 'matrix', 'timeline', 'swimlane', 'compare', 'cycle'].every((k) => DIAGRAM_TYPES[k]) && Object.values(DIAGRAM_TYPES).every((m) => ['beta', 'stable'].includes(m)), JSON.stringify(DIAGRAM_TYPES))
   rmSync(dir, { recursive: true, force: true })
 }
 

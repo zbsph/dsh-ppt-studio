@@ -279,8 +279,232 @@ function layoutTimeline({ d, box, style, id, notes }) {
   return { elements, groups: [], pos }
 }
 
+// ── 族 ④：swimlane（泳道图）──────────────────────────────────────────────
+/**
+ * 结构：`groups` = 泳道（顺序即自上而下），`nodes` 通过所属 group 归道；未归道的节点自成一列。
+ * 关键设计：泳道带用 **`role: decoration`**（完全豁免重叠报告）而不是"容器 contains"——
+ * 跨道连线的折线 AABB 有高度，若把泳道做成容器就会被判"意外重叠"；而跨道穿越泳道带**本来就是泳道图的语义**。
+ * 车道分隔线是轴对齐直线（AABB 高/宽为 0），本身也不会触发重叠判定。
+ * 跨道连线走**列间隙的竖直走廊**（不穿节点盒），因此 `line-through-box` 也不会触发。
+ */
+function layoutSwimlane({ d, box, style, id, notes }) {
+  const elements = []
+  const nodes = d.nodes ?? []
+  const lanes = (Array.isArray(d.groups) ? d.groups : []).map((g) => ({ id: g.id, label: g.label, members: (g.members ?? []).filter((m) => nodes.some((n) => n.id === m)) }))
+  if (lanes.length === 0) { notes.push('swimlane：没有泳道（请用 groups 声明每条泳道的成员）⇒ 不产元素'); return { elements, groups: [], skipContainers: true } }
+  const laneCount = lanes.length
+  const laneH = box.h / laneCount
+  const headW = 0 // 泳道标题放在带上沿内侧，不占列宽
+  const cols = Math.max(...lanes.map((l) => l.members.length), 1)
+  const gx = style.gap
+  const colW = (box.w - headW - gx * (cols - 1)) / cols
+  const nodeW = Math.max(56, Math.min(colW * 0.8, 200))
+  const nodeH = Math.max(28, Math.min(laneH * 0.5, 56))
+  const pos = new Map()
+  lanes.forEach((lane, li) => {
+    const laneY = box.y + li * laneH
+    // 泳道带（装饰层：跨道线穿过它是设计意图，不该报冲突）
+    elements.push({
+      elementId: id(`lane_${lane.id}`), elementType: 'shape', kind: 'rect',
+      bounds: [R(box.x), R(laneY), R(box.w), R(laneH)],
+      fill: style.neutral, line: { color: style.ink, width: style.lineWidth },
+      role: 'decoration', roleReason: '泳道带（装饰层；跨道连线穿过属设计意图）',
+    })
+    if (lane.label) {
+      elements.push(makeText(style, id, { id: `laneT_${lane.id}`, x: box.x + 8, y: laneY + 4, w: Math.min(200, box.w - 16), text: String(lane.label) }))
+    }
+    // 车道分隔线（第 0 条画在带顶也可，这里只画内部边界）
+    if (li > 0) {
+      elements.push(...makeEdge(style, id, { id: `sep_${lane.id}`, points: [[box.x, laneY], [box.x + box.w, laneY]], arrow: false }))
+    }
+    // 带内节点：列位置全局对齐（跨道连线才好走列间隙）
+    lane.members.forEach((mid, ci) => {
+      const n = nodes.find((x) => x.id === mid)
+      const cx0 = box.x + headW + ci * (colW + gx) + (colW - nodeW) / 2
+      const cy0 = laneY + (laneH - nodeH) / 2 + (lane.label ? 6 : 0)
+      pos.set(mid, { x: cx0, y: cy0, w: nodeW, h: nodeH })
+      elements.push(...makeNode(style, id, { id: mid, x: cx0, y: cy0, w: nodeW, h: nodeH, label: n?.label, emphasis: n?.emphasis }))
+    })
+  })
+  const laneOf = new Map()
+  lanes.forEach((l, li) => l.members.forEach((m) => laneOf.set(m, li)))
+  // 连线：同道直连；跨道走列间隙竖直走廊（3 段折线）
+  let ei = 0
+  for (const e of d.edges ?? []) {
+    const A = pos.get(e.from)
+    const B = pos.get(e.to)
+    if (!A || !B) continue
+    const sameLane = laneOf.get(e.from) === laneOf.get(e.to)
+    const yA = A.y + A.h / 2
+    const yB = B.y + B.h / 2
+    if (sameLane && Math.abs(yA - yB) < 1) {
+      const forward = B.x >= A.x
+      elements.push(...makeEdge(style, id, {
+        id: `e${ei++}`, points: [[forward ? A.x + A.w : A.x, yA], [forward ? B.x : B.x + B.w, yB]],
+        from: { ref: id(e.from), side: forward ? 'right' : 'left' }, to: { ref: id(e.to), side: forward ? 'left' : 'right' },
+        dashed: e.style === 'dashed', label: e.label,
+        labelBox: e.label ? { x: (A.x + A.w + B.x) / 2 - 40, y: yA - 18, w: 80 } : null,
+      }))
+    } else {
+      // 跨道：**经典泳道路由** —— 源节点底/顶 → 两条车道之间的间隙横移 → 目标节点顶/底。
+      // （第一版用"源右侧竖直走廊"，横向那一段会直接穿过整行节点盒，被判意外重叠 200×28px。）
+      const liA = laneOf.get(e.from)
+      const liB = laneOf.get(e.to)
+      const down = liB > liA
+      const sx = A.x + A.w / 2
+      const tx = B.x + B.w / 2
+      const y0 = down ? A.y + A.h : A.y
+      const y1 = down ? B.y : B.y + B.h
+      const yMid = (down ? box.y + (liA + 1) * laneH : box.y + liA * laneH) // 车道分隔线上（间隙处，盒外）
+      elements.push(...makeEdge(style, id, {
+        id: `e${ei++}`,
+        points: [[sx, y0], [sx, yMid], [tx, yMid], [tx, y1]],
+        from: { ref: id(e.from), side: down ? 'bottom' : 'top' }, to: { ref: id(e.to), side: down ? 'top' : 'bottom' },
+        dashed: e.style === 'dashed', label: e.label,
+        labelBox: e.label ? { x: (sx + tx) / 2 - 40, y: yMid - 18, w: 80 } : null,
+      }))
+    }
+  }
+  return { elements, groups: lanes.map((l) => ({ id: id(`grp_${l.id}`), ...(l.label ? { label: l.label } : {}), members: l.members.map(id) })), skipContainers: true, pos }
+}
+
+// ── 族 ⑤：compare（左右对比）────────────────────────────────────────────
+/**
+ * 结构：`groups[0]`/`groups[1]` = 两侧条目（多于两组的后续忽略并记 note）；未给 groups 时按 nodes 顺序对半切。
+ * 几何：双列容器 + 中缝分隔线（轴对齐，AABB 宽为 0，不会触发重叠判定）。
+ */
+function layoutCompare({ d, box, style, id, notes }) {
+  const elements = []
+  const nodes = d.nodes ?? []
+  let sides = (Array.isArray(d.groups) ? d.groups : []).map((g) => ({ id: g.id, label: g.label, members: (g.members ?? []).filter((m) => nodes.some((n) => n.id === m)) }))
+  if (sides.length === 0) {
+    const half = Math.ceil(nodes.length / 2)
+    sides = [{ id: 'left', label: d.leftLabel ?? '方案 A', members: nodes.slice(0, half).map((n) => n.id) }, { id: 'right', label: d.rightLabel ?? '方案 B', members: nodes.slice(half).map((n) => n.id) }]
+  }
+  if (sides.length > 2) { notes.push(`compare：给了 ${sides.length} 组，只取前两组（其余忽略）`); sides = sides.slice(0, 2) }
+  if (sides.length < 2) { notes.push('compare：需要两组（左右各一）⇒ 不产元素'); return { elements, groups: [] } }
+  const titleH = 20
+  const gap = style.gap * 1.6
+  const colW = (box.w - gap) / 2
+  const headH = 20 // 侧标题占块内一条（放块外会掉出安全区）
+  const bodyY = box.y + titleH + headH
+  const bodyH = box.h - titleH - headH
+  if (bodyH < 40) { notes.push('compare：扣除标题后高度不足 ⇒ 不产元素（请放大 bounds）'); return { elements, groups: [] } }
+  const groups = []
+  const pos = new Map()
+  const containers = []
+  sides.forEach((s, si) => {
+    const x = box.x + si * (colW + gap)
+    const items = s.members.length || 1
+    const ih = (bodyH - style.gap * 0.6 * (items - 1)) / items
+    s.members.forEach((mid, i) => {
+      const n = nodes.find((x2) => x2.id === mid)
+      const cell = { x, y: bodyY + i * (ih + style.gap * 0.6), w: colW, h: ih }
+      pos.set(mid, cell)
+      elements.push(...makeNode(style, id, { id: mid, ...cell, label: n?.label, emphasis: n?.emphasis }))
+    })
+    // 容器严格**落在画布内**（第一版向外扩 8px ⇒ out-of-safe-area 报错）
+    const cb = { x, y: box.y + titleH, w: colW, h: box.h - titleH }
+    const container = makeContainer(style, id, { gid: s.id, box: cb, members: s.members.map(id).concat(s.members.map((m) => id(`t_${m}`))), existing: containers, notes })
+    if (container) {
+      if (s.label) {
+        const lid = id(`gl_${s.id}`)
+        elements.unshift(makeText(style, id, { id: `gl_${s.id}`, x: cb.x + 8, y: cb.y + 2, w: Math.max(24, cb.w - 16), text: String(s.label), sizeFactor: 0.95 }))
+        container.contains.push(lid)
+      }
+      containers.push(cb)
+      elements.unshift(container)
+    }
+    groups.push({ id: id(`grp_${s.id}`), ...(s.label ? { label: s.label } : {}), members: s.members.map(id) })
+  })
+  if (d.title) elements.unshift(makeText(style, id, { id: 'cmp_title', x: box.x, y: box.y, w: box.w, text: String(d.title), sizeFactor: 1.05 }))
+  // 本族自己产出容器 ⇒ 必须 skipContainers，否则派发器会按 d.groups 再造一遍（同 id 重复 + 外扩越界）
+  return { elements, groups, pos, skipContainers: true }
+}
+
+// ── 族 ⑥：cycle（闭环反馈）─────────────────────────────────────────────
+/**
+ * 结构：`nodes` 顺序成环（`edges` 可显式指定）；无 `edges` 时按顺序相邻 + 收尾闭合。
+ * 几何：环形排布；连线**走环外侧的折线**（节点外沿 → 角平分方向外扩 → 下一节点外沿），
+ * 因此相邻连线互不相交（不像"弦"那样在环内交叉成蜘蛛网），箭头端仍精确落在节点边上（按射线求交后写 attach）。
+ */
+function layoutCycle({ d, box, style, id, notes }) {
+  const elements = []
+  const nodes = d.nodes ?? []
+  const n = nodes.length
+  if (n < 2) { notes.push('cycle：至少需要 2 个节点 ⇒ 不产元素'); return { elements, groups: [] } }
+  const cx = box.x + box.w / 2
+  const cy = box.y + box.h / 2
+  const nodeH = 34
+  const nodeW = Math.max(56, Math.min(150, (2 * Math.PI * Math.min(box.w, box.h) / 6) / n))
+  const R = Math.min(box.w / 2 - nodeW / 2, box.h / 2 - nodeH / 2) - 22
+  if (R < 30) { notes.push(`cycle：画布太小放不下 ${n} 个节点的环（R=${Math.round(R)}px）⇒ 不产元素`); return { elements, groups: [] } }
+  const pt = (a, r) => [cx + r * Math.cos(a), cy + r * Math.sin(a)]
+  const rectOfCenter = (x, y) => ({ x: x - nodeW / 2, y: y - nodeH / 2, w: nodeW, h: nodeH })
+  const pos = new Map()
+  const angleOf = new Map()
+  nodes.forEach((nd, i) => {
+    const a = -Math.PI / 2 + (2 * Math.PI * i) / n
+    const [x, y] = pt(a, R)
+    pos.set(nd.id, rectOfCenter(x, y))
+    angleOf.set(nd.id, a)
+    elements.push(...makeNode(style, id, { id: nd.id, ...rectOfCenter(x, y), label: nd.label, emphasis: nd.emphasis }))
+  })
+  /** 从节点中心沿射线求与矩形边界的交点，并给出所在的边。 */
+  const edgeHit = (rect, a) => {
+    const ccx = rect.x + rect.w / 2
+    const ccy = rect.y + rect.h / 2
+    const dx = Math.cos(a)
+    const dy = Math.sin(a)
+    const tx = dx === 0 ? Infinity : (dx > 0 ? (rect.x + rect.w - ccx) / dx : (rect.x - ccx) / dx)
+    const ty = dy === 0 ? Infinity : (dy > 0 ? (rect.y + rect.h - ccy) / dy : (rect.y - ccy) / dy)
+    const t = Math.min(Math.abs(tx), Math.abs(ty))
+    const hx = ccx + dx * t
+    const hy = ccy + dy * t
+    let side = 'right'
+    if (Math.abs(hx - rect.x) < 0.6) side = 'left'
+    else if (Math.abs(hx - (rect.x + rect.w)) < 0.6) side = 'right'
+    else if (Math.abs(hy - rect.y) < 0.6) side = 'top'
+    else side = 'bottom'
+    return { pt: [hx, hy], side }
+  }
+  const list = Array.isArray(d.edges) && d.edges.length ? d.edges : nodes.map((nd, i) => ({ from: nd.id, to: nodes[(i + 1) % n].id }))
+  let ei = 0
+  for (const e of list) {
+    const A = pos.get(e.from)
+    const B = pos.get(e.to)
+    const aA = angleOf.get(e.from)
+    const aB = angleOf.get(e.to)
+    if (!A || !B || aA === undefined || aB === undefined) continue
+    // 角平分方向（处理跨 0 的环绕）：取两角之间较短的一侧
+    let d0 = aB - aA
+    while (d0 > Math.PI) d0 -= 2 * Math.PI
+    while (d0 < -Math.PI) d0 += 2 * Math.PI
+    const aMid = aA + d0 / 2
+    const outR = R + 20
+    const outer = pt(aMid, outR)
+    // 端点必须用**真实方向**（节点中心 → 拐点）与矩形边界求交。
+    // 第一版用"角平分方向"近似 ⇒ 端点落到错误的那条边上 ⇒ 线段斜穿节点盒（门禁报 5 条意外重叠）。
+    const dirFrom = (rect) => Math.atan2(outer[1] - (rect.y + rect.h / 2), outer[0] - (rect.x + rect.w / 2))
+    const h1 = edgeHit(A, dirFrom(A))
+    const h2 = edgeHit(B, dirFrom(B))
+    elements.push(...makeEdge(style, id, {
+      id: `e${ei++}`,
+      points: [h1.pt, outer, h2.pt],
+      from: { ref: id(e.from), side: h1.side }, to: { ref: id(e.to), side: h2.side },
+      dashed: e.style === 'dashed', label: e.label,
+      labelBox: e.label ? { x: outer[0] - 40, y: outer[1] - 8, w: 80 } : null,
+    }))
+  }
+  if (d.title) elements.unshift(makeText(style, id, { id: 'cyc_title', x: box.x, y: box.y, w: box.w, text: String(d.title), sizeFactor: 1.05 }))
+  return { elements, groups: [], pos }
+}
+
 export const FAMILIES = {
   tree: { maturity: 'beta', layout: layoutTree, summary: '层级树/组织图（正交折线、按叶子序排布）' },
   matrix: { maturity: 'beta', layout: layoutMatrix, summary: '矩阵/象限（行列网格 + 表头）' },
   timeline: { maturity: 'beta', layout: layoutTimeline, summary: '时间轴/里程碑（水平轴 + 上下交替标签）' },
+  swimlane: { maturity: 'beta', layout: layoutSwimlane, summary: '泳道图（装饰层泳道带 + 跨道走列间隙走廊）' },
+  compare: { maturity: 'beta', layout: layoutCompare, summary: '左右对比（双列容器 + 中缝）' },
+  cycle: { maturity: 'beta', layout: layoutCycle, summary: '闭环反馈（环形排布 + 环外侧折线连线）' },
 }
