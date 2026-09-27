@@ -380,10 +380,14 @@ export function layoutDiagram(d, opts = {}) {
     // 单靠 contains 豁免不了它（layers 族实测 9 条）。decoration 是"这是背景带"的正确语义，
     // 与 swimlane 的做法一致；`contains` 保留（结构关系语义仍然成立，成员严格在带内）。
     const container = { elementId: cid, elementType: 'shape', kind: 'roundRect', bounds: [cb.x, cb.y, cb.w, cb.h], fill: style.neutral, line: { color: style.ink, width: style.lineWidth }, role: 'decoration', roleReason: '分组带（装饰层：跨带连线穿过属设计意图）', contains: [...new Set(inner)] }
-    if (g.label) {
+    // 组标题只在**真的有空位**时才放：容器为了不越界会被夹进画布，夹紧后顶部留给标题的空间可能不足 16px，
+    // 此时硬放就会压到首个节点上（判为"意外重叠"；压字/压盒都不该靠声明掩盖）。没位置 ⇒ 省略 + 记 note。
+    if (g.label && y0 - cb.y >= 16) {
       const lid = id(`gl_${g.id}`)
       elements.push({ elementId: lid, elementType: 'text', bounds: [round(cb.x + 8), round(cb.y + 3), round(Math.min(cb.w - 16, measure(g.label, style.fontSize * 0.85) + 4)), 16], content: { text: g.label, fontSize: Math.max(10, Math.round(style.fontSize * 0.85)), color: style.ink, align: 'left' } })
       container.contains.push(lid)
+    } else if (g.label) {
+      notes.push(`分组 "${g.id}" 的标题放不下（容器贴到画布边后顶部空间不足）⇒ 已省略标题；需要标题请缩小内容或加大画布`)
     }
     containerOf.set(g.id, container)
     elements.push(container)
