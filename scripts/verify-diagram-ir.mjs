@@ -242,5 +242,60 @@ H('5. 图族库：三族的不变量与真实门禁')
   rmSync(dir, { recursive: true, force: true })
 }
 
+// ── 6. 阶段 D-①：参考稿样式档案 → 引擎（令牌通路）──────────────────────────
+H('6. 样式档案：观测 → 归纳 → 喂回引擎（引擎无审美，只换令牌来源）')
+{
+  const { observeFromDeck, extractStyleProfile, profileToTheme } = await import('../lib/pptd/style-profile.js')
+  const dir = join(tmpdir(), `pptd-profile-${Date.now()}`)
+  rmSync(dir, { recursive: true, force: true })
+  mkdirSync(join(dir, 'pages'), { recursive: true })
+  writeFileSync(join(dir, 'deck.yaml'), ['version: 1', 'title: ref', 'size: [960, 540]', 'theme:',
+    '  colors: {primary: "#0F766E", text: "#0B2B26", bg: "#F0FDFA"}', '  textStyles:', '    body: {fontSize: 15, color: "$text"}',
+    'pages:', '  - pages/01.yaml', ''].join('\n'))
+  writeFileSync(join(dir, 'pages', '01.yaml'), ['pageType: content', 'elements:',
+    '  - elementId: k1', '    elementType: shape', '    kind: roundRect', '    bounds: [60, 60, 300, 200]', '    fill: "#0F766E"', '    line: {color: "#0B2B26", width: 2}',
+    '  - elementId: k2', '    elementType: shape', '    kind: roundRect', '    bounds: [420, 60, 300, 200]', '    fill: "#14B8A6"', '    line: {color: "#0B2B26", width: 2}',
+    '  - elementId: k3', '    elementType: shape', '    kind: roundRect', '    bounds: [60, 320, 300, 140]', '    fill: "#0F766E"', '    line: {color: "#0B2B26", width: 2}',
+    ''].join('\n'))
+  const refCtx = await resolveDeck(dir)
+  const prof = extractStyleProfile(observeFromDeck(refCtx))
+  ok('观测→归纳：调色板按**出现频次**排序（#0F766E 出现 2 次排第一），并归纳出底色/线宽',
+    prof.palette[0] === '#0F766E' && prof.palette.includes('#14B8A6') && prof.bg === '#F0FDFA' && prof.lineWidth === 2,
+    `palette=${prof.palette.join(',')}｜bg=${prof.bg}｜lineWidth=${prof.lineWidth}｜fontSize=${prof.fontSize}`)
+  ok('归纳确定性：同输入两次提取深度相等', JSON.stringify(prof) === JSON.stringify(extractStyleProfile(observeFromDeck(refCtx))))
+  ok('档案 → theme：调色板映射为 primary/accent/soft，墨色与底色随档案',
+    (() => { const t = profileToTheme(prof); return t.colors.primary === '#0F766E' && t.colors.accent === '#14B8A6' && t.colors.bg === '#F0FDFA' })(),
+    JSON.stringify(profileToTheme(prof).colors))
+
+  // 把它当 `deck.styles.ref-a` 喂给一个 IR 页：取色/线宽必须来自档案，且**过门禁**
+  const dir2 = join(tmpdir(), `pptd-profile-use-${Date.now()}`)
+  rmSync(dir2, { recursive: true, force: true })
+  mkdirSync(join(dir2, 'pages'), { recursive: true })
+  writeFileSync(join(dir2, 'deck.yaml'), ['version: 1', 'title: use', 'size: [960, 540]', 'theme:',
+    '  colors: {primary: "#2563EB", text: "#1F2937", bg: "#F8FAFC"}', '  textStyles:', '    body: {fontSize: 13, color: "$text"}',
+    'styles:', '  ref-a:', `    palette: [${prof.palette.map((c) => `"${c}"`).join(', ')}]`,
+    `    ink: "${prof.ink}"`, `    bg: "${prof.bg}"`, `    neutral: "${prof.neutral}"`,
+    `    lineWidth: ${prof.lineWidth}`, `    fontSize: ${prof.fontSize}`, `    radius: ${prof.radius}`,
+    'pages:', '  - pages/01.yaml', ''].join('\n'))
+  writeFileSync(join(dir2, 'pages', '01.yaml'), ['pageType: content', 'diagram:', '  type: tree', '  style: ref-a', '  nodes:',
+    '    - {id: r, label: 总目标}', '    - {id: a, label: 分支一, emphasis: accent}', '  edges:', '    - {from: r, to: a}', ''].join('\n'))
+  const useCtx = await resolveDeck(dir2)
+  const els2 = useCtx.pages[0].page.elements
+  const fills2 = [...new Set(els2.filter((e) => e.elementType === 'shape').map((e) => e.fill))]
+  const widths2 = [...new Set(els2.filter((e) => e.line?.width).map((e) => e.line.width))]
+  await renderDeck(useCtx, { out: 'preview' })
+  const layout2 = JSON.parse((await import('node:fs')).readFileSync(join(dir2, 'preview', 'layout.json'), 'utf8'))
+  const v2 = verifyDeck(layout2)
+  ok('档案驱动生成：节点取色来自档案调色板（primary/accent）、线宽来自档案',
+    fills2.includes(prof.palette[0]) && fills2.includes(prof.palette[1]) && widths2.includes(prof.lineWidth),
+    `取色=${JSON.stringify(fills2)}｜线宽=${JSON.stringify(widths2)}`)
+  ok('**档案驱动页过真实门禁 0 错误**（档案色板已并入主题色板，不再触发 theme-conformance）',
+    v2.errors.length === 0, v2.errors.map((e) => e.code).join(',') || '无')
+  ok('themeConformance 判据：layout.theme.colors 里确实带上了档案色（原地写入，未替换对象）',
+    Object.values(layout2.theme.colors).includes(prof.palette[0]), `layout.theme.colors=${JSON.stringify(layout2.theme.colors)}`)
+  rmSync(dir, { recursive: true, force: true })
+  rmSync(dir2, { recursive: true, force: true })
+}
+
 console.log(`\n==== verify-diagram-ir 结果：${pass} 通过 / ${fail} 失败 ====`)
 if (fail) { console.log(`失败项：${failures.join('；')}`); process.exit(1) }

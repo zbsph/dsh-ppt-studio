@@ -59,6 +59,7 @@ const STRUCT_KEYS = ['contains', 'badgeOf', 'roleReason']
 import { ATTACH_SIDES } from './relations.js'
 // 阶段 B：`diagram` 物化（IR → 元素 + 结构关系）。schema → diagram-ir → relations，无循环依赖。
 import { layoutDiagram, styleProfileFrom, validateDiagram } from './diagram-ir.js'
+import { profileToTheme } from './style-profile.js'
 import { measureText } from './layout.js'
 
 /**
@@ -622,7 +623,26 @@ export async function resolveDeck(dir) {
     if (page.diagram !== undefined) {
       const derr = validateDiagram(page.diagram, { file: ref })
       if (derr.length) throw fail(derr)
-      const prof = styleProfileFrom(theme)
+      // 阶段 D-①：`diagram.style: <档案名>` ⇒ 该图令牌来自参考稿档案（引擎仍无审美，只是换令牌来源）。
+      // 档案色板必须**并入主题色板**，否则生成的取色会被主题一致性门禁判"不在色板"（实测 3 条 theme-conformance）。
+      // 关键：必须**原地写** theme.colors——`render-html` 的 `layout.theme.colors = ctx.colors` 引用的正是
+      // resolveDeck 开头捕获的**同一个对象**；重新赋值 `theme.colors = {...}` 会造新对象、合并到不了门禁
+      //（前两轮就卡在这：档案确实驱动了几何与取色，但门禁看不到色板合并）。
+      const styleProfile = page.diagram.style ? deck.styles?.[page.diagram.style] : null
+      if (styleProfile) {
+        const pt0 = profileToTheme(styleProfile)
+        const live = theme.colors ?? (theme.colors = {})
+        const known0 = new Set(Object.values(live))
+        let ci = 0
+        for (const c of [...Object.values(pt0.colors), ...(styleProfile.palette ?? [])]) {
+          if (typeof c === 'string' && /^#[0-9a-fA-F]{6}$/.test(c) && !known0.has(c)) { known0.add(c); live[`diagram_p${ci++}`] = c }
+        }
+      }
+      const prof = styleProfileFrom(
+        styleProfile
+          ? (() => { const pt = profileToTheme(styleProfile); return { ...theme, ...pt, colors: { ...(theme.colors ?? {}), ...pt.colors } } })()
+          : theme,
+      )
       const sa = page.safeArea ?? theme.safeArea ?? null
       const bounds = Array.isArray(page.diagram?.bounds)
         ? { x: page.diagram.bounds[0], y: page.diagram.bounds[1], w: page.diagram.bounds[2], h: page.diagram.bounds[3] }
