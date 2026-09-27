@@ -19,6 +19,10 @@
  *                             不得静默跳过（静默返空与"真没问题"在输出上不可区分，2026-09-18 假绿灯事故的根因）
  */
 
+// 阶段 A（docs/08 §5）：结构关系（推导 + 几何反验证）。注意方向是 verify → relations，不反向
+// （relations.js 不依赖 verify），因此不存在循环依赖。
+import { deriveRelations, checkDiagram, summaryLine, usesStructure } from './pptd/relations.js'
+
 const TOL = 1 // px
 
 const NEUTRAL_GRAY_RE = /^#(?:[0-9a-fA-F]{6})$/ // 黑白灰中性色宽判：RGB 各分量近等
@@ -256,7 +260,30 @@ export function analyzePage(page, size) {
   const minY = sa?.top ?? 0
   const maxX = pw - (sa?.right ?? 0)
   const maxY = ph - (sa?.bottom ?? 0)
-  const declared = declaredClosure(page) // P0-2：声明闭包（嵌套承载相邻层声明 → 隔层自动通过）
+  const declaredBase = declaredClosure(page) // P0-2：声明闭包（嵌套承载相邻层声明 → 隔层自动通过）
+  // ── 阶段 A（docs/08 §5）：结构关系 = 推导 + 几何反验证 ──
+  // ① **有效**关系的豁免注入声明集（推导结果**不落盘**，每次现算）；
+  // ② 声明不成立 ⇒ 点名错误；③ 已失效的声明降级为可见警告（"声明复核"段）；
+  // ④ 图专属机械检查。以上**仅在"本页用了结构声明"时启用** ⇒ 没用新特性的页面行为与从前完全一致。
+  const usedStructure = usesStructure(page)
+  const rel = usedStructure ? deriveRelations(page) : { relations: [], exempt: [], invalid: [], errors: [], stats: { groups: 0, contains: 0, attach: 0, badge: 0, overlapDecl: 0, exempt: 0 } }
+  const declared = new Set([...declaredBase, ...(usedStructure ? rel.exempt : [])])
+  if (usedStructure) {
+    for (const e of rel.errors) findings.push({ severity: 'error', code: e.code, message: e.detail })
+    for (const iv of rel.invalid) {
+      if (iv.type !== 'overlapDecl') continue // 不成立的 contains/attach/badge 已进 rel.errors
+      findings.push({ severity: 'warning', code: 'declared-stale', message: `预期重叠声明已失效：${iv.from} × ${iv.to}（两端当前并不相交，建议移除）` })
+    }
+    const dg = checkDiagram(page)
+    for (const e of dg.errors) {
+      // text-over-text 已由既有 content-collision 覆盖 ⇒ 不重复上抛（自证脚本仍直接断言该检查本身）
+      if (e.code === 'text-over-text') continue
+      findings.push({ severity: 'error', code: e.code, message: e.detail })
+    }
+    for (const w of dg.warnings) findings.push({ severity: 'warning', code: w.code, message: w.detail })
+    // 结构关系豁免的对数（供报告"结构关系"行使用）
+    findings.structureStats = { ...rel.stats, usedStructure: true }
+  }
   const outOfSafe = new Set(page.expectedOutOfSafeArea ?? []) // 出界分级声明制（C3 修订）
   const lenient = page.overlapMode === 'lenient'
   const pairKey = (a, b) => [a, b].sort().join(' × ')
@@ -481,6 +508,23 @@ export function verifyDeck(layout) {
     for (const f of findings) {
       if (f.severity === 'confirmed') continue
       out.push(`  - [${f.severity === 'error' ? '✗' : '~'}] ${f.code}｜${f.message}`)
+    }
+    // ── 阶段 A 报告形态（docs/08 §5）：结构关系只计数；**声明复核段固定存在**（豁免必须可见）──
+    if (findings.structureStats !== undefined) {
+      const rel = deriveRelations(page)
+      out.push(`  · ${summaryLine(rel)}`)
+      const decls = Array.isArray(page.expectedOverlaps) ? page.expectedOverlaps : []
+      const noReason = decls.filter((d) => !d || typeof d.reason !== 'string' || d.reason.trim() === '').length
+      const stale = rel.invalid.filter((iv) => iv.type === 'overlapDecl').length
+      // "是否覆盖"必须按**推断**角色判（roleOf 返回的是生效角色，显式优先 ⇒ 直接比会永远相等）
+      const inferred = (el) => (['text', 'table', 'chart'].includes(el.type ?? el.kind) ? 'content' : ((el.type === 'line' || el.kind === 'line') ? 'line' : 'background'))
+      const overrides = (page.elements ?? []).filter((el) => el.role !== undefined && el.role !== inferred(el))
+      const overNoReason = overrides.filter((el) => typeof el.roleReason !== 'string' || el.roleReason.trim() === '')
+      const parts = []
+      parts.push(decls.length ? `预期重叠声明 ${decls.length} 处${stale ? `（${stale} 处已失效）` : ''}${noReason ? `（${noReason} 处缺 reason）` : ''}` : '预期重叠声明 0 处')
+      parts.push(overrides.length ? `role 覆盖 ${overrides.length} 处${overNoReason.length ? `（${overNoReason.length} 处缺 roleReason）` : ''}` : 'role 覆盖 0 处')
+      parts.push(`自证：关系全部通过几何反验证${rel.invalid.filter((iv) => iv.type !== 'overlapDecl').length ? `（${rel.invalid.filter((iv) => iv.type !== 'overlapDecl').length} 处不成立已按冲突报）` : ''}`)
+      out.push(`  · 设计声明复核：${parts.join('｜')}`)
     }
     for (const s of suggestions) {
       out.push(`  - [·] ${s.code}｜${s.message}`)

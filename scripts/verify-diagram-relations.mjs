@@ -55,8 +55,8 @@ H('1. 正例：合法结构')
   ok('统计数字正确（组 3 / 包含 2 / 附着 2 / 徽章 1 / 有意重叠 1）',
     r.stats.groups === 3 && r.stats.contains === 2 && r.stats.attach === 2 && r.stats.badge === 1 && r.stats.overlapDecl === 1,
     JSON.stringify(r.stats))
-  ok('豁免集合 = {in_box×zone, chip×zone}（去重后 2 个）',
-    r.exempt.length === 2 && r.exempt.includes('chip×zone') && r.exempt.includes('in_box×zone'), r.exempt.join(','))
+  ok('豁免集合 = {in_box × zone, chip × zone}（去重后 2 个）',
+    r.exempt.length === 2 && r.exempt.includes('chip × zone') && r.exempt.includes('in_box × zone'), r.exempt.join(','))
   ok('组深度正确（g_loop 嵌在 g_core 内 ⇒ depth 1）', r.groups.find((g) => g.id === 'g_loop')?.depth === 1)
   ok('图专属检查在合法页上静默', (() => { const c = checkDiagram(page); return c.errors.length === 0 && c.warnings.length === 0 })(),
     JSON.stringify(checkDiagram(page)))
@@ -99,7 +99,7 @@ H('2. 反例（宽松判据会在这里漏掉）')
     r4.invalid.some((x) => x.type === 'badge') && badgeRel?.valid === false,
     JSON.stringify({ invalid: r4.invalid.map((x) => x.type), badgeValid: badgeRel?.valid }))
   ok('但它仍被**显式声明**豁免（声明与结构关系相互独立）',
-    r4.exempt.includes('chip×zone'), r4.exempt.join(','))
+    r4.exempt.includes('chip × zone'), r4.exempt.join(','))
 
   // 声明两端都是内容元素 ⇒ 永不可声明
   const p5 = goodPage()
@@ -235,6 +235,65 @@ H('7. schema：结构字段的类型与引用校验（validatePage）')
 
   // 非回归：既有的"只写 2 点 + 无结构字段"的 deck 行为完全不变
   ok('非回归：无新字段的页面校验结果与从前一致（无错误）', msg({ elements: [shape('a'), line({ arrow: true })] }) === '')
+}
+
+// ── 8. verify 集成（A-③）：结构豁免真的进声明集；报告段出现；且**门控**保证普通页不受影响 ──
+H('8. verify 集成：结构豁免 / 报告形态 / 门控（非回归）')
+{
+  const { analyzePage, verifyDeck } = await import('../lib/verify.js')
+  const size = { width: 960, height: 540 }
+  const B = (x, y, w, h) => ({ x, y, w, h })
+  const container = (extra = {}) => ({ id: 'zone', type: 'shape', kind: 'roundRect', bounds: B(40, 120, 880, 300), ...extra })
+  const textInside = { id: 't1', type: 'text', kind: 'text', bounds: B(100, 200, 200, 40), content: { text: '标签' } }
+  const wrap = (page) => ({ index: 0, name: 'p', safeArea: null, overlapMode: 'declared', elements: [], expectedOverlaps: [], ...page })
+
+  // 无结构声明：容器(background) 压住文本(content) ⇒ declared 模式下未声明重叠 = 错误
+  const plain = wrap({ elements: [container(), textInside] })
+  const plainF = analyzePage(plain, size)
+  ok('门控对照：**没有**结构声明的页，容器压文本仍是 unexpected-overlap 错误',
+    plainF.some((f) => f.code === 'unexpected-overlap' && f.severity === 'error'),
+    plainF.map((f) => `${f.severity}:${f.code}`).join(','))
+
+  // 有 contains 且几何成立：同一对重叠被**结构关系豁免**（转为 confirmed 预期重叠，不再是错误）
+  const struct = wrap({ elements: [container({ contains: ['t1'] }), textInside] })
+  const structF = analyzePage(struct, size)
+  ok('结构豁免生效：contains 成立 ⇒ 该对不再报 unexpected-overlap，而是 confirmed 预期重叠',
+    !structF.some((f) => f.code === 'unexpected-overlap') && structF.some((f) => f.code === 'expected-overlap' && f.severity === 'confirmed'),
+    structF.map((f) => `${f.severity}:${f.code}`).join(','))
+
+  // contains 声明不成立（容器装不下子元素）⇒ 点名错误，且不再豁免
+  const bad = wrap({ elements: [container({ contains: ['t1'], bounds: B(40, 120, 80, 40) }), textInside] })
+  const badF = analyzePage(bad, size)
+  ok('声明不成立 ⇒ 出现 relation-invalid 错误（豁免被撤回）',
+    badF.some((f) => f.code === 'relation-invalid' && f.severity === 'error'),
+    badF.map((f) => `${f.severity}:${f.code}`).join(','))
+
+  // 已失效的预期重叠声明 ⇒ 可见警告（声明复核）
+  // 注意：本路径**受门控**——只有"用了结构声明"的页才启用阶段 A 的检查与复核段（保证普通页行为不变）。
+  // 因此夹具里必须同时有结构声明（下面的 contains）才能观察到 declared-stale。
+  const stale = wrap({
+    elements: [
+      container({ contains: ['inside'] }),
+      { ...textInside, id: 'inside', bounds: B(100, 200, 200, 40) },
+      { ...textInside, id: 'far', bounds: B(900, 500, 40, 20) },
+    ],
+    expectedOverlaps: [{ pair: ['zone', 'far'], reason: '曾经的意图' }],
+  })
+  const staleF = analyzePage(stale, size)
+  ok('失效声明 ⇒ warning declared-stale（不复用错误级，也不静默）',
+    staleF.some((f) => f.code === 'declared-stale' && f.severity === 'warning'),
+    staleF.map((f) => `${f.severity}:${f.code}`).join(','))
+
+  // 报告形态：用了结构 ⇒ 结构关系行 + 声明复核段；没用 ⇒ 两段都不出现（门控）
+  const structText = verifyDeck({ size, theme: null, pages: [struct] }).text
+  const plainText = verifyDeck({ size, theme: null, pages: [plain] }).text
+  ok('报告：用了结构的页有「结构关系」行', /· 结构关系：组 \d+｜包含 \d+｜附着 \d+｜徽章 \d+｜有意重叠 \d+（自动豁免重叠 \d+ 处，未落盘）/.test(structText), structText.split('\n').filter((l) => l.includes('结构关系')).join('｜'))
+  ok('报告：声明复核段固定存在（豁免必须可见）', structText.includes('· 设计声明复核：'), structText.split('\n').filter((l) => l.includes('声明复核')).join('｜'))
+  ok('门控（非回归）：没用新字段的页**不出现**这两段，报告与从前一致',
+    !plainText.includes('· 结构关系：') && !plainText.includes('· 设计声明复核：'))
+  ok('门控（非回归）：普通页 findings 里没有本次新增的任何 code',
+    !plainF.some((f) => ['relation-invalid', 'declared-stale', 'duplicate-element', 'line-through-box', 'arrow-not-on-edge', 'group-cycle'].includes(f.code)),
+    plainF.map((f) => f.code).join(','))
 }
 
 console.log(`\n==== verify-diagram-relations 结果：${pass} 通过 / ${fail} 失败 ====`)

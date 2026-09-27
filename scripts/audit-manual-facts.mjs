@@ -64,6 +64,8 @@ const vLines = src.verify.split(/\r?\n/)
 const codes = new Map()
 vLines.forEach((line, i) => {
   if (/\b(?:let|const|var)\s+code\s*=/.test(line)) return
+  // 阶段 A（2026-09-28）：本行**显式**写了非 error 的 severity ⇒ 不是错误码（同上，避免被上 3 行的 'error' 误收）
+  if (/severity\s*[:=]\s*'(?:warning|confirmed|suggestion|info)'/.test(line)) return
   for (const m of line.matchAll(/code\s*[:=]\s*'([a-z-]+)'/g)) {
     const w = vLines.slice(Math.max(0, i - 3), i + 1).join('\n')
     codes.set(m[1], /'error'/.test(w) ? 'error' : 'warn|suggest')

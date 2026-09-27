@@ -244,6 +244,9 @@ export async function renderDeck(ctx, { out = 'preview', debug = false } = {}) {
       expectedOutOfSafeArea: page.page.expectedOutOfSafeArea ?? [],
       contrastExempt: page.page.contrastExempt ?? [],
       overlapMode: page.page.overlapMode ?? 'declared',
+      // 阶段 A：**逻辑组合必须随 layout.json 落盘**——`ppt_verify` 吃的是 layout.json，
+      // 不透传则"结构关系/豁免/图专属检查"在门禁这一层凭空消失（本轮修过同型问题：normalizePage 白名单吞字段）。
+      groups: page.page.groups ?? [],
       elements: snaps,
     })
   }

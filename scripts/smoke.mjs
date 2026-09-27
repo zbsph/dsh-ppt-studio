@@ -1681,6 +1681,9 @@ const errorCodes = new Set()
 verifyLines.forEach((line, i) => {
   // `let code = 'overlap'` 是**初值**（后续分支必然改写；overlap 只会以 warning 出现），不是一条 finding → 排除声明式赋值
   if (/\b(?:let|const|var)\s+code\s*=/.test(line)) return
+  // 阶段 A（2026-09-28）：本行**显式**写了非 error 的 severity（如 `severity: 'warning', code: 'declared-stale'`）
+  // ⇒ 它不是错误码，不能因为上 3 行里出现过 'error' 被误收——本守卫的语义是"门禁**错误**码清单"。
+  if (/severity\s*[:=]\s*'(?:warning|confirmed|suggestion|info)'/.test(line)) return
   for (const m of line.matchAll(/code\s*[:=]\s*'([a-z-]+)'/g)) {
     // 判定该 code 是否 error 级：本行或上 3 行里出现 'error'（覆盖 severity: 'error' / severity = 'error' /
     // `mode === 'strict' ? 'error' : 'warning'` 三种写法；confirmed / warning / suggestion 不会被误收）
