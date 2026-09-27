@@ -58,6 +58,7 @@ export const SHAPE_KINDS = [
   'rect', 'roundRect', 'ellipse', 'triangle', 'custGeom',       // 原始 + 自定义几何（v0.11 候选 C）
   'rightArrow', 'leftArrow', 'upArrow', 'downArrow', 'leftRightArrow', // 箭头
   'pentagon', 'hexagon', 'chevron', 'parallelogram', 'diamond', 'octagon', 'star5', // 多边形/星
+  'notchedRightArrow', // 流程图常用（阶段 A 补齐：用户真实稿每页 4–8 个）
   'flowchartProcess', 'flowchartDecision', 'flowchartData', 'flowchartTerminator', // 流程图
 ]
 
