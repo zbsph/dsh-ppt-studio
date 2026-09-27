@@ -110,6 +110,23 @@ const names = [...zb.keys()].filter((n) => !/core\.xml$/.test(n))
 const diff = names.filter((n) => !zb.get(n).equals(zb2.get(n)))
 ok('确定性：同一 deck 两次导出的全部部件逐字节一致（仅 core.xml 时间戳除外）', diff.length === 0, `不一致=${diff.slice(0, 3).join(',') || '无'}`)
 
+// ── ⑤ 无损可控：把 IR 页"摊平"成等价手写元素，两版产物必须逐部件一致 ──────
+// 这是"改善显著"的**机械量化**：IR 只让作者少写坐标，不是换一套渲染。
+// 摊平后产物一致 ⇒ IR 是手写能力的**无损超级集**（想接管随时可以摊平）。
+const flatDir = join(root, 'flat')
+mkdirSync(join(flatDir, 'pages'), { recursive: true })
+const YAML = (await import('yaml')).default
+writeFileSync(join(flatDir, 'deck.yaml'), readFileSync(join(newDir, 'deck.yaml'), 'utf8'))
+writeFileSync(join(flatDir, 'pages', '01.yaml'), refP1)
+writeFileSync(join(flatDir, 'pages', '02.yaml'), YAML.stringify({ pageType: 'content', elements: page2.elements }))
+const flatCtx = await resolveDeck(flatDir)
+const c = await exportPptx(flatCtx, { out: join(root, 'flat.pptx') })
+const zc = zipRead(readFileSync(c.file))
+const flatNames = [...zb.keys()].filter((n) => !/core\.xml$/.test(n))
+const flatDiff = flatNames.filter((n) => !zb.get(n).equals(zc.get(n)))
+ok('**IR 是手写能力的无损超级集**：把 IR 页摊平成等价手写元素后，产物与 IR 版**逐部件一致**（作者只是少写了坐标）',
+  flatDiff.length === 0, flatDiff.slice(0, 3).join(',') || `比对 ${flatNames.length} 个部件全一致`)
+
 rmSync(root, { recursive: true, force: true })
 console.log(`\n==== verify-northstar 结果：${pass} 通过 / ${fail} 失败 ====`)
 if (fail) { console.log(`失败项：${failures.join('；')}`); process.exit(1) }
