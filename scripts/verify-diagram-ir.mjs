@@ -175,7 +175,13 @@ H('5. 图族库：三族的不变量与真实门禁')
       groups: [{ id: 'left', label: '方案 A：自研', members: ['a1', 'a2', 'a3'] }, { id: 'right', label: '方案 B：现成', members: ['b1', 'b2', 'b3'] }],
     },
     cycle: { type: 'cycle', title: '闭环反馈', nodes: [{ id: 'c1', label: '采集' }, { id: 'c2', label: '分析' }, { id: 'c3', label: '决策' }, { id: 'c4', label: '执行' }, { id: 'c5', label: '复盘' }] },
-  }
+    funnel: { type: 'funnel', title: '转化漏斗', nodes: [{ id: 'v1', label: '曝光' }, { id: 'v2', label: '点击' }, { id: 'v3', label: '咨询' }, { id: 'v4', label: '成交', emphasis: 'accent' }] },
+    steps: { type: 'steps', title: '五步法', nodes: [{ id: 's1', label: '定目标' }, { id: 's2', label: '拆任务' }, { id: 's3', label: '排优先级' }, { id: 's4', label: '执行' }, { id: 's5', label: '复盘' }] },
+    sequence: {
+      type: 'sequence', title: '下单时序',
+      nodes: [{ id: 'u', label: '用户' }, { id: 'api', label: '网关' }, { id: 'pay', label: '支付' }],
+      edges: [{ from: 'u', to: 'api', label: '提交订单' }, { from: 'api', to: 'pay', label: '发起扣款' }, { from: 'pay', to: 'api', label: '扣款成功', style: 'dashed' }, { from: 'api', to: 'u', label: '返回结果' }],
+    },  }
   const STYLE_C = { ...STYLE, measureLine: (t, fs) => String(t ?? '').length * fs, safeArea: { top: 40, bottom: 40, left: 40, right: 40 }, page: { width: 960, height: 540 } }
   const dir = join(tmpdir(), `pptd-fam-${Date.now()}`)
   rmSync(dir, { recursive: true, force: true })
