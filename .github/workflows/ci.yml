@@ -39,6 +39,9 @@ jobs:
           - windows-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          # 快测档要按"本次 PR 改了哪些文件"选影响面 ⇒ 需要能 diff 到 base（默认浅克隆拿不到）
+          fetch-depth: 0
 
       - uses: actions/setup-node@v5
         with:
@@ -55,7 +58,29 @@ jobs:
       - name: Distribution bytes are LF
         run: node scripts/check-tracked-lf.mjs
 
-      - name: npm test (build + smoke + preset drift)
+      # 2026-09-27 起**测试分档**（用户要求"轻量化测试"，见 docs/05「测试分档」）：
+      #   · PR  → `test:fast`：廉价跨切面守卫永远全跑 + 按改动文件选影响面；改动文件取不到时 **fail-safe 跑全量**
+      #   · main/手动 → `npm test`：全量门禁（合并门槛不降）
+      # 为什么 PR 可以降档：真正的深回归（真渲染/真装包/端到端）只在发版与批次边界跑；
+      # 而"改 A 文件、断言在 B 文件"这一类漂移，由快测里那几条廉价守卫当场抓住（LF / lib / 手册事实 / 计数自证）。
+      - name: 取本次 PR 的改动文件（给快测档选影响面）
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          git fetch --no-tags --depth=1 origin "${{ github.event.pull_request.base.sha }}" || true
+          if git diff --name-only "${{ github.event.pull_request.base.sha }}...HEAD" > "$RUNNER_TEMP/changed.txt" 2>/dev/null; then
+            echo "改动文件 $(wc -l < "$RUNNER_TEMP/changed.txt") 个"
+          else
+            : > "$RUNNER_TEMP/changed.txt"   # 取不到 ⇒ 空 ⇒ 快测档按 fail-safe 跑全量
+          fi
+          echo "TEST_FAST_FILES=$RUNNER_TEMP/changed.txt" >> "$GITHUB_ENV"
+
+      - name: npm run test:fast（PR：快测档）
+        if: github.event_name == 'pull_request'
+        run: npm run test:fast
+
+      - name: npm test（main / 手动：全量门禁）
+        if: github.event_name != 'pull_request'
         run: npm test
 
   # 门禁 2：**用户会敲的那条命令**，在一个隔离的 DSH_HOME 里真跑一遍。
