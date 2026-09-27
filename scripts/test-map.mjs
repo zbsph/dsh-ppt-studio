@@ -24,6 +24,8 @@ export const root = join(import.meta.dirname, '..')
  * 顺序敏感：先匹配到的标签先生效；一条规则可给多个标签。
  */
 const TAG_RULES = [
+  // 阶段 A（2026-09-28）：结构声明/复杂图地基。放在最前，避免被下面的通用词表抢先打散。
+  { re: /结构声明|复杂图|diagram|折线|attach|豁免/i, tags: ['diagram', 'relations'] },
   { re: /chart|图表|原生/i, tags: ['chart'] },
   { re: /python-pptx|pptxgenjs|兜底|引擎/i, tags: ['engine', 'fallback'] },
   { re: /导出|export|parity|连线|媒体|讲稿/i, tags: ['export'] },
@@ -60,6 +62,9 @@ export const HEAVY_SECTIONS = new Map([
 
 /** 改动文件 → 标签/脚本。glob 用简单前缀与目录规则（避免引入依赖）。 */
 const PATH_RULES = [
+  // 阶段 A：结构关系推导与几何反验证（改它必须跑 §58 与自证脚本）
+  { match: (p) => p.startsWith('src/pptd/relations'), tags: ['diagram', 'relations', 'verify'], note: '结构关系推导/几何反验证' },
+  { match: (p) => p.startsWith('src/pptd/render-html'), tags: ['preview', 'render', 'diagram'], note: '预览 HTML 与 layout.json 快照' },
   { match: (p) => p.startsWith('src/pptd/export-pptx') || p.startsWith('src/pptd/zips'), tags: ['export', 'chart', 'media', 'verify'], note: 'pptx 产物写出层' },
   { match: (p) => p.startsWith('src/pptd/schema') || p.startsWith('src/pptd/layout'), tags: ['verify', 'layout'], note: 'DSL 校验与排版' },
   { match: (p) => p.startsWith('src/pptd/svgCharts'), tags: ['chart', 'preview', 'render'], note: '图表模型/预览 SVG' },
@@ -70,7 +75,7 @@ const PATH_RULES = [
   { match: (p) => p.startsWith('src/router'), tags: ['docs', 'verify', 'engine'], note: '提示词与工作流段（含基线超集）' },
   { match: (p) => p.startsWith('src/index') || p.startsWith('src/preset-delivery'), tags: ['preset', 'isolation', 'install'], note: '装配层' },
   { match: (p) => p.startsWith('src/capabilities') || p.startsWith('src/office-qa'), tags: ['fallback', 'engine'], note: '能力探测/官方 QA' },
-  { match: (p) => p.startsWith('src/pptxPy') || p.startsWith('src/msrender') || p.startsWith('src/verify'), tags: ['engine', 'fallback', 'verify'], note: '兜底引擎/渲染/门禁' },
+  { match: (p) => p.startsWith('src/pptxPy') || p.startsWith('src/msrender') || p.startsWith('src/verify'), tags: ['engine', 'fallback', 'verify', 'diagram'], note: '兜底引擎/渲染/门禁（verify 含阶段 A 集成）' },
   { match: (p) => p.startsWith('src/'), tags: ['verify'], note: 'src 其它' },
   { match: (p) => p.startsWith('skills/'), tags: ['docs', 'skill'], note: '内置技能（有 8000 字上限）' },
   { match: (p) => p.startsWith('docs/') || p === 'README.md', tags: ['docs'], note: '文档（含计数自证/手册事实审计）' },

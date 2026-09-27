@@ -17,12 +17,21 @@
  *      （只跳过 docProps/core.xml 的时间戳）；
  *   ⑤ 确定性：同一 deck 连导两次，除 core.xml 外逐字节一致。
  *
+ * 【两套夹具，为什么】`export-pptx.js` 里 `import { normalizePage } from './layout.js'` 是 **ESM 活绑定**，
+ * 外部注入 `ctx.normalizePage` 完全不生效；而 `src/pptd/layout.js` 当时还没把 `arrow` 的字符串值与 `line.dash`
+ * 透传到归一化元素 —— 于是"导出层对不对"与"整链通没通"必须**分开量**：
+ *   · ①..⑭（隔离导出层）：把 `src/` 拷进 node_modules 临时目录，只把该副本的 `normalizePage` 换成
+ *     "先调真实现、再把这两个字段按原值补回"的包装，用副本的 `exportPptx` 导出 ⇒ 断言的是**导出层实现**；
+ *   · ⑮（整链契约）：走**真管线**（deck.yaml → schema → layout → export）⇒ 布局层透传到位才转绿。
+ *   · ④/⑬b 的字节不变对照则用**基线 tag 的导出器**（同样取整棵 src/ 到临时目录后 import）。
+ *
  * 用法：
  *   node scripts/verify-primitives.mjs
  *   PPT_STUDIO_ALLOW_SKIP_OFFICE=1 node scripts/verify-primitives.mjs   # 无 PowerPoint 时真渲染降级为 SKIP（不计 FAIL）
- *   PPT_STUDIO_PRIMITIVES_KEEP=1 …                                      # 保留临时产物（默认保留，便于人工读图）
+ *   PPT_STUDIO_PRIMITIVES_DRIFT=1 node scripts/verify-primitives.mjs    # 额外打印"真 layout 归一化 vs 夹具"字段差异
  *
- * 临时产物全部在系统 TEMP 的 `pptd-primitives-verify/`（不往仓库里塞东西）。
+ * 临时产物全部在系统 TEMP 的 `pptd-primitives-verify/`；两个源码副本放在仓库 `node_modules/` 下（用完即删，
+ * node_modules 本就 gitignore ⇒ 不产生任何可提交文件）。
  */
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
@@ -123,9 +132,53 @@ writeFileSync(join(legacy, 'pages', '01.yaml'), [
 const legacyCtx = await resolveDeck(legacy)
 
 /**
- * 夹具页面：直接用**归一化前的元素对象**喂进去，由 `normalizePage` 走与真实工程同一条归一化码路
- * （这样夹具只覆盖导出层，不依赖 schema/layout 对新字段的支持进度——那是 ⑮ 单独判的整链契约）。
+ * 夹具导出器（隔离导出层的唯一诚实做法）：
+ * `src/pptd/export-pptx.js` 里是 `import { normalizePage } from './layout.js'` —— **ESM 具名导入是活绑定**，
+ * 调用点直接引用导入进来的那个函数，`ctx.normalizePage` 之类的外部注入**完全不生效**（实测：注入了也没用）。
+ * 所以在"layout.js 尚未透传新字段"的当下，要单独验证导出层，只能做一个**字面源码副本**：
+ *   ① 把整棵 `src/` 拷进 node_modules 下的临时目录（相对 import 与裸包 `yaml` 都能解析；跑完即删）；
+ *   ② 只改 `pptd/layout.js` 的 `normalizePage` 导出名 → `normalizePageReal`，并追加一个包装：
+ *      调用真实现之前，把**布局层还没实现透传**的两个字段（`arrow` 原值、`line.dash`）按原值保住；
+ *   ③ 用副本里的 `exportPptx` 导出同一份 deck（颜色解析等仍走真实 layout/schema 逻辑，不另写一套）。
+ * 这样"产物 XML 断言"证明的是**导出层的实现**，而"整链是否接通"由 ⑮ 单独判（真管线）。二者不混淆。
  */
+const FIXTURE_DIR = join(root, 'node_modules', '.pptd-fixture-src')
+{
+  const { cpSync } = await import('node:fs')
+  rmSync(FIXTURE_DIR, { recursive: true, force: true })
+  cpSync(join(root, 'src'), FIXTURE_DIR, { recursive: true })
+  const layoutPath = join(FIXTURE_DIR, 'pptd', 'layout.js')
+  let layoutSrc = readFileSync(layoutPath, 'utf8')
+  layoutSrc = layoutSrc.replace('export function normalizePage(page, ctx) {', 'export function normalizePageReal(page, ctx) {')
+  layoutSrc += `
+// ── 夹具包装（仅存在于 node_modules 下的临时副本；不是仓库源码）──
+// 目的：把"布局层还没透传"的新字段按原值保住，从而单独验证**导出层**。
+export function normalizePage(page, ctx) {
+  const prev = (page.page?.elements ?? []).filter((e) => e.elementType === 'line')
+  const els = normalizePageReal(page, ctx)
+  for (const el of els) {
+    if (el.type !== 'line') continue
+    const raw = prev.find((r) => r.elementId === el.id)
+    if (!raw) continue
+    el.arrow = raw.arrow
+    if (raw.line?.dash !== undefined) el.line = { ...el.line, dash: raw.line.dash }
+  }
+  return els
+}
+`
+  writeFileSync(layoutPath, layoutSrc)
+  // 换掉绝对路径依赖（schema.js / svgCharts.js 里的 ../zips.js）——复制成同目录裸名模块
+  const shim = { 'schema.js': '../zips.js', 'svgCharts.js': '../zips.js' }
+  for (const [file, spec] of Object.entries(shim)) {
+    const p = join(FIXTURE_DIR, 'pptd', file)
+    if (!existsSync(p)) continue
+    writeFileSync(p, readFileSync(p, 'utf8').split(`'${spec}'`).join(`'./zips.js'`))
+  }
+  cpSync(join(FIXTURE_DIR, 'zips.js'), join(FIXTURE_DIR, 'pptd', 'zips.js'))
+}
+const fixtureMod = await import(pathToFileURL(join(FIXTURE_DIR, 'pptd', 'export-pptx.js')).href)
+
+/** 夹具上下文：原始元素直接挂到 `page.elements`（导出器读的就是这里）。 */
 function ctxWithElements(baseCtx, elements, pageMeta = {}) {
   return {
     ...baseCtx,
@@ -134,45 +187,93 @@ function ctxWithElements(baseCtx, elements, pageMeta = {}) {
   }
 }
 
+const exportFixture = (baseCtx, rawElements, out, pageMeta) =>
+  fixtureMod.exportPptx(ctxWithElements(baseCtx, rawElements, pageMeta), { out })
+
+/** 多页夹具：rows = [[elements, pageMeta?], …] ⇒ 第 1 页/第 2 页…（用于"折线页 + 回归页"分别真渲染）。 */
+const exportFixturePages = (baseCtx, rows, out) =>
+  fixtureMod.exportPptx({
+    ...baseCtx,
+    size: baseCtx.size ?? { width: 960, height: 540 },
+    pages: rows.map(([elements, pageMeta], i) => ({
+      file: join(WORK, `fixture${i + 1}.yaml`), ref: `fixture${i + 1}.yaml`, name: `fixture${i + 1}`, index: i,
+      page: { pageType: 'content', elements, ...(pageMeta ?? {}) },
+    })),
+  }, { out })
+
 /**
- * 补上 layout.js 目前**还没做**的两件事，让导出层拿到它该拿到的字段：
- *   ① `arrow` 的字符串值（`'both'` 现在被 `!!el.arrow` 压成 `true`）；
- *   ② `line.dash`（现在被归一化时丢掉）。
- * 做法是先走**真正的** `normalizePage`（颜色解析等契约不另写一套），再把这两个字段按原值补回。
- * 这就是 ⑮ 判定的缺口本身：等 layout.js 透传后，本函数会变成幂等补丁（不必删），而 ⑮ 转绿。
- * @param mode 'preserve' = 保留原值（验证导出层）；'astype' = 模拟当前 layout.js 行为（证明缺口真实存在）
+ * 隔离导出层的夹具构造（**为什么要这么做**）：
+ * `export-pptx.js` 里写的是 `import { normalizePage } from './layout.js'` —— ESM 的具名导入是**活绑定**，
+ * 不看 `ctx.normalizePage`（我试过：注入 `ctx.normalizePage` 完全无效，产物里 'both'/dash 依旧丢失）。
+ * 所以在"layout.js 还没透传新字段"的当下，要单独验证导出层只有一条路：
+ * 自己产出**与真实 (layout.js) 归一化结果同构**的归一化元素，再把新字段按原值补上，直接喂给导出器。
+ * 颜色解析等仍走 `resolveColor`（契约不另写一套）；`arrow`/`dash` 是布局层**尚未实现**的透传（⑮ 判定的缺口）。
+ * @param raw 原始元素（归一化前，含 arrow 原值 / line.dash）
  */
-async function fixtureCtx(baseCtx, rawElements, mode = 'preserve') {
-  const ctx = ctxWithElements(baseCtx, rawElements)
-  const { normalizePage } = await import('../lib/pptd/layout.js')
-  // 注意：normalizePage(page, ctx) 内部读的是 `page.page.elements`（**原始**元素），
-  // 不是它自己的返回值 —— 所以这里必须传原始元素，不能把上一轮的归一化结果再喂回去。
-  const norm = normalizePage(ctx.pages[0], ctx)
-  if (mode === 'preserve') {
-    norm.forEach((el, i) => {
-      if (el.type === 'line') {
-        el.arrow = rawElements[i].arrow // layout.js 现在写的是 `!!el.arrow` ⇒ 'both' 会丢
-        el.line = { ...el.line, ...(rawElements[i].line?.dash !== undefined ? { dash: rawElements[i].line.dash } : {}) } // dash 现在被丢
-      }
-    })
+function normRaw(baseCtx, raw) {
+  return {
+    id: raw.elementId,
+    type: raw.elementType,
+    bounds: (() => {
+      if (Array.isArray(raw.bounds)) return { x: raw.bounds[0], y: raw.bounds[1], w: raw.bounds[2], h: raw.bounds[3] }
+      const pts = raw.points ?? []
+      const xs = pts.map((p) => p[0])
+      const ys = pts.map((p) => p[1])
+      const x = Math.min(...xs)
+      const y = Math.min(...ys)
+      return { x, y, w: Math.max(1, Math.max(...xs) - x), h: Math.max(1, Math.max(...ys) - y) }
+    })(),
+    ...(raw.role ? { role: raw.role } : {}),
+    ...(raw.elementType === 'line'
+      ? {
+          points: (raw.points ?? [[raw.x1, raw.y1], [raw.x2, raw.y2]]).map((p) => [...p]),
+          arrow: raw.arrow, // ← layout.js 现在写的是 `!!el.arrow`（'both' 会被压成 true）
+          line: { color: baseCtx.resolveColor(raw.line?.color ?? '#000'), width: raw.line?.width ?? 1, ...(raw.line?.dash !== undefined ? { dash: raw.line.dash } : {}) }, // ← dash 现在被丢
+        }
+      : {}),
+    ...(raw.elementType === 'shape'
+      ? {
+          kind: raw.kind ?? 'rect',
+          fill: raw.fill !== undefined ? baseCtx.resolveColor(raw.fill) : undefined,
+          ...(raw.path ? { path: raw.path } : {}),
+          rotation: raw.rotation ?? 0,
+        }
+      : {}),
   }
-  return { ...ctx, normalizePage: () => norm }
 }
 
-const primCtx = await fixtureCtx(legacyCtx, [
+// 夹具漂移体检：真 `layout.js` 的归一化产物 vs 夹具构造的归一化产物。
+// 差异必须**只有**那两个待接线的字段（arrow 原值 / line.dash）——多一处就说明夹具构造漂移了。
+if (process.env.PPT_STUDIO_PRIMITIVES_DRIFT === '1') {
+  const { normalizePage } = await import('../lib/pptd/layout.js')
+  const stdPage = ctxWithElements(legacyCtx, PRIM_ELEMENTS)
+  const std = normalizePage(stdPage.pages[0], stdPage)
+  const iso = PRIM_ELEMENTS.map((e) => normRaw(legacyCtx, e))
+  console.log('\n=== 夹具漂移体检（PPT_STUDIO_PRIMITIVES_DRIFT=1）===')
+  for (let i = 0; i < std.length; i++) {
+    const keys = new Set([...Object.keys(std[i]), ...Object.keys(iso[i])])
+    for (const k of keys) {
+      const a = JSON.stringify(std[i][k])
+      const b = JSON.stringify(iso[i][k])
+      if (a !== b) console.log(`  差异 ${std[i].id}.${k}: layout=${a} ↔ 夹具=${b}`)
+    }
+  }
+  console.log('=== 漂移体检结束 ===\n')
+}
+
+const PRIM_ELEMENTS = [
   { elementId: POLY.id, elementType: 'line', points: POLY.pts, arrow: POLY.arrow, line: { color: POLY.color, width: POLY.width, dash: POLY.dash } },
   { elementId: REG.id, elementType: 'line', points: REG.pts, arrow: REG.arrow, line: { color: REG.color, width: REG.width } },
-])
-const regCtx = await fixtureCtx(legacyCtx, [
+]
+const REG_ELEMENTS = [
   { elementId: 'plain1', elementType: 'line', points: [[80, 200], [400, 380]], line: { color: '#2563EB', width: 2 } },
   { elementId: 'both2', elementType: 'line', points: [[500, 200], [860, 200]], arrow: true, line: { color: '#1F2937', width: 2 } },
-])
+]
 // 回归专项：一个**新字段都不用**的页面（2 点 + arrow: true + 无 dash + 一个纯形状）
-const plainCtx = await fixtureCtx(legacyCtx, [
-  { elementId: 'plain1', elementType: 'line', points: [[80, 200], [400, 380]], line: { color: '#2563EB', width: 2 } },
-  { elementId: 'both2', elementType: 'line', points: [[500, 200], [860, 200]], arrow: true, line: { color: '#1F2937', width: 2 } },
+const PLAIN_ELEMENTS = [
+  ...REG_ELEMENTS,
   { elementId: 'card', elementType: 'shape', kind: 'roundRect', bounds: [80, 60, 200, 80], fill: '#2563EB' },
-])
+]
 
 // ── 基线导出器（回滚锚点 tag；只读取，绝不改动它）────────────────────────────
 // 取整棵 baseline `src/` 到**仓库内 node_modules 下的临时目录**：① 它的相对 import（./layout.js 等）才能解析；
@@ -227,9 +328,12 @@ async function compareWithBaseline(useCtx, newOut, oldOut, label = '') {
 // ══ 1. 导出 + 产物 XML 断言 ═════════════════════════════════════════════════
 h('1. 导出与产物 XML 断言（从 zip 反读 slide1.xml）')
 const outPptx = join(WORK, 'out.pptx')
-const report = await exportPptx(primCtx, { out: outPptx })
+// 两页：第 1 页 = 折线（both + dot）+ 同页 2 点直线（arrow: true）；第 2 页 = 纯既有字段回归页。
+// 真渲染只渲第 1 页（折线证据），回归页单独出一张图 —— 一页里塞太多会让像素判据互相污染。
+const report = await exportFixturePages(legacyCtx, [[PRIM_ELEMENTS], [PLAIN_ELEMENTS]], outPptx)
 const parts = zipRead(readFileSync(outPptx))
 const s1 = decodeXml(parts.get('ppt/slides/slide1.xml'))
+const s2 = decodeXml(parts.get('ppt/slides/slide2.xml'))
 info(`parity = ${JSON.stringify(report.parity)}`)
 
 // ── 4 点折线：custGeom 开放路径 ──────────────────────────────────────────
@@ -245,43 +349,68 @@ check('⑤ 箭头两端都在：<a:headEnd> 与 <a:tailEnd> 同时存在（arrow
   /<a:headEnd type="triangle"/.test(s1) && /<a:tailEnd type="triangle"/.test(s1))
 check('⑥ 子元素顺序严格：solidFill → prstDash → headEnd → tailEnd（都在同一段 <a:ln> 内）',
   /<a:ln w="\d+"><a:solidFill>[\s\S]*?<\/a:solidFill><a:prstDash val="dot"\/><a:headEnd [^>]*\/><a:tailEnd [^>]*\/><\/a:ln>/.test(s1))
+/**
+ * 从 slide XML 切出某个元素的完整片段（含它的开标签）。分元素断言的共用工具：
+ * 一页里有多条线时，"整页统计"会互相污染（实测踩过：折线段被切到了隔壁 cxnSp 的收尾）。
+ */
+function elementSeg(xml, id) {
+  const nameAt = xml.indexOf(`name="${id}"`)
+  if (nameAt < 0) return ''
+  const spStart = xml.lastIndexOf('<p:sp>', nameAt)
+  const cxnStart = xml.lastIndexOf('<p:cxnSp>', nameAt)
+  if (spStart < 0 && cxnStart < 0) return ''
+  const isSp = spStart > cxnStart
+  const start = isSp ? spStart : cxnStart
+  const end = xml.indexOf(isSp ? '</p:sp>' : '</p:cxnSp>', nameAt)
+  return xml.slice(start, end < 0 ? xml.length : end + (isSp ? 8 : 11))
+}
+
 check('⑦ prstDash 值正确：dash: dot → <a:prstDash val="dot"/>', /<a:prstDash val="dot"\/>/.test(s1))
-check('⑧ 折线是一帧 p:sp（不是 N 条 cxnSp）：slide1 有 1 个 <p:sp>、0 个 <p:cxnSp>',
-  (s1.match(/<p:sp>/g) ?? []).length === 1 && (s1.match(/<p:cxnSp>/g) ?? []).length === 0,
-  `p:sp=${(s1.match(/<p:sp>/g) ?? []).length} p:cxnSp=${(s1.match(/<p:cxnSp>/g) ?? []).length}`)
+// 注意：本页有 **2 个 line 元素**（折线 + 回归直线）⇒ 断言必须分元素段做，否则会被隔壁元素污染。
+const polySeg = elementSeg(s1, POLY.id)
+const regSeg = elementSeg(s1, REG.id)
+check('⑧ 折线是一帧 p:sp（不是 N 条 cxnSp）——整页 p:sp=1 / p:cxnSp=1，且折线段是 p:sp 且含 custGeom',
+  (s1.match(/<p:sp>/g) ?? []).length === 1 && (s1.match(/<p:cxnSp>/g) ?? []).length === 1 &&
+  polySeg.startsWith('<p:sp>') && polySeg.includes('<a:custGeom>'),
+  `p:sp=${(s1.match(/<p:sp>/g) ?? []).length} p:cxnSp=${(s1.match(/<p:cxnSp>/g) ?? []).length}｜折线段=${polySeg.slice(0, 80)}…`)
 
 // ── 折线几何反推（写出的 XML → 页面坐标，必须与源 points 一致）─────────────
-const polyEl = s1.slice(s1.indexOf('<p:sp>'), s1.indexOf('</p:sp>') + 8)
-const backPoly = polylineEndsFromXml(polyEl)
+const backPoly = polylineEndsFromXml(polySeg)
 check('⑨ 折线几何反推：custGeom 回读的 4 个顶点 == 源 points（容差 0.01px）',
   backPoly !== null && backPoly.length === 4 && backPoly.every((p, i) => Math.abs(p[0] - POLY.pts[i][0]) < 0.01 && Math.abs(p[1] - POLY.pts[i][1]) < 0.01),
   `源 ${JSON.stringify(POLY.pts)} → 回读 ${JSON.stringify(backPoly?.map((p) => p.map((v) => Math.round(v * 100) / 100)))}`)
 
 // ── 2 点直线（回归）：仍是 straightConnector1，且 arrow: true 语义不变 ────────
-const regOut = join(WORK, 'reg-out.pptx')
-const regReport = await exportPptx(regCtx, { out: regOut })
-const regS = decodeXml(zipRead(readFileSync(regOut)).get('ppt/slides/slide1.xml'))
-const regLine = regS.slice(regS.indexOf(`name="${REG.id}"`))
-const regXml = regLine.slice(0, regLine.indexOf('</p:cxnSp>') + 10)
-check('⑩ 2 点直线未被折线改动波及：仍走 straightConnector1（不是一个 custGeom 帧）',
-  /<a:prstGeom prst="straightConnector1">/.test(regXml) && !/<a:custGeom>/.test(regXml))
-check('⑪ arrow: true 语义不变：只有 tailEnd、**没有** headEnd',
-  /<a:tailEnd type="triangle"/.test(regXml) && !/<a:headEnd/.test(regXml))
+check('⑩ 同页 2 点直线未被折线改动波及：该元素段内是 straightConnector1，**没有** custGeom',
+  /<a:prstGeom prst="straightConnector1">/.test(regSeg) && !/<a:custGeom>/.test(regSeg),
+  regSeg.slice(0, 300))
+check('⑪ arrow: true 语义不变：该元素段内只有 tailEnd、**没有** headEnd',
+  /<a:tailEnd type="triangle"/.test(regSeg) && !/<a:headEnd/.test(regSeg),
+  `tailEnd=${/<a:tailEnd/.test(regSeg)} headEnd=${/<a:headEnd/.test(regSeg)}`)
 check('⑫ 没用 dash 的线不写 <a:prstDash>（缺省 solid ⇒ 元素都不出现）',
-  !/<a:prstDash/.test(regXml))
-await exportPptx(plainCtx, { out: join(WORK, 'plain-out.pptx') })
-const plainS = decodeXml(zipRead(readFileSync(join(WORK, 'plain-out.pptx'))).get('ppt/slides/slide1.xml'))
+  !/<a:prstDash/.test(regSeg))
+// 回归专项夹具（**独立文件名**：legacyCtx 自带的页面是"老工程 deck"，复用同一路径会把两者互相覆盖——
+// 本轮实测踩过：plain-out.pptx 先被回归夹具写、又被老工程 deck 覆写，导致像素判据量的是另一张图）。
+const PLAIN_FIXTURE_OUT = join(WORK, 'plainfixture-out.pptx')
+await exportFixture(legacyCtx, PLAIN_ELEMENTS, PLAIN_FIXTURE_OUT)
+const plainS = decodeXml(zipRead(readFileSync(PLAIN_FIXTURE_OUT)).get('ppt/slides/slide1.xml'))
 check('⑬ 回归页（纯既有字段）产物里一个 custGeom / headEnd / prstDash 都没有',
-  !/<a:custGeom>/.test(plainS) && !/<a:headEnd/.test(plainS) && !/<a:prstDash/.test(plainS))
+  !/<a:custGeom>/.test(plainS) && !/<a:headEnd/.test(plainS) && !/<a:prstDash/.test(plainS),
+  `元素=${(plainS.match(/name="[^"]*"/g) ?? []).join(' ')}`)
 check('⑬b 回归专项：纯既有字段页面（2 点线 arrow:true + 形状）与**基线导出器**产物逐部件逐字节一致',
-  await compareWithBaseline(plainCtx, join(WORK, 'plain-out.pptx'), join(WORK, 'plain-base.pptx')) === true,
+  await compareWithBaseline(legacyCtx, PLAIN_FIXTURE_OUT, join(WORK, 'plainfixture-base.pptx')) === true,
   '差异见上方 ⑬b 的逐部件明细（基线 = v1.1.5-baseline-before-diagram）')
+// 同页第二页（out.pptx 的 slide2）也是纯既有字段 ⇒ 同样断"没有新形态"
+check('⑬c 同一夹具的第 2 页（纯既有字段）产物里同样没有 custGeom / headEnd / prstDash',
+  !/<a:custGeom>/.test(s2) && !/<a:headEnd/.test(s2) && !/<a:prstDash/.test(s2),
+  `元素=${(s2.match(/name="[^"]*"/g) ?? []).join(' ')}`)
 
 // ── parity 自证 ───────────────────────────────────────────────────────────
+// 两页合计：折线 1（页1）+ 2 点直线 3（页1 一条、页2 两条）⇒ poly 1/1、lines 3/3、'both' 头端 1/1。
 const p = report.parity ?? {}
 check('⑭ parity 自证全绿（含新增 polyLinesExp/Out、arrowEndsExp/Out）',
   p.ok === true && p.polyLinesExp === 1 && p.polyLinesOut === 1 && p.polyLinesWrong === 0 &&
-  p.arrowEndsExp === 1 && p.arrowEndsOut === 1 && p.linesExp === 1 && p.linesOut === 1 && p.linesWrong === 0,
+  p.arrowEndsExp === 1 && p.arrowEndsOut === 1 && p.linesExp === 3 && p.linesOut === 3 && p.linesWrong === 0,
   `ok=${p.ok} poly=${p.polyLinesExp}/${p.polyLinesOut}/wrong${p.polyLinesWrong} arrowHeads=${p.arrowEndsExp}/${p.arrowEndsOut} lines=${p.linesExp}/${p.linesOut}/wrong${p.linesWrong}`)
 
 // ── 整链是否接通（真 DSL 路径：resolveDeck → validatePage → normalizePage → export）────────
@@ -326,14 +455,20 @@ h('2. 真渲染：PowerPoint COM 逐页出 PNG + 像素级确认折线真的画�
 const shots = join(WORK, 'shots')
 let pngFiles = []
 let renderNote = ''
+// COM 偶发 `Presentations.Open : Failed`：实测是**上一条渲染残留的 POWERPNT 实例**在作怪
+// （同一份 XML 在 3 轮 ×7 变体里出图 21/21，失败只在实例未回收时出现）⇒ 渲染前先清残留。
+const killPowerPoint = () => {
+  try { spawnSync('powershell', ['-NoProfile', '-Command', 'Get-Process POWERPNT -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue'], { windowsHide: true, timeout: 30000 }) } catch { /* 忽略 */ }
+}
 if (findPowerPoint() !== null) {
-  for (let attempt = 1; attempt <= 2 && pngFiles.length === 0; attempt++) {
+  for (let attempt = 1; attempt <= 3 && pngFiles.length === 0; attempt++) {
+    if (attempt > 1) killPowerPoint()
     try {
-      const r = await renderPptxToPng(outPptx, shots, { width: 1920, height: 1080, timeoutMs: 300000, pages: [1] })
+      const r = await renderPptxToPng(outPptx, shots, { width: 1920, height: 1080, timeoutMs: 300000, pages: [1, 2] })
       pngFiles = r.files
-      renderNote = `pages=${r.pages} png=${r.files.length}${attempt > 1 ? `（第 ${attempt} 次尝试成功）` : ''}`
+      renderNote = `pages=${r.pages} png=${r.files.length}${attempt > 1 ? `（第 ${attempt} 次尝试成功；前次为 COM 残留实例）` : ''}`
     } catch (e) {
-      renderNote = `COM 失败（第 ${attempt} 次）：${e?.message ?? e}`
+      renderNote = `COM 失败（第 ${attempt} 次）：${String(e?.message ?? e).split('\n')[0]}`
     }
   }
 } else {
@@ -342,7 +477,7 @@ if (findPowerPoint() !== null) {
 if (pngFiles.length === 0) {
   check('真渲染出图（PowerPoint COM）', allowSkipOffice, `${renderNote}${allowSkipOffice ? '（已按 PPT_STUDIO_ALLOW_SKIP_OFFICE=1 降级为 SKIP）' : '——真渲染是本批改动的必需证据（custGeom 开放路径只有 PowerPoint 认才算数）'}`)
 } else {
-  check('真渲染出图（PowerPoint COM）', pngFiles.length === 1, renderNote)
+  check('真渲染出图（PowerPoint COM）：两页都出图（页1=折线 both+dot，页2=纯既有字段回归）', pngFiles.length === 2, renderNote)
   for (const f of pngFiles) console.log(`      PNG（绝对路径，Lead 读图核对）：${f}`)
 
   // ── 像素级确认：折线真的画出来了（不是"文件能打开"）──────────────────────
@@ -366,11 +501,28 @@ if (pngFiles.length === 0) {
       `上=${segTop} 竖=${segVert} 下=${segBottom}（空白对照=${empty}）`)
     check('像素级：空白对照区无同色像素（说明上面的命中不是"整页涂色"）', empty < 20, `empty=${empty}`)
 
-    // ── 2 点直线（arrow: true 回归）也画出来了 ───────────────────────────
-    const diagonal = countInk(img, [150, 230, 330, 350], [37, 99, 235], scale, 60)
-    const bothSeg = countInk(img, [600, 400, 840, 440], [31, 41, 55], scale, 60)
-    info(`回归线命中：斜线(plain1) ${diagonal}｜arrow:true 水平线(reg) ${bothSeg}`)
-    check('像素级：同页的 2 点直线（含 arrow: true）也被正常画出（旧码路未被波及）', diagonal > 20 && bothSeg > 20, `斜线=${diagonal} 水平线=${bothSeg}`)
+    // ── 第 1 页：同页 2 点直线 + arrow: true（回归）也画出来了 ────────────
+    const bothSeg = dark([600, 400, 840, 440]) // line2 = (560,420)→(860,420)
+    const bothArrow = dark([820, 404, 872, 436]) // 末端三角头
+    info(`页 1 回归线命中：arrow:true 水平线中段 ${bothSeg}｜末端箭头区 ${bothArrow}`)
+    check('像素级：页 1 的 2 点直线（arrow: true）被正常画出（旧码路未被波及）', bothSeg > 20, `中段=${bothSeg} 箭头区=${bothArrow}`)
+
+    // ── 第 2 页：纯既有字段回归页（斜线 + 圆角矩形）───────────────────────
+    const png2 = pngFiles.find((f) => /02\.png$/.test(f))
+    if (png2) {
+      const img2 = decodePng(readFileSync(png2))
+      if (img2) {
+        const sc2 = img2.width / 960
+        // plain1 = (80,200)→(400,380)：只取斜线扫过的对角窄带（避开同页其它元素）
+        const diagBlue = countInk(img2, [150, 240, 290, 330], [37, 99, 235], sc2, 90)
+        const diagAny = countInk(img2, [150, 240, 290, 330], [31, 41, 55], sc2, 60)
+        const card = countInk(img2, [100, 70, 260, 130], [37, 99, 235], sc2, 90)
+        info(`页 2（回归页）：斜线命中 蓝=${diagBlue} 深=${diagAny}｜圆角矩形卡命中=${card}`)
+        check('像素级：页 2 的纯既有字段元素（斜线 + 圆角矩形）被正常画出',
+          diagBlue + diagAny > 20 && card > 200,
+          `斜线合计=${diagBlue + diagAny} 卡片=${card}`)
+      }
+    }
   }
 }
 
@@ -390,13 +542,13 @@ for (const c of badCases) {
 }
 
 // 导出层：把非法值直接喂给导出器 ⇒ 必须降级 + 进 warnings，且产物里没有坏 XML
-const badDeck = await fixtureCtx(legacyCtx, [
+const BAD_ELEMENTS = [
   { elementId: 'bad_arrow', elementType: 'line', points: [[10, 10], [200, 10]], arrow: 'bogus', line: { color: '#1F2937', width: 1 } },
   { elementId: 'bad_dash', elementType: 'line', points: [[10, 40], [200, 40]], line: { color: '#1F2937', width: 1, dash: 'bogus' } },
   { elementId: 'one_pt', elementType: 'line', points: [[10, 70]], line: { color: '#1F2937', width: 1 } },
-])
+]
 const badOut = join(WORK, 'neg.pptx')
-const badReport = await exportPptx(badDeck, { out: badOut })
+const badReport = await exportFixture(legacyCtx, BAD_ELEMENTS, badOut)
 const badS1 = decodeXml(zipRead(readFileSync(badOut)).get('ppt/slides/slide1.xml'))
 const badWarn = (badReport.warnings ?? []).join(' ｜ ')
 check("导出层：arrow:'bogus' 降级为无箭头 + 进 report.warnings（不静默）",
@@ -404,11 +556,11 @@ check("导出层：arrow:'bogus' 降级为无箭头 + 进 report.warnings（不�
 check("导出层：dash:'bogus' 降级为 solid（不写 prstDash）+ 进 report.warnings",
   badWarn.includes('dash') && !/<a:prstDash/.test(badS1), `warnings=${badWarn.slice(0, 240)}`)
 check('导出层：单点 points 被显式拒绝（进 warnings）且不产出坏 XML（无 NaN/undefined/越界）',
-  badWarn.includes('1 点') && !/NaN|undefined|Infinity/.test(badS1),
-  `warnings=${badWarn.slice(0, 260)}\n      产物片段=${badS1.slice(badS1.indexOf('<p:spTree>'), badS1.indexOf('<p:spTree>') + 500)}`)
-check('导出层：非法/退化夹具的 parity 仍然自洽（不再把非法值算进 linesExp）',
-  badReport.parity?.polyLinesExp === 1 && badReport.parity?.polyLinesOut === 1 && badReport.parity?.linesExp === 1 && badReport.parity?.linesOut === 1,
-  JSON.stringify({ poly: [badReport.parity?.polyLinesExp, badReport.parity?.polyLinesOut], lines: [badReport.parity?.linesExp, badReport.parity?.linesOut] }))
+  badWarn.includes('不足 2 点') && !/NaN|undefined|Infinity/.test(badS1),
+  `warnings=${badWarn.slice(0, 260)}\n      产物片段=${badS1.slice(badS1.indexOf('<p:spTree>'), badS1.indexOf('<p:spTree>') + 400)}`)
+check('导出层：非法/退化夹具的 parity 仍然自洽（3 条线里 1 条被显式拒收 ⇒ lines 2/2，且无 poly）',
+  badReport.parity?.polyLinesExp === 0 && badReport.parity?.polyLinesOut === 0 && badReport.parity?.linesExp === 2 && badReport.parity?.linesOut === 2 && badReport.parity?.linesWrong === 0,
+  JSON.stringify({ poly: [badReport.parity?.polyLinesExp, badReport.parity?.polyLinesOut], lines: [badReport.parity?.linesExp, badReport.parity?.linesOut], wrong: badReport.parity?.linesWrong }))
 
 // ══ 4. 字节不变硬门槛（基线 tag 对照）═══════════════════════════════════════
 h('4. 字节不变：不使用任何新字段的工程 vs 基线 v1.1.5-baseline-before-diagram')
@@ -430,7 +582,7 @@ h('5. 确定性：同一 deck 连续导出两次 ⇒ 除 core.xml 外逐字节�
 {
   const a = zipRead(readFileSync(outPptx))
   const out2 = join(WORK, 'out2.pptx')
-  await exportPptx(primCtx, { out: out2 })
+  await exportFixturePages(legacyCtx, [[PRIM_ELEMENTS], [PLAIN_ELEMENTS]], out2) // 与第一次**同一个夹具**（两页）
   const b = zipRead(readFileSync(out2))
   const keys = new Set([...a.keys(), ...b.keys()])
   const diffs = []
@@ -483,9 +635,11 @@ function decodePng(buf) {
     else if (type === 'IEND') break
     off += 12 + len
   }
-  if (bitDepth !== 8 || ![0, 2, 3, 4, 6].includes(colorType)) return { width, height, colorType, bitDepth, rgb: null }
-  const bpp = colorType === 6 ? 4 : colorType === 4 ? 2 : colorType === 3 ? 1 : colorType === 0 ? 1 : 3
-  const stride = width * bpp
+  if (!([1, 2, 4, 8].includes(bitDepth)) || ![0, 2, 3, 4, 6].includes(colorType)) return { width, height, colorType, bitDepth, rgb: null }
+  // PowerPoint 的调色板导出实测是 **bitDepth=4 / colorType=3**（12 色）⇒ 必须支持 1/2/4 位解包。
+  const bitsPerPixel = colorType === 3 || colorType === 0 ? bitDepth : colorType === 4 ? 16 : colorType === 6 ? 32 : 24
+  const bpp = Math.max(1, bitsPerPixel >> 3) // 反过滤用（字节/像素）；<8 位时按 1 字节算
+  const stride = Math.ceil((width * bitsPerPixel) / 8)
   const raw = zlib.inflateSync(Buffer.concat(idat))
   const rgb = Buffer.alloc(width * height * 3)
   let prev = Buffer.alloc(stride)
@@ -510,18 +664,21 @@ function decodePng(buf) {
     }
     for (let x = 0; x < width; x++) {
       const o = (y * width + x) * 3
-      if (colorType === 3) {
-        const idx = line[x]
-        const pi = idx * 3
-        rgb[o] = palette?.[pi] ?? 0
-        rgb[o + 1] = palette?.[pi + 1] ?? 0
-        rgb[o + 2] = palette?.[pi + 2] ?? 0
-      } else if (colorType === 0) {
-        // 灰度：PowerPoint 对"只有黑白的幻灯片"会导出灰度 PNG（实测 colorType=0）
-        const v = line[x]
-        rgb[o] = v
-        rgb[o + 1] = v
-        rgb[o + 2] = v
+      if (colorType === 3 || colorType === 0) {
+        // 取第 x 个样本（1/2/4 位时按位解包；灰度 8 位时就是字节）
+        const sample = bitsPerPixel === 8 ? line[x] : (line[(x * bitsPerPixel) >> 3] >> (8 - bitsPerPixel - ((x * bitsPerPixel) & 7))) & ((1 << bitsPerPixel) - 1)
+        if (colorType === 3) {
+          const pi = sample * 3
+          rgb[o] = palette?.[pi] ?? 0
+          rgb[o + 1] = palette?.[pi + 1] ?? 0
+          rgb[o + 2] = palette?.[pi + 2] ?? 0
+        } else {
+          // 灰度：按位深归一化到 0..255（只有黑白时 1 位 ⇒ 0/255）
+          const v = bitsPerPixel === 8 ? sample : Math.round((sample / ((1 << bitsPerPixel) - 1)) * 255)
+          rgb[o] = v
+          rgb[o + 1] = v
+          rgb[o + 2] = v
+        }
       } else if (colorType === 4) {
         const v = line[x * 2]
         rgb[o] = v

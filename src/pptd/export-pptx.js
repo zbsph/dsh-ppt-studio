@@ -109,7 +109,7 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
         case 'line': {
           // attach 解析接入点（relations.resolveAttach）：声明了 `attach` 但还没算出 `points` 的线，
           // 在归一化阶段由 relations.js 解析成 `points`（`attach` 优先于手写 points，并另行提示）。
-          // 导出侧**只认 points**——这里不做任何 attach 几何推导（保持导出器是纯写盘层）。见 resolveElementLines()。
+          // 导出侧**只认 points**——这里不做任何 attach 几何推导（保持导出器是纯写盘层）。
           if (!el.points && el.attach) report.warnings.push(`元素 "${el.id}": 声明了 attach 但归一化层未解析出 points（请检查 relations.resolveAttach 是否已接入 normalizePage）`)
           const isPoly = Array.isArray(el.points) && el.points.length > 2
           // 退化点（points 不足 2 点）：schema 是第一道闸；漏到导出层 ⇒ **明确拒绝**（警告 + 不产坏 XML），

@@ -3021,6 +3021,98 @@ ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz
   await rm(work57, { recursive: true, force: true })
 }
 
+// ── 58. 阶段 A：结构声明与复杂图地基（2026-09-28）──────────────────────────────
+// 守三件事：① 新字段的 schema 校验（含"顺序无关的引用检查"）；② **三处白名单都要透传**
+// （layout.js normalizePage / render-html.js snap / 导出层）——第一版正是漏在 snap() 上，
+// 造成"性能数字好看、结构关系全为 0"；③ 结构豁免**真的**免掉门禁错误，且**没用新字段的页面行为不变**（门控）。
+{
+  const work58 = join(smokeDir, '.tmp-diagram-basics')
+  await rm(work58, { recursive: true, force: true })
+  await mkdir(join(work58, 'pages'), { recursive: true })
+  await writeFile(join(work58, 'deck.yaml'), ['version: 1', 'title: diagram-basics', 'size: [960, 540]', 'theme:',
+    '  colors: {primary: "#2563EB", text: "#1F2937", bg: "#F1F5F9"}', '  textStyles:',
+    '    body: {fontSize: 16, color: "$text"}', 'pages:', '  - pages/01.yaml', ''].join('\n'), 'utf8')
+  const page58 = ['pageType: content',
+    'groups:',
+    '  - id: g1', '    label: 输入层', '    members: [zone, a]',
+    'expectedOverlaps:',
+    '  - pair: [chip, zone]', '    reason: "标题胶囊压在容器顶边（设计意图）"',
+    'elements:',
+    '  - elementId: zone', '    elementType: shape', '    kind: roundRect', '    bounds: [40, 120, 880, 300]',
+    '    fill: "#F1F5F9"', '    role: background', '    contains: [a, t1, poly, dash]',
+    '  - elementId: a', '    elementType: shape', '    kind: rect', '    bounds: [80, 200, 160, 80]', '    fill: "#2563EB"',
+    '  - elementId: t1', '    elementType: text', '    bounds: [260, 200, 200, 40]', '    content: {text: "节点", style: "$body"}',
+    '  - elementId: chip', '    elementType: shape', '    kind: roundRect', '    bounds: [300, 106, 120, 30]',
+    '    fill: "#1F2937"', '    badgeOf: zone', '    roleReason: "标题胶囊"',
+    '  - elementId: poly', '    elementType: line', '    points: [[600, 200], [660, 240], [720, 200]]', '    arrow: both',
+    '  - elementId: dash', '    elementType: line', '    points: [[240, 240], [260, 220]]', '    arrow: end',
+    '    line: {color: "#1F2937", width: 1, dash: dash}',
+    '    attach: {from: {ref: a, side: right}, to: {ref: t1, side: left}}', ''].join('\n')
+  await writeFile(join(work58, 'pages', '01.yaml'), page58, 'utf8')
+
+  // ① schema：合法结构声明通过；attach 放错元素/非法 side 报错（顺序无关的引用检查也在自证脚本里钉着）
+  const ok58 = validatePage(await resolveDeck(work58).then((c) => c.pages[0].page), 's58.yaml')
+  ok('§58 结构声明：合法 deck（groups/contains/badgeOf/attach/roleReason/expectedOverlaps.reason）schema 全通过',
+    ok58 === null, ok58?.messages?.join('; ') ?? '')
+  const bad58 = validatePage({ elements: [{ elementId: 'x', elementType: 'shape', kind: 'rect', bounds: [0, 0, 9, 9], attach: { from: { ref: 'x', side: 'up' } } }] }, 's58b.yaml')
+  ok('§58 结构声明：attach 放在非 line 元素上、且 side 非法 ⇒ 均当场报错（不静默忽略）',
+    bad58 !== null && /只对 elementType: line 有效/.test(bad58.messages.join('; ')),
+    bad58?.messages?.join('; ') ?? '竟然通过')
+
+  // ② 预览与门禁共用 layout.json ⇒ 新字段必须**都**在里面（白名单漏字段 = 结构关系在门禁层凭空消失）
+  await renderDeck(await resolveDeck(work58), { out: 'preview58' })
+  const layout58 = JSON.parse(await (await import('node:fs/promises')).readFile(join(work58, 'preview58', 'layout.json'), 'utf8'))
+  const el58 = (id) => layout58.pages[0].elements.find((e) => e.id === id) ?? {}
+  ok('§58 三处白名单透传：contains/badgeOf/roleReason/attach/arrow 都进了 layout.json（防 normalizePage/snap 式漏字段复发）',
+    Array.isArray(el58('zone').contains) && el58('zone').contains.length === 4
+    && el58('chip').badgeOf === 'zone' && el58('chip').roleReason === '标题胶囊'
+    && el58('dash').attach?.from?.ref === 'a' && el58('poly').arrow === 'both',
+    `zone.contains=${JSON.stringify(el58('zone').contains)}｜chip.badgeOf=${el58('chip').badgeOf}｜poly.arrow=${el58('poly').arrow}`)
+  ok('§58 groups 随 layout.json 落盘（门禁吃 layout.json，页面级结构不能只在 DSL 里）',
+    Array.isArray(layout58.pages[0].groups) && layout58.pages[0].groups.length === 1 && layout58.pages[0].groups[0].id === 'g1')
+
+  // ③ 结构豁免真的生效 + 报告两段；门控：不用新字段的页行为不变
+  const v58 = verifyDeck(layout58)
+  ok('§58 结构豁免：容器/子元素/徽章/附着线的重叠全部被结构关系豁免 ⇒ 0 错误',
+    v58.errors.length === 0, v58.errors.map((e) => `${e.code}:${e.id}`).join('｜') || '无')
+  ok('§58 报告形态：「结构关系」计数行 + 「设计声明复核」段都在（豁免必须可见）',
+    /· 结构关系：组 1｜包含 4｜附着 2｜徽章 1｜有意重叠 1/.test(v58.text) && v58.text.includes('· 设计声明复核：'),
+    v58.text.split('\n').filter((l) => l.includes('结构关系') || l.includes('声明复核')).join('｜'))
+  // 门控对照：同一页把阶段 A 特性**全部降级**（新字段删掉、折线退回 2 点、groups 清空）——
+  // 注意 `usesStructure` 把">2 点折线"也算新特性，只删字段不退回点数会测不到门控（第一次就踩了这个）
+  const plain58 = {
+    ...layout58.pages[0], groups: [],
+    elements: (layout58.pages[0].elements ?? []).map((el) => {
+      const { contains, badgeOf, roleReason, attach, ...rest } = el
+      return Array.isArray(rest.points) && rest.points.length > 2 ? { ...rest, points: rest.points.slice(0, 2) } : rest
+    }),
+  }
+  const vp58 = analyzePage(plain58, layout58.size ?? { width: 960, height: 540 })
+  ok('§58 门控（非回归）：降级掉阶段 A 特性的同一页，容器压内容仍按未声明重叠报错，且不出结构两段/无新增 code',
+    vp58.some((f) => f.code === 'unexpected-overlap')
+    && vp58.every((f) => !['relation-invalid', 'declared-stale', 'duplicate-element', 'line-through-box', 'arrow-not-on-edge'].includes(f.code))
+    && !verifyDeck({ pages: [plain58], size: layout58.size }).text.includes('· 结构关系：'),
+    vp58.map((f) => f.code).join(','))
+
+  // ④ 导出基元：折线一帧 custGeom、双箭头两端都在、虚线 prstDash；直线仍走 straightConnector1
+  const r58 = await exportPptx(await resolveDeck(work58), { out: join(work58, 'out.pptx') })
+  const z58 = zipRead(await (await import('node:fs/promises')).readFile(r58.file))
+  const x58 = z58.get('ppt/slides/slide1.xml').toString('utf8')
+  const cnt = (re) => (x58.match(re) ?? []).length
+  ok('§58 导出：>2 点折线 = 一帧 p:sp + custGeom（不是 N 条 cxnSp 拼的直线段）',
+    cnt(/<a:custGeom>/g) === 1 && cnt(/<p:cxnSp>/g) === 1 && cnt(/prst="straightConnector1"/g) === 1,
+    `custGeom=${cnt(/<a:custGeom>/g)}｜cxnSp=${cnt(/<p:cxnSp>/g)}｜直线=${cnt(/prst="straightConnector1"/g)}`)
+  ok("§58 导出：arrow:'both' ⇒ headEnd 与 tailEnd **都在** <a:ln> 内；dash ⇒ prstDash 出现",
+    cnt(/<a:headEnd/g) === 1 && cnt(/<a:tailEnd/g) === 2 && cnt(/<a:prstDash/g) === 1,
+    `headEnd=${cnt(/<a:headEnd/g)}｜tailEnd=${cnt(/<a:tailEnd/g)}｜prstDash=${cnt(/<a:prstDash/g)}`)
+  // 口径（导出侧队友明确）：折线单独计入 polyLinesExp/Out，**不再进 linesExp/linesOut**；
+  // 故集成断言要用 polyLines*（而非 lines*），且 polyLinesWrong 是**数字**不是数组。
+  ok('§58 图进 parity：折线条数单独进 parity（polyLinesExp/Out 对得上且不为 0，wrong=0）',
+    (r58.parity?.polyLinesExp ?? 0) === 1 && r58.parity?.polyLinesOut === 1 && r58.parity?.polyLinesWrong === 0,
+    `polyLines ${r58.parity?.polyLinesOut}/${r58.parity?.polyLinesExp}｜wrong=${JSON.stringify(r58.parity?.polyLinesWrong ?? null)}`)
+  await rm(work58, { recursive: true, force: true })
+}
+
 // 37.10 【必须是最后一条断言】引用计数自证：文档里 "smoke … N 断言" 必须等于本次真实断言总数。
 // 历史形状：加断言后 README×3 + docs/02 + docs/06×2 + 手册 全靠人工同步，迟早漏一处。
 // 只扫"当前状态"文档（README / 技术报告 / 评审测试矩阵 / 使用手册）；docs/01/03/04 里的历史数字是记录，不动。
