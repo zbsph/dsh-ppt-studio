@@ -848,11 +848,17 @@ function layoutState({ d, box, style, id, notes }) {
     return null
   }
   const freeLabelBox = (pref) => {
-    const cands = [pref, { ...pref, y: pref.y + 52 }, { ...pref, y: pref.y - 24 }, { ...pref, x: pref.x + 32 }, { ...pref, x: pref.x - 32 }]
+    const cands = [
+      pref, { ...pref, y: pref.y + 52 }, { ...pref, y: pref.y - 24 },
+      { ...pref, x: pref.x + 32 }, { ...pref, x: pref.x - 32 },
+      { ...pref, x: pref.x + 64 }, { ...pref, y: pref.y + 104 },
+    ]
     for (const c of cands) {
       if (!elements.some((el) => { const r = aabbOfEl(el); return r && c.x < r.x + r.w && r.x < c.x + c.w && c.y < r.y + r.h && r.y < c.y + c.h })) return c
     }
-    return pref
+    // 全都撞 ⇒ 返回 null **省略标签**（并记 note）：绝不硬放到同一处——
+    // 第一版 fallback 返回首选位置，结果两个标签重合 ⇒ duplicate-element + content-collision（被我推上线了，回退教训留档）。
+    return null
   }
   const maxBottom = Math.max(...[...pos.values()].map((r) => r.y + r.h))
   // 总线**恒在所有节点下方**（第一版取 max(…, 0.78×高)：某列较高时总线落进节点区 ⇒ 横段穿盒）
@@ -885,6 +891,7 @@ function layoutState({ d, box, style, id, notes }) {
       const lcy = Math.round((A.y + A.h / 2 + B.y + B.h / 2) / 2)
       // 首选：竖管右侧、**线之上 28px**（天然不压自己的线）；再交给避让挑不撞的备选
       const lb = e.label ? freeLabelBox({ x: Math.round(midX + 8), y: lcy - 28, w: 80, h: 18 }) : null
+      if (e.label && !lb) notes.push(`state：边 "${e.from} → ${e.to}" 的标签无空位（会压线或压字）⇒ 已省略标签`)
       elements.push(...makeEdge(style, id, {
         id: `e${ei++}`,
         points: [[R(A.x + A.w), R(A.y + A.h / 2)], [R(midX), R(A.y + A.h / 2)], [R(midX), R(B.y + B.h / 2)], [R(B.x), R(B.y + B.h / 2)]],
