@@ -69,6 +69,30 @@ export function contains(a, b, pad = RELATION_DEFAULTS.pad) {
     && b.right <= a.right - pad + 0.001 && b.bottom <= a.bottom - pad + 0.001
 }
 
+/**
+ * 斜边预设的"边"不在包围盒上 ⇒ 返回一个**等效矩形**，让 `onSide` 的判定落在真实轮廓上。
+ * 目前覆盖 `parallelogram`（默认斜度 off = 0.25×min(w,h)）；其余 kind 返回 null（用原矩形即可）。
+ * 用户实测：暖色架构图的输出层箭头原本"插进图形"、输入层连线"没接上"，都是按包围盒取点造成的。
+ */
+export function slantRect(ref, side, pt) {
+  const b = ref?.bounds
+  if (!b || ref?.kind !== 'parallelogram') return null
+  const w = Array.isArray(b) ? b[2] : b.w
+  const h = Array.isArray(b) ? b[3] : b.h
+  // 必须带上 right/bottom —— onSide 用它们做区间判定（漏了会一律判 false，实测踩过）
+  const x0 = Array.isArray(b) ? b[0] : b.x
+  const y0 = Array.isArray(b) ? b[1] : b.y
+  const r = { x: x0, y: y0, w, h, right: x0 + w, bottom: y0 + h }
+  const off = 0.25 * Math.min(w, h)
+  const y = pt?.[1] ?? y0 + h / 2
+  const k = 1 - (y - y0) / h // 顶部 1 → 底部 0
+  if (side === 'left') return { ...r, x: r.x + off * k, right: r.right + off * k }
+  if (side === 'right') return { ...r, w: r.w - off * k, right: r.right - off * k }
+  if (side === 'top') return { ...r, x: r.x + off, w: r.w - off } // top 用 x..right 判横向范围
+  if (side === 'bottom') return { ...r, right: r.right - off } // bottom 用 x..right 判横向范围
+  return null
+}
+
 /** 点是否落在 rect 的某条边上（容差 tol）——用于 attach 判定。 */
 export function onSide(side, point, r, tol = RELATION_DEFAULTS.tol) {
   const [x, y] = point
@@ -215,7 +239,10 @@ export function deriveRelations(page, opts = {}) {
       const ref = els.get(String(spec.ref))
       if (!ref) { invalid.push({ type: 'attach', from: id, to: String(spec.ref), why: `${end} 端引用的元素不存在` }); continue }
       if (!Array.isArray(pt)) { invalid.push({ type: 'attach', from: id, to: String(spec.ref), why: `${end} 端缺少坐标（points 至少 2 点）` }); continue }
+      // 斜边预设（平行四边形）的"边"不在包围盒上 ⇒ 反验证也要按**真实轮廓**判定，
+      // 否则引擎把锚点正确解析到斜边上、这里却报"attach 声明不成立"（实测）。
       const ok = onSide(String(spec.side), pt, rectOf(ref), t.tol)
+        || (slantRect(ref, String(spec.side), pt) ? onSide(String(spec.side), pt, slantRect(ref, String(spec.side), pt), t.tol) : false)
       relations.push({ type: 'attach', from: id, to: String(spec.ref), end, valid: ok, evidence: { side: spec.side, point: pt, tol: t.tol } })
       if (!ok) invalid.push({ type: 'attach', from: id, to: String(spec.ref), why: `${end} 端点未落在 ${spec.ref} 的 ${spec.side} 边（tol=${t.tol}）` })
     }
@@ -459,11 +486,33 @@ export function resolveAttach(el, pageOrMap, opts = {}) {
   // 先算 to（用它作为 from 的朝向参考），再算 from —— 两侧同时给出时才互相参考
   const refFrom = els.get(String(a.from?.ref ?? ''))
   const refTo = els.get(String(a.to?.ref ?? ''))
+  // ── 斜边预设：包围盒边**不是真实轮廓**（用户实测：暖色架构图的平行四边形）──
+  // 按包围盒取锚点 ⇒ 箭头"插进图形里"（输出层）或"没接上"（输入层）。这里把锚点修正到**真实轮廓**。
+  // 平行四边形默认斜度 off = 0.25×min(w,h)：左边缘 x(y)=x+off×(1−(y−y0)/h)、右边缘 x(y)=x+w−off×(1−…)、
+  // 上边 x∈[x+off, x+w]、下边 x∈[x, x+w−off]。其余 kind 原样返回（可按需扩展 triangle/diamond/chevron）。
+  const slantOf = (ref) => {
+    const b = ref?.bounds
+    if (!b || ref?.kind !== 'parallelogram') return 0
+    const w = Array.isArray(b) ? b[2] : b.w
+    const h = Array.isArray(b) ? b[3] : b.h
+    return 0.25 * Math.min(w, h)
+  }
+  const onOutline = (ref, rect, side, p) => {
+    const off = slantOf(ref)
+    if (!off || !p) return p
+    const y = p[1]
+    if (side === 'left') return [rect.x + off * (1 - (y - rect.y) / rect.h), y]
+    if (side === 'right') return [rect.right - off * (1 - (y - rect.y) / rect.h), y]
+    if (side === 'top') return [Math.min(Math.max(p[0], rect.x + off), rect.right), p[1]]
+    if (side === 'bottom') return [Math.min(Math.max(p[0], rect.x), rect.right - off), p[1]]
+    return p
+  }
   const anchorOf = (spec, ref, toward, keep) => {
     if (!spec || !ref) return null
     const side = String(spec.side)
     if (!ATTACH_SIDES.includes(side)) return null
-    return anchorFor(rectOf(ref), side, toward, keep)
+    const rect = rectOf(ref)
+    return onOutline(ref, rect, side, anchorFor(rect, side, toward, keep))
   }
   const towardTo = copy && copy.length >= 2 ? copy[0] : [out[0][0], out[0][1]]
   const towardFrom = copy && copy.length >= 2 ? copy[last] : [out[last][0], out[last][1]]
