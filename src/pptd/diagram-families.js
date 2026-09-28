@@ -629,12 +629,12 @@ function layoutSteps({ d, box, style, id, notes }) {
     taken.push({ x: bx, y: by, w: badge, h: badge })
     pos.set(nd.id, { x: bx, y: by, w: badge, h: badge })
   })
-  // 引导环：**一个 decoration 环形元素**（不是裸折线）——重叠判定对它天然豁免，语义也正确（"这是一圈步骤"）。
-  // 用户反馈两点：① 环要**明显更粗**、且**与编号圆圈留出间隙**（这样一眼就和"闭环反馈"族区分开）；
-  //              ② 标签不要因为避让而被省略（第一版固定半径仍与圆点碰撞，2/5 的标签被吞了）。
-  // 现在的几何：环半径 = 圆点圆心半径 + 圆点半径 + 12px 间隙（环完全在编号圈**外**）；
-  //            标签再往外一层（环 + 32）⇒ 既不压圆点、也不压环，标签不再需要省略。
-  const ringR = Rr + badge / 2 + 12
+  // 引导环：**一个 decoration 环形元素**（重叠判定对它天然豁免，语义也对："这是一圈步骤"）。
+  // 几何按用户反馈定稿：**环穿过各编号圆心**（环直径 = 2×编号圆心半径），**只把线加粗**——
+  //   · 第一版（穿过圆心、细线）用户觉得不错；
+  //   · 第二版把环移到编号圈外面（"套一个大圈"）用户明确说不好看 ⇒ 回退到这个几何。
+  // 编号 z-order 在环之后（盖住环的穿过点），点与点之间therefore能看见弧线。
+  const ringR = Rr
   const ringW = Math.max(3, style.lineWidth + 2)
   elements.unshift({
     elementId: id('ring'), elementType: 'shape', kind: 'ellipse',
@@ -646,10 +646,15 @@ function layoutSteps({ d, box, style, id, notes }) {
   nodes.forEach((nd, i) => {
     const a = -Math.PI / 2 + (2 * Math.PI * i) / n
     for (let k = 0; k < 1; k++) {
-      const rr = ringR + 32
+      // 关键修正（用户实测：2 与 5 的标签一直被吞）：标签框不能"以半径上的点为**中心**"，
+      // 否则 90px 宽会**向内**探到圆点上（2/5 恰在水平方向，向内探得最多）⇒ 被判冲突而省略。
+      // 现在按方向补偿半个宽/高，让标签框的**内缘**正好落在 labelR 上 —— 框只会向外扩，不再碰圆点。
+      const labelR = Rr + 40
+      const off = Math.abs(Math.cos(a)) * 45 + Math.abs(Math.sin(a)) * 9
+      const lr = labelR + off
       const cand = {
-        x: Math.max(box.x, Math.min(cx + rr * Math.cos(a) - 45, box.x + box.w - 90)),
-        y: Math.max(box.y, Math.min(cy + rr * Math.sin(a) - 9, box.y + box.h - 18)),
+        x: Math.max(box.x, Math.min(cx + lr * Math.cos(a) - 45, box.x + box.w - 90)),
+        y: Math.max(box.y, Math.min(cy + lr * Math.sin(a) - 9, box.y + box.h - 18)),
         w: 90, h: 18,
       }
       const clash = taken.some((r) => cand.x < r.x + r.w && r.x < cand.x + cand.w && cand.y < r.y + r.h && r.y < cand.y + cand.h)
