@@ -92,7 +92,12 @@ writeFileSync(join(dir, 'pages', '04.yaml'), [
   '  - elementId: onedge', '    elementType: line', '    points: [[200, 150], [500, 150]]', '    arrow: false',
   // 反例：从**同一锚点**出发、共线且部分重合的一对线（扇出/树状干线）⇒ 不得报共线重叠
   '  - elementId: fan_long', '    elementType: line', '    points: [[700, 430], [800, 430]]', '    arrow: false',
-  '  - elementId: fan_short', '    elementType: line', '    points: [[700, 430], [750, 430]]', '    arrow: false',
+  // R3 正反例：箭头插进图形（该报）；同样几何但 roleReason 声明（不该报）
+  '  - elementId: ov_bad_in', '    elementType: line', '    points: [[340, 210], [390, 210]]', '    arrow: true',
+  '  - elementId: ov_declared', '    elementType: line', '    points: [[340, 230], [390, 230]]', '    arrow: true', '    roleReason: 强调贯穿（刻意插进图形）',
+  // R3 缺口正例：端点离图形边 ~6px（该报）
+  '  - elementId: ov_gap', '    elementType: line', '    points: [[560, 210], [572, 210]]', '    arrow: true',
+  '  - {elementId: gapbox, elementType: shape, kind: rect, bounds: [578, 150, 200, 120], fill: "$soft"}',
   '',
 ].join('\n'))
 
@@ -152,7 +157,18 @@ ok('组级取景：纳入容器与「容器内部的组标题」（C2 核心规�
 ok('组级取景：不吞入离得远的旁观元素（"闭包把整页拉进来"是这条规则要防的事）',
   !grp.members.includes('far_away'), `${grp.members.length} 个元素`)
 
-// ⑤ 手写路径能出成品：导出 parity 自证
+// R3：两条**只警告、可声明**的接合判据（用户明确要求：可能是意料之内的设计 ⇒ 绝不 error）
+ok('箭头插进图形 ⇒ 报 `arrow-tip-inside-shape`（warning，不是错误）',
+  v4.warns.some((w) => w.code === 'arrow-tip-inside-shape' && /ov_bad_in/.test(w.message)),
+  v4.warns.filter((w) => w.code === 'arrow-tip-inside-shape').map((w) => w.message.slice(0, 30)).join(' ｜ ') || '无')
+ok('端点离目标 ~6px ⇒ 报 `arrow-end-gap`',
+  v4.warns.some((w) => w.code === 'arrow-end-gap' && /ov_gap/.test(w.message)),
+  v4.warns.filter((w) => w.code === 'arrow-end-gap').map((w) => w.message.slice(0, 30)).join(' ｜ ') || '无')
+ok('**声明刻意如此**（roleReason）⇒ 同样的几何**不报**（用户要求：意料之内不提示）',
+  !v4.warns.some((w) => w.code === 'arrow-tip-inside-shape' && /ov_declared/.test(w.message)),
+  v4.warns.map((w) => w.code).join(',') || '无警告')
+
+// ⑥ 手写路径能出成品：导出 parity 自证
 const r = await exportPptx(ctx, { out: join(dir, 'hand.pptx') })
 ok('手写路径能正常出成品（导出 parity.ok=true，含虚线折线与附着线）',
   r.parity?.ok === true, `attached ${r.parity?.attachedLinesOut}/${r.parity?.attachedLinesExp}｜poly ${r.parity?.polyLinesOut}/${r.parity?.polyLinesExp}`)

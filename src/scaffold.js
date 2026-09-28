@@ -183,6 +183,8 @@ diagram:
   4. **边标签贴着它标注的那条线**放（线上方或线下方 6px 左右，或竖线旁边 8px），不要放在两条线中间；标签文字短就用小框（框宽≈文字宽+8），别用大框占位；
   5. 语义性的背景带 / 引导环 / 分组底板用 role: decoration（完全豁免重叠判定），**不要**用 expectedOverlaps 去掩盖"压字/压盒"；
   6. 一页可以**既用 diagram 又手写元素**（缝合页）；assistant 想要家族库没有的图，就按上面几条手写 elements 拼出来——这是被支持的路径，不是退路。
+  7. **斜边图形**（parallelogram / triangle / diamond）直接用 attach 就行：引擎会接到**真实斜边**上（不是包围盒边）——不要自己算斜边坐标；按包围盒边取点会出现"箭头插进图形里"或"离图形差一截"。
+  8. 门禁对"箭头插进图形里"（arrow-tip-inside-shape）与"端点离目标 2–10px 没接上"（arrow-end-gap）只给**警告**（不是错误）——因为这两种**都可能是刻意设计**：确实要插进去 / 刻意留空时，给该线加 roleReason: "…" 声明即可不再提示。
 
 ## 层叠角色推断（不在 expectedOverlaps 的规则）
 - text/table/chart = content；shape/image = background（承载）；line = line（引脚线/箭头）。
