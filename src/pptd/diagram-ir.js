@@ -14,7 +14,7 @@
  */
 import { ATTACH_SIDES } from './relations.js'
 // 阶段 C：图族库（每族只做几何策略；校验/样式/物化仍由本模块统一负责）
-import { FAMILIES, boxOf, makeContainer, makeText } from './diagram-families.js'
+import { FAMILIES, boxOf, makeContainer, makeText, makeEdge } from './diagram-families.js'
 
 /** 已实现图族与成熟度（阶段 C 分批扩充；未列出的 type 一律优雅降级）。 */
 export const DIAGRAM_TYPES = {
@@ -280,26 +280,26 @@ export function layoutDiagram(d, opts = {}) {
       from = { ref: id(e.from), side: forward ? 'bottom' : 'top', pt: [A.x + A.w / 2, forward ? A.y + A.h : A.y] }
       to = { ref: id(e.to), side: forward ? 'top' : 'bottom', pt: [B.x + B.w / 2, forward ? B.y : B.y + B.h] }
     }
-    const el = {
-      elementId: id(`e${i}`),
-      elementType: 'line',
-      // 轴对齐折线：连线若**斜着**跨带/跨列，其 AABB 有宽有高 ⇒ 会与容器、节点判为意外重叠
-      //（layers 族实测 13 条）。改为"出边 → 拐在带/列间隙 → 进边"：拐点落在间隙（那里没有容器也没有节点），
-      // 且竖/横段 AABB 的宽或高为 0 ⇒ 永不触发重叠判定。
-      points: (() => {
-        if (horizontal) {
-          if (Math.abs(from.pt[1] - to.pt[1]) < 1) return [[round(from.pt[0]), round(from.pt[1])], [round(to.pt[0]), round(to.pt[1])]]
-          const sepX = round((from.pt[0] + to.pt[0]) / 2)
-          return [[round(from.pt[0]), round(from.pt[1])], [sepX, round(from.pt[1])], [sepX, round(to.pt[1])], [round(to.pt[0]), round(to.pt[1])]]
-        }
-        if (Math.abs(from.pt[0] - to.pt[0]) < 1) return [[round(from.pt[0]), round(from.pt[1])], [round(to.pt[0]), round(to.pt[1])]]
-        const sepY = round((from.pt[1] + to.pt[1]) / 2)
-        return [[round(from.pt[0]), round(from.pt[1])], [round(from.pt[0]), sepY], [round(to.pt[0]), sepY], [round(to.pt[0]), round(to.pt[1])]]
-      })(),
+    // A2：改走 makeEdge ⇒ 遗留族也接入 R1（折线永远轴对齐）+ R2（箭头端 ≥18px 直段）。
+    // 此前这两族自己拼元素、绕过了这两条保护（用户强调"别让任何一条路径漏保护"）。
+    const pts = (() => {
+      if (horizontal) {
+        if (Math.abs(from.pt[1] - to.pt[1]) < 1) return [[from.pt[0], from.pt[1]], [to.pt[0], to.pt[1]]]
+        const sepX = round((from.pt[0] + to.pt[0]) / 2)
+        return [[from.pt[0], from.pt[1]], [sepX, from.pt[1]], [sepX, to.pt[1]], [to.pt[0], to.pt[1]]]
+      }
+      if (Math.abs(from.pt[0] - to.pt[0]) < 1) return [[from.pt[0], from.pt[1]], [to.pt[0], to.pt[1]]]
+      const sepY = round((from.pt[1] + to.pt[1]) / 2)
+      return [[from.pt[0], from.pt[1]], [from.pt[0], sepY], [to.pt[0], sepY], [to.pt[0], to.pt[1]]]
+    })()
+    const [el] = makeEdge(style, id, {
+      id: `e${i}`,
+      points: pts,
       arrow: true,
-      line: { color: style.ink, width: style.lineWidth, ...(e.style === 'dashed' ? { dash: 'dash' } : {}) },
-      attach: { from: { ref: from.ref, side: from.side }, to: { ref: to.ref, side: to.side } },
-    }
+      dashed: e.style === 'dashed',
+      from: { ref: id(e.from), side: from.side },
+      to: { ref: id(e.to), side: to.side },
+    })
     edgeEls.push(el)
     elements.push(el)
     // 边标签：放在两个节点之间的空隙里、沿连线错开半格（水平/垂直线上方），不与任何盒子相交
