@@ -19,6 +19,7 @@ import { renderDeck } from '../lib/pptd/render-html.js'
 import { exportPptx } from '../lib/pptd/export-pptx.js'
 import { verifyDeck } from '../lib/verify.js'
 import { checkLineRules } from '../lib/pptd/line-rules.js'
+import { renderGroupIsolated } from '../lib/group-render.js'
 
 let pass = 0
 let fail = 0
@@ -37,7 +38,7 @@ writeFileSync(join(dir, 'deck.yaml'), [
   '  colors: {primary: "#B45309", accent: "#EA580C", soft: "#FED7AA", text: "#431407", bg: "#FFFBEB"}',
   '  textStyles:', '    body: {fontSize: 14, color: "$text"}', '  line: {width: 2}',
   '  safeArea: {top: 40, bottom: 40, left: 40, right: 40}',
-  'pages:', '  - pages/01.yaml', '  - pages/02.yaml', '  - pages/03.yaml', '  - pages/04.yaml', '',
+  'pages:', '  - pages/01.yaml', '  - pages/02.yaml', '  - pages/03.yaml', '  - pages/04.yaml', '  - pages/05.yaml', '',
 ].join('\n'))
 
 // ① 合法的手写复杂图（完全不依赖任何族）
@@ -95,6 +96,22 @@ writeFileSync(join(dir, 'pages', '04.yaml'), [
   '',
 ].join('\n'))
 
+// ⑤ 组级裁剪取景（C2 的核心不变量）：容器与"容器内部的组标题"必须被纳入，
+//    离得远的旁观元素必须被排除——这条规则第一版写错过（8 vs 10），用断言锁死。
+writeFileSync(join(dir, 'pages', '05.yaml'), [
+  'pageType: content', 'groups:',
+  '  - {id: g_card, label: 卡片组, members: [c_shape, c_lab]}',
+  'elements:',
+  '  - {elementId: c_shape, elementType: shape, kind: roundRect, bounds: [120, 300, 200, 90], fill: "$primary", contains: [c_lab]}',
+  '  - {elementId: c_lab, elementType: text, bounds: [130, 330, 180, 30], content: {text: "卡内文字", fontSize: 14, color: "$bg", align: center}}',
+  // 容器：contains 里有"几何上落在它内部"的标题（不在组 members 里）——必须靠 ③ 被纳入
+  '  - {elementId: c_box, elementType: shape, kind: roundRect, bounds: [100, 280, 240, 140], fill: "$soft", role: decoration, roleReason: 卡片底板, contains: [c_shape, c_lab, c_title]}',
+  '  - {elementId: c_title, elementType: text, bounds: [110, 288, 220, 22], content: {text: "卡片标题", fontSize: 13, color: "$text", align: center}}',
+  // 旁观者：离得远，不得被吞进取景
+  '  - {elementId: far_away, elementType: shape, kind: rect, bounds: [700, 470, 160, 40], fill: "$accent"}',
+  '',
+].join('\n'))
+
 const ctx = await resolveDeck(dir)
 await renderDeck(ctx, { out: 'preview' })
 const layout = JSON.parse(readFileSync(join(dir, 'preview', 'layout.json'), 'utf8'))
@@ -127,6 +144,13 @@ ok('线**压在盒子边框上** ⇒ 报 `line-on-box-edge`（图 4 那类缺陷
 ok('**共用端点**的扇出（标准树状干线）⇒ 不得报共线重叠（用户裁定：这样画更清晰）',
   !v4.warns.some((w) => w.code === 'line-collinear-overlap' && /fan/.test(w.message)),
   v4.warns.filter((w) => w.code === 'line-collinear-overlap').map((w) => w.message.slice(0, 46)).join(' ｜ ') || '无')
+
+// ⑥ 组级裁剪取景的不变量（C2）
+const grp = await renderGroupIsolated(dir, { page: 5, group: 'g_card', out: join(dir, '.group-render') })
+ok('组级取景：纳入容器与「容器内部的组标题」（C2 核心规则——第一版漏了这条，出 8 个元素而 CLI 出 10 个）',
+  ['c_shape', 'c_lab', 'c_box', 'c_title'].every((id) => grp.members.includes(id)), grp.members.join(','))
+ok('组级取景：不吞入离得远的旁观元素（"闭包把整页拉进来"是这条规则要防的事）',
+  !grp.members.includes('far_away'), `${grp.members.length} 个元素`)
 
 // ⑤ 手写路径能出成品：导出 parity 自证
 const r = await exportPptx(ctx, { out: join(dir, 'hand.pptx') })
