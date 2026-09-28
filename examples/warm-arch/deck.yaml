@@ -1,0 +1,17 @@
+version: 1
+title: 仿真模型架构（暖色系·手写范例）
+size: [960, 540]
+theme:
+  colors:
+    primary: "#B45309"   # 琥珀棕（模块）
+    accent: "#EA580C"    # 橙（输出层）
+    soft: "#FEF3C7"      # 浅暖黄（内核底板）
+    text: "#431407"      # 深棕（文字）
+    bg: "#FFFBEB"        # 暖白（底色）
+  textStyles:
+    body: {fontSize: 14, color: "$text"}
+  line: {width: 2}
+  spacing: {base: 24}
+  safeArea: {top: 40, bottom: 40, left: 40, right: 40}
+pages:
+  - pages/01.yaml

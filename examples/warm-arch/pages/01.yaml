@@ -1,0 +1,83 @@
+pageType: content
+# 手写「仿真模型架构图」范例（不依赖任何图族）——验证自由发挥路径 + R1/R2/R4/R5 规则
+# 结构与用户附图的对应关系：① 输入层（平行四边形）→ ② 仿真内核（三个模块堆叠在底板上）→ ③ 输出层（平行四边形），
+# 底部一条**迭代反馈**虚线回路（从输出回到输入）。色系为暖色（琥珀棕 / 橙 / 浅暖黄）。
+elements:
+  # ── 标题与分层标签 ───────────────────────────────────────────────
+  - {elementId: title, elementType: text, bounds: [40, 48, 420, 28], content: {text: "仿真模型架构", fontSize: 20, color: "$text", align: left}}
+  - {elementId: l1, elementType: text, bounds: [56, 96, 160, 22], content: {text: "① 输入层", fontSize: 14, color: "$text", align: left}}
+  - {elementId: l2, elementType: text, bounds: [380, 96, 220, 22], content: {text: "② 仿真内核", fontSize: 14, color: "$text", align: center}}
+  - {elementId: l3, elementType: text, bounds: [780, 96, 140, 22], content: {text: "③ 输出层", fontSize: 14, color: "$text", align: left}}
+
+  # ── ① 输入层：平行四边形模块 ─────────────────────────────────────
+  - {elementId: inp, elementType: shape, kind: parallelogram, bounds: [50, 180, 150, 130], fill: "$primary", contains: [inp_lab]}
+  - {elementId: inp_lab, elementType: text, bounds: [62, 232, 126, 28], content: {text: "数据输入模块", fontSize: 14, color: "$bg", align: center}}
+
+  # ── ② 仿真内核：底板（decoration：连线穿越属设计意图）+ 三个堆叠模块 ──
+  - {elementId: core, elementType: shape, kind: roundRect, bounds: [250, 140, 470, 300], fill: "$soft", role: decoration, roleReason: "内核底板：连线穿越属设计意图", contains: [m1, m1_lab, m2, m2_lab, m3, m3_lab]}
+  - {elementId: m1, elementType: shape, kind: roundRect, bounds: [270, 160, 430, 70], fill: "$primary", contains: [m1_lab]}
+  - {elementId: m1_lab, elementType: text, bounds: [280, 180, 410, 30], content: {text: "车间生产模块", fontSize: 16, color: "$bg", align: center}}
+  - {elementId: m2, elementType: shape, kind: roundRect, bounds: [270, 240, 430, 70], fill: "$primary", contains: [m2_lab]}
+  - {elementId: m2_lab, elementType: text, bounds: [280, 260, 410, 30], content: {text: "负载评估模块", fontSize: 16, color: "$bg", align: center}}
+  - {elementId: m3, elementType: shape, kind: roundRect, bounds: [270, 320, 430, 70], fill: "$primary", contains: [m3_lab]}
+  - {elementId: m3_lab, elementType: text, bounds: [280, 340, 410, 30], content: {text: "生产计划跟踪模块", fontSize: 16, color: "$bg", align: center}}
+
+  # ── ③ 输出层：平行四边形模块 ─────────────────────────────────────
+  - {elementId: outp, elementType: shape, kind: parallelogram, bounds: [770, 180, 150, 130], fill: "$accent", contains: [outp_lab]}
+  - {elementId: outp_lab, elementType: text, bounds: [782, 232, 126, 28], content: {text: "数据分析与输出模块", fontSize: 13, color: "$bg", align: center}}
+
+  # ── 连线：输入 → 干线 → 三个模块（一对多）─────────────────────────
+  # 干线无箭头（纯轴对齐，手工坐标正好落在输入右边缘中点与三个模块左边缘中点）
+  - elementId: tr_in
+    elementType: line
+    points: [[200, 245], [232, 245]]
+    arrow: false
+  - elementId: tr_v
+    elementType: line
+    points: [[232, 195], [232, 355]]
+    arrow: false
+  # 三条支线各自带箭头，长度 38px（≥18px ⇒ 不触发 arrow-end-short-run）
+  - elementId: br1
+    elementType: line
+    points: [[232, 195], [270, 195]]
+    arrow: true
+  - elementId: br2
+    elementType: line
+    points: [[232, 275], [270, 275]]
+    arrow: true
+  - elementId: br3
+    elementType: line
+    points: [[232, 355], [270, 355]]
+    arrow: true
+
+  # ── 连线：三个模块 → 汇流 → 输出（多对一）────────────────────────
+  - elementId: st1
+    elementType: line
+    points: [[700, 195], [740, 195]]
+    arrow: false
+  - elementId: st2
+    elementType: line
+    points: [[700, 275], [740, 275]]
+    arrow: false
+  - elementId: st3
+    elementType: line
+    points: [[700, 355], [740, 355]]
+    arrow: false
+  - elementId: col_v
+    elementType: line
+    points: [[740, 195], [740, 355]]
+    arrow: false
+  - elementId: out_arrow
+    elementType: line
+    points: [[740, 275], [790, 275]]
+    arrow: true
+
+  # ── 底部：迭代反馈虚线回路（输出 → 输入），标签压在线上并用底板遮住线 ──
+  - elementId: fb
+    elementType: line
+    points: [[855, 310], [855, 440], [125, 440], [125, 310]]
+    arrow: true
+    line: {color: "$text", width: 1.5, dash: dash}
+    attach: {from: {ref: outp, side: bottom}, to: {ref: inp, side: bottom}}
+  - {elementId: fb_mask, elementType: shape, kind: rect, bounds: [450, 428, 104, 24], fill: "$bg", role: decoration, roleReason: "标签底板：让虚线不穿过文字"}
+  - {elementId: fb_lab, elementType: text, bounds: [450, 431, 104, 20], content: {text: "迭代反馈", fontSize: 13, color: "$text", align: center}}

@@ -1,0 +1,698 @@
+{
+  "size": {
+    "width": 960,
+    "height": 540
+  },
+  "theme": {
+    "colors": {
+      "primary": "#B45309",
+      "accent": "#EA580C",
+      "soft": "#FEF3C7",
+      "text": "#431407",
+      "bg": "#FFFBEB"
+    },
+    "textStyles": {
+      "body": {
+        "fontSize": 14,
+        "color": "$text"
+      }
+    },
+    "grid": {
+      "base": 8
+    },
+    "safeArea": {
+      "top": 40,
+      "bottom": 40,
+      "left": 40,
+      "right": 40
+    },
+    "minFontSize": null,
+    "themeConformance": "strict"
+  },
+  "pages": [
+    {
+      "index": 0,
+      "pageNo": 1,
+      "file": "pages/01.yaml",
+      "name": "pages/01",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 40,
+        "bottom": 40,
+        "left": 40,
+        "right": 40
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [],
+      "elements": [
+        {
+          "id": "title",
+          "kind": "text",
+          "bounds": {
+            "x": 40,
+            "y": 48,
+            "w": 420,
+            "h": 28
+          },
+          "style": {
+            "fontSize": 20,
+            "color": "#431407",
+            "align": "left",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 120,
+            "textH": 24,
+            "lines": 1,
+            "lineWidths": [
+              120
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "仿真模型架构"
+        },
+        {
+          "id": "l1",
+          "kind": "text",
+          "bounds": {
+            "x": 56,
+            "y": 96,
+            "w": 160,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#431407",
+            "align": "left",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 56.7,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              51.1
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "① 输入层"
+        },
+        {
+          "id": "l2",
+          "kind": "text",
+          "bounds": {
+            "x": 380,
+            "y": 96,
+            "w": 220,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#431407",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 70.7,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              65.1
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "② 仿真内核"
+        },
+        {
+          "id": "l3",
+          "kind": "text",
+          "bounds": {
+            "x": 780,
+            "y": 96,
+            "w": 140,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#431407",
+            "align": "left",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 56.7,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              51.1
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "③ 输出层"
+        },
+        {
+          "id": "inp",
+          "kind": "shape",
+          "bounds": {
+            "x": 50,
+            "y": 180,
+            "w": 150,
+            "h": 130
+          },
+          "contains": [
+            "inp_lab"
+          ],
+          "shape": "parallelogram",
+          "fill": "#B45309",
+          "rotation": 0
+        },
+        {
+          "id": "inp_lab",
+          "kind": "text",
+          "bounds": {
+            "x": 62,
+            "y": 232,
+            "w": 126,
+            "h": 28
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#FFFBEB",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 84,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              84
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "数据输入模块"
+        },
+        {
+          "id": "core",
+          "kind": "shape",
+          "bounds": {
+            "x": 250,
+            "y": 140,
+            "w": 470,
+            "h": 300
+          },
+          "role": "decoration",
+          "contains": [
+            "m1",
+            "m1_lab",
+            "m2",
+            "m2_lab",
+            "m3",
+            "m3_lab"
+          ],
+          "roleReason": "内核底板：连线穿越属设计意图",
+          "shape": "roundRect",
+          "fill": "#FEF3C7",
+          "rotation": 0
+        },
+        {
+          "id": "m1",
+          "kind": "shape",
+          "bounds": {
+            "x": 270,
+            "y": 160,
+            "w": 430,
+            "h": 70
+          },
+          "contains": [
+            "m1_lab"
+          ],
+          "shape": "roundRect",
+          "fill": "#B45309",
+          "rotation": 0
+        },
+        {
+          "id": "m1_lab",
+          "kind": "text",
+          "bounds": {
+            "x": 280,
+            "y": 180,
+            "w": 410,
+            "h": 30
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#FFFBEB",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 96,
+            "textH": 19.2,
+            "lines": 1,
+            "lineWidths": [
+              96
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "车间生产模块"
+        },
+        {
+          "id": "m2",
+          "kind": "shape",
+          "bounds": {
+            "x": 270,
+            "y": 240,
+            "w": 430,
+            "h": 70
+          },
+          "contains": [
+            "m2_lab"
+          ],
+          "shape": "roundRect",
+          "fill": "#B45309",
+          "rotation": 0
+        },
+        {
+          "id": "m2_lab",
+          "kind": "text",
+          "bounds": {
+            "x": 280,
+            "y": 260,
+            "w": 410,
+            "h": 30
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#FFFBEB",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 96,
+            "textH": 19.2,
+            "lines": 1,
+            "lineWidths": [
+              96
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "负载评估模块"
+        },
+        {
+          "id": "m3",
+          "kind": "shape",
+          "bounds": {
+            "x": 270,
+            "y": 320,
+            "w": 430,
+            "h": 70
+          },
+          "contains": [
+            "m3_lab"
+          ],
+          "shape": "roundRect",
+          "fill": "#B45309",
+          "rotation": 0
+        },
+        {
+          "id": "m3_lab",
+          "kind": "text",
+          "bounds": {
+            "x": 280,
+            "y": 340,
+            "w": 410,
+            "h": 30
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#FFFBEB",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 128,
+            "textH": 19.2,
+            "lines": 1,
+            "lineWidths": [
+              128
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "生产计划跟踪模块"
+        },
+        {
+          "id": "outp",
+          "kind": "shape",
+          "bounds": {
+            "x": 770,
+            "y": 180,
+            "w": 150,
+            "h": 130
+          },
+          "contains": [
+            "outp_lab"
+          ],
+          "shape": "parallelogram",
+          "fill": "#EA580C",
+          "rotation": 0
+        },
+        {
+          "id": "outp_lab",
+          "kind": "text",
+          "bounds": {
+            "x": 782,
+            "y": 232,
+            "w": 126,
+            "h": 28
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFBEB",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 117,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              117
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "数据分析与输出模块"
+        },
+        {
+          "id": "tr_in",
+          "kind": "line",
+          "bounds": {
+            "x": 200,
+            "y": 245,
+            "w": 32,
+            "h": 1
+          },
+          "points": [
+            [
+              200,
+              245
+            ],
+            [
+              232,
+              245
+            ]
+          ]
+        },
+        {
+          "id": "tr_v",
+          "kind": "line",
+          "bounds": {
+            "x": 232,
+            "y": 195,
+            "w": 1,
+            "h": 160
+          },
+          "points": [
+            [
+              232,
+              195
+            ],
+            [
+              232,
+              355
+            ]
+          ]
+        },
+        {
+          "id": "br1",
+          "kind": "line",
+          "bounds": {
+            "x": 232,
+            "y": 195,
+            "w": 38,
+            "h": 1
+          },
+          "arrow": true,
+          "points": [
+            [
+              232,
+              195
+            ],
+            [
+              270,
+              195
+            ]
+          ]
+        },
+        {
+          "id": "br2",
+          "kind": "line",
+          "bounds": {
+            "x": 232,
+            "y": 275,
+            "w": 38,
+            "h": 1
+          },
+          "arrow": true,
+          "points": [
+            [
+              232,
+              275
+            ],
+            [
+              270,
+              275
+            ]
+          ]
+        },
+        {
+          "id": "br3",
+          "kind": "line",
+          "bounds": {
+            "x": 232,
+            "y": 355,
+            "w": 38,
+            "h": 1
+          },
+          "arrow": true,
+          "points": [
+            [
+              232,
+              355
+            ],
+            [
+              270,
+              355
+            ]
+          ]
+        },
+        {
+          "id": "st1",
+          "kind": "line",
+          "bounds": {
+            "x": 700,
+            "y": 195,
+            "w": 40,
+            "h": 1
+          },
+          "points": [
+            [
+              700,
+              195
+            ],
+            [
+              740,
+              195
+            ]
+          ]
+        },
+        {
+          "id": "st2",
+          "kind": "line",
+          "bounds": {
+            "x": 700,
+            "y": 275,
+            "w": 40,
+            "h": 1
+          },
+          "points": [
+            [
+              700,
+              275
+            ],
+            [
+              740,
+              275
+            ]
+          ]
+        },
+        {
+          "id": "st3",
+          "kind": "line",
+          "bounds": {
+            "x": 700,
+            "y": 355,
+            "w": 40,
+            "h": 1
+          },
+          "points": [
+            [
+              700,
+              355
+            ],
+            [
+              740,
+              355
+            ]
+          ]
+        },
+        {
+          "id": "col_v",
+          "kind": "line",
+          "bounds": {
+            "x": 740,
+            "y": 195,
+            "w": 1,
+            "h": 160
+          },
+          "points": [
+            [
+              740,
+              195
+            ],
+            [
+              740,
+              355
+            ]
+          ]
+        },
+        {
+          "id": "out_arrow",
+          "kind": "line",
+          "bounds": {
+            "x": 740,
+            "y": 275,
+            "w": 50,
+            "h": 1
+          },
+          "arrow": true,
+          "points": [
+            [
+              740,
+              275
+            ],
+            [
+              790,
+              275
+            ]
+          ]
+        },
+        {
+          "id": "fb",
+          "kind": "line",
+          "bounds": {
+            "x": 125,
+            "y": 310,
+            "w": 730,
+            "h": 130
+          },
+          "attach": {
+            "from": {
+              "ref": "outp",
+              "side": "bottom"
+            },
+            "to": {
+              "ref": "inp",
+              "side": "bottom"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              855,
+              310
+            ],
+            [
+              855,
+              440
+            ],
+            [
+              125,
+              440
+            ],
+            [
+              125,
+              310
+            ]
+          ]
+        },
+        {
+          "id": "fb_mask",
+          "kind": "shape",
+          "bounds": {
+            "x": 450,
+            "y": 428,
+            "w": 104,
+            "h": 24
+          },
+          "role": "decoration",
+          "roleReason": "标签底板：让虚线不穿过文字",
+          "shape": "rect",
+          "fill": "#FFFBEB",
+          "rotation": 0
+        },
+        {
+          "id": "fb_lab",
+          "kind": "text",
+          "bounds": {
+            "x": 450,
+            "y": 431,
+            "w": 104,
+            "h": 20
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#431407",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "迭代反馈"
+        }
+      ]
+    }
+  ]
+}
