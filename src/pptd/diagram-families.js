@@ -813,9 +813,9 @@ function layoutState({ d, box, style, id, notes }) {
     if (!byLayer.has(l)) byLayer.set(l, [])
     byLayer.get(l).push(n.id)
   }
-  // 列间距按"是否有边标签"预留：标签空间要在**布局阶段**给出来，而不是靠"绕总线"换空间
-  //（用户实测附图 2：带标签的相邻层边被迫下总线，绕出一个细长空回环）。
-  const gap = edges.some((e) => e.label) ? Math.max(style.gap, 96) : style.gap
+  // 列间距按"是否有边标签"预留：**要能放下一个标签**（实测 96px 时，入口横段只有 ~57px 长，
+  // 标签放不下 ⇒ 回退到"竖管中段"⇒ 标签落在两条横线中间，用户读作"离线太远、太高"）。
+  const gap = edges.some((e) => e.label) ? Math.max(style.gap, 150) : style.gap
   const colW = (box.w - gap * maxLayer) / (maxLayer + 1)
   const nodeW = Math.max(56, Math.min(colW * 0.8, 180))
   const rowMax = Math.max(...[...byLayer.values()].map((v) => v.length), 1)
@@ -862,14 +862,17 @@ function layoutState({ d, box, style, id, notes }) {
   }
   const ptsDist = (c, pts) => Math.min(...pts.slice(0, -1).map((p, i) => segDist(c, p, pts[i + 1])))
   /** 沿线滑动找标签位：从**箭头端往回**扫；夹在画布内；不压线不压字；且**离自己的线最近**；全不行返回 null。 */
-  const placeEdgeLabel = (ownPts, w = 100, h = 18) => {
+  const placeEdgeLabel = (ownPts, w = 84, h = 18) => {
     const seeds = []
     for (let i = ownPts.length - 2; i >= 0; i--) {
       const p = ownPts[i]; const q = ownPts[i + 1]
       const mx = (p[0] + q[0]) / 2; const my = (p[1] + q[1]) / 2
       if (Math.abs(q[1] - p[1]) < 1) {
-        seeds.push({ x: Math.round(mx - w / 2), y: Math.round(my - 26), w, h })
-        seeds.push({ x: Math.round(mx - w / 2), y: Math.round(my + 8), w, h })
+        // 横段：**贴着线**放（上下各 6px 视觉间隙）。
+        // 教训：原来取 w=100、间隙 26px ⇒ 100px 宽放不进 96px 的列间距 ⇒ 横段候选全被否
+        // ⇒ 回退到"竖管中段"候选，标签落到两条横线**中间**，用户读作"离线太远/太高"。
+        seeds.push({ x: Math.round(mx - w / 2), y: Math.round(my - h - 6), w, h })
+        seeds.push({ x: Math.round(mx - w / 2), y: Math.round(my + 6), w, h })
       } else {
         seeds.push({ x: Math.round(mx + 8), y: Math.round(my - h / 2), w, h })
         seeds.push({ x: Math.round(mx - w - 8), y: Math.round(my - h / 2), w, h })
@@ -958,12 +961,17 @@ function layoutState({ d, box, style, id, notes }) {
   // 这样"离自己的线最近"这条判据才真正有约束力（第一遍时后放的线还看不见，实测导致标签互换）。
   for (const { e, pts } of edgeRoutes) {
     if (!e.label) continue
-    const tbox = placeEdgeLabel(pts)
+    // **框紧贴文字**（用户建议，steps 族已这么做、边标签漏了）：固定 84/100px 宽的框是"离线太远"的根源——
+    // 两个字只需要 ~30px，而宽框在列间距里放不下 ⇒ 被否 ⇒ 回退到"竖管中段"（落在两条横线中间，显得太高）。
+    const txt = String(e.label)
+    const cjkN = (txt.match(/[\u3000-\u9fff\uff00-\uffef]/g) ?? []).length
+    const tw = Math.min(140, Math.max(24, Math.round(cjkN * style.fontSize + (txt.length - cjkN) * style.fontSize * 0.55) + 10))
+    const tbox = placeEdgeLabel(pts, tw)
     if (!tbox) {
       notes.push(`state：边 "${e.from} → ${e.to}" 的标签沿线都放不下（压线/压字/离自己的线更远）⇒ 已省略标签`)
       continue
     }
-    elements.push(makeText(style, id, { id: `lbl_${e.from}_${e.to}`, x: tbox.x, y: tbox.y, w: tbox.w, text: String(e.label), align: 'center' }))
+    elements.push(makeText(style, id, { id: `lbl_${e.from}_${e.to}`, x: tbox.x, y: tbox.y, w: tbox.w, text: txt, align: 'center' }))
   }
   if (d.title) elements.unshift(makeText(style, id, { id: 'stt_title', x: box.x, y: box.y, w: box.w, text: String(d.title), sizeFactor: 1.05 }))
   return { elements, groups: [], pos }
