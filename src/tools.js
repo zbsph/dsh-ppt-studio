@@ -468,9 +468,27 @@ export function registerTools(ctx) {
   reg({
     name: 'ppt_render',
     description: '渲染 deck 项目 → preview/*.html 与 layout.json（数字审阅的数据源）。每页制作后运行',
-    parameters: { dir: dirSchema, debug: { type: 'boolean', description: '文本框描边调试（默认 false）' } },
+    parameters: { dir: dirSchema, debug: { type: 'boolean', description: '文本框描边调试（默认 false）' }, group: { type: 'string', description: '只对某个**组合**出隔离裁剪图（组 id，见 layout.json 或页面 YAML 的 groups）：渲染到 <dir>/.group-render/isolated/preview。整页缩略图会掩盖"线落边/压字/留白"这类小尺寸缺陷，审阅组内细节时用它；省略则渲染整册' }, page: { type: 'number', description: '配合 group：组所在页码（1 起，缺省 1）' } },
     output: markdownResult(),
-    async execute({ dir, debug }) {
+    async execute({ dir, debug, group, page }) {
+      if (group) {
+        // 组级裁剪渲染（C2）：与 CLI `npm run render:group` **共用同一套取景规则**（src/group-render.js）
+        const { renderGroupIsolated } = await import('./group-render.js')
+        try {
+          const r = await renderGroupIsolated(dir, { page: page ?? 1, group })
+          return [
+            `✓ 组级隔离渲染完成：组 ${r.groupId}${r.label ? `（${r.label}）` : ''}｜取景 ${r.members.length} 个元素｜bbox ${Math.round(r.bbox.x)},${Math.round(r.bbox.y)} ${Math.round(r.bbox.w)}×${Math.round(r.bbox.h)}（含 pad）`,
+            '',
+            `**这是第 ${page ?? 1} 页某个组合的局部图，不是整页**（整页缩略图会掩盖线落边/压字/留白这类小尺寸缺陷）。`,
+            '',
+            ...r.htmlFiles.map((f) => `  - ${f}`),
+            '',
+            '下一步：read_image 导出的 PNG，或指向该隔离目录做截图复核组内细节。',
+          ].join('\n')
+        } catch (error) {
+          return `✗ 组级隔离渲染失败：\n${errText(error)}`
+        }
+      }
       try {
         const ctx0 = await loadCtx(dir)
         const r = await renderDeck(ctx0, { debug: !!debug })
