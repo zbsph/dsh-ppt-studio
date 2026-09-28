@@ -76,7 +76,11 @@ export function contains(a, b, pad = RELATION_DEFAULTS.pad) {
  */
 export function slantRect(ref, side, pt) {
   const b = ref?.bounds
-  if (!b || ref?.kind !== 'parallelogram') return null
+  // **两种命名都要认**（本会话第三次踩同类坑）：
+  //  · DSL 原文：kind = 'parallelogram'；
+  //  · preview/layout 快照：kind = 'shape'，真实预设几何在 **shape** 字段里（'parallelogram'）。
+  const prst = ref?.shape ?? ref?.kind
+  if (!b || prst !== 'parallelogram') return null
   const w = Array.isArray(b) ? b[2] : b.w
   const h = Array.isArray(b) ? b[3] : b.h
   // 必须带上 right/bottom —— onSide 用它们做区间判定（漏了会一律判 false，实测踩过）
@@ -91,6 +95,17 @@ export function slantRect(ref, side, pt) {
   if (side === 'top') return { ...r, x: r.x + off, w: r.w - off } // top 用 x..right 判横向范围
   if (side === 'bottom') return { ...r, right: r.right - off } // bottom 用 x..right 判横向范围
   return null
+}
+
+/**
+ * attach 判定的**统一入口**：先按包围盒边判，再按斜边预设的**真实轮廓**判。
+ * 必须三处共用（否则会出现"解析对了、校验却报 attach 不成立"的自相矛盾，实测踩过）：
+ *  · `relations.js` 的 deriveRelations 反验证；· `export-pptx.js` 的 parity attach 计数；· 将来新增的判定。
+ */
+export function onAttachSide(ref, side, pt, tol = RELATION_DEFAULTS.tol) {
+  if (onSide(side, pt, rectOf(ref), tol)) return true
+  const sr = slantRect(ref, side, pt)
+  return sr ? onSide(side, pt, sr, tol) : false
 }
 
 /** 点是否落在 rect 的某条边上（容差 tol）——用于 attach 判定。 */
@@ -239,10 +254,8 @@ export function deriveRelations(page, opts = {}) {
       const ref = els.get(String(spec.ref))
       if (!ref) { invalid.push({ type: 'attach', from: id, to: String(spec.ref), why: `${end} 端引用的元素不存在` }); continue }
       if (!Array.isArray(pt)) { invalid.push({ type: 'attach', from: id, to: String(spec.ref), why: `${end} 端缺少坐标（points 至少 2 点）` }); continue }
-      // 斜边预设（平行四边形）的"边"不在包围盒上 ⇒ 反验证也要按**真实轮廓**判定，
-      // 否则引擎把锚点正确解析到斜边上、这里却报"attach 声明不成立"（实测）。
-      const ok = onSide(String(spec.side), pt, rectOf(ref), t.tol)
-        || (slantRect(ref, String(spec.side), pt) ? onSide(String(spec.side), pt, slantRect(ref, String(spec.side), pt), t.tol) : false)
+      // 统一入口（认包围盒边 + 斜边真实轮廓）——不再各处自己拼判定
+      const ok = onAttachSide(ref, String(spec.side), pt, t.tol)
       relations.push({ type: 'attach', from: id, to: String(spec.ref), end, valid: ok, evidence: { side: spec.side, point: pt, tol: t.tol } })
       if (!ok) invalid.push({ type: 'attach', from: id, to: String(spec.ref), why: `${end} 端点未落在 ${spec.ref} 的 ${spec.side} 边（tol=${t.tol}）` })
     }
