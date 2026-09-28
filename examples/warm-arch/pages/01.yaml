@@ -28,9 +28,12 @@ elements:
 
   # ── 连线：输入 → 干线 → 三个模块（一对多）─────────────────────────
   # 干线无箭头（纯轴对齐，手工坐标正好落在输入右边缘中点与三个模块左边缘中点）
+  # 注意：平行四边形是**斜边**——连线要接在"该 y 上的真实边缘"上，不能按包围盒边取点。
+  # 本图 offset = 0.25×min(w,h) = 32.5px：左边缘 x(y) = bx + off×(1-(y-by)/h)，右边缘 x(y) = bx + w - off×(1-(y-by)/h)。
+  # y=245（中点）时输入层右边缘 = 50+150-16.25 = 183.75 ⇒ 从 184 起画；输出层 y=275 时左边缘 = 770+8.75 = 778.75 ⇒ 打到 778。
   - elementId: tr_in
     elementType: line
-    points: [[200, 245], [232, 245]]
+    points: [[184, 245], [232, 245]]
     arrow: false
   - elementId: tr_v
     elementType: line
@@ -69,7 +72,7 @@ elements:
     arrow: false
   - elementId: out_arrow
     elementType: line
-    points: [[740, 275], [790, 275]]
+    points: [[740, 275], [778, 275]]
     arrow: true
 
   # ── 底部：迭代反馈虚线回路（输出 → 输入），标签压在线上并用底板遮住线 ──
