@@ -919,16 +919,41 @@ function layoutState({ d, box, style, id, notes }) {
   }
   const edgeRoutes = [] // 第一遍只放线并把路由记下来；标签统一在**第二遍**放
   const maxBottom = Math.max(...[...pos.values()].map((r) => r.y + r.h))
-  // 总线**恒在所有节点下方**（第一版取 max(…, 0.78×高)：某列较高时总线落进节点区 ⇒ 横段穿盒）
-  let bus = maxBottom + 16
+  // ── B1/B2：**逐边走廊 + 占用惩罚**（替代"同层共用一根竖管 + 全局总线"）─────────────
+  // 病因（用户实测）：所有回边共用同一个 `bus` y、同一层的边共用同一个走廊 x ⇒ 线与线重合、
+  // T 型分叉、相互交叉。现在每条边自己选走廊坐标与车道，**优先选没人用过的**（占用 ×100 惩罚），
+  // 理想位置两侧按 6px/20px 试探 —— 这是"走廊占用惩罚"的可用版（不做跳线小圆弧，按 D3 决定）。
+  const laneBase = maxBottom + 16
   const labeled = edges.some((e) => e.label)
   const busStep = labeled ? 20 : 8 // 有标签时留出标签高度，避免边标签互相压字（content-collision 不可声明）
+  const usedLane = new Map()
+  const usedCorr = new Map()
+  const pickCorridor = (ideal) => {
+    const cands = [ideal]
+    for (let k = 1; k <= 4; k++) cands.push(ideal + k * 6, ideal - k * 6)
+    let best = cands[0]
+    let bestCost = Infinity
+    for (const c of cands) {
+      const cost = (usedCorr.get(Math.round(c)) ?? 0) * 100 + Math.abs(c - ideal)
+      if (cost < bestCost) { bestCost = cost; best = c }
+    }
+    const key = Math.round(best)
+    usedCorr.set(key, (usedCorr.get(key) ?? 0) + 1)
+    return key
+  }
+  const pickLane = () => {
+    for (let k = 0; k < 8; k++) {
+      const y = laneBase + k * busStep
+      if (!usedLane.get(y)) { usedLane.set(y, 1); return y }
+    }
+    return laneBase + 8 * busStep
+  }
   let ei = 0
   for (const e of edges) {
     const A = pos.get(e.from)
     const B = pos.get(e.to)
     if (!A || !B) { notes.push(`state：转移 ${e.from}→${e.to} 的端点状态不存在 ⇒ 已跳过`); continue }
-    if (bus + 6 > box.y + box.h) { notes.push(`state：转移总线放不下（画布高度不足）⇒ 转移 ${e.from}→${e.to} 已省略；建议放大 bounds 或减少状态`); continue }
+    if (laneBase + busStep * 8 + 6 > box.y + box.h) { notes.push(`state：转移车道放不下（画布高度不足）⇒ 转移 ${e.from}→${e.to} 已省略；建议放大 bounds 或减少状态`); continue }
     const ax = A.x + A.w / 2
     const bx = B.x + B.w / 2
     void ax; void bx
@@ -945,7 +970,7 @@ function layoutState({ d, box, style, id, notes }) {
     // 相邻层**一律直连**（含带标签的边）：布局已为标签预留列间距 ⇒ 不再需要"绕总线换空间"。
     // 第一版把带标签的相邻层边也塞进总线，于是出现细长空回环（用户实测附图 2）。
     if (lB === lA + 1) {
-      const midX = A.x + A.w + Math.max(6, gap / 2)
+      const midX = pickCorridor(A.x + A.w + Math.max(6, gap / 2)) // 逐边走廊：相邻层直连也各自占一条 x
       const lcy = Math.round((A.y + A.h / 2 + B.y + B.h / 2) / 2)
       // 首选：竖管右侧、**线之上 28px**（天然不压自己的线）；再交给避让挑不撞的备选
       const _pts = [[R(A.x + A.w), R(A.y + A.h / 2)], [R(midX), R(A.y + A.h / 2)], [R(midX), R(B.y + B.h / 2)], [R(B.x), R(B.y + B.h / 2)]]
@@ -964,15 +989,16 @@ function layoutState({ d, box, style, id, notes }) {
     const corB = sideB === 'left' ? B.x - g4 : B.x + B.w + g4
     const ptB = sideB === 'left' ? [B.x, B.y + B.h / 2] : [B.x + B.w, B.y + B.h / 2]
     const ptA = sideOf(A, lA) === 'right' ? [A.x + A.w, A.y + A.h / 2] : [A.x, A.y + A.h / 2]
-    const busPts = [ptA, [corOf(A, lA), A.y + A.h / 2], [corOf(A, lA), bus], [corB, bus], [corB, B.y + B.h / 2], ptB]
-    edgeRoutes.push({ e, pts: busPts, preferSeg: 2 }) // 2 = 总线那段（长横线）：回边的视觉主体
+    const riserA = pickCorridor(corOf(A, lA)) // 逐边走廊（占用惩罚：优先走没人用过的 x）
+    const busY = pickLane() // 逐边车道（优先走最浅的没被占用的 y ⇒ 回环更短）
+    const busPts = [ptA, [riserA, A.y + A.h / 2], [riserA, busY], [corB, busY], [corB, B.y + B.h / 2], ptB]
+    edgeRoutes.push({ e, pts: busPts, preferSeg: 2 }) // 2 = 车道那段（长横线）：回边的视觉主体
     elements.push(...makeEdge(style, id, {
       id: `e${ei++}`,
       points: busPts,
       from: { ref: id(e.from), side: sideOf(A, lA) }, to: { ref: id(e.to), side: sideB },
       dashed: e.style === 'dashed',
     }))
-    bus += busStep
   }
 
   // ── 第二遍：**所有线都就位之后**再放边标签 ───────────────────────────────
