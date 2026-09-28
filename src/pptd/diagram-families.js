@@ -646,20 +646,26 @@ function layoutSteps({ d, box, style, id, notes }) {
   nodes.forEach((nd, i) => {
     const a = -Math.PI / 2 + (2 * Math.PI * i) / n
     for (let k = 0; k < 1; k++) {
-      // 关键修正（用户实测：2 与 5 的标签一直被吞）：标签框不能"以半径上的点为**中心**"，
-      // 否则 90px 宽会**向内**探到圆点上（2/5 恰在水平方向，向内探得最多）⇒ 被判冲突而省略。
-      // 现在按方向补偿半个宽/高，让标签框的**内缘**正好落在 labelR 上 —— 框只会向外扩，不再碰圆点。
-      const labelR = Rr + 40
-      const off = Math.abs(Math.cos(a)) * 45 + Math.abs(Math.sin(a)) * 9
-      const lr = labelR + off
+      // 标签框**紧贴文字**（宽度 = 实测文字宽 + 8），并让**框的内缘**离圆点边固定 12px。
+      // 教训（用户两轮实测）：① 框不能以半径上的点为中心——90px 宽会向内探到圆点上（2/5 在水平方向最严重）⇒ 被省；
+      // ② 框也别做太宽——文字在宽框里居中，视觉位置又被推到外面 ⇒ "离圆圈太远"。
+      // 现在"距离"由常量 gap 决定：内缘 = 圆点边 + 12px，且框随文字收窄 ⇒ 远近一致、不再靠事后目检。
+      // 注意：本文件没有模块级 measure()（那只是 wrapLabel 的参数）——用确定性字宽估算：
+      // CJK 按等宽、拉丁按 0.55 倍。估偏大一点无害（框更宽松），估偏小会被压字检查抓出来。
+      const txt = String(nd.label ?? '')
+      const cjkN = (txt.match(/[\u3000-\u9fff\uff00-\uffef]/g) ?? []).length
+      const tw = Math.min(150, Math.max(24, Math.round(cjkN * style.fontSize + (txt.length - cjkN) * style.fontSize * 0.55) + 8))
+      const th = 18
+      const halfExtent = Math.abs(Math.cos(a)) * (tw / 2) + Math.abs(Math.sin(a)) * (th / 2)
+      const innerR = Rr + badge / 2 + 12
       const cand = {
-        x: Math.max(box.x, Math.min(cx + lr * Math.cos(a) - 45, box.x + box.w - 90)),
-        y: Math.max(box.y, Math.min(cy + lr * Math.sin(a) - 9, box.y + box.h - 18)),
-        w: 90, h: 18,
+        x: Math.max(box.x, Math.min(cx + (innerR + halfExtent) * Math.cos(a) - tw / 2, box.x + box.w - tw)),
+        y: Math.max(box.y, Math.min(cy + (innerR + halfExtent) * Math.sin(a) - th / 2, box.y + box.h - th)),
+        w: tw, h: th,
       }
       const clash = taken.some((r) => cand.x < r.x + r.w && r.x < cand.x + cand.w && cand.y < r.y + r.h && r.y < cand.y + cand.h)
       if (clash) { notes.push(`steps：步骤 "${nd.id}" 的标签与其它文字冲突 ⇒ 已省略（压字是内容互压，永不可声明）`); return }
-      elements.push(makeText(style, id, { id: `t_${nd.id}`, x: cand.x, y: cand.y, w: 90, text: nd.label ?? '', align: 'center' }))
+      elements.push(makeText(style, id, { id: `t_${nd.id}`, x: cand.x, y: cand.y, w: cand.w, text: nd.label ?? '', align: 'center' }))
       taken.push(cand)
       return
     }
