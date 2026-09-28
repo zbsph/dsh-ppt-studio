@@ -19,10 +19,10 @@ import { FAMILIES, boxOf, makeContainer, makeText, makeEdge } from './diagram-fa
 /** 已实现图族与成熟度（阶段 C 分批扩充；未列出的 type 一律优雅降级）。 */
 export const DIAGRAM_TYPES = {
   // maturity 升级判据（docs/13 §2）：**连续两轮真渲染无问题**才升 stable。
-  // 2026-09-28：flow + 10 个族库族（tree/matrix/timeline/swimlane/compare/cycle/funnel/steps/sequence/state）两轮均 0 错误 ⇒ stable；
-  // layers 只有第 2 轮干净（第 1 轮暴露了 5 层缺陷）⇒ 保持 beta，下一轮复核后再升。
+  // 2026-09-28：flow + 10 个族库族两轮均 0 错误 ⇒ stable。
+  // 2026-09-29：layers 也升 stable —— 第 2 轮（修完 5 层缺陷后）与 A/B 系列改动后的复跑均 0 错误 0 警告，满足 DoD。
   flow: 'stable',
-  layers: 'beta',
+  layers: 'stable',
   ...Object.fromEntries(Object.entries(FAMILIES).map(([k, v]) => [k, v.maturity])),
 }
 

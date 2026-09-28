@@ -238,9 +238,8 @@ H('5. 图族库：三族的不变量与真实门禁')
   const declAll = ctx.pages.reduce((n, p) => n + (p.page.expectedOverlaps ?? []).length + (p.page.expectedOutOfSafeArea ?? []).length, 0)
   ok('**三族一起过真实门禁：0 错误，且三页合计零声明**（不靠声明掩盖几何问题）',
     v.errors.length === 0 && declAll === 0, `错误 ${v.errors.length}｜声明 ${declAll}｜${v.errors.slice(0, 4).map((e) => `${e.code}:${e.id}`).join(' | ')}`)
-  ok('族清单与成熟度按 DoD 分级（连续两轮真渲染无问题 → stable；layers 仅一轮 → beta）',
-    ['tree', 'matrix', 'timeline', 'swimlane', 'compare', 'cycle', 'funnel', 'steps', 'sequence', 'state'].every((k) => DIAGRAM_TYPES[k] === 'stable')
-    && DIAGRAM_TYPES.flow === 'stable' && DIAGRAM_TYPES.layers === 'beta'
+  ok('族清单与成熟度按 DoD 分级：**12 族全部 stable**（连续两轮真渲染无问题）',
+    ['tree', 'matrix', 'timeline', 'swimlane', 'compare', 'cycle', 'funnel', 'steps', 'sequence', 'state', 'flow', 'layers'].every((k) => DIAGRAM_TYPES[k] === 'stable')
     && Object.values(DIAGRAM_TYPES).every((m) => ['beta', 'stable'].includes(m)), JSON.stringify(DIAGRAM_TYPES))
   rmSync(dir, { recursive: true, force: true })
 }
