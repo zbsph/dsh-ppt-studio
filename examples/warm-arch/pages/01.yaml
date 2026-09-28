@@ -75,9 +75,9 @@ elements:
   # ── 底部：迭代反馈虚线回路（输出 → 输入），标签压在线上并用底板遮住线 ──
   - elementId: fb
     elementType: line
-    points: [[855, 310], [855, 440], [125, 440], [125, 310]]
+    points: [[855, 310], [855, 470], [125, 470], [125, 310]]
     arrow: true
     line: {color: "$text", width: 1.5, dash: dash}
     attach: {from: {ref: outp, side: bottom}, to: {ref: inp, side: bottom}}
-  - {elementId: fb_mask, elementType: shape, kind: rect, bounds: [450, 428, 104, 24], fill: "$bg", role: decoration, roleReason: "标签底板：让虚线不穿过文字"}
-  - {elementId: fb_lab, elementType: text, bounds: [450, 431, 104, 20], content: {text: "迭代反馈", fontSize: 13, color: "$text", align: center}}
+  - {elementId: fb_mask, elementType: shape, kind: rect, bounds: [450, 458, 104, 24], fill: "$bg", role: decoration, roleReason: "标签底板：让虚线不穿过文字"}
+  - {elementId: fb_lab, elementType: text, bounds: [450, 461, 104, 20], content: {text: "迭代反馈", fontSize: 13, color: "$text", align: center}}
