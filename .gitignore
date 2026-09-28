@@ -43,3 +43,7 @@ examples/**/.tmp-*/
 # smoke 造的临时模板（同上：正常会自清，崩过就留下；名字都带 smoke- 前缀）
 templates/smoke-*/
 
+
+# 范例的运行产物（源码与渲染证据仍跟踪）
+examples/warm-arch/preview/
+examples/warm-arch/*.pptx
