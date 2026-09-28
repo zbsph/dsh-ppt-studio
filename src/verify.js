@@ -22,6 +22,7 @@
 // 阶段 A（docs/08 §5）：结构关系（推导 + 几何反验证）。注意方向是 verify → relations，不反向
 // （relations.js 不依赖 verify），因此不存在循环依赖。
 import { deriveRelations, checkDiagram, summaryLine, usesStructure } from './pptd/relations.js'
+import { checkLineRules } from './pptd/line-rules.js'
 
 const TOL = 1 // px
 
@@ -286,6 +287,8 @@ export function analyzePage(page, size) {
     // 结构关系豁免的对数（供报告"结构关系"行使用）
     findings.structureStats = { ...rel.stats, usedStructure: true }
   }
+  // 折线绘制规则（阶段 A1，泛用性优先）：对**所有**页面生效（含手写自由发挥）——只警告，不改判定
+  for (const w of checkLineRules(els)) findings.push({ severity: 'warning', code: w.code, message: w.message })
   const outOfSafe = new Set(page.expectedOutOfSafeArea ?? []) // 出界分级声明制（C3 修订）
   const lenient = page.overlapMode === 'lenient'
   const pairKey = (a, b) => [a, b].sort().join(' × ')
