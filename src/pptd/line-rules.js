@@ -20,6 +20,7 @@ const r1 = (n) => Math.round(n * 10) / 10
 
 export function checkLineRules(els) {
   const out = []
+  const lines = [] // 供第二阶段的"线×线/线×边框"两两比较
   for (const el of els ?? []) {
     // 两条路径的字段名不同：**DSL 原文**用 elementType，**preview 快照**用 kind（实测踩过：
     // 只判 elementType 时快照路径一条都不报）。几何用 points（快照里也保留）。
@@ -28,6 +29,7 @@ export function checkLineRules(els) {
     const pts = el.points
     if (!Array.isArray(pts) || pts.length < 2) continue
     const id = el.elementId ?? el.id ?? '?'
+    lines.push({ id, pts, deliberate: el.role === 'decoration' || Boolean(el.roleReason) })
     const deliberate = el.role === 'decoration' || Boolean(el.roleReason) // 显式声明"斜线是设计意图"
 
     // ① 斜段（只报第一条，避免刷屏）
@@ -60,5 +62,53 @@ export function checkLineRules(els) {
       }
     }
   }
+  // ── ③ 共线重叠：用户裁定的"真缺陷"判据 ──────────────────────────────────
+  // 两条线走在**同一条直线上且部分重合**（只共用一个点不算——树状干线是标准画法，读者能分清方向）。
+  const segsOf = (l) => l.pts.slice(0, -1).map((p, i) => ({ p, q: l.pts[i + 1] }))
+  const overlap1D = (a1, a2, b1, b2) => Math.min(Math.max(a1, a2), Math.max(b1, b2)) - Math.max(Math.min(a1, a2), Math.min(b1, b2))
+  for (let a = 0; a < lines.length; a++) {
+    for (let b = a + 1; b < lines.length; b++) {
+      const la = lines[a]; const lb = lines[b]
+      if (la.deliberate && lb.deliberate) continue
+      // **共用端点的"扇出/汇入"豁免**（用户裁定）：两条边从同一个锚点出发（或汇入同一个锚点）、
+      // 随后分开 ⇒ 这是标准树状干线画法，读者能分清方向；只有"互不相关的两条线走成一条"才是缺陷。
+      const near = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]) <= 1
+      const endsA = [la.pts[0], la.pts[la.pts.length - 1]]
+      const endsB = [lb.pts[0], lb.pts[lb.pts.length - 1]]
+      if (endsA.some((x) => endsB.some((y) => near(x, y)))) continue
+      let hit = false
+      for (const sa of segsOf(la)) {
+        for (const sb of segsOf(lb)) {
+          const ah = Math.abs(sa.p[1] - sa.q[1]) < 0.5; const bh = Math.abs(sb.p[1] - sb.q[1]) < 0.5
+          if (ah && bh && Math.abs(sa.p[1] - sb.p[1]) < 0.5 && overlap1D(sa.p[0], sa.q[0], sb.p[0], sb.q[0]) > 2) hit = true
+          const av = Math.abs(sa.p[0] - sa.q[0]) < 0.5; const bv = Math.abs(sb.p[0] - sb.q[0]) < 0.5
+          if (av && bv && Math.abs(sa.p[0] - sb.p[0]) < 0.5 && overlap1D(sa.p[1], sa.q[1], sb.p[1], sb.q[1]) > 2) hit = true
+        }
+      }
+      if (hit) out.push({ code: 'line-collinear-overlap', message: `${la.id} 与 ${lb.id} 存在**共线重叠**的线段（两条线走在同一条直线上且部分重合）⇒ 读者分不清哪条是哪条；请错开走廊，或改成"共用一个点后分开"的**树状干线**（只共点、不共线，是标准画法）` })
+    }
+  }
+
+  // ── ④ 线压在盒子边框上（图 4 那类缺陷的机械判据）────────────────────────
+  const boxes = (els ?? []).filter((e) => e && Array.isArray(e.bounds)
+    && (e.elementType === 'shape' || e.elementType === 'image' || e.elementType === 'table' || (e.kind && e.kind !== 'line')))
+    .map((e) => ({ id: e.elementId ?? e.id ?? '?', b: { x: e.bounds[0], y: e.bounds[1], w: e.bounds[2], h: e.bounds[3] } }))
+  for (const l of lines) {
+    if (l.deliberate) continue
+    let hitId = null
+    for (const s of segsOf(l)) {
+      for (const { id: bid, b } of boxes) {
+        const edges = [[b.x, b.y, b.x + b.w, b.y], [b.x, b.y + b.h, b.x + b.w, b.y + b.h], [b.x, b.y, b.x, b.y + b.h], [b.x + b.w, b.y, b.x + b.w, b.y + b.h]]
+        for (const [x1, y1, x2, y2] of edges) {
+          const eh = Math.abs(y1 - y2) < 0.5; const sh = Math.abs(s.p[1] - s.q[1]) < 0.5
+          if (eh && sh && Math.abs(s.p[1] - y1) <= 1.5 && overlap1D(s.p[0], s.q[0], x1, x2) > 8) hitId = bid
+          const ev = Math.abs(x1 - x2) < 0.5; const sv = Math.abs(s.p[0] - s.q[0]) < 0.5
+          if (ev && sv && Math.abs(s.p[0] - x1) <= 1.5 && overlap1D(s.p[1], s.q[1], y1, y2) > 8) hitId = bid
+        }
+      }
+    }
+    if (hitId) out.push({ code: 'line-on-box-edge', message: `${l.id} 有一段**压在 "${hitId}" 的边框上**（线与框重合 ⇒ 分不清线与边界）—— 把这段挪开 ≥8px，或让该盒子这条边不可见` })
+  }
+
   return out
 }

@@ -927,20 +927,6 @@ function layoutState({ d, box, style, id, notes }) {
   const labeled = edges.some((e) => e.label)
   const busStep = labeled ? 20 : 8 // 有标签时留出标签高度，避免边标签互相压字（content-collision 不可声明）
   const usedLane = new Map()
-  const usedCorr = new Map()
-  const pickCorridor = (ideal) => {
-    const cands = [ideal]
-    for (let k = 1; k <= 4; k++) cands.push(ideal + k * 6, ideal - k * 6)
-    let best = cands[0]
-    let bestCost = Infinity
-    for (const c of cands) {
-      const cost = (usedCorr.get(Math.round(c)) ?? 0) * 100 + Math.abs(c - ideal)
-      if (cost < bestCost) { bestCost = cost; best = c }
-    }
-    const key = Math.round(best)
-    usedCorr.set(key, (usedCorr.get(key) ?? 0) + 1)
-    return key
-  }
   const pickLane = () => {
     for (let k = 0; k < 8; k++) {
       const y = laneBase + k * busStep
@@ -970,7 +956,7 @@ function layoutState({ d, box, style, id, notes }) {
     // 相邻层**一律直连**（含带标签的边）：布局已为标签预留列间距 ⇒ 不再需要"绕总线换空间"。
     // 第一版把带标签的相邻层边也塞进总线，于是出现细长空回环（用户实测附图 2）。
     if (lB === lA + 1) {
-      const midX = pickCorridor(A.x + A.w + Math.max(6, gap / 2)) // 逐边走廊：相邻层直连也各自占一条 x
+      const midX = A.x + A.w + Math.max(6, gap / 2) // 相邻层直连：共用理想走廊（判据是"不共线重叠"，不是"不共用"）
       const lcy = Math.round((A.y + A.h / 2 + B.y + B.h / 2) / 2)
       // 首选：竖管右侧、**线之上 28px**（天然不压自己的线）；再交给避让挑不撞的备选
       const _pts = [[R(A.x + A.w), R(A.y + A.h / 2)], [R(midX), R(A.y + A.h / 2)], [R(midX), R(B.y + B.h / 2)], [R(B.x), R(B.y + B.h / 2)]]
@@ -989,7 +975,10 @@ function layoutState({ d, box, style, id, notes }) {
     const corB = sideB === 'left' ? B.x - g4 : B.x + B.w + g4
     const ptB = sideB === 'left' ? [B.x, B.y + B.h / 2] : [B.x + B.w, B.y + B.h / 2]
     const ptA = sideOf(A, lA) === 'right' ? [A.x + A.w, A.y + A.h / 2] : [A.x, A.y + A.h / 2]
-    const riserA = pickCorridor(corOf(A, lA)) // 逐边走廊（占用惩罚：优先走没人用过的 x）
+    // **同层共用竖管**（树状干线）：这是标准画法——只要两条边**不共线重叠**（一条往上、一条往下，
+    // 只在出口共用一个点），读者就不会误读方向。第一版"逐边走廊偏移"是**过度纠正**（用户裁定）。
+    // 真正的缺陷是"共线重叠"与"线压在盒子边框上"，那两条已由 line-rules 的机械检查兜住。
+    const riserA = corOf(A, lA)
     const busY = pickLane() // 逐边车道（优先走最浅的没被占用的 y ⇒ 回环更短）
     const busPts = [ptA, [riserA, A.y + A.h / 2], [riserA, busY], [corB, busY], [corB, B.y + B.h / 2], ptB]
     edgeRoutes.push({ e, pts: busPts, preferSeg: 2 }) // 2 = 车道那段（长横线）：回边的视觉主体
