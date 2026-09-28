@@ -70,30 +70,70 @@ export function contains(a, b, pad = RELATION_DEFAULTS.pad) {
 }
 
 /**
- * 斜边预设的"边"不在包围盒上 ⇒ 返回一个**等效矩形**，让 `onSide` 的判定落在真实轮廓上。
- * 目前覆盖 `parallelogram`（默认斜度 off = 0.25×min(w,h)）；其余 kind 返回 null（用原矩形即可）。
+ * 斜边预设的**真实轮廓**：返回指定 side 上、靠近点 p 的锚点坐标。
+ * 目前覆盖 `parallelogram` / `triangle` / `diamond`（其余 kind 返回 null ⇒ 退回包围盒边语义）。
+ * 两种命名都要认：DSL 用 kind；preview/layout 快照用 kind='shape' + `shape`=<预设名>（实测踩过）。
  * 用户实测：暖色架构图的输出层箭头原本"插进图形"、输入层连线"没接上"，都是按包围盒取点造成的。
+ */
+export function outlineAnchor(ref, side, p) {
+  const b = ref?.bounds
+  if (!b) return null
+  const prst = ref?.shape ?? ref?.kind
+  const w = Array.isArray(b) ? b[2] : b.w
+  const h = Array.isArray(b) ? b[3] : b.h
+  const x0 = Array.isArray(b) ? b[0] : b.x
+  const y0 = Array.isArray(b) ? b[1] : b.y
+  const y = p?.[1] ?? y0 + h / 2
+  const k = 1 - (y - y0) / h // 顶部 1 → 底部 0
+  if (prst === 'parallelogram') {
+    // 顶点 (x0+off,y0)、(x0+w,y0)、(x0+w−off,y0+h)、(x0,y0+h)；off = 0.25×min(w,h)
+    const off = 0.25 * Math.min(w, h)
+    if (side === 'left') return [x0 + off * k, y]
+    if (side === 'right') return [x0 + w - off * k, y]
+    if (side === 'top') return [Math.min(Math.max(p?.[0] ?? x0 + w / 2, x0 + off), x0 + w), y0]
+    if (side === 'bottom') return [Math.min(Math.max(p?.[0] ?? x0 + w / 2, x0), x0 + w - off), y0 + h]
+    return null
+  }
+  if (prst === 'triangle') {
+    // 顶点 (w/2,0)、(w,h)、(0,h)：左右边斜；底边整条；顶边退化为顶点
+    if (side === 'left') return [x0 + (w / 2) * k, y]
+    if (side === 'right') return [x0 + w - (w / 2) * k, y]
+    if (side === 'bottom') return [Math.min(Math.max(p?.[0] ?? x0 + w / 2, x0), x0 + w), y0 + h]
+    if (side === 'top') return [x0 + w / 2, y0]
+    return null
+  }
+  if (prst === 'diamond') {
+    // 顶点 (x0+w/2,y0)、(x0+w,y0+h/2)、(x0+w/2,y0+h)、(x0,y0+h/2)：
+    // 左右边是斜的：left(y) = x0 + |y−mid|×(w/h)，right(y) = x0+w − |y−mid|×(w/h)
+    // （第一版写成 w/2 ± dy 是错的——那描述的是"从中心张开的锥形"，单测当场抓住）
+    const dy = Math.abs(y - (y0 + h / 2)) * (w / h)
+    if (side === 'left') return [x0 + dy, y]
+    if (side === 'right') return [x0 + w - dy, y]
+    if (side === 'top') return [x0 + w / 2, y0]
+    if (side === 'bottom') return [x0 + w / 2, y0 + h]
+    return null
+  }
+  return null
+}
+
+/**
+ * 把"真实轮廓锚点"表达成**等效矩形**，让 `onSide` 的判定落在真实边上。
+ * 注意必须带上 right/bottom —— `onSide` 用它们做区间判定（漏了会一律判 false，实测踩过）。
  */
 export function slantRect(ref, side, pt) {
   const b = ref?.bounds
-  // **两种命名都要认**（本会话第三次踩同类坑）：
-  //  · DSL 原文：kind = 'parallelogram'；
-  //  · preview/layout 快照：kind = 'shape'，真实预设几何在 **shape** 字段里（'parallelogram'）。
-  const prst = ref?.shape ?? ref?.kind
-  if (!b || prst !== 'parallelogram') return null
+  if (!b) return null
   const w = Array.isArray(b) ? b[2] : b.w
   const h = Array.isArray(b) ? b[3] : b.h
-  // 必须带上 right/bottom —— onSide 用它们做区间判定（漏了会一律判 false，实测踩过）
   const x0 = Array.isArray(b) ? b[0] : b.x
   const y0 = Array.isArray(b) ? b[1] : b.y
   const r = { x: x0, y: y0, w, h, right: x0 + w, bottom: y0 + h }
-  const off = 0.25 * Math.min(w, h)
-  const y = pt?.[1] ?? y0 + h / 2
-  const k = 1 - (y - y0) / h // 顶部 1 → 底部 0
-  if (side === 'left') return { ...r, x: r.x + off * k, right: r.right + off * k }
-  if (side === 'right') return { ...r, w: r.w - off * k, right: r.right - off * k }
-  if (side === 'top') return { ...r, x: r.x + off, w: r.w - off } // top 用 x..right 判横向范围
-  if (side === 'bottom') return { ...r, right: r.right - off } // bottom 用 x..right 判横向范围
+  const a = outlineAnchor(ref, side, pt)
+  if (!a) return null
+  if (side === 'left') return { ...r, x: a[0] }
+  if (side === 'right') return { ...r, right: a[0] }
+  if (side === 'top') return { ...r, y: a[1] }
+  if (side === 'bottom') return { ...r, bottom: a[1] }
   return null
 }
 
@@ -499,27 +539,9 @@ export function resolveAttach(el, pageOrMap, opts = {}) {
   // 先算 to（用它作为 from 的朝向参考），再算 from —— 两侧同时给出时才互相参考
   const refFrom = els.get(String(a.from?.ref ?? ''))
   const refTo = els.get(String(a.to?.ref ?? ''))
-  // ── 斜边预设：包围盒边**不是真实轮廓**（用户实测：暖色架构图的平行四边形）──
-  // 按包围盒取锚点 ⇒ 箭头"插进图形里"（输出层）或"没接上"（输入层）。这里把锚点修正到**真实轮廓**。
-  // 平行四边形默认斜度 off = 0.25×min(w,h)：左边缘 x(y)=x+off×(1−(y−y0)/h)、右边缘 x(y)=x+w−off×(1−…)、
-  // 上边 x∈[x+off, x+w]、下边 x∈[x, x+w−off]。其余 kind 原样返回（可按需扩展 triangle/diamond/chevron）。
-  const slantOf = (ref) => {
-    const b = ref?.bounds
-    if (!b || ref?.kind !== 'parallelogram') return 0
-    const w = Array.isArray(b) ? b[2] : b.w
-    const h = Array.isArray(b) ? b[3] : b.h
-    return 0.25 * Math.min(w, h)
-  }
-  const onOutline = (ref, rect, side, p) => {
-    const off = slantOf(ref)
-    if (!off || !p) return p
-    const y = p[1]
-    if (side === 'left') return [rect.x + off * (1 - (y - rect.y) / rect.h), y]
-    if (side === 'right') return [rect.right - off * (1 - (y - rect.y) / rect.h), y]
-    if (side === 'top') return [Math.min(Math.max(p[0], rect.x + off), rect.right), p[1]]
-    if (side === 'bottom') return [Math.min(Math.max(p[0], rect.x), rect.right - off), p[1]]
-    return p
-  }
+  // 斜边预设（平行四边形/三角形/菱形）：锚点落在**真实轮廓**上，而不是包围盒边。
+  // 单一来源 = `outlineAnchor`（与门禁侧的 `slantRect` 共用同一套公式，避免"解析对了、校验报错"）。
+  const onOutline = (ref, rect, side, p) => outlineAnchor(ref, side, p) ?? p
   const anchorOf = (spec, ref, toward, keep) => {
     if (!spec || !ref) return null
     const side = String(spec.side)

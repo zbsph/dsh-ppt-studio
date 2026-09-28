@@ -361,5 +361,31 @@ H('9. resolveAttach：锚点解析与"改写可见"')
   ok('纯函数：不改输入元素（points 不被原地改写）', JSON.stringify(src) === before)
 }
 
+// ── 8. 斜边预设：attach 锚点必须落在**真实轮廓**上（R1/R4c）──────────────
+H('8. 斜边预设的 attach 锚点（真实轮廓，而非包围盒边）')
+{
+  const { outlineAnchor, slantRect, onSide } = await import('../lib/pptd/relations.js')
+  const cases = [
+    ['parallelogram', [770, 180, 150, 130], 'left', [740, 275], 778.75],
+    ['parallelogram', [50, 180, 150, 130], 'right', [232, 245], 183.75],
+    ['triangle', [100, 100, 200, 120], 'left', [80, 160], 150],
+    ['triangle', [100, 100, 200, 120], 'right', [300, 160], 250],
+    ['diamond', [100, 100, 200, 120], 'left', [80, 160], 100],
+    ['diamond', [100, 100, 200, 120], 'right', [300, 160], 300],
+  ]
+  for (const [kind, bounds, side, from, want] of cases) {
+    const ref = { kind, bounds }
+    const a = outlineAnchor(ref, side, from)
+    const okAnchor = !!a && Math.abs(a[0] - want) < 1.5
+    const okVerify = okAnchor ? onSide(side, a, slantRect(ref, side, a), 1.5) : false
+    ok(`${kind}.${side}：锚点在真实轮廓上（x≈${want}）且能过反验证`, okAnchor && okVerify, `x=${a ? a[0].toFixed(2) : 'null'}`)
+  }
+  // 快照命名差异（kind='shape' + shape=<预设名>）也必须认——这里踩过坑，固化成断言
+  const snapRef = { kind: 'shape', shape: 'parallelogram', bounds: { x: 770, y: 180, w: 150, h: 130 } }
+  const sa = outlineAnchor(snapRef, 'left', [740, 275])
+  ok('快照命名（kind="shape" + shape="parallelogram"）同样解析到真实轮廓',
+    !!sa && Math.abs(sa[0] - 778.75) < 1.5, `x=${sa ? sa[0].toFixed(2) : 'null'}`)
+}
+
 console.log(`\n==== verify-diagram-relations 结果：${pass} 通过 / ${fail} 失败 ====`)
 if (fail) { console.log(`失败项：${failures.join('；')}`); process.exit(1) }
