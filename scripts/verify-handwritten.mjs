@@ -37,7 +37,7 @@ writeFileSync(join(dir, 'deck.yaml'), [
   '  colors: {primary: "#B45309", accent: "#EA580C", soft: "#FED7AA", text: "#431407", bg: "#FFFBEB"}',
   '  textStyles:', '    body: {fontSize: 14, color: "$text"}', '  line: {width: 2}',
   '  safeArea: {top: 40, bottom: 40, left: 40, right: 40}',
-  'pages:', '  - pages/01.yaml', '  - pages/02.yaml', '  - pages/03.yaml', '',
+  'pages:', '  - pages/01.yaml', '  - pages/02.yaml', '  - pages/03.yaml', '  - pages/04.yaml', '',
 ].join('\n'))
 
 // ① 合法的手写复杂图（完全不依赖任何族）
@@ -80,6 +80,21 @@ writeFileSync(join(dir, 'pages', '03.yaml'), [
   '',
 ].join('\n'))
 
+// ④ 新判据的正例与反例（用户裁定的区分：共线重叠/压框 = 缺陷；共用端点的扇出 = 标准画法）
+writeFileSync(join(dir, 'pages', '04.yaml'), [
+  'pageType: content', 'elements:',
+  // 正例①：互不相关的两条线走成共线重叠 ⇒ 必须报 line-collinear-overlap
+  '  - elementId: ov1', '    elementType: line', '    points: [[300, 380], [600, 380]]', '    arrow: false',
+  '  - elementId: ov2', '    elementType: line', '    points: [[400, 380], [700, 380]]', '    arrow: false',
+  // 正例②：线**压在盒子边框上** ⇒ 必须报 line-on-box-edge
+  '  - {elementId: edgebox, elementType: shape, kind: rect, bounds: [200, 150, 300, 120], fill: "$soft"}',
+  '  - elementId: onedge', '    elementType: line', '    points: [[200, 150], [500, 150]]', '    arrow: false',
+  // 反例：从**同一锚点**出发、共线且部分重合的一对线（扇出/树状干线）⇒ 不得报共线重叠
+  '  - elementId: fan_long', '    elementType: line', '    points: [[700, 430], [800, 430]]', '    arrow: false',
+  '  - elementId: fan_short', '    elementType: line', '    points: [[700, 430], [750, 430]]', '    arrow: false',
+  '',
+].join('\n'))
+
 const ctx = await resolveDeck(dir)
 await renderDeck(ctx, { out: 'preview' })
 const layout = JSON.parse(readFileSync(join(dir, 'preview', 'layout.json'), 'utf8'))
@@ -103,7 +118,17 @@ const v3 = vOf(2)
 ok('刻意斜线用 `role: decoration` 声明 ⇒ **豁免**（不再提示，但仍是 warning 级、不阻断）',
   !v3.warns.some((w) => w.code === 'line-diagonal-segment'), v3.warns.map((w) => w.code).join(',') || '无相关警告')
 
-// ④ 手写路径能出成品：导出 parity 自证
+const v4 = vOf(3)
+ok('互不相关的两条线**共线重叠** ⇒ 报 `line-collinear-overlap`（真缺陷判据）',
+  v4.warns.some((w) => w.code === 'line-collinear-overlap' && /ov1/.test(w.message) && /ov2/.test(w.message)),
+  v4.warns.map((w) => w.code).join(',') || '无')
+ok('线**压在盒子边框上** ⇒ 报 `line-on-box-edge`（图 4 那类缺陷的机械判据）',
+  v4.warns.some((w) => w.code === 'line-on-box-edge'), v4.warns.map((w) => w.code).join(',') || '无')
+ok('**共用端点**的扇出（标准树状干线）⇒ 不得报共线重叠（用户裁定：这样画更清晰）',
+  !v4.warns.some((w) => w.code === 'line-collinear-overlap' && /fan/.test(w.message)),
+  v4.warns.filter((w) => w.code === 'line-collinear-overlap').map((w) => w.message.slice(0, 46)).join(' ｜ ') || '无')
+
+// ⑤ 手写路径能出成品：导出 parity 自证
 const r = await exportPptx(ctx, { out: join(dir, 'hand.pptx') })
 ok('手写路径能正常出成品（导出 parity.ok=true，含虚线折线与附着线）',
   r.parity?.ok === true, `attached ${r.parity?.attachedLinesOut}/${r.parity?.attachedLinesExp}｜poly ${r.parity?.polyLinesOut}/${r.parity?.polyLinesExp}`)

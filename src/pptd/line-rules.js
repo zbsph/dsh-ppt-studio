@@ -90,9 +90,13 @@ export function checkLineRules(els) {
   }
 
   // ── ④ 线压在盒子边框上（图 4 那类缺陷的机械判据）────────────────────────
-  const boxes = (els ?? []).filter((e) => e && Array.isArray(e.bounds)
+  // 盒子：**两种字段形状都要认**——DSL 原文 bounds=[x,y,w,h]，preview/layout 快照 bounds={x,y,w,h}
+  //（实测踩过：只认数组时，压框判据在快照路径上一律不触发）。
+  const rectOf = (b) => Array.isArray(b) ? { x: b[0], y: b[1], w: b[2], h: b[3] }
+    : (b && typeof b === 'object' && typeof b.x === 'number' ? { x: b.x, y: b.y, w: b.w, h: b.h } : null)
+  const boxes = (els ?? []).filter((e) => e && rectOf(e.bounds)
     && (e.elementType === 'shape' || e.elementType === 'image' || e.elementType === 'table' || (e.kind && e.kind !== 'line')))
-    .map((e) => ({ id: e.elementId ?? e.id ?? '?', b: { x: e.bounds[0], y: e.bounds[1], w: e.bounds[2], h: e.bounds[3] } }))
+    .map((e) => ({ id: e.elementId ?? e.id ?? '?', b: rectOf(e.bounds) }))
   for (const l of lines) {
     if (l.deliberate) continue
     let hitId = null
