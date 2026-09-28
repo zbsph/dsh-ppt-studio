@@ -880,7 +880,9 @@ function layoutState({ d, box, style, id, notes }) {
     }
     const tries = []
     for (const s of seeds) tries.push(s, { ...s, y: s.y - 26 }, { ...s, y: s.y + 26 }, { ...s, x: s.x + 30 }, { ...s, x: s.x - 30 })
-    for (const c of tries) {
+    const accepted = []
+    for (let i = 0; i < tries.length; i++) {
+      const c = tries[i]
       const cc = {
         ...c,
         x: Math.min(Math.max(c.x, box.x), Math.max(box.x, box.x + box.w - c.w)),
@@ -894,10 +896,17 @@ function layoutState({ d, box, style, id, notes }) {
       })) continue
       const dOwn = ptsDist(cc, ownPts)
       const others = elements.filter((el) => Array.isArray(el.points) && el.points.length).map((el) => ptsDist(cc, el.points))
-      if (others.length && dOwn > Math.min(...others)) continue
-      return cc
+      const clearance = others.length ? Math.min(...others) : 1e9
+      if (others.length && dOwn > clearance) continue
+      accepted.push({ c: cc, i, clearance })
     }
-    return null
+    if (!accepted.length) return null
+    // **哪一侧更空就放哪一侧**：默认用顺序上第一个可接受的位置（保持既有观感），
+    // 只有当别的候选离**其他线**明显更远（≥10px）时才换过去。
+    // 用户实测：退货（回边）本该落在线下方，固定"先试上方"让它跑到上面、与"提交"挤在一起。
+    let pick = accepted[0]
+    for (const a of accepted) if (a.clearance > pick.clearance + 10) pick = a
+    return pick.c
   }
   const edgeRoutes = [] // 第一遍只放线并把路由记下来；标签统一在**第二遍**放
   const maxBottom = Math.max(...[...pos.values()].map((r) => r.y + r.h))
