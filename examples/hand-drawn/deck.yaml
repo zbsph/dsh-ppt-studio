@@ -13,8 +13,10 @@ pages:
   - pages/02.yaml
   - pages/03.yaml
   - pages/04.yaml
+  - pages/05.yaml
   - pages/06.yaml
   - pages/07.yaml
+  - pages/08.yaml
   - pages/09.yaml
   - pages/10.yaml
   - pages/12.yaml

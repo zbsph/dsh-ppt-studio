@@ -2707,6 +2707,563 @@
     {
       "index": 4,
       "pageNo": 5,
+      "file": "pages/05.yaml",
+      "name": "pages/05",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [],
+      "elements": [
+        {
+          "id": "title",
+          "kind": "text",
+          "bounds": {
+            "x": 60,
+            "y": 34,
+            "w": 760,
+            "h": 38
+          },
+          "style": {
+            "fontSize": 25,
+            "color": "#2E1065",
+            "bold": true,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 185.5,
+            "textH": 30,
+            "lines": 1,
+            "lineWidths": [
+              185.5
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "网衣清洗两方案"
+        },
+        {
+          "id": "sub",
+          "kind": "text",
+          "bounds": {
+            "x": 60,
+            "y": 76,
+            "w": 820,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#64748B",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 276,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              266.4
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "同为清洗网衣：人工潜水 vs 水下机器人，各有权衡"
+        },
+        {
+          "id": "pA",
+          "kind": "shape",
+          "bounds": {
+            "x": 80,
+            "y": 150,
+            "w": 380,
+            "h": 300
+          },
+          "contains": [
+            "pAh",
+            "pAr0",
+            "pAr1",
+            "pAr2",
+            "pAr3"
+          ],
+          "shape": "roundRect",
+          "fill": "#F5F3FF",
+          "rotation": 0
+        },
+        {
+          "id": "pAh",
+          "kind": "text",
+          "bounds": {
+            "x": 100,
+            "y": 168,
+            "w": 340,
+            "h": 28
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#6D28D9",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 135.20000000000002,
+            "textH": 19.2,
+            "lines": 1,
+            "lineWidths": [
+              128.8
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "方案 A：潜水人工"
+        },
+        {
+          "id": "pAr0",
+          "kind": "shape",
+          "bounds": {
+            "x": 100,
+            "y": 216,
+            "w": 340,
+            "h": 44
+          },
+          "contains": [
+            "pAr0t"
+          ],
+          "shape": "roundRect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "pAr0t",
+          "kind": "text",
+          "bounds": {
+            "x": 110,
+            "y": 228,
+            "w": 320,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#1F2937",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "潜水人工"
+        },
+        {
+          "id": "pAr1",
+          "kind": "shape",
+          "bounds": {
+            "x": 100,
+            "y": 270,
+            "w": 340,
+            "h": 44
+          },
+          "contains": [
+            "pAr1t"
+          ],
+          "shape": "roundRect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "pAr1t",
+          "kind": "text",
+          "bounds": {
+            "x": 110,
+            "y": 282,
+            "w": 320,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#1F2937",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "清洗彻底"
+        },
+        {
+          "id": "pAr2",
+          "kind": "shape",
+          "bounds": {
+            "x": 100,
+            "y": 324,
+            "w": 340,
+            "h": 44
+          },
+          "contains": [
+            "pAr2t"
+          ],
+          "shape": "roundRect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "pAr2t",
+          "kind": "text",
+          "bounds": {
+            "x": 110,
+            "y": 336,
+            "w": 320,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#1F2937",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 81.25,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              76.05
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "作业窗口 ≤2h"
+        },
+        {
+          "id": "pAr3",
+          "kind": "shape",
+          "bounds": {
+            "x": 100,
+            "y": 378,
+            "w": 340,
+            "h": 44
+          },
+          "contains": [
+            "pAr3t"
+          ],
+          "shape": "roundRect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "pAr3t",
+          "kind": "text",
+          "bounds": {
+            "x": 110,
+            "y": 390,
+            "w": 320,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#1F2937",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "人力紧张"
+        },
+        {
+          "id": "pB",
+          "kind": "shape",
+          "bounds": {
+            "x": 500,
+            "y": 150,
+            "w": 380,
+            "h": 300
+          },
+          "contains": [
+            "pBh",
+            "pBr0",
+            "pBr1",
+            "pBr2",
+            "pBr3"
+          ],
+          "shape": "roundRect",
+          "fill": "#FFF1F2",
+          "rotation": 0
+        },
+        {
+          "id": "pBh",
+          "kind": "text",
+          "bounds": {
+            "x": 520,
+            "y": 168,
+            "w": 340,
+            "h": 28
+          },
+          "style": {
+            "fontSize": 16,
+            "color": "#BE123C",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 152.16000000000003,
+            "textH": 19.2,
+            "lines": 1,
+            "lineWidths": [
+              145.76000000000002
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "方案 B：水下机器人"
+        },
+        {
+          "id": "pBr0",
+          "kind": "shape",
+          "bounds": {
+            "x": 520,
+            "y": 216,
+            "w": 340,
+            "h": 44
+          },
+          "contains": [
+            "pBr0t"
+          ],
+          "shape": "roundRect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "pBr0t",
+          "kind": "text",
+          "bounds": {
+            "x": 530,
+            "y": 228,
+            "w": 320,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#1F2937",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 65,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              65
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "水下机器人"
+        },
+        {
+          "id": "pBr1",
+          "kind": "shape",
+          "bounds": {
+            "x": 520,
+            "y": 270,
+            "w": 340,
+            "h": 44
+          },
+          "contains": [
+            "pBr1t"
+          ],
+          "shape": "roundRect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "pBr1t",
+          "kind": "text",
+          "bounds": {
+            "x": 530,
+            "y": 282,
+            "w": 320,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#1F2937",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 65,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              65
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "可夜间作业"
+        },
+        {
+          "id": "pBr2",
+          "kind": "shape",
+          "bounds": {
+            "x": 520,
+            "y": 324,
+            "w": 340,
+            "h": 44
+          },
+          "contains": [
+            "pBr2t"
+          ],
+          "shape": "roundRect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "pBr2t",
+          "kind": "text",
+          "bounds": {
+            "x": 530,
+            "y": 336,
+            "w": 320,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#1F2937",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 68.25,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              63.05
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "覆盖率 92%"
+        },
+        {
+          "id": "pBr3",
+          "kind": "shape",
+          "bounds": {
+            "x": 520,
+            "y": 378,
+            "w": 340,
+            "h": 44
+          },
+          "contains": [
+            "pBr3t"
+          ],
+          "shape": "roundRect",
+          "fill": "#FFFFFF",
+          "rotation": 0
+        },
+        {
+          "id": "pBr3t",
+          "kind": "text",
+          "bounds": {
+            "x": 530,
+            "y": 390,
+            "w": 320,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#1F2937",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 65,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              65
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "购置成本高"
+        },
+        {
+          "id": "vs",
+          "kind": "text",
+          "bounds": {
+            "x": 452,
+            "y": 290,
+            "w": 56,
+            "h": 24
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#7C3AED",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 25.44,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              25.44
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "对比"
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "pageNo": 6,
       "file": "pages/06.yaml",
       "name": "pages/06",
       "background": {
@@ -3113,8 +3670,8 @@
       ]
     },
     {
-      "index": 5,
-      "pageNo": 6,
+      "index": 6,
+      "pageNo": 7,
       "file": "pages/07.yaml",
       "name": "pages/07",
       "background": {
@@ -3551,8 +4108,548 @@
       ]
     },
     {
-      "index": 6,
-      "pageNo": 7,
+      "index": 7,
+      "pageNo": 8,
+      "file": "pages/08.yaml",
+      "name": "pages/08",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [],
+      "elements": [
+        {
+          "id": "title",
+          "kind": "text",
+          "bounds": {
+            "x": 60,
+            "y": 34,
+            "w": 760,
+            "h": 38
+          },
+          "style": {
+            "fontSize": 25,
+            "color": "#2E1065",
+            "bold": true,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 106,
+            "textH": 30,
+            "lines": 1,
+            "lineWidths": [
+              106
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "巡检七步"
+        },
+        {
+          "id": "sub",
+          "kind": "text",
+          "bounds": {
+            "x": 60,
+            "y": 76,
+            "w": 820,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#64748B",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 440.4000000000001,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              382.80000000000007
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "出海申报 → 断电挂牌 → 网衣外观 → 锚链张力 → 溶氧复测 → 设备保养 → 数据回传"
+        },
+        {
+          "id": "n0",
+          "kind": "shape",
+          "bounds": {
+            "x": 395,
+            "y": 158,
+            "w": 170,
+            "h": 48
+          },
+          "contains": [
+            "nt0"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "nt0",
+          "kind": "text",
+          "bounds": {
+            "x": 401,
+            "y": 171,
+            "w": 158,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 69.29,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              64.09
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "① 出海申报"
+        },
+        {
+          "id": "n1",
+          "kind": "shape",
+          "bounds": {
+            "x": 606,
+            "y": 210,
+            "w": 170,
+            "h": 48
+          },
+          "contains": [
+            "nt1"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "nt1",
+          "kind": "text",
+          "bounds": {
+            "x": 612,
+            "y": 223,
+            "w": 158,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 69.29,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              64.09
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "② 断电挂牌"
+        },
+        {
+          "id": "n2",
+          "kind": "shape",
+          "bounds": {
+            "x": 658,
+            "y": 327,
+            "w": 170,
+            "h": 48
+          },
+          "contains": [
+            "nt2"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "nt2",
+          "kind": "text",
+          "bounds": {
+            "x": 664,
+            "y": 340,
+            "w": 158,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 69.29,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              64.09
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "③ 网衣外观"
+        },
+        {
+          "id": "n3",
+          "kind": "shape",
+          "bounds": {
+            "x": 512,
+            "y": 420,
+            "w": 170,
+            "h": 48
+          },
+          "contains": [
+            "nt3"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "nt3",
+          "kind": "text",
+          "bounds": {
+            "x": 518,
+            "y": 433,
+            "w": 158,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 69.29,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              64.09
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "④ 锚链张力"
+        },
+        {
+          "id": "n4",
+          "kind": "shape",
+          "bounds": {
+            "x": 278,
+            "y": 420,
+            "w": 170,
+            "h": 48
+          },
+          "contains": [
+            "nt4"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "nt4",
+          "kind": "text",
+          "bounds": {
+            "x": 284,
+            "y": 433,
+            "w": 158,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 69.29,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              64.09
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "⑤ 溶氧复测"
+        },
+        {
+          "id": "n5",
+          "kind": "shape",
+          "bounds": {
+            "x": 132,
+            "y": 327,
+            "w": 170,
+            "h": 48
+          },
+          "contains": [
+            "nt5"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "nt5",
+          "kind": "text",
+          "bounds": {
+            "x": 138,
+            "y": 340,
+            "w": 158,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 69.29,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              64.09
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "⑥ 设备保养"
+        },
+        {
+          "id": "n6",
+          "kind": "shape",
+          "bounds": {
+            "x": 184,
+            "y": 210,
+            "w": 170,
+            "h": 48
+          },
+          "contains": [
+            "nt6"
+          ],
+          "shape": "roundRect",
+          "fill": "#E11D48",
+          "rotation": 0
+        },
+        {
+          "id": "nt6",
+          "kind": "text",
+          "bounds": {
+            "x": 190,
+            "y": 223,
+            "w": 158,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 69.29,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              64.09
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "⑦ 数据回传"
+        },
+        {
+          "id": "c0",
+          "kind": "line",
+          "bounds": {
+            "x": 571,
+            "y": 204,
+            "w": 29,
+            "h": 8
+          },
+          "arrow": true,
+          "points": [
+            [
+              571,
+              204
+            ],
+            [
+              600,
+              212
+            ]
+          ]
+        },
+        {
+          "id": "c1",
+          "kind": "line",
+          "bounds": {
+            "x": 705,
+            "y": 265,
+            "w": 24,
+            "h": 55
+          },
+          "arrow": true,
+          "points": [
+            [
+              729,
+              320
+            ],
+            [
+              705,
+              265
+            ]
+          ]
+        },
+        {
+          "id": "c2",
+          "kind": "line",
+          "bounds": {
+            "x": 664,
+            "y": 393,
+            "w": 12,
+            "h": 9
+          },
+          "arrow": true,
+          "points": [
+            [
+              664,
+              402
+            ],
+            [
+              676,
+              393
+            ]
+          ]
+        },
+        {
+          "id": "c3",
+          "kind": "line",
+          "bounds": {
+            "x": 457,
+            "y": 444,
+            "w": 46,
+            "h": 1
+          },
+          "arrow": true,
+          "points": [
+            [
+              503,
+              444
+            ],
+            [
+              457,
+              444
+            ]
+          ]
+        },
+        {
+          "id": "c4",
+          "kind": "line",
+          "bounds": {
+            "x": 284,
+            "y": 393,
+            "w": 12,
+            "h": 9
+          },
+          "arrow": true,
+          "points": [
+            [
+              284,
+              393
+            ],
+            [
+              296,
+              402
+            ]
+          ]
+        },
+        {
+          "id": "c5",
+          "kind": "line",
+          "bounds": {
+            "x": 231,
+            "y": 265,
+            "w": 24,
+            "h": 55
+          },
+          "arrow": true,
+          "points": [
+            [
+              255,
+              265
+            ],
+            [
+              231,
+              320
+            ]
+          ]
+        },
+        {
+          "id": "c6",
+          "kind": "line",
+          "bounds": {
+            "x": 360,
+            "y": 204,
+            "w": 29,
+            "h": 8
+          },
+          "arrow": true,
+          "points": [
+            [
+              360,
+              212
+            ],
+            [
+              389,
+              204
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "pageNo": 9,
       "file": "pages/09.yaml",
       "name": "pages/09",
       "background": {
@@ -4134,8 +5231,8 @@
       ]
     },
     {
-      "index": 7,
-      "pageNo": 8,
+      "index": 9,
+      "pageNo": 10,
       "file": "pages/10.yaml",
       "name": "pages/10",
       "background": {
@@ -4835,8 +5932,8 @@
       ]
     },
     {
-      "index": 8,
-      "pageNo": 9,
+      "index": 10,
+      "pageNo": 11,
       "file": "pages/12.yaml",
       "name": "pages/12",
       "background": {

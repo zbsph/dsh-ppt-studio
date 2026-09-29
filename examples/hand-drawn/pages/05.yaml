@@ -1,0 +1,124 @@
+pageType: content
+elements:
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 760, 38]
+    content: { text: '网衣清洗两方案', fontSize: 25, color: '#2E1065', bold: true }
+  - elementId: sub
+    elementType: text
+    bounds: [60, 76, 820, 22]
+    content: { text: '同为清洗网衣：人工潜水 vs 水下机器人，各有权衡', fontSize: 12, color: '#64748B' }
+  - elementId: pA
+    elementType: shape
+    kind: roundRect
+    bounds: [80, 150, 380, 300]
+    fill: '#F5F3FF'
+    line: { color: '#DDD6FE', width: 1.5 }
+    contains: [pAh, pAr0, pAr1, pAr2, pAr3]
+  - elementId: pAh
+    elementType: text
+    bounds: [100, 168, 340, 28]
+    content: { text: '方案 A：潜水人工', fontSize: 16, color: '#6D28D9', bold: true, align: center }
+  - elementId: pAr0
+    elementType: shape
+    kind: roundRect
+    bounds: [100, 216, 340, 44]
+    fill: '#FFFFFF'
+    line: { color: '#E5E7EB', width: 1 }
+    contains: [pAr0t]
+  - elementId: pAr0t
+    elementType: text
+    bounds: [110, 228, 320, 22]
+    content: { text: '潜水人工', fontSize: 13, color: '#1F2937', align: center }
+  - elementId: pAr1
+    elementType: shape
+    kind: roundRect
+    bounds: [100, 270, 340, 44]
+    fill: '#FFFFFF'
+    line: { color: '#E5E7EB', width: 1 }
+    contains: [pAr1t]
+  - elementId: pAr1t
+    elementType: text
+    bounds: [110, 282, 320, 22]
+    content: { text: '清洗彻底', fontSize: 13, color: '#1F2937', align: center }
+  - elementId: pAr2
+    elementType: shape
+    kind: roundRect
+    bounds: [100, 324, 340, 44]
+    fill: '#FFFFFF'
+    line: { color: '#E5E7EB', width: 1 }
+    contains: [pAr2t]
+  - elementId: pAr2t
+    elementType: text
+    bounds: [110, 336, 320, 22]
+    content: { text: '作业窗口 ≤2h', fontSize: 13, color: '#1F2937', align: center }
+  - elementId: pAr3
+    elementType: shape
+    kind: roundRect
+    bounds: [100, 378, 340, 44]
+    fill: '#FFFFFF'
+    line: { color: '#E5E7EB', width: 1 }
+    contains: [pAr3t]
+  - elementId: pAr3t
+    elementType: text
+    bounds: [110, 390, 320, 22]
+    content: { text: '人力紧张', fontSize: 13, color: '#1F2937', align: center }
+  - elementId: pB
+    elementType: shape
+    kind: roundRect
+    bounds: [500, 150, 380, 300]
+    fill: '#FFF1F2'
+    line: { color: '#DDD6FE', width: 1.5 }
+    contains: [pBh, pBr0, pBr1, pBr2, pBr3]
+  - elementId: pBh
+    elementType: text
+    bounds: [520, 168, 340, 28]
+    content: { text: '方案 B：水下机器人', fontSize: 16, color: '#BE123C', bold: true, align: center }
+  - elementId: pBr0
+    elementType: shape
+    kind: roundRect
+    bounds: [520, 216, 340, 44]
+    fill: '#FFFFFF'
+    line: { color: '#E5E7EB', width: 1 }
+    contains: [pBr0t]
+  - elementId: pBr0t
+    elementType: text
+    bounds: [530, 228, 320, 22]
+    content: { text: '水下机器人', fontSize: 13, color: '#1F2937', align: center }
+  - elementId: pBr1
+    elementType: shape
+    kind: roundRect
+    bounds: [520, 270, 340, 44]
+    fill: '#FFFFFF'
+    line: { color: '#E5E7EB', width: 1 }
+    contains: [pBr1t]
+  - elementId: pBr1t
+    elementType: text
+    bounds: [530, 282, 320, 22]
+    content: { text: '可夜间作业', fontSize: 13, color: '#1F2937', align: center }
+  - elementId: pBr2
+    elementType: shape
+    kind: roundRect
+    bounds: [520, 324, 340, 44]
+    fill: '#FFFFFF'
+    line: { color: '#E5E7EB', width: 1 }
+    contains: [pBr2t]
+  - elementId: pBr2t
+    elementType: text
+    bounds: [530, 336, 320, 22]
+    content: { text: '覆盖率 92%', fontSize: 13, color: '#1F2937', align: center }
+  - elementId: pBr3
+    elementType: shape
+    kind: roundRect
+    bounds: [520, 378, 340, 44]
+    fill: '#FFFFFF'
+    line: { color: '#E5E7EB', width: 1 }
+    contains: [pBr3t]
+  - elementId: pBr3t
+    elementType: text
+    bounds: [530, 390, 320, 22]
+    content: { text: '购置成本高', fontSize: 13, color: '#1F2937', align: center }
+  - elementId: vs
+    elementType: text
+    bounds: [452, 290, 56, 24]
+    content: { text: '对比', fontSize: 12, color: '#7C3AED', bold: true, align: center }

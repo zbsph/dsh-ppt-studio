@@ -1,0 +1,115 @@
+pageType: content
+elements:
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 760, 38]
+    content: { text: '巡检七步', fontSize: 25, color: '#2E1065', bold: true }
+  - elementId: sub
+    elementType: text
+    bounds: [60, 76, 820, 22]
+    content: { text: '出海申报 → 断电挂牌 → 网衣外观 → 锚链张力 → 溶氧复测 → 设备保养 → 数据回传', fontSize: 12, color: '#64748B' }
+  - elementId: n0
+    elementType: shape
+    kind: roundRect
+    bounds: [395, 158, 170, 48]
+    fill: '#7C3AED'
+    contains: [nt0]
+  - elementId: nt0
+    elementType: text
+    bounds: [401, 171, 158, 22]
+    content: { text: '① 出海申报', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
+  - elementId: n1
+    elementType: shape
+    kind: roundRect
+    bounds: [606, 210, 170, 48]
+    fill: '#7C3AED'
+    contains: [nt1]
+  - elementId: nt1
+    elementType: text
+    bounds: [612, 223, 158, 22]
+    content: { text: '② 断电挂牌', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
+  - elementId: n2
+    elementType: shape
+    kind: roundRect
+    bounds: [658, 327, 170, 48]
+    fill: '#7C3AED'
+    contains: [nt2]
+  - elementId: nt2
+    elementType: text
+    bounds: [664, 340, 158, 22]
+    content: { text: '③ 网衣外观', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
+  - elementId: n3
+    elementType: shape
+    kind: roundRect
+    bounds: [512, 420, 170, 48]
+    fill: '#7C3AED'
+    contains: [nt3]
+  - elementId: nt3
+    elementType: text
+    bounds: [518, 433, 158, 22]
+    content: { text: '④ 锚链张力', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
+  - elementId: n4
+    elementType: shape
+    kind: roundRect
+    bounds: [278, 420, 170, 48]
+    fill: '#7C3AED'
+    contains: [nt4]
+  - elementId: nt4
+    elementType: text
+    bounds: [284, 433, 158, 22]
+    content: { text: '⑤ 溶氧复测', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
+  - elementId: n5
+    elementType: shape
+    kind: roundRect
+    bounds: [132, 327, 170, 48]
+    fill: '#7C3AED'
+    contains: [nt5]
+  - elementId: nt5
+    elementType: text
+    bounds: [138, 340, 158, 22]
+    content: { text: '⑥ 设备保养', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
+  - elementId: n6
+    elementType: shape
+    kind: roundRect
+    bounds: [184, 210, 170, 48]
+    fill: '#E11D48'
+    contains: [nt6]
+  - elementId: nt6
+    elementType: text
+    bounds: [190, 223, 158, 22]
+    content: { text: '⑦ 数据回传', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
+  - elementId: c0
+    elementType: line
+    points: [[571, 204], [600, 212]]
+    line: { color: '#C4B5FD', width: 1.5 }
+    arrow: true
+  - elementId: c1
+    elementType: line
+    points: [[729, 320], [705, 265]]
+    line: { color: '#C4B5FD', width: 1.5 }
+    arrow: true
+  - elementId: c2
+    elementType: line
+    points: [[664, 402], [676, 393]]
+    line: { color: '#C4B5FD', width: 1.5 }
+    arrow: true
+  - elementId: c3
+    elementType: line
+    points: [[503, 444], [457, 444]]
+    line: { color: '#C4B5FD', width: 1.5 }
+    arrow: true
+  - elementId: c4
+    elementType: line
+    points: [[284, 393], [296, 402]]
+    line: { color: '#C4B5FD', width: 1.5 }
+    arrow: true
+  - elementId: c5
+    elementType: line
+    points: [[255, 265], [231, 320]]
+    line: { color: '#C4B5FD', width: 1.5 }
+    arrow: true
+  - elementId: c6
+    elementType: line
+    points: [[360, 212], [389, 204]]
+    line: { color: '#C4B5FD', width: 1.5 }
+    arrow: true
