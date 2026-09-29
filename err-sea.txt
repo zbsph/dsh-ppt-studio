@@ -1,0 +1,7 @@
+MESSAGE: Cannot read properties of undefined (reading '1')
+STACK:
+TypeError: Cannot read properties of undefined (reading '1')
+    at Object.layoutState [as layout] (file:///D:/SharkCode/dsh-ppt-studio/lib/pptd/diagram-families.js:1141:38)
+    at layoutDiagram (file:///D:/SharkCode/dsh-ppt-studio/lib/pptd/diagram-ir.js:159:24)
+    at resolveDeck (file:///D:/SharkCode/dsh-ppt-studio/lib/pptd/schema.js:672:19)
+    at async file:///C:/Users/11867/AppData/Local/Temp/seadiag2.mjs:4:15

@@ -1,0 +1,40 @@
+pageType: content
+diagram:
+  type: tree
+  title: 养殖平台组织
+  nodes:
+    - id: r
+      label: 平台长
+    - id: o
+      label: 养殖组
+    - id: m
+      label: 装备组
+    - id: q
+      label: 质检组
+    - id: o1
+      label: 投喂一班
+    - id: o2
+      label: 投喂二班
+    - id: m1
+      label: 网衣维护
+      emphasis: accent
+  edges:
+    - from: r
+      to: o
+    - from: r
+      to: m
+    - from: r
+      to: q
+    - from: o
+      to: o1
+    - from: o
+      to: o2
+    - from: m
+      to: m1
+  groups:
+    - id: g_yz
+      label: 养殖体系
+      members:
+        - o
+        - o1
+        - o2

@@ -1,0 +1,49 @@
+pageType: content
+diagram:
+  type: swimlane
+  title: 日投喂与巡检
+  groups:
+    - id: l1
+      label: 集控
+      members:
+        - a1
+        - a2
+    - id: l2
+      label: 投喂
+      members:
+        - b1
+    - id: l3
+      label: 潜水
+      members:
+        - c1
+    - id: l4
+      label: 质检
+      members:
+        - d1
+        - d2
+  nodes:
+    - id: a1
+      label: 投喂计划
+    - id: a2
+      label: 水质复核
+    - id: b1
+      label: 自动投喂
+    - id: c1
+      label: 水下巡检
+    - id: d1
+      label: 取样检测
+    - id: d2
+      label: 结果归档
+      emphasis: accent
+  edges:
+    - from: a1
+      to: a2
+      label: 复核
+    - from: a2
+      to: b1
+    - from: b1
+      to: c1
+    - from: c1
+      to: d1
+    - from: d1
+      to: d2

@@ -1,0 +1,7064 @@
+{
+  "size": {
+    "width": 960,
+    "height": 540
+  },
+  "theme": {
+    "colors": {
+      "primary": "#7C3AED",
+      "accent": "#E11D48",
+      "soft": "#EDE9FE",
+      "text": "#2E1065",
+      "bg": "#FAF5FF"
+    },
+    "textStyles": {
+      "body": {
+        "fontSize": 13,
+        "color": "$text"
+      }
+    },
+    "grid": {
+      "base": 8
+    },
+    "safeArea": {
+      "top": 40,
+      "bottom": 40,
+      "left": 40,
+      "right": 40
+    },
+    "minFontSize": null,
+    "themeConformance": "strict"
+  },
+  "pages": [
+    {
+      "index": 0,
+      "pageNo": 1,
+      "file": "pages/01.yaml",
+      "name": "pages/01",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 40,
+        "bottom": 40,
+        "left": 40,
+        "right": 40
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [
+        {
+          "id": "d1_grp_g_yz",
+          "label": "养殖体系",
+          "members": [
+            "d1_o",
+            "d1_o1",
+            "d1_o2",
+            "d1_t_o",
+            "d1_t_o1",
+            "d1_t_o2",
+            "d1_e3",
+            "d1_e4"
+          ]
+        }
+      ],
+      "elements": [
+        {
+          "id": "d1_g_g_yz",
+          "kind": "shape",
+          "bounds": {
+            "x": 58.4,
+            "y": 222,
+            "w": 403.2,
+            "h": 233.33
+          },
+          "role": "background",
+          "contains": [
+            "d1_o",
+            "d1_o1",
+            "d1_o2",
+            "d1_t_o",
+            "d1_t_o1",
+            "d1_t_o2",
+            "d1_e3",
+            "d1_e4",
+            "d1_gl_g_yz"
+          ],
+          "shape": "roundRect",
+          "fill": "#FAF5FF",
+          "rotation": 0
+        },
+        {
+          "id": "d1_gl_g_yz",
+          "kind": "text",
+          "bounds": {
+            "x": 64.4,
+            "y": 225,
+            "w": 391.2,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "left",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 44,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              44
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "养殖体系"
+        },
+        {
+          "id": "d1_r",
+          "kind": "shape",
+          "bounds": {
+            "x": 469.73,
+            "y": 92.67,
+            "w": 167.2,
+            "h": 48
+          },
+          "contains": [
+            "d1_t_r"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d1_t_r",
+          "kind": "text",
+          "bounds": {
+            "x": 475.73,
+            "y": 108.22,
+            "w": 155.2,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 39,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              39
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "平台长"
+        },
+        {
+          "id": "d1_o",
+          "kind": "shape",
+          "bounds": {
+            "x": 176.4,
+            "y": 246,
+            "w": 167.2,
+            "h": 48
+          },
+          "contains": [
+            "d1_t_o"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d1_t_o",
+          "kind": "text",
+          "bounds": {
+            "x": 182.4,
+            "y": 261.55,
+            "w": 155.2,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 39,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              39
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "养殖组"
+        },
+        {
+          "id": "d1_m",
+          "kind": "shape",
+          "bounds": {
+            "x": 506.4,
+            "y": 246,
+            "w": 167.2,
+            "h": 48
+          },
+          "contains": [
+            "d1_t_m"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d1_t_m",
+          "kind": "text",
+          "bounds": {
+            "x": 512.4,
+            "y": 261.55,
+            "w": 155.2,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 39,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              39
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "装备组"
+        },
+        {
+          "id": "d1_q",
+          "kind": "shape",
+          "bounds": {
+            "x": 726.4,
+            "y": 246,
+            "w": 167.2,
+            "h": 48
+          },
+          "contains": [
+            "d1_t_q"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d1_t_q",
+          "kind": "text",
+          "bounds": {
+            "x": 732.4,
+            "y": 261.55,
+            "w": 155.2,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 39,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              39
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "质检组"
+        },
+        {
+          "id": "d1_o1",
+          "kind": "shape",
+          "bounds": {
+            "x": 66.4,
+            "y": 399.33,
+            "w": 167.2,
+            "h": 48
+          },
+          "contains": [
+            "d1_t_o1"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d1_t_o1",
+          "kind": "text",
+          "bounds": {
+            "x": 72.4,
+            "y": 414.88,
+            "w": 155.2,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "投喂一班"
+        },
+        {
+          "id": "d1_o2",
+          "kind": "shape",
+          "bounds": {
+            "x": 286.4,
+            "y": 399.33,
+            "w": 167.2,
+            "h": 48
+          },
+          "contains": [
+            "d1_t_o2"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d1_t_o2",
+          "kind": "text",
+          "bounds": {
+            "x": 292.4,
+            "y": 414.88,
+            "w": 155.2,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "投喂二班"
+        },
+        {
+          "id": "d1_m1",
+          "kind": "shape",
+          "bounds": {
+            "x": 506.4,
+            "y": 399.33,
+            "w": 167.2,
+            "h": 48
+          },
+          "contains": [
+            "d1_t_m1"
+          ],
+          "shape": "roundRect",
+          "fill": "#E11D48",
+          "rotation": 0
+        },
+        {
+          "id": "d1_t_m1",
+          "kind": "text",
+          "bounds": {
+            "x": 512.4,
+            "y": 414.88,
+            "w": 155.2,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "网衣维护"
+        },
+        {
+          "id": "d1_e0",
+          "kind": "line",
+          "bounds": {
+            "x": 260,
+            "y": 140.67,
+            "w": 293.33000000000004,
+            "h": 105.33000000000001
+          },
+          "attach": {
+            "from": {
+              "ref": "d1_r",
+              "side": "bottom"
+            },
+            "to": {
+              "ref": "d1_o",
+              "side": "top"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              553.33,
+              140.67
+            ],
+            [
+              553.33,
+              193.33
+            ],
+            [
+              260,
+              193.33
+            ],
+            [
+              260,
+              246
+            ]
+          ]
+        },
+        {
+          "id": "d1_e1",
+          "kind": "line",
+          "bounds": {
+            "x": 553.33,
+            "y": 140.67,
+            "w": 36.66999999999996,
+            "h": 105.33000000000001
+          },
+          "attach": {
+            "from": {
+              "ref": "d1_r",
+              "side": "bottom"
+            },
+            "to": {
+              "ref": "d1_m",
+              "side": "top"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              553.33,
+              140.67
+            ],
+            [
+              553.33,
+              193.33
+            ],
+            [
+              590,
+              193.33
+            ],
+            [
+              590,
+              246
+            ]
+          ]
+        },
+        {
+          "id": "d1_e2",
+          "kind": "line",
+          "bounds": {
+            "x": 553.33,
+            "y": 140.67,
+            "w": 256.66999999999996,
+            "h": 105.33000000000001
+          },
+          "attach": {
+            "from": {
+              "ref": "d1_r",
+              "side": "bottom"
+            },
+            "to": {
+              "ref": "d1_q",
+              "side": "top"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              553.33,
+              140.67
+            ],
+            [
+              553.33,
+              193.33
+            ],
+            [
+              810,
+              193.33
+            ],
+            [
+              810,
+              246
+            ]
+          ]
+        },
+        {
+          "id": "d1_e3",
+          "kind": "line",
+          "bounds": {
+            "x": 150,
+            "y": 294,
+            "w": 110,
+            "h": 105.32999999999998
+          },
+          "attach": {
+            "from": {
+              "ref": "d1_o",
+              "side": "bottom"
+            },
+            "to": {
+              "ref": "d1_o1",
+              "side": "top"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              260,
+              294
+            ],
+            [
+              260,
+              346.67
+            ],
+            [
+              150,
+              346.67
+            ],
+            [
+              150,
+              399.33
+            ]
+          ]
+        },
+        {
+          "id": "d1_e4",
+          "kind": "line",
+          "bounds": {
+            "x": 260,
+            "y": 294,
+            "w": 110,
+            "h": 105.32999999999998
+          },
+          "attach": {
+            "from": {
+              "ref": "d1_o",
+              "side": "bottom"
+            },
+            "to": {
+              "ref": "d1_o2",
+              "side": "top"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              260,
+              294
+            ],
+            [
+              260,
+              346.67
+            ],
+            [
+              370,
+              346.67
+            ],
+            [
+              370,
+              399.33
+            ]
+          ]
+        },
+        {
+          "id": "d1_e5",
+          "kind": "line",
+          "bounds": {
+            "x": 590,
+            "y": 294,
+            "w": 1,
+            "h": 105.32999999999998
+          },
+          "attach": {
+            "from": {
+              "ref": "d1_m",
+              "side": "bottom"
+            },
+            "to": {
+              "ref": "d1_m1",
+              "side": "top"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              590,
+              294
+            ],
+            [
+              590,
+              346.67
+            ],
+            [
+              590,
+              346.67
+            ],
+            [
+              590,
+              399.33
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "pageNo": 2,
+      "file": "pages/02.yaml",
+      "name": "pages/02",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 40,
+        "bottom": 40,
+        "left": 40,
+        "right": 40
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [],
+      "elements": [
+        {
+          "id": "d2_mx_title",
+          "kind": "text",
+          "bounds": {
+            "x": 40,
+            "y": 40,
+            "w": 880,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#2E1065",
+            "align": "left",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 98,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              98
+            ],
+            "overflowY": 1,
+            "overflowX": 0
+          },
+          "text": "风险处置优先级"
+        },
+        {
+          "id": "d2_k1",
+          "kind": "shape",
+          "bounds": {
+            "x": 130,
+            "y": 84,
+            "w": 253.73,
+            "h": 200.8
+          },
+          "contains": [
+            "d2_t_k1"
+          ],
+          "shape": "roundRect",
+          "fill": "#E11D48",
+          "rotation": 0
+        },
+        {
+          "id": "d2_t_k1",
+          "kind": "text",
+          "bounds": {
+            "x": 136,
+            "y": 175.95,
+            "w": 241.73,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "溶氧骤降"
+        },
+        {
+          "id": "d2_k2",
+          "kind": "shape",
+          "bounds": {
+            "x": 398.13,
+            "y": 84,
+            "w": 253.73,
+            "h": 200.8
+          },
+          "contains": [
+            "d2_t_k2"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d2_t_k2",
+          "kind": "text",
+          "bounds": {
+            "x": 404.13,
+            "y": 175.95,
+            "w": 241.73,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "网衣破损"
+        },
+        {
+          "id": "d2_k3",
+          "kind": "shape",
+          "bounds": {
+            "x": 666.27,
+            "y": 84,
+            "w": 253.73,
+            "h": 200.8
+          },
+          "contains": [
+            "d2_t_k3"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d2_t_k3",
+          "kind": "text",
+          "bounds": {
+            "x": 672.27,
+            "y": 175.95,
+            "w": 241.73,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "台风预警"
+        },
+        {
+          "id": "d2_k4",
+          "kind": "shape",
+          "bounds": {
+            "x": 130,
+            "y": 299.2,
+            "w": 253.73,
+            "h": 200.8
+          },
+          "contains": [
+            "d2_t_k4"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d2_t_k4",
+          "kind": "text",
+          "bounds": {
+            "x": 136,
+            "y": 391.15,
+            "w": 241.73,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 65,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              65
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "附着物增多"
+        },
+        {
+          "id": "d2_k5",
+          "kind": "shape",
+          "bounds": {
+            "x": 398.13,
+            "y": 299.2,
+            "w": 253.73,
+            "h": 200.8
+          },
+          "contains": [
+            "d2_t_k5"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d2_t_k5",
+          "kind": "text",
+          "bounds": {
+            "x": 404.13,
+            "y": 391.15,
+            "w": 241.73,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "锚链磨损"
+        },
+        {
+          "id": "d2_k6",
+          "kind": "shape",
+          "bounds": {
+            "x": 666.27,
+            "y": 299.2,
+            "w": 253.73,
+            "h": 200.8
+          },
+          "contains": [
+            "d2_t_k6"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d2_t_k6",
+          "kind": "text",
+          "bounds": {
+            "x": 672.27,
+            "y": 391.15,
+            "w": 241.73,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "低温胁迫"
+        },
+        {
+          "id": "d2_cl0",
+          "kind": "text",
+          "bounds": {
+            "x": 130,
+            "y": 62,
+            "w": 253.73,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 33,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              33
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "可观察"
+        },
+        {
+          "id": "d2_cl1",
+          "kind": "text",
+          "bounds": {
+            "x": 398.13,
+            "y": 62,
+            "w": 253.73,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 44,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              44
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "当班处置"
+        },
+        {
+          "id": "d2_cl2",
+          "kind": "text",
+          "bounds": {
+            "x": 666.27,
+            "y": 62,
+            "w": 253.73,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 44,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              44
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "立即撤离"
+        },
+        {
+          "id": "d2_rl0",
+          "kind": "text",
+          "bounds": {
+            "x": 40,
+            "y": 176.4,
+            "w": 82,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "right",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 22,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              22
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "高频"
+        },
+        {
+          "id": "d2_rl1",
+          "kind": "text",
+          "bounds": {
+            "x": 40,
+            "y": 391.6,
+            "w": 82,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "right",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 22,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              22
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "低频"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "pageNo": 3,
+      "file": "pages/03.yaml",
+      "name": "pages/03",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 40,
+        "bottom": 40,
+        "left": 40,
+        "right": 40
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [],
+      "elements": [
+        {
+          "id": "d3_tl_title",
+          "kind": "text",
+          "bounds": {
+            "x": 40,
+            "y": 40,
+            "w": 880,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#2E1065",
+            "align": "left",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 70,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              70
+            ],
+            "overflowY": 1,
+            "overflowX": 0
+          },
+          "text": "投苗到出栏"
+        },
+        {
+          "id": "d3_axis",
+          "kind": "line",
+          "bounds": {
+            "x": 40,
+            "y": 270,
+            "w": 880,
+            "h": 1
+          },
+          "points": [
+            [
+              40,
+              270
+            ],
+            [
+              920,
+              270
+            ]
+          ]
+        },
+        {
+          "id": "d3_dot_t1",
+          "kind": "shape",
+          "bounds": {
+            "x": 104.33,
+            "y": 261,
+            "w": 18,
+            "h": 18
+          },
+          "role": "decoration",
+          "shape": "ellipse",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d3_stub_t1",
+          "kind": "line",
+          "bounds": {
+            "x": 113.33,
+            "y": 249,
+            "w": 1,
+            "h": 12
+          },
+          "points": [
+            [
+              113.33,
+              261
+            ],
+            [
+              113.33,
+              249
+            ]
+          ]
+        },
+        {
+          "id": "d3_t_lb_t1",
+          "kind": "text",
+          "bounds": {
+            "x": 56.27,
+            "y": 236,
+            "w": 114.13,
+            "h": 14
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 48,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              48
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "苗种检疫"
+        },
+        {
+          "id": "d3_dot_t2",
+          "kind": "shape",
+          "bounds": {
+            "x": 251,
+            "y": 261,
+            "w": 18,
+            "h": 18
+          },
+          "role": "decoration",
+          "shape": "ellipse",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d3_stub_t2",
+          "kind": "line",
+          "bounds": {
+            "x": 260,
+            "y": 279,
+            "w": 1,
+            "h": 12
+          },
+          "points": [
+            [
+              260,
+              279
+            ],
+            [
+              260,
+              291
+            ]
+          ]
+        },
+        {
+          "id": "d3_t_lb_t2",
+          "kind": "text",
+          "bounds": {
+            "x": 202.93,
+            "y": 294,
+            "w": 114.13,
+            "h": 14
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 48,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              48
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "分级投苗"
+        },
+        {
+          "id": "d3_dot_t3",
+          "kind": "shape",
+          "bounds": {
+            "x": 397.67,
+            "y": 261,
+            "w": 18,
+            "h": 18
+          },
+          "role": "decoration",
+          "shape": "ellipse",
+          "fill": "#E11D48",
+          "rotation": 0
+        },
+        {
+          "id": "d3_stub_t3",
+          "kind": "line",
+          "bounds": {
+            "x": 406.67,
+            "y": 249,
+            "w": 1,
+            "h": 12
+          },
+          "points": [
+            [
+              406.67,
+              261
+            ],
+            [
+              406.67,
+              249
+            ]
+          ]
+        },
+        {
+          "id": "d3_t_lb_t3",
+          "kind": "text",
+          "bounds": {
+            "x": 349.6,
+            "y": 236,
+            "w": 114.13,
+            "h": 14
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 48,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              48
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "中期分箱"
+        },
+        {
+          "id": "d3_dot_t4",
+          "kind": "shape",
+          "bounds": {
+            "x": 544.33,
+            "y": 261,
+            "w": 18,
+            "h": 18
+          },
+          "role": "decoration",
+          "shape": "ellipse",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d3_stub_t4",
+          "kind": "line",
+          "bounds": {
+            "x": 553.33,
+            "y": 279,
+            "w": 1,
+            "h": 12
+          },
+          "points": [
+            [
+              553.33,
+              279
+            ],
+            [
+              553.33,
+              291
+            ]
+          ]
+        },
+        {
+          "id": "d3_t_lb_t4",
+          "kind": "text",
+          "bounds": {
+            "x": 496.27,
+            "y": 294,
+            "w": 114.13,
+            "h": 14
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 48,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              48
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "强化育肥"
+        },
+        {
+          "id": "d3_dot_t5",
+          "kind": "shape",
+          "bounds": {
+            "x": 691,
+            "y": 261,
+            "w": 18,
+            "h": 18
+          },
+          "role": "decoration",
+          "shape": "ellipse",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d3_stub_t5",
+          "kind": "line",
+          "bounds": {
+            "x": 700,
+            "y": 249,
+            "w": 1,
+            "h": 12
+          },
+          "points": [
+            [
+              700,
+              261
+            ],
+            [
+              700,
+              249
+            ]
+          ]
+        },
+        {
+          "id": "d3_t_lb_t5",
+          "kind": "text",
+          "bounds": {
+            "x": 642.93,
+            "y": 236,
+            "w": 114.13,
+            "h": 14
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 48,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              48
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "起网抽检"
+        },
+        {
+          "id": "d3_dot_t6",
+          "kind": "shape",
+          "bounds": {
+            "x": 837.67,
+            "y": 261,
+            "w": 18,
+            "h": 18
+          },
+          "role": "decoration",
+          "shape": "ellipse",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d3_stub_t6",
+          "kind": "line",
+          "bounds": {
+            "x": 846.67,
+            "y": 279,
+            "w": 1,
+            "h": 12
+          },
+          "points": [
+            [
+              846.67,
+              279
+            ],
+            [
+              846.67,
+              291
+            ]
+          ]
+        },
+        {
+          "id": "d3_t_lb_t6",
+          "kind": "text",
+          "bounds": {
+            "x": 789.6,
+            "y": 294,
+            "w": 114.13,
+            "h": 14
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 48,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              48
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "成鱼出栏"
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "pageNo": 4,
+      "file": "pages/04.yaml",
+      "name": "pages/04",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 40,
+        "bottom": 40,
+        "left": 40,
+        "right": 40
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [
+        {
+          "id": "d4_grp_l1",
+          "label": "集控",
+          "members": [
+            "d4_a1",
+            "d4_a2"
+          ]
+        },
+        {
+          "id": "d4_grp_l2",
+          "label": "投喂",
+          "members": [
+            "d4_b1"
+          ]
+        },
+        {
+          "id": "d4_grp_l3",
+          "label": "潜水",
+          "members": [
+            "d4_c1"
+          ]
+        },
+        {
+          "id": "d4_grp_l4",
+          "label": "质检",
+          "members": [
+            "d4_d1",
+            "d4_d2"
+          ]
+        }
+      ],
+      "elements": [
+        {
+          "id": "d4_lane_l1",
+          "kind": "shape",
+          "bounds": {
+            "x": 40,
+            "y": 40,
+            "w": 880,
+            "h": 115
+          },
+          "role": "decoration",
+          "roleReason": "泳道带（装饰层；跨道连线穿过属设计意图）",
+          "shape": "rect",
+          "fill": "#FAF5FF",
+          "rotation": 0
+        },
+        {
+          "id": "d4_laneT_l1",
+          "kind": "text",
+          "bounds": {
+            "x": 48,
+            "y": 44,
+            "w": 200,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "left",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 22,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              22
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "集控"
+        },
+        {
+          "id": "d4_a1",
+          "kind": "shape",
+          "bounds": {
+            "x": 154,
+            "y": 75.5,
+            "w": 200,
+            "h": 56
+          },
+          "contains": [
+            "d4_t_a1"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d4_t_a1",
+          "kind": "text",
+          "bounds": {
+            "x": 160,
+            "y": 95.05,
+            "w": 188,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "投喂计划"
+        },
+        {
+          "id": "d4_a2",
+          "kind": "shape",
+          "bounds": {
+            "x": 606,
+            "y": 75.5,
+            "w": 200,
+            "h": 56
+          },
+          "contains": [
+            "d4_t_a2"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d4_t_a2",
+          "kind": "text",
+          "bounds": {
+            "x": 612,
+            "y": 95.05,
+            "w": 188,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "水质复核"
+        },
+        {
+          "id": "d4_lane_l2",
+          "kind": "shape",
+          "bounds": {
+            "x": 40,
+            "y": 155,
+            "w": 880,
+            "h": 115
+          },
+          "role": "decoration",
+          "roleReason": "泳道带（装饰层；跨道连线穿过属设计意图）",
+          "shape": "rect",
+          "fill": "#FAF5FF",
+          "rotation": 0
+        },
+        {
+          "id": "d4_laneT_l2",
+          "kind": "text",
+          "bounds": {
+            "x": 48,
+            "y": 159,
+            "w": 200,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "left",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 22,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              22
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "投喂"
+        },
+        {
+          "id": "d4_sep_l2",
+          "kind": "line",
+          "bounds": {
+            "x": 40,
+            "y": 155,
+            "w": 880,
+            "h": 1
+          },
+          "role": "decoration",
+          "roleReason": "泳道分隔线（结构线，非数据流）",
+          "points": [
+            [
+              40,
+              155
+            ],
+            [
+              920,
+              155
+            ]
+          ]
+        },
+        {
+          "id": "d4_b1",
+          "kind": "shape",
+          "bounds": {
+            "x": 154,
+            "y": 190.5,
+            "w": 200,
+            "h": 56
+          },
+          "contains": [
+            "d4_t_b1"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d4_t_b1",
+          "kind": "text",
+          "bounds": {
+            "x": 160,
+            "y": 210.05,
+            "w": 188,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "自动投喂"
+        },
+        {
+          "id": "d4_lane_l3",
+          "kind": "shape",
+          "bounds": {
+            "x": 40,
+            "y": 270,
+            "w": 880,
+            "h": 115
+          },
+          "role": "decoration",
+          "roleReason": "泳道带（装饰层；跨道连线穿过属设计意图）",
+          "shape": "rect",
+          "fill": "#FAF5FF",
+          "rotation": 0
+        },
+        {
+          "id": "d4_laneT_l3",
+          "kind": "text",
+          "bounds": {
+            "x": 48,
+            "y": 274,
+            "w": 200,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "left",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 22,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              22
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "潜水"
+        },
+        {
+          "id": "d4_sep_l3",
+          "kind": "line",
+          "bounds": {
+            "x": 40,
+            "y": 270,
+            "w": 880,
+            "h": 1
+          },
+          "role": "decoration",
+          "roleReason": "泳道分隔线（结构线，非数据流）",
+          "points": [
+            [
+              40,
+              270
+            ],
+            [
+              920,
+              270
+            ]
+          ]
+        },
+        {
+          "id": "d4_c1",
+          "kind": "shape",
+          "bounds": {
+            "x": 154,
+            "y": 305.5,
+            "w": 200,
+            "h": 56
+          },
+          "contains": [
+            "d4_t_c1"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d4_t_c1",
+          "kind": "text",
+          "bounds": {
+            "x": 160,
+            "y": 325.05,
+            "w": 188,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "水下巡检"
+        },
+        {
+          "id": "d4_lane_l4",
+          "kind": "shape",
+          "bounds": {
+            "x": 40,
+            "y": 385,
+            "w": 880,
+            "h": 115
+          },
+          "role": "decoration",
+          "roleReason": "泳道带（装饰层；跨道连线穿过属设计意图）",
+          "shape": "rect",
+          "fill": "#FAF5FF",
+          "rotation": 0
+        },
+        {
+          "id": "d4_laneT_l4",
+          "kind": "text",
+          "bounds": {
+            "x": 48,
+            "y": 389,
+            "w": 200,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "left",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 22,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              22
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "质检"
+        },
+        {
+          "id": "d4_sep_l4",
+          "kind": "line",
+          "bounds": {
+            "x": 40,
+            "y": 385,
+            "w": 880,
+            "h": 1
+          },
+          "role": "decoration",
+          "roleReason": "泳道分隔线（结构线，非数据流）",
+          "points": [
+            [
+              40,
+              385
+            ],
+            [
+              920,
+              385
+            ]
+          ]
+        },
+        {
+          "id": "d4_d1",
+          "kind": "shape",
+          "bounds": {
+            "x": 154,
+            "y": 420.5,
+            "w": 200,
+            "h": 56
+          },
+          "contains": [
+            "d4_t_d1"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d4_t_d1",
+          "kind": "text",
+          "bounds": {
+            "x": 160,
+            "y": 440.05,
+            "w": 188,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "取样检测"
+        },
+        {
+          "id": "d4_d2",
+          "kind": "shape",
+          "bounds": {
+            "x": 606,
+            "y": 420.5,
+            "w": 200,
+            "h": 56
+          },
+          "contains": [
+            "d4_t_d2"
+          ],
+          "shape": "roundRect",
+          "fill": "#E11D48",
+          "rotation": 0
+        },
+        {
+          "id": "d4_t_d2",
+          "kind": "text",
+          "bounds": {
+            "x": 612,
+            "y": 440.05,
+            "w": 188,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "结果归档"
+        },
+        {
+          "id": "d4_e0",
+          "kind": "line",
+          "bounds": {
+            "x": 354,
+            "y": 103.5,
+            "w": 252,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d4_a1",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d4_a2",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              354,
+              103.5
+            ],
+            [
+              606,
+              103.5
+            ]
+          ]
+        },
+        {
+          "id": "d4_el_e0",
+          "kind": "text",
+          "bounds": {
+            "x": 469,
+            "y": 85.5,
+            "w": 22,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 22,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              22
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "复核"
+        },
+        {
+          "id": "d4_e1",
+          "kind": "line",
+          "bounds": {
+            "x": 254,
+            "y": 131.5,
+            "w": 452,
+            "h": 59
+          },
+          "attach": {
+            "from": {
+              "ref": "d4_a2",
+              "side": "bottom"
+            },
+            "to": {
+              "ref": "d4_b1",
+              "side": "top"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              706,
+              131.5
+            ],
+            [
+              706,
+              143
+            ],
+            [
+              254,
+              143
+            ],
+            [
+              254,
+              190.5
+            ]
+          ]
+        },
+        {
+          "id": "d4_e2",
+          "kind": "line",
+          "bounds": {
+            "x": 254,
+            "y": 246.5,
+            "w": 1,
+            "h": 59
+          },
+          "attach": {
+            "from": {
+              "ref": "d4_b1",
+              "side": "bottom"
+            },
+            "to": {
+              "ref": "d4_c1",
+              "side": "top"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              254,
+              246.5
+            ],
+            [
+              254,
+              258
+            ],
+            [
+              254,
+              258
+            ],
+            [
+              254,
+              305.5
+            ]
+          ]
+        },
+        {
+          "id": "d4_e3",
+          "kind": "line",
+          "bounds": {
+            "x": 254,
+            "y": 361.5,
+            "w": 1,
+            "h": 59
+          },
+          "attach": {
+            "from": {
+              "ref": "d4_c1",
+              "side": "bottom"
+            },
+            "to": {
+              "ref": "d4_d1",
+              "side": "top"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              254,
+              361.5
+            ],
+            [
+              254,
+              373
+            ],
+            [
+              254,
+              373
+            ],
+            [
+              254,
+              420.5
+            ]
+          ]
+        },
+        {
+          "id": "d4_e4",
+          "kind": "line",
+          "bounds": {
+            "x": 354,
+            "y": 448.5,
+            "w": 252,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d4_d1",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d4_d2",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              354,
+              448.5
+            ],
+            [
+              606,
+              448.5
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "pageNo": 5,
+      "file": "pages/05.yaml",
+      "name": "pages/05",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 40,
+        "bottom": 40,
+        "left": 40,
+        "right": 40
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [
+        {
+          "id": "d5_grp_left",
+          "label": "方案 A：人工",
+          "members": [
+            "d5_a1",
+            "d5_a2",
+            "d5_a3",
+            "d5_a4"
+          ]
+        },
+        {
+          "id": "d5_grp_right",
+          "label": "方案 B：机器人",
+          "members": [
+            "d5_b1",
+            "d5_b2",
+            "d5_b3",
+            "d5_b4"
+          ]
+        }
+      ],
+      "elements": [
+        {
+          "id": "d5_cmp_title",
+          "kind": "text",
+          "bounds": {
+            "x": 40,
+            "y": 40,
+            "w": 880,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#2E1065",
+            "align": "left",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 98,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              98
+            ],
+            "overflowY": 1,
+            "overflowX": 0
+          },
+          "text": "网衣清洗两方案"
+        },
+        {
+          "id": "d5_g_right",
+          "kind": "shape",
+          "bounds": {
+            "x": 499.2,
+            "y": 60,
+            "w": 420.8,
+            "h": 440
+          },
+          "role": "background",
+          "contains": [
+            "d5_b1",
+            "d5_b2",
+            "d5_b3",
+            "d5_b4",
+            "d5_t_b1",
+            "d5_t_b2",
+            "d5_t_b3",
+            "d5_t_b4",
+            "d5_gl_right"
+          ],
+          "shape": "roundRect",
+          "fill": "#FAF5FF",
+          "rotation": 0
+        },
+        {
+          "id": "d5_gl_right",
+          "kind": "text",
+          "bounds": {
+            "x": 509.2,
+            "y": 68,
+            "w": 400.8,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#2E1065",
+            "align": "left",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 84,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              84
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "方案 B：机器人"
+        },
+        {
+          "id": "d5_g_left",
+          "kind": "shape",
+          "bounds": {
+            "x": 40,
+            "y": 60,
+            "w": 420.8,
+            "h": 440
+          },
+          "role": "background",
+          "contains": [
+            "d5_a1",
+            "d5_a2",
+            "d5_a3",
+            "d5_a4",
+            "d5_t_a1",
+            "d5_t_a2",
+            "d5_t_a3",
+            "d5_t_a4",
+            "d5_gl_left"
+          ],
+          "shape": "roundRect",
+          "fill": "#FAF5FF",
+          "rotation": 0
+        },
+        {
+          "id": "d5_gl_left",
+          "kind": "text",
+          "bounds": {
+            "x": 50,
+            "y": 68,
+            "w": 400.8,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#2E1065",
+            "align": "left",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 72,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              72
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "方案 A：人工"
+        },
+        {
+          "id": "d5_a1",
+          "kind": "shape",
+          "bounds": {
+            "x": 40,
+            "y": 86,
+            "w": 420.8,
+            "h": 92.7
+          },
+          "contains": [
+            "d5_t_a1"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d5_t_a1",
+          "kind": "text",
+          "bounds": {
+            "x": 46,
+            "y": 123.9,
+            "w": 408.8,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "潜水人工"
+        },
+        {
+          "id": "d5_a2",
+          "kind": "shape",
+          "bounds": {
+            "x": 40,
+            "y": 193.1,
+            "w": 420.8,
+            "h": 92.7
+          },
+          "contains": [
+            "d5_t_a2"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d5_t_a2",
+          "kind": "text",
+          "bounds": {
+            "x": 46,
+            "y": 231,
+            "w": 408.8,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "清洗彻底"
+        },
+        {
+          "id": "d5_a3",
+          "kind": "shape",
+          "bounds": {
+            "x": 40,
+            "y": 300.2,
+            "w": 420.8,
+            "h": 92.7
+          },
+          "contains": [
+            "d5_t_a3"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d5_t_a3",
+          "kind": "text",
+          "bounds": {
+            "x": 46,
+            "y": 338.1,
+            "w": 408.8,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 55.24999999999999,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              55.24999999999999
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "窗口 ≤2h"
+        },
+        {
+          "id": "d5_a4",
+          "kind": "shape",
+          "bounds": {
+            "x": 40,
+            "y": 407.3,
+            "w": 420.8,
+            "h": 92.7
+          },
+          "contains": [
+            "d5_t_a4"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d5_t_a4",
+          "kind": "text",
+          "bounds": {
+            "x": 46,
+            "y": 445.2,
+            "w": 408.8,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "人力紧张"
+        },
+        {
+          "id": "d5_b1",
+          "kind": "shape",
+          "bounds": {
+            "x": 499.2,
+            "y": 86,
+            "w": 420.8,
+            "h": 92.7
+          },
+          "contains": [
+            "d5_t_b1"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d5_t_b1",
+          "kind": "text",
+          "bounds": {
+            "x": 505.2,
+            "y": 123.9,
+            "w": 408.8,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 65,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              65
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "水下机器人"
+        },
+        {
+          "id": "d5_b2",
+          "kind": "shape",
+          "bounds": {
+            "x": 499.2,
+            "y": 193.1,
+            "w": 420.8,
+            "h": 92.7
+          },
+          "contains": [
+            "d5_t_b2"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d5_t_b2",
+          "kind": "text",
+          "bounds": {
+            "x": 505.2,
+            "y": 231,
+            "w": 408.8,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 65,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              65
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "可夜间作业"
+        },
+        {
+          "id": "d5_b3",
+          "kind": "shape",
+          "bounds": {
+            "x": 499.2,
+            "y": 300.2,
+            "w": 420.8,
+            "h": 92.7
+          },
+          "contains": [
+            "d5_t_b3"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d5_t_b3",
+          "kind": "text",
+          "bounds": {
+            "x": 505.2,
+            "y": 338.1,
+            "w": 408.8,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 68.25,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              68.25
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "覆盖率 92%"
+        },
+        {
+          "id": "d5_b4",
+          "kind": "shape",
+          "bounds": {
+            "x": 499.2,
+            "y": 407.3,
+            "w": 420.8,
+            "h": 92.7
+          },
+          "contains": [
+            "d5_t_b4"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d5_t_b4",
+          "kind": "text",
+          "bounds": {
+            "x": 505.2,
+            "y": 445.2,
+            "w": 408.8,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 65,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              65
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "购置成本高"
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "pageNo": 6,
+      "file": "pages/06.yaml",
+      "name": "pages/06",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 40,
+        "bottom": 40,
+        "left": 40,
+        "right": 40
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [],
+      "elements": [
+        {
+          "id": "d6_cyc_title",
+          "kind": "text",
+          "bounds": {
+            "x": 40,
+            "y": 40,
+            "w": 880,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#2E1065",
+            "align": "left",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 84,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              84
+            ],
+            "overflowY": 1,
+            "overflowX": 0
+          },
+          "text": "水质调控闭环"
+        },
+        {
+          "id": "d6_q1",
+          "kind": "shape",
+          "bounds": {
+            "x": 431.83,
+            "y": 62,
+            "w": 96.34,
+            "h": 34
+          },
+          "contains": [
+            "d6_t_q1"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d6_t_q1",
+          "kind": "text",
+          "bounds": {
+            "x": 437.83,
+            "y": 70.55,
+            "w": 84.34,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 65,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              65
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "传感器采集"
+        },
+        {
+          "id": "d6_q2",
+          "kind": "shape",
+          "bounds": {
+            "x": 613.48,
+            "y": 193.98,
+            "w": 96.34,
+            "h": 34
+          },
+          "contains": [
+            "d6_t_q2"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d6_t_q2",
+          "kind": "text",
+          "bounds": {
+            "x": 619.48,
+            "y": 202.53,
+            "w": 84.34,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "趋势预测"
+        },
+        {
+          "id": "d6_q3",
+          "kind": "shape",
+          "bounds": {
+            "x": 544.1,
+            "y": 407.52,
+            "w": 96.34,
+            "h": 34
+          },
+          "contains": [
+            "d6_t_q3"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d6_t_q3",
+          "kind": "text",
+          "bounds": {
+            "x": 550.1,
+            "y": 416.07,
+            "w": 84.34,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "投喂调整"
+        },
+        {
+          "id": "d6_q4",
+          "kind": "shape",
+          "bounds": {
+            "x": 319.56,
+            "y": 407.52,
+            "w": 96.34,
+            "h": 34
+          },
+          "contains": [
+            "d6_t_q4"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d6_t_q4",
+          "kind": "text",
+          "bounds": {
+            "x": 325.56,
+            "y": 416.07,
+            "w": 84.34,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "效果复核"
+        },
+        {
+          "id": "d6_q5",
+          "kind": "shape",
+          "bounds": {
+            "x": 250.18,
+            "y": 193.98,
+            "w": 96.34,
+            "h": 34
+          },
+          "contains": [
+            "d6_t_q5"
+          ],
+          "shape": "roundRect",
+          "fill": "#E11D48",
+          "rotation": 0
+        },
+        {
+          "id": "d6_t_q5",
+          "kind": "text",
+          "bounds": {
+            "x": 256.18,
+            "y": 202.53,
+            "w": 84.34,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "阈值回写"
+        },
+        {
+          "id": "d6_e0",
+          "kind": "line",
+          "bounds": {
+            "x": 528.17,
+            "y": 86.88,
+            "w": 124.71000000000004,
+            "h": 107.1
+          },
+          "attach": {
+            "from": {
+              "ref": "d6_q1",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d6_q2",
+              "side": "top"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              528.17,
+              86.88
+            ],
+            [
+              604.02,
+              99.3
+            ],
+            [
+              652.88,
+              193.98
+            ]
+          ]
+        },
+        {
+          "id": "d6_e1",
+          "kind": "line",
+          "bounds": {
+            "x": 609.09,
+            "y": 227.98,
+            "w": 71.57999999999993,
+            "h": 179.54
+          },
+          "attach": {
+            "from": {
+              "ref": "d6_q2",
+              "side": "bottom"
+            },
+            "to": {
+              "ref": "d6_q3",
+              "side": "top"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              664.25,
+              227.98
+            ],
+            [
+              680.67,
+              335.2
+            ],
+            [
+              609.09,
+              407.52
+            ]
+          ]
+        },
+        {
+          "id": "d6_e2",
+          "kind": "line",
+          "bounds": {
+            "x": 401.53,
+            "y": 441.52,
+            "w": 156.94000000000005,
+            "h": 39.48000000000002
+          },
+          "attach": {
+            "from": {
+              "ref": "d6_q3",
+              "side": "bottom"
+            },
+            "to": {
+              "ref": "d6_q4",
+              "side": "bottom"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              558.47,
+              441.52
+            ],
+            [
+              480,
+              481
+            ],
+            [
+              401.53,
+              441.52
+            ]
+          ]
+        },
+        {
+          "id": "d6_e3",
+          "kind": "line",
+          "bounds": {
+            "x": 279.33,
+            "y": 227.98,
+            "w": 71.58000000000004,
+            "h": 179.54
+          },
+          "attach": {
+            "from": {
+              "ref": "d6_q4",
+              "side": "top"
+            },
+            "to": {
+              "ref": "d6_q5",
+              "side": "bottom"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              350.91,
+              407.52
+            ],
+            [
+              279.33,
+              335.2
+            ],
+            [
+              295.75,
+              227.98
+            ]
+          ]
+        },
+        {
+          "id": "d6_e4",
+          "kind": "line",
+          "bounds": {
+            "x": 307.12,
+            "y": 86.88,
+            "w": 124.70999999999998,
+            "h": 107.1
+          },
+          "attach": {
+            "from": {
+              "ref": "d6_q5",
+              "side": "top"
+            },
+            "to": {
+              "ref": "d6_q1",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              307.12,
+              193.98
+            ],
+            [
+              355.98,
+              99.3
+            ],
+            [
+              431.83,
+              86.88
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "pageNo": 7,
+      "file": "pages/07.yaml",
+      "name": "pages/07",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 40,
+        "bottom": 40,
+        "left": 40,
+        "right": 40
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [],
+      "elements": [
+        {
+          "id": "d7_fn_title",
+          "kind": "text",
+          "bounds": {
+            "x": 40,
+            "y": 40,
+            "w": 880,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#2E1065",
+            "align": "left",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 84,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              84
+            ],
+            "overflowY": 1,
+            "overflowX": 0
+          },
+          "text": "分级出栏漏斗"
+        },
+        {
+          "id": "d7_f1",
+          "kind": "shape",
+          "bounds": {
+            "x": 40,
+            "y": 62,
+            "w": 880,
+            "h": 109.5
+          },
+          "contains": [
+            "d7_t_f1"
+          ],
+          "shape": "custGeom",
+          "fill": "#7C3AED",
+          "path": {
+            "w": 880,
+            "h": 110,
+            "commands": [
+              {
+                "cmd": "moveTo",
+                "pts": [
+                  [
+                    0,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    880,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    795,
+                    110
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    85,
+                    110
+                  ]
+                ]
+              },
+              {
+                "cmd": "close"
+              }
+            ]
+          },
+          "rotation": 0
+        },
+        {
+          "id": "d7_t_f1",
+          "kind": "text",
+          "bounds": {
+            "x": 40,
+            "y": 108.3,
+            "w": 880,
+            "h": 16.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 70.19999999999999,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              70.19999999999999
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "存栏 52000"
+        },
+        {
+          "id": "d7_f2",
+          "kind": "shape",
+          "bounds": {
+            "x": 125.07,
+            "y": 171.5,
+            "w": 709.87,
+            "h": 109.5
+          },
+          "contains": [
+            "d7_t_f2"
+          ],
+          "shape": "custGeom",
+          "fill": "#7C3AED",
+          "path": {
+            "w": 710,
+            "h": 110,
+            "commands": [
+              {
+                "cmd": "moveTo",
+                "pts": [
+                  [
+                    0,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    710,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    625,
+                    110
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    85,
+                    110
+                  ]
+                ]
+              },
+              {
+                "cmd": "close"
+              }
+            ]
+          },
+          "rotation": 0
+        },
+        {
+          "id": "d7_t_f2",
+          "kind": "text",
+          "bounds": {
+            "x": 125.07,
+            "y": 217.8,
+            "w": 709.87,
+            "h": 16.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 109.19999999999999,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              109.19999999999999
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "达捕捞规格 31000"
+        },
+        {
+          "id": "d7_f3",
+          "kind": "shape",
+          "bounds": {
+            "x": 210.13,
+            "y": 281,
+            "w": 539.73,
+            "h": 109.5
+          },
+          "contains": [
+            "d7_t_f3"
+          ],
+          "shape": "custGeom",
+          "fill": "#7C3AED",
+          "path": {
+            "w": 540,
+            "h": 110,
+            "commands": [
+              {
+                "cmd": "moveTo",
+                "pts": [
+                  [
+                    0,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    540,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    455,
+                    110
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    85,
+                    110
+                  ]
+                ]
+              },
+              {
+                "cmd": "close"
+              }
+            ]
+          },
+          "rotation": 0
+        },
+        {
+          "id": "d7_t_f3",
+          "kind": "text",
+          "bounds": {
+            "x": 210.13,
+            "y": 327.3,
+            "w": 539.73,
+            "h": 16.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 96.19999999999999,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              96.19999999999999
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "抽检合格 18400"
+        },
+        {
+          "id": "d7_f4",
+          "kind": "shape",
+          "bounds": {
+            "x": 295.2,
+            "y": 390.5,
+            "w": 369.6,
+            "h": 109.5
+          },
+          "contains": [
+            "d7_t_f4"
+          ],
+          "shape": "custGeom",
+          "fill": "#E11D48",
+          "path": {
+            "w": 370,
+            "h": 110,
+            "commands": [
+              {
+                "cmd": "moveTo",
+                "pts": [
+                  [
+                    0,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    370,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    262,
+                    110
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    107,
+                    110
+                  ]
+                ]
+              },
+              {
+                "cmd": "close"
+              }
+            ]
+          },
+          "rotation": 0
+        },
+        {
+          "id": "d7_t_f4",
+          "kind": "text",
+          "bounds": {
+            "x": 295.2,
+            "y": 436.8,
+            "w": 369.6,
+            "h": 16.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 62.39999999999999,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              62.39999999999999
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "直供 5600"
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "pageNo": 8,
+      "file": "pages/08.yaml",
+      "name": "pages/08",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 40,
+        "bottom": 40,
+        "left": 40,
+        "right": 40
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [],
+      "elements": [
+        {
+          "id": "d8_st_title",
+          "kind": "text",
+          "bounds": {
+            "x": 48,
+            "y": 256,
+            "w": 200,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#2E1065",
+            "align": "left",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 56,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              56
+            ],
+            "overflowY": 1,
+            "overflowX": 0
+          },
+          "text": "巡检七步"
+        },
+        {
+          "id": "d8_ring",
+          "kind": "shape",
+          "bounds": {
+            "x": 310,
+            "y": 100,
+            "w": 340,
+            "h": 340
+          },
+          "role": "decoration",
+          "roleReason": "步骤环的引导环（装饰层：只表达\"这是一圈步骤\"，不参与内容重叠判定）",
+          "shape": "ellipse",
+          "fill": "#FAF5FF",
+          "rotation": 0
+        },
+        {
+          "id": "d8_s1",
+          "kind": "shape",
+          "bounds": {
+            "x": 460,
+            "y": 80,
+            "w": 40,
+            "h": 40
+          },
+          "contains": [
+            "d8_n_s1"
+          ],
+          "shape": "ellipse",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d8_n_s1",
+          "kind": "text",
+          "bounds": {
+            "x": 460,
+            "y": 88.3,
+            "w": 40,
+            "h": 23.4
+          },
+          "style": {
+            "fontSize": 18,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 10.799999999999999,
+            "textH": 21.599999999999998,
+            "lines": 1,
+            "lineWidths": [
+              10.799999999999999
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "1"
+        },
+        {
+          "id": "d8_s2",
+          "kind": "shape",
+          "bounds": {
+            "x": 592.91,
+            "y": 144.01,
+            "w": 40,
+            "h": 40
+          },
+          "contains": [
+            "d8_n_s2"
+          ],
+          "shape": "ellipse",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d8_n_s2",
+          "kind": "text",
+          "bounds": {
+            "x": 592.91,
+            "y": 152.31,
+            "w": 40,
+            "h": 23.4
+          },
+          "style": {
+            "fontSize": 18,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 10.799999999999999,
+            "textH": 21.599999999999998,
+            "lines": 1,
+            "lineWidths": [
+              10.799999999999999
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "2"
+        },
+        {
+          "id": "d8_s3",
+          "kind": "shape",
+          "bounds": {
+            "x": 625.74,
+            "y": 287.83,
+            "w": 40,
+            "h": 40
+          },
+          "contains": [
+            "d8_n_s3"
+          ],
+          "shape": "ellipse",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d8_n_s3",
+          "kind": "text",
+          "bounds": {
+            "x": 625.74,
+            "y": 296.13,
+            "w": 40,
+            "h": 23.4
+          },
+          "style": {
+            "fontSize": 18,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 10.799999999999999,
+            "textH": 21.599999999999998,
+            "lines": 1,
+            "lineWidths": [
+              10.799999999999999
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "3"
+        },
+        {
+          "id": "d8_s4",
+          "kind": "shape",
+          "bounds": {
+            "x": 533.76,
+            "y": 403.16,
+            "w": 40,
+            "h": 40
+          },
+          "contains": [
+            "d8_n_s4"
+          ],
+          "shape": "ellipse",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d8_n_s4",
+          "kind": "text",
+          "bounds": {
+            "x": 533.76,
+            "y": 411.46,
+            "w": 40,
+            "h": 23.4
+          },
+          "style": {
+            "fontSize": 18,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 10.799999999999999,
+            "textH": 21.599999999999998,
+            "lines": 1,
+            "lineWidths": [
+              10.799999999999999
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "4"
+        },
+        {
+          "id": "d8_s5",
+          "kind": "shape",
+          "bounds": {
+            "x": 386.24,
+            "y": 403.16,
+            "w": 40,
+            "h": 40
+          },
+          "contains": [
+            "d8_n_s5"
+          ],
+          "shape": "ellipse",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d8_n_s5",
+          "kind": "text",
+          "bounds": {
+            "x": 386.24,
+            "y": 411.46,
+            "w": 40,
+            "h": 23.4
+          },
+          "style": {
+            "fontSize": 18,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 10.799999999999999,
+            "textH": 21.599999999999998,
+            "lines": 1,
+            "lineWidths": [
+              10.799999999999999
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "5"
+        },
+        {
+          "id": "d8_s6",
+          "kind": "shape",
+          "bounds": {
+            "x": 294.26,
+            "y": 287.83,
+            "w": 40,
+            "h": 40
+          },
+          "contains": [
+            "d8_n_s6"
+          ],
+          "shape": "ellipse",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d8_n_s6",
+          "kind": "text",
+          "bounds": {
+            "x": 294.26,
+            "y": 296.13,
+            "w": 40,
+            "h": 23.4
+          },
+          "style": {
+            "fontSize": 18,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 10.799999999999999,
+            "textH": 21.599999999999998,
+            "lines": 1,
+            "lineWidths": [
+              10.799999999999999
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "6"
+        },
+        {
+          "id": "d8_s7",
+          "kind": "shape",
+          "bounds": {
+            "x": 327.09,
+            "y": 144.01,
+            "w": 40,
+            "h": 40
+          },
+          "contains": [
+            "d8_n_s7"
+          ],
+          "shape": "ellipse",
+          "fill": "#E11D48",
+          "rotation": 0
+        },
+        {
+          "id": "d8_n_s7",
+          "kind": "text",
+          "bounds": {
+            "x": 327.09,
+            "y": 152.31,
+            "w": 40,
+            "h": 23.4
+          },
+          "style": {
+            "fontSize": 18,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 10.799999999999999,
+            "textH": 21.599999999999998,
+            "lines": 1,
+            "lineWidths": [
+              10.799999999999999
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "7"
+        },
+        {
+          "id": "d8_t_s1",
+          "kind": "text",
+          "bounds": {
+            "x": 450,
+            "y": 50,
+            "w": 60,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 44,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              44
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "出海申报"
+        },
+        {
+          "id": "d8_t_s2",
+          "kind": "text",
+          "bounds": {
+            "x": 630.65,
+            "y": 116.93,
+            "w": 60,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 44,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              44
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "断电挂牌"
+        },
+        {
+          "id": "d8_t_s3",
+          "kind": "text",
+          "bounds": {
+            "x": 677.4,
+            "y": 312.9,
+            "w": 60,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 44,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              44
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "网衣外观"
+        },
+        {
+          "id": "d8_t_s4",
+          "kind": "text",
+          "bounds": {
+            "x": 546.81,
+            "y": 462.03,
+            "w": 60,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 44,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              44
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "锚链张力"
+        },
+        {
+          "id": "d8_t_s5",
+          "kind": "text",
+          "bounds": {
+            "x": 353.19,
+            "y": 462.03,
+            "w": 60,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 44,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              44
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "溶氧复测"
+        },
+        {
+          "id": "d8_t_s6",
+          "kind": "text",
+          "bounds": {
+            "x": 222.6,
+            "y": 312.9,
+            "w": 60,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 44,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              44
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "设备保养"
+        },
+        {
+          "id": "d8_t_s7",
+          "kind": "text",
+          "bounds": {
+            "x": 269.35,
+            "y": 116.93,
+            "w": 60,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 44,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              44
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "数据回传"
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "pageNo": 9,
+      "file": "pages/09.yaml",
+      "name": "pages/09",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 40,
+        "bottom": 40,
+        "left": 40,
+        "right": 40
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [],
+      "elements": [
+        {
+          "id": "d9_sq_title",
+          "kind": "text",
+          "bounds": {
+            "x": 40,
+            "y": 40,
+            "w": 880,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#2E1065",
+            "align": "left",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 84,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              84
+            ],
+            "overflowY": 1,
+            "overflowX": 0
+          },
+          "text": "投喂指令时序"
+        },
+        {
+          "id": "d9_u",
+          "kind": "shape",
+          "bounds": {
+            "x": 51,
+            "y": 60,
+            "w": 180,
+            "h": 34
+          },
+          "contains": [
+            "d9_t_u"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d9_t_u",
+          "kind": "text",
+          "bounds": {
+            "x": 57,
+            "y": 68.55,
+            "w": 168,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "岸基中心"
+        },
+        {
+          "id": "d9_ll_u",
+          "kind": "shape",
+          "bounds": {
+            "x": 140,
+            "y": 94,
+            "w": 2,
+            "h": 398
+          },
+          "role": "decoration",
+          "roleReason": "时序图生命线（装饰层）",
+          "shape": "rect",
+          "fill": "#2E1065",
+          "rotation": 0
+        },
+        {
+          "id": "d9_p",
+          "kind": "shape",
+          "bounds": {
+            "x": 277,
+            "y": 60,
+            "w": 180,
+            "h": 34
+          },
+          "contains": [
+            "d9_t_p"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d9_t_p",
+          "kind": "text",
+          "bounds": {
+            "x": 283,
+            "y": 68.55,
+            "w": 168,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "平台终端"
+        },
+        {
+          "id": "d9_ll_p",
+          "kind": "shape",
+          "bounds": {
+            "x": 366,
+            "y": 94,
+            "w": 2,
+            "h": 398
+          },
+          "role": "decoration",
+          "roleReason": "时序图生命线（装饰层）",
+          "shape": "rect",
+          "fill": "#2E1065",
+          "rotation": 0
+        },
+        {
+          "id": "d9_f",
+          "kind": "shape",
+          "bounds": {
+            "x": 503,
+            "y": 60,
+            "w": 180,
+            "h": 34
+          },
+          "contains": [
+            "d9_t_f"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d9_t_f",
+          "kind": "text",
+          "bounds": {
+            "x": 509,
+            "y": 68.55,
+            "w": 168,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 39,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              39
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "投喂机"
+        },
+        {
+          "id": "d9_ll_f",
+          "kind": "shape",
+          "bounds": {
+            "x": 592,
+            "y": 94,
+            "w": 2,
+            "h": 398
+          },
+          "role": "decoration",
+          "roleReason": "时序图生命线（装饰层）",
+          "shape": "rect",
+          "fill": "#2E1065",
+          "rotation": 0
+        },
+        {
+          "id": "d9_s",
+          "kind": "shape",
+          "bounds": {
+            "x": 729,
+            "y": 60,
+            "w": 180,
+            "h": 34
+          },
+          "contains": [
+            "d9_t_s"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d9_t_s",
+          "kind": "text",
+          "bounds": {
+            "x": 735,
+            "y": 68.55,
+            "w": 168,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "水下相机"
+        },
+        {
+          "id": "d9_ll_s",
+          "kind": "shape",
+          "bounds": {
+            "x": 818,
+            "y": 94,
+            "w": 2,
+            "h": 398
+          },
+          "role": "decoration",
+          "roleReason": "时序图生命线（装饰层）",
+          "shape": "rect",
+          "fill": "#2E1065",
+          "rotation": 0
+        },
+        {
+          "id": "d9_m0",
+          "kind": "line",
+          "bounds": {
+            "x": 142,
+            "y": 146.5,
+            "w": 224,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d9_ll_u",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d9_ll_p",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              142,
+              146.5
+            ],
+            [
+              366,
+              146.5
+            ]
+          ]
+        },
+        {
+          "id": "d9_el_m0",
+          "kind": "text",
+          "bounds": {
+            "x": 232,
+            "y": 128.5,
+            "w": 44,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 44,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              44
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "下发计划"
+        },
+        {
+          "id": "d9_m1",
+          "kind": "line",
+          "bounds": {
+            "x": 368,
+            "y": 207.5,
+            "w": 224,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d9_ll_p",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d9_ll_f",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              368,
+              207.5
+            ],
+            [
+              592,
+              207.5
+            ]
+          ]
+        },
+        {
+          "id": "d9_el_m1",
+          "kind": "text",
+          "bounds": {
+            "x": 458,
+            "y": 189.5,
+            "w": 44,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 44,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              44
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "启动投喂"
+        },
+        {
+          "id": "d9_m2",
+          "kind": "line",
+          "bounds": {
+            "x": 368,
+            "y": 268.5,
+            "w": 224,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d9_ll_f",
+              "side": "left"
+            },
+            "to": {
+              "ref": "d9_ll_p",
+              "side": "right"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              592,
+              268.5
+            ],
+            [
+              368,
+              268.5
+            ]
+          ]
+        },
+        {
+          "id": "d9_el_m2",
+          "kind": "text",
+          "bounds": {
+            "x": 458,
+            "y": 250.5,
+            "w": 44,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 44,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              44
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "投喂完成"
+        },
+        {
+          "id": "d9_m3",
+          "kind": "line",
+          "bounds": {
+            "x": 368,
+            "y": 329.5,
+            "w": 450,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d9_ll_s",
+              "side": "left"
+            },
+            "to": {
+              "ref": "d9_ll_p",
+              "side": "right"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              818,
+              329.5
+            ],
+            [
+              368,
+              329.5
+            ]
+          ]
+        },
+        {
+          "id": "d9_el_m3",
+          "kind": "text",
+          "bounds": {
+            "x": 571,
+            "y": 311.5,
+            "w": 44,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 44,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              44
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "残饵画面"
+        },
+        {
+          "id": "d9_m4",
+          "kind": "line",
+          "bounds": {
+            "x": 142,
+            "y": 390.5,
+            "w": 224,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d9_ll_p",
+              "side": "left"
+            },
+            "to": {
+              "ref": "d9_ll_u",
+              "side": "right"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              366,
+              390.5
+            ],
+            [
+              142,
+              390.5
+            ]
+          ]
+        },
+        {
+          "id": "d9_el_m4",
+          "kind": "text",
+          "bounds": {
+            "x": 232,
+            "y": 372.5,
+            "w": 44,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 44,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              44
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "当班汇总"
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "pageNo": 10,
+      "file": "pages/10.yaml",
+      "name": "pages/10",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 40,
+        "bottom": 40,
+        "left": 40,
+        "right": 40
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [],
+      "elements": [
+        {
+          "id": "d10_s0",
+          "kind": "shape",
+          "bounds": {
+            "x": 40,
+            "y": 155.6,
+            "w": 56,
+            "h": 54
+          },
+          "contains": [
+            "d10_t_s0"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d10_t_s0",
+          "kind": "text",
+          "bounds": {
+            "x": 46,
+            "y": 174.15,
+            "w": 44,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 26,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              26
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "空箱"
+        },
+        {
+          "id": "d10_s1",
+          "kind": "shape",
+          "bounds": {
+            "x": 246,
+            "y": 155.6,
+            "w": 56,
+            "h": 54
+          },
+          "contains": [
+            "d10_t_s1"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d10_t_s1",
+          "kind": "text",
+          "bounds": {
+            "x": 252,
+            "y": 174.15,
+            "w": 44,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 39,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              39
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "已投苗"
+        },
+        {
+          "id": "d10_s2",
+          "kind": "shape",
+          "bounds": {
+            "x": 452,
+            "y": 155.6,
+            "w": 56,
+            "h": 54
+          },
+          "contains": [
+            "d10_t_s2"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d10_t_s2",
+          "kind": "text",
+          "bounds": {
+            "x": 458,
+            "y": 174.15,
+            "w": 44,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 39,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              39
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "育肥中"
+        },
+        {
+          "id": "d10_s3",
+          "kind": "shape",
+          "bounds": {
+            "x": 658,
+            "y": 155.6,
+            "w": 56,
+            "h": 54
+          },
+          "contains": [
+            "d10_t_s3"
+          ],
+          "shape": "roundRect",
+          "fill": "#E11D48",
+          "rotation": 0
+        },
+        {
+          "id": "d10_t_s3",
+          "kind": "text",
+          "bounds": {
+            "x": 664,
+            "y": 174.15,
+            "w": 44,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 39,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              39
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "待出栏"
+        },
+        {
+          "id": "d10_s4",
+          "kind": "shape",
+          "bounds": {
+            "x": 864,
+            "y": 155.6,
+            "w": 56,
+            "h": 54
+          },
+          "contains": [
+            "d10_t_s4"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d10_t_s4",
+          "kind": "text",
+          "bounds": {
+            "x": 870,
+            "y": 174.15,
+            "w": 44,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 39,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              39
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "已清空"
+        },
+        {
+          "id": "d10_e0",
+          "kind": "line",
+          "bounds": {
+            "x": 96,
+            "y": 182.6,
+            "w": 150,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d10_s0",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d10_s1",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              96,
+              182.6
+            ],
+            [
+              171,
+              182.6
+            ],
+            [
+              171,
+              182.6
+            ],
+            [
+              246,
+              182.6
+            ]
+          ]
+        },
+        {
+          "id": "d10_e1",
+          "kind": "line",
+          "bounds": {
+            "x": 302,
+            "y": 182.6,
+            "w": 150,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d10_s1",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d10_s2",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              302,
+              182.6
+            ],
+            [
+              377,
+              182.6
+            ],
+            [
+              377,
+              182.6
+            ],
+            [
+              452,
+              182.6
+            ]
+          ]
+        },
+        {
+          "id": "d10_e2",
+          "kind": "line",
+          "bounds": {
+            "x": 508,
+            "y": 182.6,
+            "w": 150,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d10_s2",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d10_s3",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              508,
+              182.6
+            ],
+            [
+              583,
+              182.6
+            ],
+            [
+              583,
+              182.6
+            ],
+            [
+              658,
+              182.6
+            ]
+          ]
+        },
+        {
+          "id": "d10_e3",
+          "kind": "line",
+          "bounds": {
+            "x": 714,
+            "y": 182.6,
+            "w": 150,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d10_s3",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d10_s4",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              714,
+              182.6
+            ],
+            [
+              789,
+              182.6
+            ],
+            [
+              789,
+              182.6
+            ],
+            [
+              864,
+              182.6
+            ]
+          ]
+        },
+        {
+          "id": "d10_e4",
+          "kind": "line",
+          "bounds": {
+            "x": 274,
+            "y": 117.6,
+            "w": 220,
+            "h": 38
+          },
+          "attach": {
+            "from": {
+              "ref": "d10_s2",
+              "side": "top"
+            },
+            "to": {
+              "ref": "d10_s1",
+              "side": "top"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              494,
+              155.6
+            ],
+            [
+              494,
+              118.1
+            ],
+            [
+              494,
+              117.6
+            ],
+            [
+              274,
+              117.6
+            ],
+            [
+              274,
+              118.1
+            ],
+            [
+              274,
+              155.6
+            ]
+          ]
+        },
+        {
+          "id": "d10_lbl_s0_s1",
+          "kind": "text",
+          "bounds": {
+            "x": 191,
+            "y": 159,
+            "w": 36,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 22,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              22
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "投苗"
+        },
+        {
+          "id": "d10_lbl_s1_s2",
+          "kind": "text",
+          "bounds": {
+            "x": 390,
+            "y": 159,
+            "w": 49,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 33,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              33
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "转育肥"
+        },
+        {
+          "id": "d10_lbl_s2_s3",
+          "kind": "text",
+          "bounds": {
+            "x": 596,
+            "y": 159,
+            "w": 49,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 33,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              33
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "达规格"
+        },
+        {
+          "id": "d10_lbl_s3_s4",
+          "kind": "text",
+          "bounds": {
+            "x": 796,
+            "y": 159,
+            "w": 62,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 44,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              44
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "出栏完毕"
+        },
+        {
+          "id": "d10_lbl_s2_s1",
+          "kind": "text",
+          "bounds": {
+            "x": 353,
+            "y": 94,
+            "w": 62,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 11,
+            "color": "#2E1065",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 44,
+            "textH": 13.2,
+            "lines": 1,
+            "lineWidths": [
+              44
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "规格不足"
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "pageNo": 11,
+      "file": "pages/11.yaml",
+      "name": "pages/11",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 40,
+        "bottom": 40,
+        "left": 40,
+        "right": 40
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [],
+      "elements": [
+        {
+          "id": "d11_e0",
+          "kind": "line",
+          "bounds": {
+            "x": 185.83,
+            "y": 270,
+            "w": 45.94999999999999,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d11_a",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d11_b",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              185.83,
+              270
+            ],
+            [
+              231.78,
+              270
+            ]
+          ]
+        },
+        {
+          "id": "d11_e1",
+          "kind": "line",
+          "bounds": {
+            "x": 366.63,
+            "y": 270,
+            "w": 45.94999999999999,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d11_b",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d11_c",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              366.63,
+              270
+            ],
+            [
+              412.58,
+              270
+            ]
+          ]
+        },
+        {
+          "id": "d11_e2",
+          "kind": "line",
+          "bounds": {
+            "x": 547.43,
+            "y": 270,
+            "w": 45.950000000000045,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d11_c",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d11_d",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              547.43,
+              270
+            ],
+            [
+              593.38,
+              270
+            ]
+          ]
+        },
+        {
+          "id": "d11_e3",
+          "kind": "line",
+          "bounds": {
+            "x": 728.23,
+            "y": 270,
+            "w": 45.94999999999993,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d11_d",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d11_e",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              728.23,
+              270
+            ],
+            [
+              774.18,
+              270
+            ]
+          ]
+        },
+        {
+          "id": "d11_a",
+          "kind": "shape",
+          "bounds": {
+            "x": 50.98,
+            "y": 210,
+            "w": 134.85,
+            "h": 120
+          },
+          "contains": [
+            "d11_t_a"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d11_t_a",
+          "kind": "text",
+          "bounds": {
+            "x": 56.98,
+            "y": 261.55,
+            "w": 122.85,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "出栏申报"
+        },
+        {
+          "id": "d11_b",
+          "kind": "shape",
+          "bounds": {
+            "x": 231.78,
+            "y": 210,
+            "w": 134.85,
+            "h": 120
+          },
+          "contains": [
+            "d11_t_b"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d11_t_b",
+          "kind": "text",
+          "bounds": {
+            "x": 237.78,
+            "y": 261.55,
+            "w": 122.85,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "起网准备"
+        },
+        {
+          "id": "d11_c",
+          "kind": "shape",
+          "bounds": {
+            "x": 412.58,
+            "y": 210,
+            "w": 134.85,
+            "h": 120
+          },
+          "contains": [
+            "d11_t_c"
+          ],
+          "shape": "roundRect",
+          "fill": "#E11D48",
+          "rotation": 0
+        },
+        {
+          "id": "d11_t_c",
+          "kind": "text",
+          "bounds": {
+            "x": 418.58,
+            "y": 261.55,
+            "w": 122.85,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 26,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              26
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "起网"
+        },
+        {
+          "id": "d11_d",
+          "kind": "shape",
+          "bounds": {
+            "x": 593.38,
+            "y": 210,
+            "w": 134.85,
+            "h": 120
+          },
+          "contains": [
+            "d11_t_d"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d11_t_d",
+          "kind": "text",
+          "bounds": {
+            "x": 599.38,
+            "y": 261.55,
+            "w": 122.85,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "冰鲜装箱"
+        },
+        {
+          "id": "d11_e",
+          "kind": "shape",
+          "bounds": {
+            "x": 774.18,
+            "y": 210,
+            "w": 134.85,
+            "h": 120
+          },
+          "contains": [
+            "d11_t_e"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d11_t_e",
+          "kind": "text",
+          "bounds": {
+            "x": 780.18,
+            "y": 261.55,
+            "w": 122.85,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "驳船转运"
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "pageNo": 12,
+      "file": "pages/12.yaml",
+      "name": "pages/12",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 40,
+        "bottom": 40,
+        "left": 40,
+        "right": 40
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [
+        {
+          "id": "d12_grp_l1",
+          "label": "感知层",
+          "members": [
+            "d12_a1",
+            "d12_a2",
+            "d12_t_a1",
+            "d12_t_a2"
+          ]
+        },
+        {
+          "id": "d12_grp_l2",
+          "label": "通信层",
+          "members": [
+            "d12_b1",
+            "d12_t_b1"
+          ]
+        },
+        {
+          "id": "d12_grp_l3",
+          "label": "平台层",
+          "members": [
+            "d12_c1",
+            "d12_c2",
+            "d12_t_c1",
+            "d12_t_c2"
+          ]
+        },
+        {
+          "id": "d12_grp_l4",
+          "label": "应用层",
+          "members": [
+            "d12_d1",
+            "d12_t_d1"
+          ]
+        }
+      ],
+      "elements": [
+        {
+          "id": "d12_g_l1",
+          "kind": "shape",
+          "bounds": {
+            "x": 40,
+            "y": 40,
+            "w": 107,
+            "h": 372
+          },
+          "role": "decoration",
+          "contains": [
+            "d12_a1",
+            "d12_a2",
+            "d12_t_a1",
+            "d12_t_a2"
+          ],
+          "roleReason": "分组带（装饰层：跨带连线穿过属设计意图）",
+          "shape": "roundRect",
+          "fill": "#FAF5FF",
+          "rotation": 0
+        },
+        {
+          "id": "d12_g_l2",
+          "kind": "shape",
+          "bounds": {
+            "x": 151,
+            "y": 40,
+            "w": 117,
+            "h": 130
+          },
+          "role": "decoration",
+          "contains": [
+            "d12_b1",
+            "d12_t_b1"
+          ],
+          "roleReason": "分组带（装饰层：跨带连线穿过属设计意图）",
+          "shape": "roundRect",
+          "fill": "#FAF5FF",
+          "rotation": 0
+        },
+        {
+          "id": "d12_g_l3",
+          "kind": "shape",
+          "bounds": {
+            "x": 272,
+            "y": 40,
+            "w": 117,
+            "h": 372
+          },
+          "role": "decoration",
+          "contains": [
+            "d12_c1",
+            "d12_c2",
+            "d12_t_c1",
+            "d12_t_c2"
+          ],
+          "roleReason": "分组带（装饰层：跨带连线穿过属设计意图）",
+          "shape": "roundRect",
+          "fill": "#FAF5FF",
+          "rotation": 0
+        },
+        {
+          "id": "d12_g_l4",
+          "kind": "shape",
+          "bounds": {
+            "x": 393,
+            "y": 40,
+            "w": 117,
+            "h": 130
+          },
+          "role": "decoration",
+          "contains": [
+            "d12_d1",
+            "d12_t_d1"
+          ],
+          "roleReason": "分组带（装饰层：跨带连线穿过属设计意图）",
+          "shape": "roundRect",
+          "fill": "#FAF5FF",
+          "rotation": 0
+        },
+        {
+          "id": "d12_e0",
+          "kind": "line",
+          "bounds": {
+            "x": 137,
+            "y": 100,
+            "w": 24,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d12_a1",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d12_b1",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              137,
+              100
+            ],
+            [
+              161,
+              100
+            ]
+          ]
+        },
+        {
+          "id": "d12_e1",
+          "kind": "line",
+          "bounds": {
+            "x": 88.5,
+            "y": 160,
+            "w": 121,
+            "h": 122
+          },
+          "attach": {
+            "from": {
+              "ref": "d12_a2",
+              "side": "top"
+            },
+            "to": {
+              "ref": "d12_b1",
+              "side": "bottom"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              88.5,
+              282
+            ],
+            [
+              88.5,
+              221
+            ],
+            [
+              209.5,
+              221
+            ],
+            [
+              209.5,
+              160
+            ]
+          ]
+        },
+        {
+          "id": "d12_e2",
+          "kind": "line",
+          "bounds": {
+            "x": 258,
+            "y": 100,
+            "w": 24,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d12_b1",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d12_c1",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              258,
+              100
+            ],
+            [
+              282,
+              100
+            ]
+          ]
+        },
+        {
+          "id": "d12_e3",
+          "kind": "line",
+          "bounds": {
+            "x": 330.5,
+            "y": 160,
+            "w": 1,
+            "h": 122
+          },
+          "attach": {
+            "from": {
+              "ref": "d12_c1",
+              "side": "bottom"
+            },
+            "to": {
+              "ref": "d12_c2",
+              "side": "top"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              330.5,
+              160
+            ],
+            [
+              330.5,
+              282
+            ]
+          ]
+        },
+        {
+          "id": "d12_e4",
+          "kind": "line",
+          "bounds": {
+            "x": 330.5,
+            "y": 160,
+            "w": 121,
+            "h": 122
+          },
+          "attach": {
+            "from": {
+              "ref": "d12_c2",
+              "side": "top"
+            },
+            "to": {
+              "ref": "d12_d1",
+              "side": "bottom"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              330.5,
+              282
+            ],
+            [
+              330.5,
+              221
+            ],
+            [
+              451.5,
+              221
+            ],
+            [
+              451.5,
+              160
+            ]
+          ]
+        },
+        {
+          "id": "d12_a1",
+          "kind": "shape",
+          "bounds": {
+            "x": 40,
+            "y": 40,
+            "w": 97,
+            "h": 120
+          },
+          "contains": [
+            "d12_t_a1"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d12_t_a1",
+          "kind": "text",
+          "bounds": {
+            "x": 46,
+            "y": 91.55,
+            "w": 85,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "溶氧探头"
+        },
+        {
+          "id": "d12_a2",
+          "kind": "shape",
+          "bounds": {
+            "x": 40,
+            "y": 282,
+            "w": 97,
+            "h": 120
+          },
+          "contains": [
+            "d12_t_a2"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d12_t_a2",
+          "kind": "text",
+          "bounds": {
+            "x": 46,
+            "y": 333.55,
+            "w": 85,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "水下相机"
+        },
+        {
+          "id": "d12_b1",
+          "kind": "shape",
+          "bounds": {
+            "x": 161,
+            "y": 40,
+            "w": 97,
+            "h": 120
+          },
+          "contains": [
+            "d12_t_b1"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d12_t_b1",
+          "kind": "text",
+          "bounds": {
+            "x": 167,
+            "y": 91.55,
+            "w": 85,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 65,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              65
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "海缆与微波"
+        },
+        {
+          "id": "d12_c1",
+          "kind": "shape",
+          "bounds": {
+            "x": 282,
+            "y": 40,
+            "w": 97,
+            "h": 120
+          },
+          "contains": [
+            "d12_t_c1"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d12_t_c1",
+          "kind": "text",
+          "bounds": {
+            "x": 288,
+            "y": 91.55,
+            "w": 85,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "生长模型"
+        },
+        {
+          "id": "d12_c2",
+          "kind": "shape",
+          "bounds": {
+            "x": 282,
+            "y": 282,
+            "w": 97,
+            "h": 120
+          },
+          "contains": [
+            "d12_t_c2"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "d12_t_c2",
+          "kind": "text",
+          "bounds": {
+            "x": 288,
+            "y": 333.55,
+            "w": 85,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 52,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              52
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "投喂决策"
+        },
+        {
+          "id": "d12_d1",
+          "kind": "shape",
+          "bounds": {
+            "x": 403,
+            "y": 40,
+            "w": 97,
+            "h": 120
+          },
+          "contains": [
+            "d12_t_d1"
+          ],
+          "shape": "roundRect",
+          "fill": "#E11D48",
+          "rotation": 0
+        },
+        {
+          "id": "d12_t_d1",
+          "kind": "text",
+          "bounds": {
+            "x": 409,
+            "y": 91.55,
+            "w": 85,
+            "h": 18.9
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 78,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              78
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "出栏排程看板"
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "pageNo": 13,
+      "file": "pages/13.yaml",
+      "name": "pages/13",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 40,
+        "bottom": 40,
+        "left": 40,
+        "right": 40
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [],
+      "elements": [
+        {
+          "id": "title",
+          "kind": "text",
+          "bounds": {
+            "x": 60,
+            "y": 40,
+            "w": 460,
+            "h": 40
+          },
+          "style": {
+            "fontSize": 26,
+            "color": "#2E1065",
+            "bold": true,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 220.48000000000002,
+            "textH": 31.2,
+            "lines": 1,
+            "lineWidths": [
+              220.48000000000002
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "深海养殖平台架构"
+        },
+        {
+          "id": "k1",
+          "kind": "text",
+          "bounds": {
+            "x": 70,
+            "y": 100,
+            "w": 220,
+            "h": 24
+          },
+          "style": {
+            "fontSize": 15,
+            "color": "#E11D48",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 60.75,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              54.75
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "① 感知层"
+        },
+        {
+          "id": "k2",
+          "kind": "text",
+          "bounds": {
+            "x": 400,
+            "y": 100,
+            "w": 220,
+            "h": 24
+          },
+          "style": {
+            "fontSize": 15,
+            "color": "#E11D48",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 60.75,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              54.75
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "② 平台层"
+        },
+        {
+          "id": "k3",
+          "kind": "text",
+          "bounds": {
+            "x": 720,
+            "y": 100,
+            "w": 190,
+            "h": 24
+          },
+          "style": {
+            "fontSize": 15,
+            "color": "#E11D48",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 60.75,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              54.75
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "③ 决策层"
+        },
+        {
+          "id": "sens",
+          "kind": "shape",
+          "bounds": {
+            "x": 80,
+            "y": 190,
+            "w": 170,
+            "h": 130
+          },
+          "contains": [
+            "sens_lab"
+          ],
+          "shape": "parallelogram",
+          "fill": "#E11D48",
+          "rotation": 0
+        },
+        {
+          "id": "sens_lab",
+          "kind": "text",
+          "bounds": {
+            "x": 120,
+            "y": 240,
+            "w": 100,
+            "h": 30
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#FAF5FF",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 55.8,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              55.8
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "溶氧·水温"
+        },
+        {
+          "id": "app",
+          "kind": "shape",
+          "bounds": {
+            "x": 700,
+            "y": 190,
+            "w": 170,
+            "h": 130
+          },
+          "contains": [
+            "app_lab"
+          ],
+          "shape": "parallelogram",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "app_lab",
+          "kind": "text",
+          "bounds": {
+            "x": 740,
+            "y": 240,
+            "w": 100,
+            "h": 30
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#FAF5FF",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 48,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              48
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "出栏排程"
+        },
+        {
+          "id": "core",
+          "kind": "shape",
+          "bounds": {
+            "x": 320,
+            "y": 150,
+            "w": 340,
+            "h": 240
+          },
+          "role": "decoration",
+          "roleReason": "平台底板",
+          "shape": "roundRect",
+          "fill": "#EDE9FE",
+          "rotation": 0
+        },
+        {
+          "id": "m1",
+          "kind": "shape",
+          "bounds": {
+            "x": 345,
+            "y": 175,
+            "w": 290,
+            "h": 56
+          },
+          "contains": [
+            "m1_lab"
+          ],
+          "shape": "rect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "m1_lab",
+          "kind": "text",
+          "bounds": {
+            "x": 355,
+            "y": 192,
+            "w": 270,
+            "h": 24
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#FAF5FF",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 84,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              84
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "海缆与微波链路"
+        },
+        {
+          "id": "m2",
+          "kind": "shape",
+          "bounds": {
+            "x": 345,
+            "y": 245,
+            "w": 290,
+            "h": 56
+          },
+          "contains": [
+            "m2_lab"
+          ],
+          "shape": "rect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "m2_lab",
+          "kind": "text",
+          "bounds": {
+            "x": 355,
+            "y": 262,
+            "w": 270,
+            "h": 24
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#FAF5FF",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 96,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              96
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "生长与水环境模型"
+        },
+        {
+          "id": "m3",
+          "kind": "shape",
+          "bounds": {
+            "x": 345,
+            "y": 315,
+            "w": 290,
+            "h": 56
+          },
+          "contains": [
+            "m3_lab"
+          ],
+          "shape": "rect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "m3_lab",
+          "kind": "text",
+          "bounds": {
+            "x": 355,
+            "y": 332,
+            "w": 270,
+            "h": 24
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#FAF5FF",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 72,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              72
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "投喂决策引擎"
+        },
+        {
+          "id": "in_trunk",
+          "kind": "line",
+          "bounds": {
+            "x": 250,
+            "y": 255,
+            "w": 35,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "sens",
+              "side": "right"
+            }
+          },
+          "attachNotes": [
+            "from 端手写坐标 [250, 255] 与 attach 解析结果 [234, 255] 不一致（相差 16.3px）⇒ 按 attach 覆盖"
+          ],
+          "points": [
+            [
+              233.75,
+              255
+            ],
+            [
+              285,
+              255
+            ]
+          ]
+        },
+        {
+          "id": "in_v",
+          "kind": "line",
+          "bounds": {
+            "x": 285,
+            "y": 203,
+            "w": 1,
+            "h": 140
+          },
+          "points": [
+            [
+              285,
+              203
+            ],
+            [
+              285,
+              343
+            ]
+          ]
+        },
+        {
+          "id": "br1",
+          "kind": "line",
+          "bounds": {
+            "x": 285,
+            "y": 203,
+            "w": 60,
+            "h": 1
+          },
+          "arrow": true,
+          "points": [
+            [
+              285,
+              203
+            ],
+            [
+              345,
+              203
+            ]
+          ]
+        },
+        {
+          "id": "br2",
+          "kind": "line",
+          "bounds": {
+            "x": 285,
+            "y": 273,
+            "w": 60,
+            "h": 1
+          },
+          "arrow": true,
+          "points": [
+            [
+              285,
+              273
+            ],
+            [
+              345,
+              273
+            ]
+          ]
+        },
+        {
+          "id": "br3",
+          "kind": "line",
+          "bounds": {
+            "x": 285,
+            "y": 343,
+            "w": 60,
+            "h": 1
+          },
+          "arrow": true,
+          "points": [
+            [
+              285,
+              343
+            ],
+            [
+              345,
+              343
+            ]
+          ]
+        },
+        {
+          "id": "st1",
+          "kind": "line",
+          "bounds": {
+            "x": 635,
+            "y": 203,
+            "w": 35,
+            "h": 1
+          },
+          "points": [
+            [
+              635,
+              203
+            ],
+            [
+              670,
+              203
+            ]
+          ]
+        },
+        {
+          "id": "st2",
+          "kind": "line",
+          "bounds": {
+            "x": 635,
+            "y": 273,
+            "w": 35,
+            "h": 1
+          },
+          "points": [
+            [
+              635,
+              273
+            ],
+            [
+              670,
+              273
+            ]
+          ]
+        },
+        {
+          "id": "st3",
+          "kind": "line",
+          "bounds": {
+            "x": 635,
+            "y": 343,
+            "w": 35,
+            "h": 1
+          },
+          "points": [
+            [
+              635,
+              343
+            ],
+            [
+              670,
+              343
+            ]
+          ]
+        },
+        {
+          "id": "out_v",
+          "kind": "line",
+          "bounds": {
+            "x": 670,
+            "y": 203,
+            "w": 1,
+            "h": 140
+          },
+          "points": [
+            [
+              670,
+              203
+            ],
+            [
+              670,
+              343
+            ]
+          ]
+        },
+        {
+          "id": "out_arrow",
+          "kind": "line",
+          "bounds": {
+            "x": 670,
+            "y": 273,
+            "w": 30,
+            "h": 1
+          },
+          "attach": {
+            "to": {
+              "ref": "app",
+              "side": "left"
+            }
+          },
+          "attachNotes": [
+            "to 端手写坐标 [700, 273] 与 attach 解析结果 [712, 273] 不一致（相差 11.8px）⇒ 按 attach 覆盖"
+          ],
+          "arrow": true,
+          "points": [
+            [
+              670,
+              273
+            ],
+            [
+              711.75,
+              273
+            ]
+          ]
+        },
+        {
+          "id": "fb",
+          "kind": "line",
+          "bounds": {
+            "x": 165,
+            "y": 320,
+            "w": 620,
+            "h": 145
+          },
+          "attach": {
+            "from": {
+              "ref": "app",
+              "side": "bottom"
+            },
+            "to": {
+              "ref": "sens",
+              "side": "bottom"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              785,
+              320
+            ],
+            [
+              785,
+              465
+            ],
+            [
+              165,
+              465
+            ],
+            [
+              165,
+              320
+            ]
+          ]
+        },
+        {
+          "id": "fb_mask",
+          "kind": "shape",
+          "bounds": {
+            "x": 415,
+            "y": 453,
+            "w": 130,
+            "h": 24
+          },
+          "role": "decoration",
+          "roleReason": "标签底板",
+          "shape": "rect",
+          "fill": "#FAF5FF",
+          "rotation": 0
+        },
+        {
+          "id": "fb_lab",
+          "kind": "text",
+          "bounds": {
+            "x": 415,
+            "y": 456,
+            "w": 130,
+            "h": 20
+          },
+          "style": {
+            "fontSize": 13,
+            "color": "#2E1065",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 78,
+            "textH": 15.6,
+            "lines": 1,
+            "lineWidths": [
+              78
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "投喂计划回写"
+        }
+      ]
+    }
+  ]
+}

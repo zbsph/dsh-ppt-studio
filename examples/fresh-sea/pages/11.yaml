@@ -1,0 +1,25 @@
+pageType: content
+diagram:
+  type: flow
+  direction: LR
+  nodes:
+    - id: a
+      label: 出栏申报
+    - id: b
+      label: 起网准备
+    - id: c
+      label: 起网
+      emphasis: accent
+    - id: d
+      label: 冰鲜装箱
+    - id: e
+      label: 驳船转运
+  edges:
+    - from: a
+      to: b
+    - from: b
+      to: c
+    - from: c
+      to: d
+    - from: d
+      to: e

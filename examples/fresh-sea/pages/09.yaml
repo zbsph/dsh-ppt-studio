@@ -1,0 +1,30 @@
+pageType: content
+diagram:
+  type: sequence
+  title: 投喂指令时序
+  nodes:
+    - id: u
+      label: 岸基中心
+    - id: p
+      label: 平台终端
+    - id: f
+      label: 投喂机
+    - id: s
+      label: 水下相机
+  edges:
+    - from: u
+      to: p
+      label: 下发计划
+    - from: p
+      to: f
+      label: 启动投喂
+    - from: f
+      to: p
+      label: 投喂完成
+    - from: s
+      to: p
+      label: 残饵画面
+    - from: p
+      to: u
+      label: 当班汇总
+      style: dashed

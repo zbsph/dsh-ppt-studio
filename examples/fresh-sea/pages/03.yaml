@@ -1,0 +1,18 @@
+pageType: content
+diagram:
+  type: timeline
+  title: 投苗到出栏
+  nodes:
+    - id: t1
+      label: 苗种检疫
+    - id: t2
+      label: 分级投苗
+    - id: t3
+      label: 中期分箱
+      emphasis: accent
+    - id: t4
+      label: 强化育肥
+    - id: t5
+      label: 起网抽检
+    - id: t6
+      label: 成鱼出栏
