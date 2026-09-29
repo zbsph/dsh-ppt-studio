@@ -678,464 +678,190 @@
             "wrap": true
           },
           "metrics": {
-            "textW": 276,
+            "textW": 358.80000000000007,
             "textH": 14.399999999999999,
             "lines": 1,
             "lineWidths": [
-              276
+              339.6
             ],
             "overflowY": 0,
             "overflowX": 0
           },
-          "text": "横轴＝发生概率，纵轴＝影响程度；右上角优先处置"
+          "text": "按发生频次分行、按处置力度分列：可观察 / 当班处置 / 立即撤离"
         },
         {
-          "id": "ylab",
+          "id": "colh0",
           "kind": "text",
           "bounds": {
-            "x": 66,
-            "y": 250,
-            "w": 24,
-            "h": 120
+            "x": 160,
+            "y": 158,
+            "w": 230,
+            "h": 24
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#7C3AED",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 44.519999999999996,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              44.519999999999996
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "可观察"
+        },
+        {
+          "id": "colh1",
+          "kind": "text",
+          "bounds": {
+            "x": 410,
+            "y": 158,
+            "w": 230,
+            "h": 24
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#7C3AED",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 59.36,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              59.36
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "当班处置"
+        },
+        {
+          "id": "colh2",
+          "kind": "text",
+          "bounds": {
+            "x": 660,
+            "y": 158,
+            "w": 230,
+            "h": 24
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#7C3AED",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 59.36,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              59.36
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "立即撤离"
+        },
+        {
+          "id": "rowh高频",
+          "kind": "text",
+          "bounds": {
+            "x": 60,
+            "y": 238,
+            "w": 90,
+            "h": 24
           },
           "style": {
             "fontSize": 13,
             "color": "#7C3AED",
             "bold": true,
+            "align": "center",
             "lineHeight": 1.2,
             "wrap": true
           },
           "metrics": {
             "textW": 27.560000000000002,
-            "textH": 31.2,
-            "lines": 2,
+            "textH": 15.6,
+            "lines": 1,
             "lineWidths": [
-              13.780000000000001,
-              13.780000000000001
+              27.560000000000002
             ],
             "overflowY": 0,
-            "overflowX": 4
+            "overflowX": 0
           },
-          "text": "影响"
+          "text": "高频"
         },
         {
-          "id": "xlab",
+          "id": "rowh低频",
           "kind": "text",
           "bounds": {
-            "x": 470,
-            "y": 486,
-            "w": 200,
-            "h": 22
+            "x": 60,
+            "y": 378,
+            "w": 90,
+            "h": 24
           },
           "style": {
             "fontSize": 13,
             "color": "#7C3AED",
             "bold": true,
+            "align": "center",
             "lineHeight": 1.2,
             "wrap": true
           },
           "metrics": {
-            "textW": 69.29,
+            "textW": 27.560000000000002,
             "textH": 15.6,
             "lines": 1,
             "lineWidths": [
-              64.09
+              27.560000000000002
             ],
             "overflowY": 0,
             "overflowX": 0
           },
-          "text": "发生概率 →"
+          "text": "低频"
         },
         {
-          "id": "q0",
+          "id": "cell00",
           "kind": "shape",
           "bounds": {
-            "x": 180,
-            "y": 140,
-            "w": 350,
-            "h": 160
+            "x": 160,
+            "y": 190,
+            "w": 230,
+            "h": 120
           },
           "contains": [
-            "qt0",
-            "r2",
-            "r3"
-          ],
-          "shape": "rect",
-          "fill": "#EDE9FE",
-          "rotation": 0
-        },
-        {
-          "id": "qt0",
-          "kind": "text",
-          "bounds": {
-            "x": 188,
-            "y": 148,
-            "w": 334,
-            "h": 18
-          },
-          "style": {
-            "fontSize": 10,
-            "color": "#6D28D9",
-            "align": "center",
-            "lineHeight": 1.2,
-            "wrap": true
-          },
-          "metrics": {
-            "textW": 66.5,
-            "textH": 12,
-            "lines": 1,
-            "lineWidths": [
-              66.5
-            ],
-            "overflowY": 0,
-            "overflowX": 0
-          },
-          "text": "高影响·低概率"
-        },
-        {
-          "id": "q1",
-          "kind": "shape",
-          "bounds": {
-            "x": 530,
-            "y": 140,
-            "w": 350,
-            "h": 160
-          },
-          "contains": [
-            "qt1",
-            "r0",
-            "r1"
-          ],
-          "shape": "rect",
-          "fill": "#FCE7F3",
-          "rotation": 0
-        },
-        {
-          "id": "qt1",
-          "kind": "text",
-          "bounds": {
-            "x": 538,
-            "y": 148,
-            "w": 334,
-            "h": 18
-          },
-          "style": {
-            "fontSize": 10,
-            "color": "#6D28D9",
-            "align": "center",
-            "lineHeight": 1.2,
-            "wrap": true
-          },
-          "metrics": {
-            "textW": 66.5,
-            "textH": 12,
-            "lines": 1,
-            "lineWidths": [
-              66.5
-            ],
-            "overflowY": 0,
-            "overflowX": 0
-          },
-          "text": "高影响·高概率"
-        },
-        {
-          "id": "q2",
-          "kind": "shape",
-          "bounds": {
-            "x": 180,
-            "y": 310,
-            "w": 350,
-            "h": 160
-          },
-          "contains": [
-            "qt2",
-            "r5"
-          ],
-          "shape": "rect",
-          "fill": "#EDE9FE",
-          "rotation": 0
-        },
-        {
-          "id": "qt2",
-          "kind": "text",
-          "bounds": {
-            "x": 188,
-            "y": 318,
-            "w": 334,
-            "h": 18
-          },
-          "style": {
-            "fontSize": 10,
-            "color": "#6D28D9",
-            "align": "center",
-            "lineHeight": 1.2,
-            "wrap": true
-          },
-          "metrics": {
-            "textW": 66.5,
-            "textH": 12,
-            "lines": 1,
-            "lineWidths": [
-              66.5
-            ],
-            "overflowY": 0,
-            "overflowX": 0
-          },
-          "text": "低影响·低概率"
-        },
-        {
-          "id": "q3",
-          "kind": "shape",
-          "bounds": {
-            "x": 530,
-            "y": 310,
-            "w": 350,
-            "h": 160
-          },
-          "contains": [
-            "qt3",
-            "r4"
-          ],
-          "shape": "rect",
-          "fill": "#FCE7F3",
-          "rotation": 0
-        },
-        {
-          "id": "qt3",
-          "kind": "text",
-          "bounds": {
-            "x": 538,
-            "y": 318,
-            "w": 334,
-            "h": 18
-          },
-          "style": {
-            "fontSize": 10,
-            "color": "#6D28D9",
-            "align": "center",
-            "lineHeight": 1.2,
-            "wrap": true
-          },
-          "metrics": {
-            "textW": 66.5,
-            "textH": 12,
-            "lines": 1,
-            "lineWidths": [
-              66.5
-            ],
-            "overflowY": 0,
-            "overflowX": 0
-          },
-          "text": "低影响·高概率"
-        },
-        {
-          "id": "r0",
-          "kind": "shape",
-          "bounds": {
-            "x": 530,
-            "y": 175,
-            "w": 150,
-            "h": 40
-          },
-          "contains": [
-            "rt0"
+            "cellT00"
           ],
           "shape": "roundRect",
-          "fill": "#FFFFFF",
+          "fill": "#E11D48",
           "rotation": 0
         },
         {
-          "id": "rt0",
+          "id": "cellT00",
           "kind": "text",
           "bounds": {
-            "x": 534,
-            "y": 186,
-            "w": 142,
-            "h": 20
+            "x": 168,
+            "y": 236,
+            "w": 214,
+            "h": 28
           },
           "style": {
-            "fontSize": 12,
-            "color": "#2E1065",
-            "bold": true,
-            "align": "center",
-            "lineHeight": 1.2,
-            "wrap": true
-          },
-          "metrics": {
-            "textW": 50.88,
-            "textH": 14.399999999999999,
-            "lines": 1,
-            "lineWidths": [
-              50.88
-            ],
-            "overflowY": 0,
-            "overflowX": 0
-          },
-          "text": "台风预警"
-        },
-        {
-          "id": "r1",
-          "kind": "shape",
-          "bounds": {
-            "x": 700,
-            "y": 175,
-            "w": 150,
-            "h": 40
-          },
-          "contains": [
-            "rt1"
-          ],
-          "shape": "roundRect",
-          "fill": "#FFFFFF",
-          "rotation": 0
-        },
-        {
-          "id": "rt1",
-          "kind": "text",
-          "bounds": {
-            "x": 704,
-            "y": 186,
-            "w": 142,
-            "h": 20
-          },
-          "style": {
-            "fontSize": 12,
-            "color": "#2E1065",
-            "bold": true,
-            "align": "center",
-            "lineHeight": 1.2,
-            "wrap": true
-          },
-          "metrics": {
-            "textW": 50.88,
-            "textH": 14.399999999999999,
-            "lines": 1,
-            "lineWidths": [
-              50.88
-            ],
-            "overflowY": 0,
-            "overflowX": 0
-          },
-          "text": "溶氧骤降"
-        },
-        {
-          "id": "r2",
-          "kind": "shape",
-          "bounds": {
-            "x": 180,
-            "y": 205,
-            "w": 150,
-            "h": 40
-          },
-          "contains": [
-            "rt2"
-          ],
-          "shape": "roundRect",
-          "fill": "#FFFFFF",
-          "rotation": 0
-        },
-        {
-          "id": "rt2",
-          "kind": "text",
-          "bounds": {
-            "x": 184,
-            "y": 216,
-            "w": 142,
-            "h": 20
-          },
-          "style": {
-            "fontSize": 12,
-            "color": "#2E1065",
-            "bold": true,
-            "align": "center",
-            "lineHeight": 1.2,
-            "wrap": true
-          },
-          "metrics": {
-            "textW": 50.88,
-            "textH": 14.399999999999999,
-            "lines": 1,
-            "lineWidths": [
-              50.88
-            ],
-            "overflowY": 0,
-            "overflowX": 0
-          },
-          "text": "网衣破损"
-        },
-        {
-          "id": "r3",
-          "kind": "shape",
-          "bounds": {
-            "x": 350,
-            "y": 205,
-            "w": 150,
-            "h": 40
-          },
-          "contains": [
-            "rt3"
-          ],
-          "shape": "roundRect",
-          "fill": "#FFFFFF",
-          "rotation": 0
-        },
-        {
-          "id": "rt3",
-          "kind": "text",
-          "bounds": {
-            "x": 354,
-            "y": 216,
-            "w": 142,
-            "h": 20
-          },
-          "style": {
-            "fontSize": 12,
-            "color": "#2E1065",
-            "bold": true,
-            "align": "center",
-            "lineHeight": 1.2,
-            "wrap": true
-          },
-          "metrics": {
-            "textW": 50.88,
-            "textH": 14.399999999999999,
-            "lines": 1,
-            "lineWidths": [
-              50.88
-            ],
-            "overflowY": 0,
-            "overflowX": 0
-          },
-          "text": "锚链磨损"
-        },
-        {
-          "id": "r4",
-          "kind": "shape",
-          "bounds": {
-            "x": 530,
-            "y": 375,
-            "w": 150,
-            "h": 40
-          },
-          "contains": [
-            "rt4"
-          ],
-          "shape": "roundRect",
-          "fill": "#FFFFFF",
-          "rotation": 0
-        },
-        {
-          "id": "rt4",
-          "kind": "text",
-          "bounds": {
-            "x": 534,
-            "y": 386,
-            "w": 142,
-            "h": 20
-          },
-          "style": {
-            "fontSize": 12,
-            "color": "#2E1065",
+            "fontSize": 15,
+            "color": "#FFFFFF",
             "bold": true,
             "align": "center",
             "lineHeight": 1.2,
@@ -1143,7 +869,7 @@
           },
           "metrics": {
             "textW": 63.6,
-            "textH": 14.399999999999999,
+            "textH": 18,
             "lines": 1,
             "lineWidths": [
               63.6
@@ -1151,47 +877,227 @@
             "overflowY": 0,
             "overflowX": 0
           },
-          "text": "附着物增多"
+          "text": "溶氧骤降"
         },
         {
-          "id": "r5",
+          "id": "cell01",
           "kind": "shape",
           "bounds": {
-            "x": 180,
-            "y": 375,
-            "w": 150,
-            "h": 40
+            "x": 410,
+            "y": 190,
+            "w": 230,
+            "h": 120
           },
           "contains": [
-            "rt5"
+            "cellT01"
           ],
           "shape": "roundRect",
-          "fill": "#FFFFFF",
+          "fill": "#7C3AED",
           "rotation": 0
         },
         {
-          "id": "rt5",
+          "id": "cellT01",
           "kind": "text",
           "bounds": {
-            "x": 184,
-            "y": 386,
-            "w": 142,
-            "h": 20
+            "x": 418,
+            "y": 236,
+            "w": 214,
+            "h": 28
           },
           "style": {
-            "fontSize": 12,
-            "color": "#2E1065",
+            "fontSize": 15,
+            "color": "#FFFFFF",
             "bold": true,
             "align": "center",
             "lineHeight": 1.2,
             "wrap": true
           },
           "metrics": {
-            "textW": 50.88,
-            "textH": 14.399999999999999,
+            "textW": 63.6,
+            "textH": 18,
             "lines": 1,
             "lineWidths": [
-              50.88
+              63.6
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "网衣破损"
+        },
+        {
+          "id": "cell02",
+          "kind": "shape",
+          "bounds": {
+            "x": 660,
+            "y": 190,
+            "w": 230,
+            "h": 120
+          },
+          "contains": [
+            "cellT02"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "cellT02",
+          "kind": "text",
+          "bounds": {
+            "x": 668,
+            "y": 236,
+            "w": 214,
+            "h": 28
+          },
+          "style": {
+            "fontSize": 15,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 63.6,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              63.6
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "台风预警"
+        },
+        {
+          "id": "cell10",
+          "kind": "shape",
+          "bounds": {
+            "x": 160,
+            "y": 330,
+            "w": 230,
+            "h": 120
+          },
+          "contains": [
+            "cellT10"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "cellT10",
+          "kind": "text",
+          "bounds": {
+            "x": 168,
+            "y": 376,
+            "w": 214,
+            "h": 28
+          },
+          "style": {
+            "fontSize": 15,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 79.5,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              79.5
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "附着物增多"
+        },
+        {
+          "id": "cell11",
+          "kind": "shape",
+          "bounds": {
+            "x": 410,
+            "y": 330,
+            "w": 230,
+            "h": 120
+          },
+          "contains": [
+            "cellT11"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "cellT11",
+          "kind": "text",
+          "bounds": {
+            "x": 418,
+            "y": 376,
+            "w": 214,
+            "h": 28
+          },
+          "style": {
+            "fontSize": 15,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 63.6,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              63.6
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "锚链磨损"
+        },
+        {
+          "id": "cell12",
+          "kind": "shape",
+          "bounds": {
+            "x": 660,
+            "y": 330,
+            "w": 230,
+            "h": 120
+          },
+          "contains": [
+            "cellT12"
+          ],
+          "shape": "roundRect",
+          "fill": "#7C3AED",
+          "rotation": 0
+        },
+        {
+          "id": "cellT12",
+          "kind": "text",
+          "bounds": {
+            "x": 668,
+            "y": 376,
+            "w": 214,
+            "h": 28
+          },
+          "style": {
+            "fontSize": 15,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 63.6,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              63.6
             ],
             "overflowY": 0,
             "overflowX": 0
