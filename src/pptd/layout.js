@@ -188,7 +188,23 @@ export function normalizePage(page, ctx) {
         const isAxisAligned = raw.every((p, i) => i === 0
           || Math.abs(p[0] - raw[i - 1][0]) < 0.5 || Math.abs(p[1] - raw[i - 1][1]) < 0.5)
         const exempt = el.orthogonal === false || el.line?.orthogonal === false || !isAxisAligned
-        const pts = exempt ? raw : orthogonalize(arrowEndRuns(orthogonalize(raw), el.arrow ?? false))
+        // **折返守卫（2026-09 实测新增）**：族里的 `orthogonalize(arrowEndRuns(...))` 组合是为"折线拐角"设计的，
+        // 直接用在简单 L 形上会**造出折返尖刺**——实测 [(200,300),(400,300),(400,307)]（末段仅 7px）会变成
+        // [(200,300),(400,300),(400,289),(400,307)]：先上 11px 再下 18px。折返 100% 是缺陷 ⇒
+        // 一旦通路结果引入折返（相邻两段共线且反向），就**保留原样**，把"箭头前直段过短"交给门禁检查去拦。
+        const hasFoldback = (p) => {
+          for (let i = 2; i < p.length; i++) {
+            const ax = p[i - 1][0] - p[i - 2][0], ay = p[i - 1][1] - p[i - 2][1]
+            const bx = p[i][0] - p[i - 1][0], by = p[i][1] - p[i - 1][1]
+            const la = Math.hypot(ax, ay), lb = Math.hypot(bx, by)
+            if (!la || !lb) continue
+            const collinear = Math.abs(ax * by - ay * bx) < 1e-6 * la * lb
+            if (collinear && ax * bx + ay * by < 0) return true
+          }
+          return false
+        }
+        const fixed = exempt ? raw : orthogonalize(arrowEndRuns(orthogonalize(raw), el.arrow ?? false))
+        const pts = hasFoldback(fixed) ? raw : fixed
         const line = { color: resolveColor(el.line?.color ?? '#000'), width: el.line?.width ?? 1, ...(el.line?.dash ? { dash: el.line.dash } : {}) }
         // 阶段 A：`arrow` 必须**原样**透传。原先写作 `!!el.arrow` 会把 `'both'` 压成 `true`
         // ⇒ 两端箭头/虚线折线走到导出层时已经不认得（本轮实测：headEnd 计数 0）。
