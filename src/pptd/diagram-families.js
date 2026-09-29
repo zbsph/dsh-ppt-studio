@@ -9,6 +9,7 @@
  *   · 容器严格包住成员、且容器之间不重叠（重叠就退化为"只保留逻辑组"并记 note，不硬画）；
  *   · 确定性（同输入两次输出深度相等）；· 空间不够时**省略装饰性内容并记 note**，不硬塞。
  */
+import { orthogonalize, arrowEndRuns, ARROW_MIN_RUN } from './route-geometry.js'
 
 /** 简易换行（词级贪心；CJK 按字）。各族共用，避免"长标签溢出节点"。 */
 export function wrapLabel(text, maxW, fontSize, measure) {
@@ -45,65 +46,6 @@ export function makeNode(style, idOf, { id, x, y, w, h, label = '', emphasis = '
   }
   shape.contains = [txt.elementId]
   return [shape, txt]
-}
-
-/**
- * 箭头端的"直线段最短长度"。
- * 用户实测反馈：拐点离箭头太近时，箭头看起来像"断的"、也看不出指向（附图那根线就是在箭头处拐弯）。
- * 规则：带箭头的端点，其**紧邻的那一段**必须 ≥ ARROW_MIN_RUN 像素；不够就把相邻的**拐点**沿该段反向挪远。
- * 只挪拐点、不动端点（attach 语义不变），且挪动方向沿该段自身 ⇒ 拐点仍落在原来的走廊/间隙里。
- */
-const ARROW_MIN_RUN = 18
-export function arrowEndRuns(pts, arrow) {
-  const p = (pts ?? []).map(([x, y]) => [x, y])
-  if (p.length < 2) return p
-  // 让 p[i]→p[j] 这一段至少有 MIN 长（挪 i，不动 j）
-  const fix = (i, j) => {
-    const d = Math.hypot(p[j][0] - p[i][0], p[j][1] - p[i][1])
-    if (d === 0 || d >= ARROW_MIN_RUN) return
-    const ux = (p[j][0] - p[i][0]) / d
-    const uy = (p[j][1] - p[i][1]) / d
-    let nx = p[j][0] - ux * ARROW_MIN_RUN
-    let ny = p[j][1] - uy * ARROW_MIN_RUN
-    // **夹紧（X1-b）**：挪动后的拐点不得越过相邻点 p[i-1] —— 越过就形成"折返尖刺"
-    //（用户实测图 10 顶端多出一根线：91.1 → 73.1 → 118.1 的折返就是这里挪出来的）。
-    // 宁可这一段略短于 18px，也不许出现折返（折返 100% 是缺陷，短直段只是观感弱一点）。
-    if (i - 1 >= 0) {
-      const px = p[i - 1][0]
-      const py = p[i - 1][1]
-      const sameX = Math.abs(px - p[i][0]) < 0.5 && Math.abs(p[i][0] - p[j][0]) < 0.5
-      const sameY = Math.abs(py - p[i][1]) < 0.5 && Math.abs(p[i][1] - p[j][1]) < 0.5
-      if (sameX) ny = uy > 0 ? Math.min(ny, py) : Math.max(ny, py)
-      else if (sameY) nx = ux > 0 ? Math.min(nx, px) : Math.max(nx, px)
-    }
-    p[i] = [nx, ny]
-  }
-  const n = p.length
-  if (arrow === true || arrow === 'end' || arrow === 'both') fix(n - 2, n - 1) // 箭头在末端
-  if (arrow === 'both') fix(1, 0) // 两端箭头：起点那一段
-  return p
-}
-
-/**
- * 斜段 → 直角折线：把每一段非轴对齐的线拆成"先横后竖"两段（插入一个拐点）。
- *
- * **这是设计定死的规则**（用户提出、2026-09-28 敲定）：引擎产出的折线**永远轴对齐**。
- *   · 正交路由是这套图的"工程感"来源，也让"竖/横段 AABB 宽或高为 0"这条重叠判定前提成立；
- *   · 斜段会让**箭头方向不确定**（截图里那种"看不出指向"的线就是斜段+拐弯叠加）；
- *   · **唯一例外**：本身就是"环/放射"语义的图形（`cycle` 的外环弦、`funnel` 的梯形斜边），
- *     前者用 `orthogonal: false` 显式声明豁免，后者画的是 custGeom 形状而不是箭头折线。
- * 用途：兜住 `arrowEndRuns` 之类的后处理——它们只挪拐点，可能把**前一段**拉斜（用户实测发现的回归）。
- */
-export function orthogonalize(pts) {
-  if (!pts || pts.length < 2) return pts
-  const out = [pts[0]]
-  for (let i = 1; i < pts.length; i++) {
-    const [x0, y0] = out[out.length - 1]
-    const [x1, y1] = pts[i]
-    if (Math.abs(x1 - x0) < 0.5 || Math.abs(y1 - y0) < 0.5) { out.push([x1, y1]); continue }
-    out.push([x1, y0], [x1, y1]) // 先横后竖
-  }
-  return out
 }
 
 /** 折线/直线（可带 attach 与标签）。points 为绝对坐标数组。 */

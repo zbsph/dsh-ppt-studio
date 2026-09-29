@@ -14,11 +14,12 @@
  * 只产出 **warning**：不改任何判定 ⇒ 既有稿的产物、结论与门禁结果都不变（无图页逐字节不变）。
  */
 
-export const ARROW_MIN_RUN = 18
+export { ARROW_MIN_RUN }
 
 const r1 = (n) => Math.round(n * 10) / 10
 
 import { outlineAnchor } from './relations.js'
+import { ARROW_MIN_RUN } from './route-geometry.js'
 import { checkLineText } from './line-text-rule.js'
 
 export function checkLineRules(els) {

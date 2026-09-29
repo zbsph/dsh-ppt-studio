@@ -135,7 +135,7 @@ function boundsOf(el) {
 // 方向是 layout → relations（relations 不依赖 layout），无循环依赖。
 import { resolveAttach } from './relations.js'
 // G1：手画与族共用同一份路由后处理（正交化 + 箭头端最短直段），带 n<3 与折返两道守卫
-import { routePolyline, isAxisAligned } from './route-geometry.js'
+import { routePolyline } from './route-geometry.js'
 
 /** 归一化一个页面：元素 → 统一对象（含解析样式与文本度量）。 */
 export function normalizePage(page, ctx) {
