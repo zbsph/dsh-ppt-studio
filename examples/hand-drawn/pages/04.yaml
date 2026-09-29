@@ -46,7 +46,7 @@ elements:
     bounds: [156, 156, 780, 72]
     fill: '#F5F3FF'
     line: { color: '#E9D5FF', width: 1 }
-    contains: [lnt0, s0, st0, s5, st5]
+    contains: [s0, st0, s5, st5]
   - elementId: ln1
     elementType: shape
     kind: roundRect
@@ -63,7 +63,7 @@ elements:
     bounds: [156, 240, 780, 72]
     fill: '#FFFFFF'
     line: { color: '#E9D5FF', width: 1 }
-    contains: [lnt1, s2, st2]
+    contains: [s2, st2]
   - elementId: ln2
     elementType: shape
     kind: roundRect
@@ -80,7 +80,7 @@ elements:
     bounds: [156, 324, 780, 72]
     fill: '#F5F3FF'
     line: { color: '#E9D5FF', width: 1 }
-    contains: [lnt2, s3, st3]
+    contains: [s3, st3]
   - elementId: ln3
     elementType: shape
     kind: roundRect
@@ -97,7 +97,7 @@ elements:
     bounds: [156, 408, 780, 72]
     fill: '#FFFFFF'
     line: { color: '#E9D5FF', width: 1 }
-    contains: [lnt3, s1, st1, s4, st4]
+    contains: [s1, st1, s4, st4]
   - elementId: s0
     elementType: shape
     kind: roundRect
