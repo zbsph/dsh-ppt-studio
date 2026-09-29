@@ -39,7 +39,7 @@ elements:
     kind: roundRect
     bounds: [336, 176, 292, 214]
     fill: '#EDE9FE'
-    contains: [midH, m0, mt0, m1, mt1, m2, mt2]
+    contains: [m0, mt0, m1, mt1, m2, mt2]
   - elementId: m0
     elementType: shape
     kind: roundRect
