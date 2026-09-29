@@ -1,0 +1,28 @@
+version: 1
+title: 同内容三风格（从零重做）
+size: [960, 540]
+styles:
+  assist:
+    traits:
+      card: { shape: rect }
+      badge: number
+      subtitle: true
+      label: below
+      edge: { glyph: arrow, backStyle: dashed }
+      density: compact
+    palette: ["#0F172A", "#38BDF8"]
+  ideal:
+    traits:
+      layout: column
+      badge: number
+      badgePosition: inline
+      align: left
+      subtitle: true
+      edge: { glyph: chevron, backStyle: dashed }
+      frame: { title: false, rails: return }
+    palette: ["#2563EB", "#10B981"]
+    cardFill: { type: gradient, angle: 90, stops: [{ pos: 0, color: "#DBEAFE" }, { pos: 100, color: "#93C5FD" }] }
+pages:
+  - pages/01.yaml
+  - pages/02.yaml
+  - pages/03.yaml

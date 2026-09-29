@@ -1,0 +1,17 @@
+pageType: content
+title: 跨境包裹清关状态机（默认风格）
+diagram:
+  type: state
+  style: none
+  nodes:
+    - {id: c0, label: 已揽收, sub: 海外仓入库}
+    - {id: c1, label: 出口报关, sub: 单证已提交}
+    - {id: c2, label: 干线运输, sub: 航班在途}
+    - {id: c3, label: 进口清关, sub: 海关查验}
+    - {id: c4, label: 已投递, sub: 签收留痕}
+  edges:
+    - {from: c0, to: c1, label: 交运}
+    - {from: c1, to: c2, label: 放行}
+    - {from: c2, to: c3, label: 到港}
+    - {from: c3, to: c4, label: 清关完成}
+    - {from: c3, to: c2, label: 补件退回}

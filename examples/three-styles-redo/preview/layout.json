@@ -1,0 +1,2419 @@
+{
+  "size": {
+    "width": 960,
+    "height": 540
+  },
+  "theme": {
+    "colors": {},
+    "textStyles": {},
+    "grid": {
+      "base": 8
+    },
+    "safeArea": null,
+    "minFontSize": null,
+    "themeConformance": "strict"
+  },
+  "pages": [
+    {
+      "index": 0,
+      "pageNo": 1,
+      "file": "pages/01.yaml",
+      "name": "跨境包裹清关状态机（默认风格）",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [],
+      "reservedBands": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [],
+      "elements": [
+        {
+          "id": "d1_c0",
+          "kind": "shape",
+          "bounds": {
+            "x": 56,
+            "y": 163.2,
+            "w": 56,
+            "h": 54
+          },
+          "contains": [
+            "d1_t_c0"
+          ],
+          "shape": "roundRect",
+          "fill": "#2563EB",
+          "rotation": 0
+        },
+        {
+          "id": "d1_t_c0",
+          "kind": "text",
+          "bounds": {
+            "x": 62,
+            "y": 181.1,
+            "w": 44,
+            "h": 20.2
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 42,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              42
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "已揽收"
+        },
+        {
+          "id": "d1_c1",
+          "kind": "shape",
+          "bounds": {
+            "x": 254,
+            "y": 163.2,
+            "w": 56,
+            "h": 54
+          },
+          "contains": [
+            "d1_t_c1"
+          ],
+          "shape": "roundRect",
+          "fill": "#2563EB",
+          "rotation": 0
+        },
+        {
+          "id": "d1_t_c1",
+          "kind": "text",
+          "bounds": {
+            "x": 260,
+            "y": 172,
+            "w": 44,
+            "h": 38.4
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 65.1,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              65.1
+            ],
+            "overflowY": 0,
+            "overflowX": 21
+          },
+          "text": "出口报\n关"
+        },
+        {
+          "id": "d1_c2",
+          "kind": "shape",
+          "bounds": {
+            "x": 452,
+            "y": 163.2,
+            "w": 56,
+            "h": 54
+          },
+          "contains": [
+            "d1_t_c2"
+          ],
+          "shape": "roundRect",
+          "fill": "#2563EB",
+          "rotation": 0
+        },
+        {
+          "id": "d1_t_c2",
+          "kind": "text",
+          "bounds": {
+            "x": 458,
+            "y": 172,
+            "w": 44,
+            "h": 38.4
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 65.1,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              65.1
+            ],
+            "overflowY": 0,
+            "overflowX": 21
+          },
+          "text": "干线运\n输"
+        },
+        {
+          "id": "d1_c3",
+          "kind": "shape",
+          "bounds": {
+            "x": 650,
+            "y": 163.2,
+            "w": 56,
+            "h": 54
+          },
+          "contains": [
+            "d1_t_c3"
+          ],
+          "shape": "roundRect",
+          "fill": "#2563EB",
+          "rotation": 0
+        },
+        {
+          "id": "d1_t_c3",
+          "kind": "text",
+          "bounds": {
+            "x": 656,
+            "y": 172,
+            "w": 44,
+            "h": 38.4
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 65.1,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              65.1
+            ],
+            "overflowY": 0,
+            "overflowX": 21
+          },
+          "text": "进口清\n关"
+        },
+        {
+          "id": "d1_c4",
+          "kind": "shape",
+          "bounds": {
+            "x": 848,
+            "y": 163.2,
+            "w": 56,
+            "h": 54
+          },
+          "contains": [
+            "d1_t_c4"
+          ],
+          "shape": "roundRect",
+          "fill": "#2563EB",
+          "rotation": 0
+        },
+        {
+          "id": "d1_t_c4",
+          "kind": "text",
+          "bounds": {
+            "x": 854,
+            "y": 181.1,
+            "w": 44,
+            "h": 20.2
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#FFFFFF",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 42,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              42
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "已投递"
+        },
+        {
+          "id": "d1_e0",
+          "kind": "line",
+          "bounds": {
+            "x": 112,
+            "y": 190.2,
+            "w": 142,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d1_c0",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d1_c1",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              112,
+              190.2
+            ],
+            [
+              187,
+              190.2
+            ],
+            [
+              187,
+              190.2
+            ],
+            [
+              254,
+              190.2
+            ]
+          ]
+        },
+        {
+          "id": "d1_e1",
+          "kind": "line",
+          "bounds": {
+            "x": 310,
+            "y": 190.2,
+            "w": 142,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d1_c1",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d1_c2",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              310,
+              190.2
+            ],
+            [
+              385,
+              190.2
+            ],
+            [
+              385,
+              190.2
+            ],
+            [
+              452,
+              190.2
+            ]
+          ]
+        },
+        {
+          "id": "d1_e2",
+          "kind": "line",
+          "bounds": {
+            "x": 508,
+            "y": 190.2,
+            "w": 142,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d1_c2",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d1_c3",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              508,
+              190.2
+            ],
+            [
+              583,
+              190.2
+            ],
+            [
+              583,
+              190.2
+            ],
+            [
+              650,
+              190.2
+            ]
+          ]
+        },
+        {
+          "id": "d1_e3",
+          "kind": "line",
+          "bounds": {
+            "x": 706,
+            "y": 190.2,
+            "w": 142,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d1_c3",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d1_c4",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              706,
+              190.2
+            ],
+            [
+              781,
+              190.2
+            ],
+            [
+              781,
+              190.2
+            ],
+            [
+              848,
+              190.2
+            ]
+          ]
+        },
+        {
+          "id": "d1_e4",
+          "kind": "line",
+          "bounds": {
+            "x": 480,
+            "y": 125.2,
+            "w": 212,
+            "h": 37.999999999999986
+          },
+          "attach": {
+            "from": {
+              "ref": "d1_c3",
+              "side": "top"
+            },
+            "to": {
+              "ref": "d1_c2",
+              "side": "top"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              692,
+              163.2
+            ],
+            [
+              692,
+              125.7
+            ],
+            [
+              692,
+              125.2
+            ],
+            [
+              480,
+              125.2
+            ],
+            [
+              480,
+              125.7
+            ],
+            [
+              480,
+              163.2
+            ]
+          ]
+        },
+        {
+          "id": "d1_lbl_c0_c1",
+          "kind": "text",
+          "bounds": {
+            "x": 202,
+            "y": 166,
+            "w": 38,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 24,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              24
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "交运"
+        },
+        {
+          "id": "d1_lbl_c1_c2",
+          "kind": "text",
+          "bounds": {
+            "x": 400,
+            "y": 166,
+            "w": 38,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 24,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              24
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "放行"
+        },
+        {
+          "id": "d1_lbl_c2_c3",
+          "kind": "text",
+          "bounds": {
+            "x": 598,
+            "y": 166,
+            "w": 38,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 24,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              24
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "到港"
+        },
+        {
+          "id": "d1_lbl_c3_c4",
+          "kind": "text",
+          "bounds": {
+            "x": 782,
+            "y": 166,
+            "w": 66,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 48,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              48
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "清关完成"
+        },
+        {
+          "id": "d1_lbl_c3_c2",
+          "kind": "text",
+          "bounds": {
+            "x": 553,
+            "y": 101,
+            "w": 66,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 48,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              48
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "补件退回"
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "pageNo": 2,
+      "file": "pages/02.yaml",
+      "name": "跨境包裹清关状态机（助手自设计）",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [],
+      "reservedBands": [
+        {
+          "id": "label.below:c0",
+          "x": 58.64,
+          "y": 156.86,
+          "w": 100,
+          "h": 18.900000000000002,
+          "reason": "卡下标签带",
+          "owner": [
+            "d2_t_c0"
+          ]
+        },
+        {
+          "id": "label.below:c1",
+          "x": 244.32,
+          "y": 156.86,
+          "w": 100,
+          "h": 18.900000000000002,
+          "reason": "卡下标签带",
+          "owner": [
+            "d2_t_c1"
+          ]
+        },
+        {
+          "id": "label.below:c2",
+          "x": 430,
+          "y": 156.86,
+          "w": 100,
+          "h": 18.900000000000002,
+          "reason": "卡下标签带",
+          "owner": [
+            "d2_t_c2"
+          ]
+        },
+        {
+          "id": "label.below:c3",
+          "x": 615.68,
+          "y": 156.86,
+          "w": 100,
+          "h": 18.900000000000002,
+          "reason": "卡下标签带",
+          "owner": [
+            "d2_t_c3"
+          ]
+        },
+        {
+          "id": "label.below:c4",
+          "x": 801.36,
+          "y": 156.86,
+          "w": 100,
+          "h": 18.900000000000002,
+          "reason": "卡下标签带",
+          "owner": [
+            "d2_t_c4"
+          ]
+        }
+      ],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [],
+      "elements": [
+        {
+          "id": "d2_c0",
+          "kind": "shape",
+          "bounds": {
+            "x": 58.64,
+            "y": 151.86,
+            "w": 100,
+            "h": 76.68
+          },
+          "contains": [
+            "d2_bd_c0",
+            "d2_s_c0"
+          ],
+          "shape": "rect",
+          "fill": "#0F172A",
+          "rotation": 0
+        },
+        {
+          "id": "d2_t_c0",
+          "kind": "text",
+          "bounds": {
+            "x": 58.64,
+            "y": 156.86,
+            "w": 100,
+            "h": 18.900000000000002
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 42,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              42
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "已揽收"
+        },
+        {
+          "id": "d2_bd_c0",
+          "kind": "shape",
+          "bounds": {
+            "x": 63.64,
+            "y": 158.85999999999999,
+            "w": 15,
+            "h": 15
+          },
+          "contains": [
+            "d2_bt_c0"
+          ],
+          "shape": "ellipse",
+          "fill": "#38BDF8",
+          "rotation": 0
+        },
+        {
+          "id": "d2_bt_c0",
+          "kind": "text",
+          "bounds": {
+            "x": 63.64,
+            "y": 160.66,
+            "w": 15,
+            "h": 12
+          },
+          "style": {
+            "fontSize": 8.7,
+            "color": "#1F2937",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 5.22,
+            "textH": 10.44,
+            "lines": 1,
+            "lineWidths": [
+              5.22
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "1"
+        },
+        {
+          "id": "d2_s_c0",
+          "kind": "text",
+          "bounds": {
+            "x": 64.64,
+            "y": 191.73,
+            "w": 88,
+            "h": 24.54
+          },
+          "style": {
+            "fontSize": 10.92,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 54.6,
+            "textH": 13.104,
+            "lines": 1,
+            "lineWidths": [
+              54.6
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "海外仓入库"
+        },
+        {
+          "id": "d2_c1",
+          "kind": "shape",
+          "bounds": {
+            "x": 244.32,
+            "y": 151.86,
+            "w": 100,
+            "h": 76.68
+          },
+          "contains": [
+            "d2_bd_c1",
+            "d2_s_c1"
+          ],
+          "shape": "rect",
+          "fill": "#0F172A",
+          "rotation": 0
+        },
+        {
+          "id": "d2_t_c1",
+          "kind": "text",
+          "bounds": {
+            "x": 244.32,
+            "y": 156.86,
+            "w": 100,
+            "h": 18.900000000000002
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 56,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              56
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "出口报关"
+        },
+        {
+          "id": "d2_bd_c1",
+          "kind": "shape",
+          "bounds": {
+            "x": 249.32,
+            "y": 158.85999999999999,
+            "w": 15,
+            "h": 15
+          },
+          "contains": [
+            "d2_bt_c1"
+          ],
+          "shape": "ellipse",
+          "fill": "#38BDF8",
+          "rotation": 0
+        },
+        {
+          "id": "d2_bt_c1",
+          "kind": "text",
+          "bounds": {
+            "x": 249.32,
+            "y": 160.66,
+            "w": 15,
+            "h": 12
+          },
+          "style": {
+            "fontSize": 8.7,
+            "color": "#1F2937",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 5.22,
+            "textH": 10.44,
+            "lines": 1,
+            "lineWidths": [
+              5.22
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "2"
+        },
+        {
+          "id": "d2_s_c1",
+          "kind": "text",
+          "bounds": {
+            "x": 250.32,
+            "y": 191.73,
+            "w": 88,
+            "h": 24.54
+          },
+          "style": {
+            "fontSize": 10.92,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 54.6,
+            "textH": 13.104,
+            "lines": 1,
+            "lineWidths": [
+              54.6
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "单证已提交"
+        },
+        {
+          "id": "d2_c2",
+          "kind": "shape",
+          "bounds": {
+            "x": 430,
+            "y": 151.86,
+            "w": 100,
+            "h": 76.68
+          },
+          "contains": [
+            "d2_bd_c2",
+            "d2_s_c2"
+          ],
+          "shape": "rect",
+          "fill": "#0F172A",
+          "rotation": 0
+        },
+        {
+          "id": "d2_t_c2",
+          "kind": "text",
+          "bounds": {
+            "x": 430,
+            "y": 156.86,
+            "w": 100,
+            "h": 18.900000000000002
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 56,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              56
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "干线运输"
+        },
+        {
+          "id": "d2_bd_c2",
+          "kind": "shape",
+          "bounds": {
+            "x": 435,
+            "y": 158.85999999999999,
+            "w": 15,
+            "h": 15
+          },
+          "contains": [
+            "d2_bt_c2"
+          ],
+          "shape": "ellipse",
+          "fill": "#38BDF8",
+          "rotation": 0
+        },
+        {
+          "id": "d2_bt_c2",
+          "kind": "text",
+          "bounds": {
+            "x": 435,
+            "y": 160.66,
+            "w": 15,
+            "h": 12
+          },
+          "style": {
+            "fontSize": 8.7,
+            "color": "#1F2937",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 5.22,
+            "textH": 10.44,
+            "lines": 1,
+            "lineWidths": [
+              5.22
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "3"
+        },
+        {
+          "id": "d2_s_c2",
+          "kind": "text",
+          "bounds": {
+            "x": 436,
+            "y": 191.73,
+            "w": 88,
+            "h": 24.54
+          },
+          "style": {
+            "fontSize": 10.92,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 43.68,
+            "textH": 13.104,
+            "lines": 1,
+            "lineWidths": [
+              43.68
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "航班在途"
+        },
+        {
+          "id": "d2_c3",
+          "kind": "shape",
+          "bounds": {
+            "x": 615.68,
+            "y": 151.86,
+            "w": 100,
+            "h": 76.68
+          },
+          "contains": [
+            "d2_bd_c3",
+            "d2_s_c3"
+          ],
+          "shape": "rect",
+          "fill": "#0F172A",
+          "rotation": 0
+        },
+        {
+          "id": "d2_t_c3",
+          "kind": "text",
+          "bounds": {
+            "x": 615.68,
+            "y": 156.86,
+            "w": 100,
+            "h": 18.900000000000002
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 56,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              56
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "进口清关"
+        },
+        {
+          "id": "d2_bd_c3",
+          "kind": "shape",
+          "bounds": {
+            "x": 620.68,
+            "y": 158.85999999999999,
+            "w": 15,
+            "h": 15
+          },
+          "contains": [
+            "d2_bt_c3"
+          ],
+          "shape": "ellipse",
+          "fill": "#38BDF8",
+          "rotation": 0
+        },
+        {
+          "id": "d2_bt_c3",
+          "kind": "text",
+          "bounds": {
+            "x": 620.68,
+            "y": 160.66,
+            "w": 15,
+            "h": 12
+          },
+          "style": {
+            "fontSize": 8.7,
+            "color": "#1F2937",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 5.22,
+            "textH": 10.44,
+            "lines": 1,
+            "lineWidths": [
+              5.22
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "4"
+        },
+        {
+          "id": "d2_s_c3",
+          "kind": "text",
+          "bounds": {
+            "x": 621.68,
+            "y": 191.73,
+            "w": 88,
+            "h": 24.54
+          },
+          "style": {
+            "fontSize": 10.92,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 43.68,
+            "textH": 13.104,
+            "lines": 1,
+            "lineWidths": [
+              43.68
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "海关查验"
+        },
+        {
+          "id": "d2_c4",
+          "kind": "shape",
+          "bounds": {
+            "x": 801.36,
+            "y": 151.86,
+            "w": 100,
+            "h": 76.68
+          },
+          "contains": [
+            "d2_bd_c4",
+            "d2_s_c4"
+          ],
+          "shape": "rect",
+          "fill": "#0F172A",
+          "rotation": 0
+        },
+        {
+          "id": "d2_t_c4",
+          "kind": "text",
+          "bounds": {
+            "x": 801.36,
+            "y": 156.86,
+            "w": 100,
+            "h": 18.900000000000002
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 42,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              42
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "已投递"
+        },
+        {
+          "id": "d2_bd_c4",
+          "kind": "shape",
+          "bounds": {
+            "x": 806.36,
+            "y": 158.85999999999999,
+            "w": 15,
+            "h": 15
+          },
+          "contains": [
+            "d2_bt_c4"
+          ],
+          "shape": "ellipse",
+          "fill": "#38BDF8",
+          "rotation": 0
+        },
+        {
+          "id": "d2_bt_c4",
+          "kind": "text",
+          "bounds": {
+            "x": 806.36,
+            "y": 160.66,
+            "w": 15,
+            "h": 12
+          },
+          "style": {
+            "fontSize": 8.7,
+            "color": "#1F2937",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 5.22,
+            "textH": 10.44,
+            "lines": 1,
+            "lineWidths": [
+              5.22
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "5"
+        },
+        {
+          "id": "d2_s_c4",
+          "kind": "text",
+          "bounds": {
+            "x": 807.36,
+            "y": 191.73,
+            "w": 88,
+            "h": 24.54
+          },
+          "style": {
+            "fontSize": 10.92,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 43.68,
+            "textH": 13.104,
+            "lines": 1,
+            "lineWidths": [
+              43.68
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "签收留痕"
+        },
+        {
+          "id": "d2_e0",
+          "kind": "line",
+          "bounds": {
+            "x": 158.64,
+            "y": 190.2,
+            "w": 85.68,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d2_c0",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d2_c1",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              158.64,
+              190.2
+            ],
+            [
+              202.84,
+              190.2
+            ],
+            [
+              202.84,
+              190.2
+            ],
+            [
+              244.32,
+              190.2
+            ]
+          ]
+        },
+        {
+          "id": "d2_e1",
+          "kind": "line",
+          "bounds": {
+            "x": 344.32,
+            "y": 190.2,
+            "w": 85.68,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d2_c1",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d2_c2",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              344.32,
+              190.2
+            ],
+            [
+              388.52,
+              190.2
+            ],
+            [
+              388.52,
+              190.2
+            ],
+            [
+              430,
+              190.2
+            ]
+          ]
+        },
+        {
+          "id": "d2_e2",
+          "kind": "line",
+          "bounds": {
+            "x": 530,
+            "y": 190.2,
+            "w": 85.67999999999995,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d2_c2",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d2_c3",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              530,
+              190.2
+            ],
+            [
+              574.2,
+              190.2
+            ],
+            [
+              574.2,
+              190.2
+            ],
+            [
+              615.68,
+              190.2
+            ]
+          ]
+        },
+        {
+          "id": "d2_e3",
+          "kind": "line",
+          "bounds": {
+            "x": 715.68,
+            "y": 190.2,
+            "w": 85.68000000000006,
+            "h": 1
+          },
+          "attach": {
+            "from": {
+              "ref": "d2_c3",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d2_c4",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              715.68,
+              190.2
+            ],
+            [
+              759.88,
+              190.2
+            ],
+            [
+              759.88,
+              190.2
+            ],
+            [
+              801.36,
+              190.2
+            ]
+          ]
+        },
+        {
+          "id": "d2_e4",
+          "kind": "line",
+          "bounds": {
+            "x": 407.9,
+            "y": 190.2,
+            "w": 329.88,
+            "h": 80.34000000000003
+          },
+          "attach": {
+            "from": {
+              "ref": "d2_c3",
+              "side": "right"
+            },
+            "to": {
+              "ref": "d2_c2",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              715.68,
+              190.2
+            ],
+            [
+              737.78,
+              190.2
+            ],
+            [
+              737.78,
+              270.54
+            ],
+            [
+              407.9,
+              270.54
+            ],
+            [
+              407.9,
+              190.2
+            ],
+            [
+              430,
+              190.2
+            ]
+          ]
+        },
+        {
+          "id": "d2_lbl_c0_c1",
+          "kind": "text",
+          "bounds": {
+            "x": 205,
+            "y": 166,
+            "w": 38,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 24,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              24
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "交运"
+        },
+        {
+          "id": "d2_lbl_c1_c2",
+          "kind": "text",
+          "bounds": {
+            "x": 390,
+            "y": 166,
+            "w": 38,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 24,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              24
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "放行"
+        },
+        {
+          "id": "d2_lbl_c2_c3",
+          "kind": "text",
+          "bounds": {
+            "x": 576,
+            "y": 166,
+            "w": 38,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 24,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              24
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "到港"
+        },
+        {
+          "id": "d2_lbl_c3_c4",
+          "kind": "text",
+          "bounds": {
+            "x": 727,
+            "y": 166,
+            "w": 66,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 48,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              48
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "清关完成"
+        },
+        {
+          "id": "d2_lbl_c3_c2",
+          "kind": "text",
+          "bounds": {
+            "x": 540,
+            "y": 247,
+            "w": 66,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 48,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              48
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "补件退回"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "pageNo": 3,
+      "file": "pages/03.yaml",
+      "name": "跨境包裹清关状态机（用户理想风格）",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [],
+      "reservedBands": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [],
+      "elements": [
+        {
+          "id": "d3_c0",
+          "kind": "shape",
+          "bounds": {
+            "x": 220,
+            "y": 62,
+            "w": 521,
+            "h": 61
+          },
+          "contains": [
+            "d3_t_c0",
+            "d3_s_c0",
+            "d3_bd_c0"
+          ],
+          "shape": "roundRect",
+          "fill": {
+            "type": "gradient",
+            "angle": 90,
+            "stops": [
+              {
+                "pos": 0,
+                "color": "#DBEAFE"
+              },
+              {
+                "pos": 100,
+                "color": "#93C5FD"
+              }
+            ]
+          },
+          "rotation": 0
+        },
+        {
+          "id": "d3_t_c0",
+          "kind": "text",
+          "bounds": {
+            "x": 249,
+            "y": 70,
+            "w": 484,
+            "h": 20.74
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#1F2937",
+            "align": "left",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 42,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              42
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "已揽收"
+        },
+        {
+          "id": "d3_bd_c0",
+          "kind": "shape",
+          "bounds": {
+            "x": 228,
+            "y": 69,
+            "w": 16,
+            "h": 16
+          },
+          "contains": [
+            "d3_bt_c0"
+          ],
+          "shape": "ellipse",
+          "fill": "#10B981",
+          "rotation": 0
+        },
+        {
+          "id": "d3_bt_c0",
+          "kind": "text",
+          "bounds": {
+            "x": 228,
+            "y": 70.92,
+            "w": 16,
+            "h": 12.8
+          },
+          "style": {
+            "fontSize": 8.8,
+            "color": "#1F2937",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 5.28,
+            "textH": 10.56,
+            "lines": 1,
+            "lineWidths": [
+              5.28
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "1"
+        },
+        {
+          "id": "d3_s_c0",
+          "kind": "text",
+          "bounds": {
+            "x": 228,
+            "y": 93.72,
+            "w": 505,
+            "h": 18.3
+          },
+          "style": {
+            "fontSize": 11.479999999999999,
+            "color": "#1F2937",
+            "align": "left",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 57.39999999999999,
+            "textH": 13.775999999999998,
+            "lines": 1,
+            "lineWidths": [
+              57.39999999999999
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "海外仓入库"
+        },
+        {
+          "id": "d3_c1",
+          "kind": "shape",
+          "bounds": {
+            "x": 220,
+            "y": 151,
+            "w": 521,
+            "h": 61
+          },
+          "contains": [
+            "d3_t_c1",
+            "d3_s_c1",
+            "d3_bd_c1"
+          ],
+          "shape": "roundRect",
+          "fill": {
+            "type": "gradient",
+            "angle": 90,
+            "stops": [
+              {
+                "pos": 0,
+                "color": "#DBEAFE"
+              },
+              {
+                "pos": 100,
+                "color": "#93C5FD"
+              }
+            ]
+          },
+          "rotation": 0
+        },
+        {
+          "id": "d3_t_c1",
+          "kind": "text",
+          "bounds": {
+            "x": 249,
+            "y": 159,
+            "w": 484,
+            "h": 20.74
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#1F2937",
+            "align": "left",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 56,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              56
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "出口报关"
+        },
+        {
+          "id": "d3_bd_c1",
+          "kind": "shape",
+          "bounds": {
+            "x": 228,
+            "y": 158,
+            "w": 16,
+            "h": 16
+          },
+          "contains": [
+            "d3_bt_c1"
+          ],
+          "shape": "ellipse",
+          "fill": "#10B981",
+          "rotation": 0
+        },
+        {
+          "id": "d3_bt_c1",
+          "kind": "text",
+          "bounds": {
+            "x": 228,
+            "y": 159.92,
+            "w": 16,
+            "h": 12.8
+          },
+          "style": {
+            "fontSize": 8.8,
+            "color": "#1F2937",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 5.28,
+            "textH": 10.56,
+            "lines": 1,
+            "lineWidths": [
+              5.28
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "2"
+        },
+        {
+          "id": "d3_s_c1",
+          "kind": "text",
+          "bounds": {
+            "x": 228,
+            "y": 182.72,
+            "w": 505,
+            "h": 18.3
+          },
+          "style": {
+            "fontSize": 11.479999999999999,
+            "color": "#1F2937",
+            "align": "left",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 57.39999999999999,
+            "textH": 13.775999999999998,
+            "lines": 1,
+            "lineWidths": [
+              57.39999999999999
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "单证已提交"
+        },
+        {
+          "id": "d3_c2",
+          "kind": "shape",
+          "bounds": {
+            "x": 220,
+            "y": 240,
+            "w": 521,
+            "h": 61
+          },
+          "contains": [
+            "d3_t_c2",
+            "d3_s_c2",
+            "d3_bd_c2"
+          ],
+          "shape": "roundRect",
+          "fill": {
+            "type": "gradient",
+            "angle": 90,
+            "stops": [
+              {
+                "pos": 0,
+                "color": "#DBEAFE"
+              },
+              {
+                "pos": 100,
+                "color": "#93C5FD"
+              }
+            ]
+          },
+          "rotation": 0
+        },
+        {
+          "id": "d3_t_c2",
+          "kind": "text",
+          "bounds": {
+            "x": 249,
+            "y": 248,
+            "w": 484,
+            "h": 20.74
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#1F2937",
+            "align": "left",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 56,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              56
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "干线运输"
+        },
+        {
+          "id": "d3_bd_c2",
+          "kind": "shape",
+          "bounds": {
+            "x": 228,
+            "y": 247,
+            "w": 16,
+            "h": 16
+          },
+          "contains": [
+            "d3_bt_c2"
+          ],
+          "shape": "ellipse",
+          "fill": "#10B981",
+          "rotation": 0
+        },
+        {
+          "id": "d3_bt_c2",
+          "kind": "text",
+          "bounds": {
+            "x": 228,
+            "y": 248.92,
+            "w": 16,
+            "h": 12.8
+          },
+          "style": {
+            "fontSize": 8.8,
+            "color": "#1F2937",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 5.28,
+            "textH": 10.56,
+            "lines": 1,
+            "lineWidths": [
+              5.28
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "3"
+        },
+        {
+          "id": "d3_s_c2",
+          "kind": "text",
+          "bounds": {
+            "x": 228,
+            "y": 271.72,
+            "w": 505,
+            "h": 18.3
+          },
+          "style": {
+            "fontSize": 11.479999999999999,
+            "color": "#1F2937",
+            "align": "left",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 45.919999999999995,
+            "textH": 13.775999999999998,
+            "lines": 1,
+            "lineWidths": [
+              45.919999999999995
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "航班在途"
+        },
+        {
+          "id": "d3_c3",
+          "kind": "shape",
+          "bounds": {
+            "x": 220,
+            "y": 329,
+            "w": 521,
+            "h": 61
+          },
+          "contains": [
+            "d3_t_c3",
+            "d3_s_c3",
+            "d3_bd_c3"
+          ],
+          "shape": "roundRect",
+          "fill": {
+            "type": "gradient",
+            "angle": 90,
+            "stops": [
+              {
+                "pos": 0,
+                "color": "#DBEAFE"
+              },
+              {
+                "pos": 100,
+                "color": "#93C5FD"
+              }
+            ]
+          },
+          "rotation": 0
+        },
+        {
+          "id": "d3_t_c3",
+          "kind": "text",
+          "bounds": {
+            "x": 249,
+            "y": 337,
+            "w": 484,
+            "h": 20.74
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#1F2937",
+            "align": "left",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 56,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              56
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "进口清关"
+        },
+        {
+          "id": "d3_bd_c3",
+          "kind": "shape",
+          "bounds": {
+            "x": 228,
+            "y": 336,
+            "w": 16,
+            "h": 16
+          },
+          "contains": [
+            "d3_bt_c3"
+          ],
+          "shape": "ellipse",
+          "fill": "#10B981",
+          "rotation": 0
+        },
+        {
+          "id": "d3_bt_c3",
+          "kind": "text",
+          "bounds": {
+            "x": 228,
+            "y": 337.92,
+            "w": 16,
+            "h": 12.8
+          },
+          "style": {
+            "fontSize": 8.8,
+            "color": "#1F2937",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 5.28,
+            "textH": 10.56,
+            "lines": 1,
+            "lineWidths": [
+              5.28
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "4"
+        },
+        {
+          "id": "d3_s_c3",
+          "kind": "text",
+          "bounds": {
+            "x": 228,
+            "y": 360.72,
+            "w": 505,
+            "h": 18.3
+          },
+          "style": {
+            "fontSize": 11.479999999999999,
+            "color": "#1F2937",
+            "align": "left",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 45.919999999999995,
+            "textH": 13.775999999999998,
+            "lines": 1,
+            "lineWidths": [
+              45.919999999999995
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "海关查验"
+        },
+        {
+          "id": "d3_c4",
+          "kind": "shape",
+          "bounds": {
+            "x": 220,
+            "y": 418,
+            "w": 521,
+            "h": 61
+          },
+          "contains": [
+            "d3_t_c4",
+            "d3_s_c4",
+            "d3_bd_c4"
+          ],
+          "shape": "roundRect",
+          "fill": {
+            "type": "gradient",
+            "angle": 90,
+            "stops": [
+              {
+                "pos": 0,
+                "color": "#DBEAFE"
+              },
+              {
+                "pos": 100,
+                "color": "#93C5FD"
+              }
+            ]
+          },
+          "rotation": 0
+        },
+        {
+          "id": "d3_t_c4",
+          "kind": "text",
+          "bounds": {
+            "x": 249,
+            "y": 426,
+            "w": 484,
+            "h": 20.74
+          },
+          "style": {
+            "fontSize": 14,
+            "color": "#1F2937",
+            "align": "left",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 42,
+            "textH": 16.8,
+            "lines": 1,
+            "lineWidths": [
+              42
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "已投递"
+        },
+        {
+          "id": "d3_bd_c4",
+          "kind": "shape",
+          "bounds": {
+            "x": 228,
+            "y": 425,
+            "w": 16,
+            "h": 16
+          },
+          "contains": [
+            "d3_bt_c4"
+          ],
+          "shape": "ellipse",
+          "fill": "#10B981",
+          "rotation": 0
+        },
+        {
+          "id": "d3_bt_c4",
+          "kind": "text",
+          "bounds": {
+            "x": 228,
+            "y": 426.92,
+            "w": 16,
+            "h": 12.8
+          },
+          "style": {
+            "fontSize": 8.8,
+            "color": "#1F2937",
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 5.28,
+            "textH": 10.56,
+            "lines": 1,
+            "lineWidths": [
+              5.28
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "5"
+        },
+        {
+          "id": "d3_s_c4",
+          "kind": "text",
+          "bounds": {
+            "x": 228,
+            "y": 449.72,
+            "w": 505,
+            "h": 18.3
+          },
+          "style": {
+            "fontSize": 11.479999999999999,
+            "color": "#1F2937",
+            "align": "left",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 45.919999999999995,
+            "textH": 13.775999999999998,
+            "lines": 1,
+            "lineWidths": [
+              45.919999999999995
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "签收留痕"
+        },
+        {
+          "id": "d3_ch_chain_c0_c1",
+          "kind": "shape",
+          "bounds": {
+            "x": 471.5,
+            "y": 136.5,
+            "w": 18,
+            "h": 14
+          },
+          "role": "decoration",
+          "roleReason": "连接符 glyph（贴在线端的视觉标记，属装饰层）",
+          "shape": "chevron",
+          "fill": "#10B981",
+          "rotation": 270
+        },
+        {
+          "id": "d3_ch_chain_c1_c2",
+          "kind": "shape",
+          "bounds": {
+            "x": 471.5,
+            "y": 225.5,
+            "w": 18,
+            "h": 14
+          },
+          "role": "decoration",
+          "roleReason": "连接符 glyph（贴在线端的视觉标记，属装饰层）",
+          "shape": "chevron",
+          "fill": "#10B981",
+          "rotation": 270
+        },
+        {
+          "id": "d3_ch_chain_c2_c3",
+          "kind": "shape",
+          "bounds": {
+            "x": 471.5,
+            "y": 314.5,
+            "w": 18,
+            "h": 14
+          },
+          "role": "decoration",
+          "roleReason": "连接符 glyph（贴在线端的视觉标记，属装饰层）",
+          "shape": "chevron",
+          "fill": "#10B981",
+          "rotation": 270
+        },
+        {
+          "id": "d3_ch_chain_c3_c4",
+          "kind": "shape",
+          "bounds": {
+            "x": 471.5,
+            "y": 403.5,
+            "w": 18,
+            "h": 14
+          },
+          "role": "decoration",
+          "roleReason": "连接符 glyph（贴在线端的视觉标记，属装饰层）",
+          "shape": "chevron",
+          "fill": "#10B981",
+          "rotation": 270
+        },
+        {
+          "id": "d3_e0",
+          "kind": "line",
+          "bounds": {
+            "x": 194,
+            "y": 270.5,
+            "w": 26,
+            "h": 89
+          },
+          "attach": {
+            "from": {
+              "ref": "d3_c3",
+              "side": "left"
+            },
+            "to": {
+              "ref": "d3_c2",
+              "side": "left"
+            }
+          },
+          "arrow": true,
+          "points": [
+            [
+              220,
+              359.5
+            ],
+            [
+              194,
+              359.5
+            ],
+            [
+              194,
+              270.5
+            ],
+            [
+              220,
+              270.5
+            ]
+          ]
+        },
+        {
+          "id": "d3_el_e0",
+          "kind": "text",
+          "bounds": {
+            "x": null,
+            "y": null,
+            "w": null,
+            "h": 16
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#1F2937",
+            "align": "center",
+            "wrap": false,
+            "lineHeight": 1.2
+          },
+          "metrics": {
+            "textW": 48,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              48
+            ],
+            "overflowY": 0,
+            "overflowX": null
+          },
+          "text": "补件退回"
+        }
+      ]
+    }
+  ]
+}
