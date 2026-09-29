@@ -63,7 +63,14 @@ const cur = { digest, perPage, pngs }
 if (process.argv.includes('--capture')) {
   mkdirSync(dirname(BASE), { recursive: true })
   const head = execSync('git rev-parse HEAD', { cwd: ROOT, encoding: 'utf8' }).trim()
-  writeFileSync(BASE, JSON.stringify({ savedAt: new Date().toISOString(), head, ...cur }, null, 2) + '\n')
+  // 保留更新历史：不再整文件覆写（否则上一次的更新原因会丢——实测踩过）
+  const prev = existsSync(BASE) ? JSON.parse(readFileSync(BASE, 'utf8')) : {}
+  const reasonIdx = process.argv.indexOf('--reason')
+  const reason = reasonIdx >= 0 ? (process.argv[reasonIdx + 1] ?? '(未注明)') : '(未注明，见提交信息)'
+  const history = [...(prev.history ?? [])]
+  if (prev.digest && prev.digest !== cur.digest) history.push({ at: new Date().toISOString(), from: prev.digest, to: cur.digest, reason })
+  else if (prev.digest && prev.digest === cur.digest) history.push({ at: new Date().toISOString(), from: cur.digest, to: cur.digest, reason: '摘要未变（重采）: ' + reason })
+  writeFileSync(BASE, JSON.stringify({ savedAt: new Date().toISOString(), head, ...cur, history }, null, 2) + '\n')
   console.log('✓ 基线已落盘 scripts/fixtures/handdrawn-baseline.json')
   console.log('  layout 摘要 = ' + digest)
   console.log('  逐页 = ' + perPage.map((p) => p.page + ':错' + p.errors + '/警' + p.warns).join(' '))
