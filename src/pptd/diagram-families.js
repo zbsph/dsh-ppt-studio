@@ -363,7 +363,11 @@ function layoutSwimlane({ d, box, style, id, notes }) {
     }
     // 车道分隔线（第 0 条画在带顶也可，这里只画内部边界）
     if (li > 0) {
-      elements.push(...makeEdge(style, id, { id: `sep_${lane.id}`, points: [[box.x, laneY], [box.x + box.w, laneY]], arrow: false }))
+      // 泳道分隔线是**结构线**（不是数据流）⇒ 声明为 decoration：跨道连线穿过泳道边界是标准画法（BPMN 同），
+      // 声明后 line-crossing 等判据会跳过它（否则每次跨道连线都会被记成"交叉"）。
+      const seps = makeEdge(style, id, { id: `sep_${lane.id}`, points: [[box.x, laneY], [box.x + box.w, laneY]], arrow: false })
+      for (const sp of seps) { sp.role = 'decoration'; sp.roleReason = '泳道分隔线（结构线，非数据流）' }
+      elements.push(...seps)
     }
     // 带内节点：列位置全局对齐（跨道连线才好走列间隙）
     lane.members.forEach((mid, ci) => {
