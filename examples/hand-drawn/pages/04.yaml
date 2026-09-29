@@ -3,14 +3,24 @@ pageType: content
 expectedOverlaps:
   - { pair: [lb0, a0] }
   - { pair: [lb3, a0] }
+  - { pair: [ln0, a0] }
+  - { pair: [ln3, a0] }
   - { pair: [lb3, a1] }
   - { pair: [lb1, a1] }
+  - { pair: [ln3, a1] }
+  - { pair: [ln1, a1] }
   - { pair: [lb1, a2] }
   - { pair: [lb2, a2] }
+  - { pair: [ln1, a2] }
+  - { pair: [ln2, a2] }
   - { pair: [lb2, a3] }
   - { pair: [lb3, a3] }
+  - { pair: [ln2, a3] }
+  - { pair: [ln3, a3] }
   - { pair: [lb3, a4] }
   - { pair: [lb0, a4] }
+  - { pair: [ln3, a4] }
+  - { pair: [ln0, a4] }
 elements:
   - elementId: title
     elementType: text
