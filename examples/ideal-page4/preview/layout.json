@@ -78,7 +78,7 @@
           },
           "style": {
             "fontSize": 14,
-            "color": "#FFFFFF",
+            "color": "#1F2937",
             "align": "left",
             "wrap": false,
             "lineHeight": 1.2
@@ -150,7 +150,7 @@
           },
           "style": {
             "fontSize": 11.479999999999999,
-            "color": "#FFFFFF",
+            "color": "#1F2937",
             "align": "left",
             "lineHeight": 1.2,
             "wrap": true
@@ -209,7 +209,7 @@
           },
           "style": {
             "fontSize": 14,
-            "color": "#FFFFFF",
+            "color": "#1F2937",
             "align": "left",
             "wrap": false,
             "lineHeight": 1.2
@@ -281,7 +281,7 @@
           },
           "style": {
             "fontSize": 11.479999999999999,
-            "color": "#FFFFFF",
+            "color": "#1F2937",
             "align": "left",
             "lineHeight": 1.2,
             "wrap": true
@@ -340,7 +340,7 @@
           },
           "style": {
             "fontSize": 14,
-            "color": "#FFFFFF",
+            "color": "#1F2937",
             "align": "left",
             "wrap": false,
             "lineHeight": 1.2
@@ -412,7 +412,7 @@
           },
           "style": {
             "fontSize": 11.479999999999999,
-            "color": "#FFFFFF",
+            "color": "#1F2937",
             "align": "left",
             "lineHeight": 1.2,
             "wrap": true
@@ -471,7 +471,7 @@
           },
           "style": {
             "fontSize": 14,
-            "color": "#FFFFFF",
+            "color": "#1F2937",
             "align": "left",
             "wrap": false,
             "lineHeight": 1.2
@@ -543,7 +543,7 @@
           },
           "style": {
             "fontSize": 11.479999999999999,
-            "color": "#FFFFFF",
+            "color": "#1F2937",
             "align": "left",
             "lineHeight": 1.2,
             "wrap": true
@@ -602,7 +602,7 @@
           },
           "style": {
             "fontSize": 14,
-            "color": "#FFFFFF",
+            "color": "#1F2937",
             "align": "left",
             "wrap": false,
             "lineHeight": 1.2
@@ -674,7 +674,7 @@
           },
           "style": {
             "fontSize": 11.479999999999999,
-            "color": "#FFFFFF",
+            "color": "#1F2937",
             "align": "left",
             "lineHeight": 1.2,
             "wrap": true
@@ -696,7 +696,7 @@
           "kind": "shape",
           "bounds": {
             "x": 471.5,
-            "y": 133,
+            "y": 136.5,
             "w": 18,
             "h": 14
           },
@@ -711,7 +711,7 @@
           "kind": "shape",
           "bounds": {
             "x": 471.5,
-            "y": 222,
+            "y": 225.5,
             "w": 18,
             "h": 14
           },
@@ -726,7 +726,7 @@
           "kind": "shape",
           "bounds": {
             "x": 471.5,
-            "y": 311,
+            "y": 314.5,
             "w": 18,
             "h": 14
           },
@@ -741,7 +741,7 @@
           "kind": "shape",
           "bounds": {
             "x": 471.5,
-            "y": 400,
+            "y": 403.5,
             "w": 18,
             "h": 14
           },

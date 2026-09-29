@@ -32,6 +32,21 @@ const R = (n) => Math.round(n * 100) / 100
 export function makeNode(style, idOf, { id, x, y, w, h, label = '', emphasis = 'primary', fontSize }) {
   // paint 直通（宪法②）：style.cardFill 可为渐变 {type:'gradient',stops,angle} 或纯色；不传 ⇒ 与既有完全一致
   const fill = style.cardFill ?? (emphasis === 'plain' ? style.neutral : (emphasis === 'accent' ? (style.palette[1] ?? style.palette[0]) : style.palette[0]))
+  // ── 渐变/浅底卡：文字色按**对比度自动选**（"能防的防"）──
+  // 实测：浅蓝渐变 #DBEAFE→#93C5FD 配白字只有 1.22:1，合规检查一次抓出 10 条 ⇒ 不能硬用白字。
+  // **只对渐变填充生效**（字符串填充走原逻辑）⇒ 默认风格逐像素不变。
+  const gradEnds = fill && typeof fill === 'object' && Array.isArray(fill.stops) ? fill.stops.map((st) => st.color) : null
+  const __lum = (hex) => {
+    const m = /^#?([0-9a-fA-F]{6})$/.exec(String(hex ?? ''))
+    if (!m) return 0
+    const n = parseInt(m[1], 16)
+    const ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { const c = v / 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4) })
+    return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2]
+  }
+  const __cr = (a, b) => { const l1 = __lum(a); const l2 = __lum(b); const hi = Math.max(l1, l2); const lo = Math.min(l1, l2); return (hi + 0.05) / (lo + 0.05) }
+  const gradTextColor = gradEnds && gradEnds.length
+    ? (Math.min(...gradEnds.map((c) => __cr(style.ink, c))) >= Math.min(...gradEnds.map((c) => __cr('#FFFFFF', c))) ? style.ink : '#FFFFFF')
+    : null
   const fs = fontSize ?? style.fontSize
   const shape = {
     elementId: idOf(id), elementType: 'shape', kind: 'roundRect',
@@ -42,7 +57,7 @@ export function makeNode(style, idOf, { id, x, y, w, h, label = '', emphasis = '
   const txt = {
     elementId: idOf(`t_${id}`), elementType: 'text',
     bounds: [R(x + 6), R(y + Math.max(3, (h - th) / 2)), R(w - 12), R(Math.min(th + 2, h - 4))],
-    content: { text: lines.join('\n'), fontSize: fs, color: emphasis === 'plain' ? style.ink : '#FFFFFF', align: 'center', wrap: false },
+    content: { text: lines.join('\n'), fontSize: fs, color: gradTextColor ?? (emphasis === 'plain' ? style.ink : '#FFFFFF'), align: 'center', wrap: false },
   }
   shape.contains = [txt.elementId]
   return [shape, txt]
@@ -1442,8 +1457,9 @@ function layoutStateColumn({ d, box, style, id, notes }) {
     const a = pos.get(e.from)
     const b = pos.get(e.to)
     const cx = a.x + a.w / 2
-    const yTop = a.y + a.h + 4
-    const yBot = b.y - 4
+    // 尖端要**贴住**下游卡（合规判据 ±2.5px）：此前留 4px 被报 style-connector-off-target ×4
+    const yTop = a.y + a.h + 1
+    const yBot = b.y - 0.5
     elements.push(chevronGlyphEl(style, id, `chain_${e.from}_${e.to}`, [[cx, yTop], [cx, yBot]]))
   }
   // 非主链的边：一律走**左侧走廊**（虚线 + 箭头），并标注其标签
