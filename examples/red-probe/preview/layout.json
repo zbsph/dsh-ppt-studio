@@ -1,0 +1,235 @@
+{
+  "size": {
+    "width": 960,
+    "height": 540
+  },
+  "theme": {
+    "colors": {
+      "primary": "#7C3AED",
+      "accent": "#E11D48",
+      "soft": "#EDE9FE",
+      "text": "#2E1065",
+      "bg": "#FAF5FF"
+    },
+    "textStyles": {},
+    "grid": {
+      "base": 8
+    },
+    "safeArea": null,
+    "minFontSize": null,
+    "themeConformance": "strict"
+  },
+  "pages": [
+    {
+      "index": 0,
+      "pageNo": 1,
+      "file": "pages/red.yaml",
+      "name": "pages/red",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [],
+      "elements": [
+        {
+          "id": "title",
+          "kind": "text",
+          "bounds": {
+            "x": 60,
+            "y": 34,
+            "w": 400,
+            "h": 30
+          },
+          "style": {
+            "fontSize": 22,
+            "color": "#2E1065",
+            "bold": true,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 116.6,
+            "textH": 26.4,
+            "lines": 1,
+            "lineWidths": [
+              116.6
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "红样本探针"
+        },
+        {
+          "id": "lab",
+          "kind": "text",
+          "bounds": {
+            "x": 300,
+            "y": 240,
+            "w": 120,
+            "h": 24
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#334155",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 48,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              48
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "残饵画面"
+        },
+        {
+          "id": "life",
+          "kind": "line",
+          "bounds": {
+            "x": 360,
+            "y": 180,
+            "w": 1,
+            "h": 150
+          },
+          "points": [
+            [
+              360,
+              180
+            ],
+            [
+              360,
+              330
+            ]
+          ]
+        },
+        {
+          "id": "short",
+          "kind": "line",
+          "bounds": {
+            "x": 100,
+            "y": 430,
+            "w": 100,
+            "h": 7
+          },
+          "arrow": true,
+          "points": [
+            [
+              100,
+              430
+            ],
+            [
+              200,
+              430
+            ],
+            [
+              200,
+              437
+            ]
+          ]
+        },
+        {
+          "id": "tgtGap",
+          "kind": "shape",
+          "bounds": {
+            "x": 570,
+            "y": 400,
+            "w": 120,
+            "h": 60
+          },
+          "shape": "roundRect",
+          "fill": "#EDE9FE",
+          "rotation": 0
+        },
+        {
+          "id": "gap",
+          "kind": "line",
+          "bounds": {
+            "x": 470,
+            "y": 430,
+            "w": 90,
+            "h": 1
+          },
+          "arrow": true,
+          "points": [
+            [
+              470,
+              430
+            ],
+            [
+              560,
+              430
+            ]
+          ]
+        },
+        {
+          "id": "tgtIn",
+          "kind": "shape",
+          "bounds": {
+            "x": 730,
+            "y": 380,
+            "w": 120,
+            "h": 60
+          },
+          "shape": "roundRect",
+          "fill": "#EDE9FE",
+          "rotation": 0
+        },
+        {
+          "id": "inside",
+          "kind": "line",
+          "bounds": {
+            "x": 660,
+            "y": 410,
+            "w": 100,
+            "h": 1
+          },
+          "arrow": true,
+          "points": [
+            [
+              660,
+              410
+            ],
+            [
+              760,
+              410
+            ]
+          ]
+        },
+        {
+          "id": "diag",
+          "kind": "line",
+          "bounds": {
+            "x": 100,
+            "y": 140,
+            "w": 120,
+            "h": 60
+          },
+          "points": [
+            [
+              100,
+              140
+            ],
+            [
+              220,
+              200
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

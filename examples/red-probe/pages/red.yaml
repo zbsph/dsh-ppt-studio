@@ -1,0 +1,45 @@
+pageType: content
+elements:
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 400, 30]
+    content: { text: '红样本探针', fontSize: 22, color: '#2E1065', bold: true }
+  - elementId: lab
+    elementType: text
+    bounds: [300, 240, 120, 24]
+    content: { text: '残饵画面', fontSize: 12, color: '#334155' }
+  - elementId: life
+    elementType: line
+    points: [[360, 180], [360, 330]]
+    line: { color: '#94A3B8', width: 1.2 }
+    arrow: false
+  - elementId: short
+    elementType: line
+    points: [[100, 430], [200, 430], [200, 437]]
+    line: { color: '#7C3AED', width: 2 }
+    arrow: true
+  - elementId: tgtGap
+    elementType: shape
+    kind: roundRect
+    bounds: [570, 400, 120, 60]
+    fill: '#EDE9FE'
+  - elementId: gap
+    elementType: line
+    points: [[470, 430], [560, 430]]
+    line: { color: '#7C3AED', width: 2 }
+    arrow: true
+  - elementId: tgtIn
+    elementType: shape
+    kind: roundRect
+    bounds: [730, 380, 120, 60]
+    fill: '#EDE9FE'
+  - elementId: inside
+    elementType: line
+    points: [[660, 410], [760, 410]]
+    line: { color: '#E11D48', width: 2 }
+    arrow: true
+  - elementId: diag
+    elementType: line
+    points: [[100, 140], [220, 200]]
+    line: { color: '#64748B', width: 1.5 }
+    arrow: false
