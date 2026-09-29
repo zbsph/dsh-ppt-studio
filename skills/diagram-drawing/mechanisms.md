@@ -83,3 +83,25 @@
 | state | 转移标签贴箭头上方 **4px**，卡距≥标签宽（70px）；返工回边走**外圈车道** |
 | flow | 起止 `roundRect`、末步 accent；异常回边标签放**车道上方**独立一行 |
 | layers | 层带 contains 层内卡；层间箭头用 `attach`（left/right 边） |
+
+## 7. 契约：2 点直连线 ≠ 折线（2026-09 实测确认，**别再踩**）
+
+| 形态 | 导出 | 规则 |
+|---|---|---|
+| **2 点直连线**（含斜向！） | `<p:cxnSp>`（带 `flipH`/`flipV`） | **受支持的连接符** ✓ —— **绝对不要正交化它** ✗ |
+| **n≥3 折线** | 一帧 `p:sp` + `custGeom` 开放路径 | **保证轴对齐** ✓（斜段会被自动拆成横/竖两段） |
+
+**实测事故**：我曾把"折线永远轴对齐"套到 2 点斜连线上 ⇒ 它们被拆成 custGeom ✗ ⇒
+`cxnSp` 数归零 ⇒ smoke 的 **6 条连线方向专项断言全崩**（`✗ 连线：全部 6 条 cxnSp 已导出` +
+`TypeError … reading 'flipH'`）✓。**这是代码真错，不是 fixture** ✗。
+
+**实现现状**（`src/pptd/route-geometry.js` 的 `routePolyline`）：
+```js
+if (raw.length < 3) return raw                    // 2 点直连线：原样（cxnSp 契约）
+const fixed = orthogonalize(arrowEndRuns(orthogonalize(raw), arrow))
+return hasFoldback(fixed) ? raw : fixed           // 折返守卫：不造尖刺，交门禁报
+```
+**豁免声明**（`layout.js`，只看显式声明）：`orthogonal: false` ／ `role: decoration` ／ `roleReason: '…'`。
+
+**推论**：环形/放射图若用 **2 点弦**（如 06/08）⇒ **本来就不会被正交化** ✓，
+此时写 `role: decoration` 只为**消掉 `line-diagonal-segment` 警告** ✓（属警告清理，不是功能必需）。

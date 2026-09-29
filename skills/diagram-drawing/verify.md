@@ -29,3 +29,22 @@
 3. **一条不解释就不许收工**。
 
 配套索引见 `mechanisms.md`（何时用哪个机制 + 门禁 code 对照表）。
+
+## 铁律之三：验证输出的"看法"（2026-09，三次踩坑）
+
+1. **验证输出一律原文落屏，不许过滤成摘要** ✗
+   我连续三次把 smoke/probe 输出 `Select-String` 成几行摘要 ⇒ 失败断言**没留下** ⇒ 无法归因，
+   只能猜（其中两次猜错）✓。至少保留**失败行 + 其上下文**；宁可刷屏。
+2. **判据只看汇总行与退出码** ✓
+   `==== 结果：N 通过 / M 失败 ====` ／ `node --check` 的 exit code ／ `抓取断言：全部命中`。
+   **绝不要用 `grep ✗` 当失败探测器** ✗ —— smoke 正文里**故意造错的 fixture** 自身就带 `[✗]`，
+   会把"通过用例的内部内容"当成失败 ✓（我被骗过一次 ✓）。
+3. **复跑 smoke 前先清 fixture** ✓
+   ```powershell
+   Remove-Item examples\smoke\.tmp-home -Recurse -Force -ErrorAction SilentlyContinue
+   git checkout -- examples
+   ```
+4. **归因顺序：先 fixture，后代码 —— 但别停在 fixture** ✓
+   同一 HEAD 上轮绿、本轮崩 ⇒ **先怀疑 fixture 残留** ✓（本阶段三次如此）；
+   但本轮实测反例：`cxnSp` 断言崩**是代码真错** ✗（我把 2 点斜连线正交化了 ✓）⇒
+   怀疑过 fixture 之后，**必须再核对一次"我的改动是否真的违反契约"** ✓。
