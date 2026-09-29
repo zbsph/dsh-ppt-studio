@@ -1,0 +1,900 @@
+{
+  "size": {
+    "width": 960,
+    "height": 540
+  },
+  "theme": {
+    "colors": {
+      "primary": "#7C3AED",
+      "accent": "#E11D48",
+      "soft": "#EDE9FE",
+      "text": "#2E1065",
+      "bg": "#FAF5FF"
+    },
+    "textStyles": {},
+    "grid": {
+      "base": 8
+    },
+    "safeArea": null,
+    "minFontSize": null,
+    "themeConformance": "strict"
+  },
+  "pages": [
+    {
+      "index": 0,
+      "pageNo": 1,
+      "file": "pages/pyramid.yaml",
+      "name": "pages/pyramid",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [],
+      "elements": [
+        {
+          "id": "title",
+          "kind": "text",
+          "bounds": {
+            "x": 60,
+            "y": 34,
+            "w": 760,
+            "h": 38
+          },
+          "style": {
+            "fontSize": 25,
+            "color": "#2E1065",
+            "bold": true,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 358.75,
+            "textH": 30,
+            "lines": 1,
+            "lineWidths": [
+              348.75
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "金字塔变体（pyramid 等价）"
+        },
+        {
+          "id": "sub",
+          "kind": "text",
+          "bounds": {
+            "x": 60,
+            "y": 76,
+            "w": 820,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#64748B",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 313.8,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              265.8
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "逐段放宽：苗种 240 → 育肥 400 → 成鱼 560 → 直供 720"
+        },
+        {
+          "id": "b0",
+          "kind": "shape",
+          "bounds": {
+            "x": 80,
+            "y": 148,
+            "w": 800,
+            "h": 70
+          },
+          "contains": [
+            "bt0"
+          ],
+          "shape": "custGeom",
+          "fill": "#7C3AED",
+          "path": {
+            "w": 800,
+            "h": 70,
+            "commands": [
+              {
+                "cmd": "moveTo",
+                "pts": [
+                  [
+                    280,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    520,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    600,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    200,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "close"
+              }
+            ]
+          },
+          "rotation": 0
+        },
+        {
+          "id": "bt0",
+          "kind": "text",
+          "bounds": {
+            "x": 390,
+            "y": 172,
+            "w": 180,
+            "h": 26
+          },
+          "style": {
+            "fontSize": 15,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 31.8,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              31.8
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "苗种"
+        },
+        {
+          "id": "b1",
+          "kind": "shape",
+          "bounds": {
+            "x": 80,
+            "y": 218,
+            "w": 800,
+            "h": 70
+          },
+          "contains": [
+            "bt1"
+          ],
+          "shape": "custGeom",
+          "fill": "#7C3AED",
+          "path": {
+            "w": 800,
+            "h": 70,
+            "commands": [
+              {
+                "cmd": "moveTo",
+                "pts": [
+                  [
+                    200,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    600,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    680,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    120,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "close"
+              }
+            ]
+          },
+          "rotation": 0
+        },
+        {
+          "id": "bt1",
+          "kind": "text",
+          "bounds": {
+            "x": 310,
+            "y": 242,
+            "w": 340,
+            "h": 26
+          },
+          "style": {
+            "fontSize": 15,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 31.8,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              31.8
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "育肥"
+        },
+        {
+          "id": "b2",
+          "kind": "shape",
+          "bounds": {
+            "x": 80,
+            "y": 288,
+            "w": 800,
+            "h": 70
+          },
+          "contains": [
+            "bt2"
+          ],
+          "shape": "custGeom",
+          "fill": "#7C3AED",
+          "path": {
+            "w": 800,
+            "h": 70,
+            "commands": [
+              {
+                "cmd": "moveTo",
+                "pts": [
+                  [
+                    120,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    680,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    760,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    40,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "close"
+              }
+            ]
+          },
+          "rotation": 0
+        },
+        {
+          "id": "bt2",
+          "kind": "text",
+          "bounds": {
+            "x": 230,
+            "y": 312,
+            "w": 500,
+            "h": 26
+          },
+          "style": {
+            "fontSize": 15,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 31.8,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              31.8
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "成鱼"
+        },
+        {
+          "id": "b3",
+          "kind": "shape",
+          "bounds": {
+            "x": 80,
+            "y": 358,
+            "w": 800,
+            "h": 70
+          },
+          "contains": [
+            "bt3"
+          ],
+          "shape": "custGeom",
+          "fill": "#E11D48",
+          "path": {
+            "w": 800,
+            "h": 70,
+            "commands": [
+              {
+                "cmd": "moveTo",
+                "pts": [
+                  [
+                    40,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    760,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    940,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    -140,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "close"
+              }
+            ]
+          },
+          "rotation": 0
+        },
+        {
+          "id": "bt3",
+          "kind": "text",
+          "bounds": {
+            "x": 150,
+            "y": 382,
+            "w": 660,
+            "h": 26
+          },
+          "style": {
+            "fontSize": 15,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 31.8,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              31.8
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "直供"
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "pageNo": 2,
+      "file": "pages/narrow.yaml",
+      "name": "pages/narrow",
+      "background": {
+        "type": "solid",
+        "color": "#FFFFFF"
+      },
+      "safeArea": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      },
+      "expectedOverlaps": [],
+      "expectedOutOfSafeArea": [],
+      "contrastExempt": [],
+      "overlapMode": "declared",
+      "groups": [],
+      "elements": [
+        {
+          "id": "title",
+          "kind": "text",
+          "bounds": {
+            "x": 60,
+            "y": 34,
+            "w": 760,
+            "h": 38
+          },
+          "style": {
+            "fontSize": 25,
+            "color": "#2E1065",
+            "bold": true,
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 401,
+            "textH": 30,
+            "lines": 1,
+            "lineWidths": [
+              391
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "窄口漏斗变体（minRatio 等价）"
+        },
+        {
+          "id": "sub",
+          "kind": "text",
+          "bounds": {
+            "x": 60,
+            "y": 76,
+            "w": 820,
+            "h": 22
+          },
+          "style": {
+            "fontSize": 12,
+            "color": "#64748B",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 274.79999999999995,
+            "textH": 14.399999999999999,
+            "lines": 1,
+            "lineWidths": [
+              226.8
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "末段宽 ≈ 首段 × 0.25：760 → 560 → 360 → 190"
+        },
+        {
+          "id": "b0",
+          "kind": "shape",
+          "bounds": {
+            "x": 80,
+            "y": 148,
+            "w": 800,
+            "h": 70
+          },
+          "contains": [
+            "bt0"
+          ],
+          "shape": "custGeom",
+          "fill": "#7C3AED",
+          "path": {
+            "w": 800,
+            "h": 70,
+            "commands": [
+              {
+                "cmd": "moveTo",
+                "pts": [
+                  [
+                    20,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    780,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    680,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    120,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "close"
+              }
+            ]
+          },
+          "rotation": 0
+        },
+        {
+          "id": "bt0",
+          "kind": "text",
+          "bounds": {
+            "x": 230,
+            "y": 172,
+            "w": 500,
+            "h": 26
+          },
+          "style": {
+            "fontSize": 15,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 31.8,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              31.8
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "存栏"
+        },
+        {
+          "id": "b1",
+          "kind": "shape",
+          "bounds": {
+            "x": 80,
+            "y": 218,
+            "w": 800,
+            "h": 70
+          },
+          "contains": [
+            "bt1"
+          ],
+          "shape": "custGeom",
+          "fill": "#7C3AED",
+          "path": {
+            "w": 800,
+            "h": 70,
+            "commands": [
+              {
+                "cmd": "moveTo",
+                "pts": [
+                  [
+                    120,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    680,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    580,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    220,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "close"
+              }
+            ]
+          },
+          "rotation": 0
+        },
+        {
+          "id": "bt1",
+          "kind": "text",
+          "bounds": {
+            "x": 330,
+            "y": 242,
+            "w": 300,
+            "h": 26
+          },
+          "style": {
+            "fontSize": 15,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 47.7,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              47.7
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "达规格"
+        },
+        {
+          "id": "b2",
+          "kind": "shape",
+          "bounds": {
+            "x": 80,
+            "y": 288,
+            "w": 800,
+            "h": 70
+          },
+          "contains": [
+            "bt2"
+          ],
+          "shape": "custGeom",
+          "fill": "#7C3AED",
+          "path": {
+            "w": 800,
+            "h": 70,
+            "commands": [
+              {
+                "cmd": "moveTo",
+                "pts": [
+                  [
+                    220,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    580,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    495,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    305,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "close"
+              }
+            ]
+          },
+          "rotation": 0
+        },
+        {
+          "id": "bt2",
+          "kind": "text",
+          "bounds": {
+            "x": 415,
+            "y": 312,
+            "w": 130,
+            "h": 26
+          },
+          "style": {
+            "fontSize": 15,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 31.8,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              31.8
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "抽检"
+        },
+        {
+          "id": "b3",
+          "kind": "shape",
+          "bounds": {
+            "x": 80,
+            "y": 358,
+            "w": 800,
+            "h": 70
+          },
+          "contains": [
+            "bt3"
+          ],
+          "shape": "custGeom",
+          "fill": "#E11D48",
+          "path": {
+            "w": 800,
+            "h": 70,
+            "commands": [
+              {
+                "cmd": "moveTo",
+                "pts": [
+                  [
+                    305,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    495,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    448,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    353,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "close"
+              }
+            ]
+          },
+          "rotation": 0
+        },
+        {
+          "id": "bt3",
+          "kind": "text",
+          "bounds": {
+            "x": 420,
+            "y": 382,
+            "w": 120,
+            "h": 26
+          },
+          "style": {
+            "fontSize": 15,
+            "color": "#FFFFFF",
+            "bold": true,
+            "align": "center",
+            "lineHeight": 1.2,
+            "wrap": true
+          },
+          "metrics": {
+            "textW": 31.8,
+            "textH": 18,
+            "lines": 1,
+            "lineWidths": [
+              31.8
+            ],
+            "overflowY": 0,
+            "overflowX": 0
+          },
+          "text": "直供"
+        }
+      ]
+    }
+  ]
+}

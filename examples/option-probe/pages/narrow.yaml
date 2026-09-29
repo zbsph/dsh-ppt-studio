@@ -1,0 +1,90 @@
+pageType: content
+elements:
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 760, 38]
+    content: { text: '窄口漏斗变体（minRatio 等价）', fontSize: 25, color: '#2E1065', bold: true }
+  - elementId: sub
+    elementType: text
+    bounds: [60, 76, 820, 22]
+    content: { text: '末段宽 ≈ 首段 × 0.25：760 → 560 → 360 → 190', fontSize: 12, color: '#64748B' }
+  - elementId: b0
+    elementType: shape
+    kind: custGeom
+    bounds: [80, 148, 800, 70]
+    fill: '#7C3AED'
+    line: { color: '#FFFFFF', width: 1.5 }
+    contains: [bt0]
+    path:
+      w: 800
+      h: 70
+      commands:
+        - { cmd: moveTo, pts: [[20, 0]] }
+        - { cmd: lnTo, pts: [[780, 0]] }
+        - { cmd: lnTo, pts: [[680, 70]] }
+        - { cmd: lnTo, pts: [[120, 70]] }
+        - { cmd: close }
+  - elementId: bt0
+    elementType: text
+    bounds: [230, 172, 500, 26]
+    content: { text: '存栏', fontSize: 15, color: '#FFFFFF', bold: true, align: center }
+  - elementId: b1
+    elementType: shape
+    kind: custGeom
+    bounds: [80, 218, 800, 70]
+    fill: '#7C3AED'
+    line: { color: '#FFFFFF', width: 1.5 }
+    contains: [bt1]
+    path:
+      w: 800
+      h: 70
+      commands:
+        - { cmd: moveTo, pts: [[120, 0]] }
+        - { cmd: lnTo, pts: [[680, 0]] }
+        - { cmd: lnTo, pts: [[580, 70]] }
+        - { cmd: lnTo, pts: [[220, 70]] }
+        - { cmd: close }
+  - elementId: bt1
+    elementType: text
+    bounds: [330, 242, 300, 26]
+    content: { text: '达规格', fontSize: 15, color: '#FFFFFF', bold: true, align: center }
+  - elementId: b2
+    elementType: shape
+    kind: custGeom
+    bounds: [80, 288, 800, 70]
+    fill: '#7C3AED'
+    line: { color: '#FFFFFF', width: 1.5 }
+    contains: [bt2]
+    path:
+      w: 800
+      h: 70
+      commands:
+        - { cmd: moveTo, pts: [[220, 0]] }
+        - { cmd: lnTo, pts: [[580, 0]] }
+        - { cmd: lnTo, pts: [[495, 70]] }
+        - { cmd: lnTo, pts: [[305, 70]] }
+        - { cmd: close }
+  - elementId: bt2
+    elementType: text
+    bounds: [415, 312, 130, 26]
+    content: { text: '抽检', fontSize: 15, color: '#FFFFFF', bold: true, align: center }
+  - elementId: b3
+    elementType: shape
+    kind: custGeom
+    bounds: [80, 358, 800, 70]
+    fill: '#E11D48'
+    line: { color: '#FFFFFF', width: 1.5 }
+    contains: [bt3]
+    path:
+      w: 800
+      h: 70
+      commands:
+        - { cmd: moveTo, pts: [[305, 0]] }
+        - { cmd: lnTo, pts: [[495, 0]] }
+        - { cmd: lnTo, pts: [[448, 70]] }
+        - { cmd: lnTo, pts: [[353, 70]] }
+        - { cmd: close }
+  - elementId: bt3
+    elementType: text
+    bounds: [420, 382, 120, 26]
+    content: { text: '直供', fontSize: 15, color: '#FFFFFF', bold: true, align: center }

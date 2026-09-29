@@ -1,0 +1,90 @@
+pageType: content
+elements:
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 760, 38]
+    content: { text: '金字塔变体（pyramid 等价）', fontSize: 25, color: '#2E1065', bold: true }
+  - elementId: sub
+    elementType: text
+    bounds: [60, 76, 820, 22]
+    content: { text: '逐段放宽：苗种 240 → 育肥 400 → 成鱼 560 → 直供 720', fontSize: 12, color: '#64748B' }
+  - elementId: b0
+    elementType: shape
+    kind: custGeom
+    bounds: [80, 148, 800, 70]
+    fill: '#7C3AED'
+    line: { color: '#FFFFFF', width: 1.5 }
+    contains: [bt0]
+    path:
+      w: 800
+      h: 70
+      commands:
+        - { cmd: moveTo, pts: [[280, 0]] }
+        - { cmd: lnTo, pts: [[520, 0]] }
+        - { cmd: lnTo, pts: [[600, 70]] }
+        - { cmd: lnTo, pts: [[200, 70]] }
+        - { cmd: close }
+  - elementId: bt0
+    elementType: text
+    bounds: [390, 172, 180, 26]
+    content: { text: '苗种', fontSize: 15, color: '#FFFFFF', bold: true, align: center }
+  - elementId: b1
+    elementType: shape
+    kind: custGeom
+    bounds: [80, 218, 800, 70]
+    fill: '#7C3AED'
+    line: { color: '#FFFFFF', width: 1.5 }
+    contains: [bt1]
+    path:
+      w: 800
+      h: 70
+      commands:
+        - { cmd: moveTo, pts: [[200, 0]] }
+        - { cmd: lnTo, pts: [[600, 0]] }
+        - { cmd: lnTo, pts: [[680, 70]] }
+        - { cmd: lnTo, pts: [[120, 70]] }
+        - { cmd: close }
+  - elementId: bt1
+    elementType: text
+    bounds: [310, 242, 340, 26]
+    content: { text: '育肥', fontSize: 15, color: '#FFFFFF', bold: true, align: center }
+  - elementId: b2
+    elementType: shape
+    kind: custGeom
+    bounds: [80, 288, 800, 70]
+    fill: '#7C3AED'
+    line: { color: '#FFFFFF', width: 1.5 }
+    contains: [bt2]
+    path:
+      w: 800
+      h: 70
+      commands:
+        - { cmd: moveTo, pts: [[120, 0]] }
+        - { cmd: lnTo, pts: [[680, 0]] }
+        - { cmd: lnTo, pts: [[760, 70]] }
+        - { cmd: lnTo, pts: [[40, 70]] }
+        - { cmd: close }
+  - elementId: bt2
+    elementType: text
+    bounds: [230, 312, 500, 26]
+    content: { text: '成鱼', fontSize: 15, color: '#FFFFFF', bold: true, align: center }
+  - elementId: b3
+    elementType: shape
+    kind: custGeom
+    bounds: [80, 358, 800, 70]
+    fill: '#E11D48'
+    line: { color: '#FFFFFF', width: 1.5 }
+    contains: [bt3]
+    path:
+      w: 800
+      h: 70
+      commands:
+        - { cmd: moveTo, pts: [[40, 0]] }
+        - { cmd: lnTo, pts: [[760, 0]] }
+        - { cmd: lnTo, pts: [[940, 70]] }
+        - { cmd: lnTo, pts: [[-140, 70]] }
+        - { cmd: close }
+  - elementId: bt3
+    elementType: text
+    bounds: [150, 382, 660, 26]
+    content: { text: '直供', fontSize: 15, color: '#FFFFFF', bold: true, align: center }

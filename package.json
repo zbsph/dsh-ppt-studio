@@ -61,6 +61,7 @@
   },
   "scripts": {
     "verify:handdrawn": "node scripts/verify-handdrawn.mjs",
+    "verify:optionprobe": "node scripts/handdrawn-option-probe.mjs",
     "verify:redprobe": "node scripts/red-probe.mjs",
     "verify:linetext": "node scripts/check-line-text.mjs",
     "build": "bash scripts/build.sh",
