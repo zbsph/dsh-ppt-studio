@@ -1,0 +1,128 @@
+pageType: content
+elements:
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 760, 38]
+    content: { text: '风险处置优先级', fontSize: 25, color: '#2E1065', bold: true }
+  - elementId: sub
+    elementType: text
+    bounds: [60, 76, 820, 22]
+    content: { text: '横轴＝发生概率，纵轴＝影响程度；右上角优先处置', fontSize: 12, color: '#64748B' }
+  - elementId: ylab
+    elementType: text
+    bounds: [66, 250, 24, 120]
+    content: { text: '影响', fontSize: 13, color: '#7C3AED', bold: true }
+  - elementId: xlab
+    elementType: text
+    bounds: [470, 486, 200, 22]
+    content: { text: '发生概率 →', fontSize: 13, color: '#7C3AED', bold: true }
+  - elementId: q0
+    elementType: shape
+    kind: rect
+    bounds: [180, 140, 350, 160]
+    fill: '#EDE9FE'
+    line: { color: '#C4B5FD', width: 1 }
+    contains: [qt0]
+  - elementId: qt0
+    elementType: text
+    bounds: [188, 148, 334, 18]
+    content: { text: '高影响·低概率', fontSize: 10, color: '#6D28D9', align: center }
+  - elementId: q1
+    elementType: shape
+    kind: rect
+    bounds: [530, 140, 350, 160]
+    fill: '#FCE7F3'
+    line: { color: '#C4B5FD', width: 1 }
+    contains: [qt1]
+  - elementId: qt1
+    elementType: text
+    bounds: [538, 148, 334, 18]
+    content: { text: '高影响·高概率', fontSize: 10, color: '#6D28D9', align: center }
+  - elementId: q2
+    elementType: shape
+    kind: rect
+    bounds: [180, 310, 350, 160]
+    fill: '#EDE9FE'
+    line: { color: '#C4B5FD', width: 1 }
+    contains: [qt2]
+  - elementId: qt2
+    elementType: text
+    bounds: [188, 318, 334, 18]
+    content: { text: '低影响·低概率', fontSize: 10, color: '#6D28D9', align: center }
+  - elementId: q3
+    elementType: shape
+    kind: rect
+    bounds: [530, 310, 350, 160]
+    fill: '#FCE7F3'
+    line: { color: '#C4B5FD', width: 1 }
+    contains: [qt3]
+  - elementId: qt3
+    elementType: text
+    bounds: [538, 318, 334, 18]
+    content: { text: '低影响·高概率', fontSize: 10, color: '#6D28D9', align: center }
+  - elementId: r0
+    elementType: shape
+    kind: roundRect
+    bounds: [530, 175, 150, 40]
+    fill: '#FFFFFF'
+    line: { color: '#C4B5FD', width: 1 }
+    contains: [rt0]
+  - elementId: rt0
+    elementType: text
+    bounds: [534, 186, 142, 20]
+    content: { text: '台风预警', fontSize: 12, color: '#2E1065', bold: true, align: center }
+  - elementId: r1
+    elementType: shape
+    kind: roundRect
+    bounds: [700, 175, 150, 40]
+    fill: '#FFFFFF'
+    line: { color: '#C4B5FD', width: 1 }
+    contains: [rt1]
+  - elementId: rt1
+    elementType: text
+    bounds: [704, 186, 142, 20]
+    content: { text: '溶氧骤降', fontSize: 12, color: '#2E1065', bold: true, align: center }
+  - elementId: r2
+    elementType: shape
+    kind: roundRect
+    bounds: [180, 205, 150, 40]
+    fill: '#FFFFFF'
+    line: { color: '#C4B5FD', width: 1 }
+    contains: [rt2]
+  - elementId: rt2
+    elementType: text
+    bounds: [184, 216, 142, 20]
+    content: { text: '网衣破损', fontSize: 12, color: '#2E1065', bold: true, align: center }
+  - elementId: r3
+    elementType: shape
+    kind: roundRect
+    bounds: [350, 205, 150, 40]
+    fill: '#FFFFFF'
+    line: { color: '#C4B5FD', width: 1 }
+    contains: [rt3]
+  - elementId: rt3
+    elementType: text
+    bounds: [354, 216, 142, 20]
+    content: { text: '锚链磨损', fontSize: 12, color: '#2E1065', bold: true, align: center }
+  - elementId: r4
+    elementType: shape
+    kind: roundRect
+    bounds: [530, 375, 150, 40]
+    fill: '#FFFFFF'
+    line: { color: '#C4B5FD', width: 1 }
+    contains: [rt4]
+  - elementId: rt4
+    elementType: text
+    bounds: [534, 386, 142, 20]
+    content: { text: '附着物增多', fontSize: 12, color: '#2E1065', bold: true, align: center }
+  - elementId: r5
+    elementType: shape
+    kind: roundRect
+    bounds: [180, 375, 150, 40]
+    fill: '#FFFFFF'
+    line: { color: '#C4B5FD', width: 1 }
+    contains: [rt5]
+  - elementId: rt5
+    elementType: text
+    bounds: [184, 386, 142, 20]
+    content: { text: '低温胁迫', fontSize: 12, color: '#2E1065', bold: true, align: center }

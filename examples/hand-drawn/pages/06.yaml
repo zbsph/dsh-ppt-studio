@@ -1,0 +1,89 @@
+pageType: content
+elements:
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 760, 38]
+    content: { text: '水质调控闭环', fontSize: 25, color: '#2E1065', bold: true }
+  - elementId: sub
+    elementType: text
+    bounds: [60, 76, 820, 22]
+    content: { text: '采集 → 预测 → 调整 → 复核 → 回写：形成自动调控闭环', fontSize: 12, color: '#64748B' }
+  - elementId: n0
+    elementType: shape
+    kind: roundRect
+    bounds: [395, 154, 170, 52]
+    fill: '#7C3AED'
+    contains: [nt0]
+  - elementId: nt0
+    elementType: text
+    bounds: [399, 169, 162, 24]
+    content: { text: '传感器采集', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
+  - elementId: n1
+    elementType: shape
+    kind: roundRect
+    bounds: [633, 245, 170, 52]
+    fill: '#7C3AED'
+    contains: [nt1]
+  - elementId: nt1
+    elementType: text
+    bounds: [637, 260, 162, 24]
+    content: { text: '趋势预测', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
+  - elementId: n2
+    elementType: shape
+    kind: roundRect
+    bounds: [542, 393, 170, 52]
+    fill: '#E11D48'
+    contains: [nt2]
+  - elementId: nt2
+    elementType: text
+    bounds: [546, 408, 162, 24]
+    content: { text: '投喂调整', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
+  - elementId: n3
+    elementType: shape
+    kind: roundRect
+    bounds: [248, 393, 170, 52]
+    fill: '#7C3AED'
+    contains: [nt3]
+  - elementId: nt3
+    elementType: text
+    bounds: [252, 408, 162, 24]
+    content: { text: '效果复核', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
+  - elementId: n4
+    elementType: shape
+    kind: roundRect
+    bounds: [157, 245, 170, 52]
+    fill: '#7C3AED'
+    contains: [nt4]
+  - elementId: nt4
+    elementType: text
+    bounds: [161, 260, 162, 24]
+    content: { text: '阈值回写', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
+  - elementId: c0
+    elementType: line
+    points: [[480, 180], [599, 180], [599, 271], [718, 271]]
+    line: { color: '#C4B5FD', width: 1.5 }
+    arrow: true
+  - elementId: c1
+    elementType: line
+    points: [[718, 271], [673, 271], [673, 419], [627, 419]]
+    line: { color: '#C4B5FD', width: 1.5 }
+    arrow: true
+  - elementId: c2
+    elementType: line
+    points: [[627, 419], [480, 419], [480, 419], [333, 419]]
+    line: { color: '#C4B5FD', width: 1.5 }
+    arrow: true
+  - elementId: c3
+    elementType: line
+    points: [[333, 419], [288, 419], [288, 271], [242, 271]]
+    line: { color: '#C4B5FD', width: 1.5 }
+    arrow: true
+  - elementId: c4
+    elementType: line
+    points: [[242, 271], [361, 271], [361, 180], [480, 180]]
+    line: { color: '#C4B5FD', width: 1.5 }
+    arrow: true
+  - elementId: core
+    elementType: text
+    bounds: [330, 292, 300, 30]
+    content: { text: '调控闭环', fontSize: 18, color: '#7C3AED', bold: true, align: center }
