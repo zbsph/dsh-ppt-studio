@@ -167,6 +167,9 @@ export function layoutDiagram(d, opts = {}) {
   if (family) {
     const prof = { ...style, measureLine: (t, fs) => measure(t, fs) }
     const out = family.layout({ d, box, style: prof, id, notes })
+    // ── Z1：预留区清单**透传**到布局结果（供页面快照与门禁 band-crossing 使用）──
+    // 族只声明"哪块地方被占了"；下游负责把它带到快照并交给检查，避免各层各写一份。
+    const reservedBands = Array.isArray(out?.reservedBands) ? out.reservedBands : []
     const els = [...(out.elements ?? [])]
     const gs = []
     const existing = []
@@ -174,6 +177,7 @@ export function layoutDiagram(d, opts = {}) {
     if (out.skipContainers) {
       for (const g of out.groups ?? []) gs.push(g)
       return {
+      reservedBands,
         elements: els, groups: gs, notes,
         stats: { family: type, maturity: family.maturity, nodes: nodes.length, edges: edges.length, elements: els.length, groups: gs.length, containers: 0 },
       }
