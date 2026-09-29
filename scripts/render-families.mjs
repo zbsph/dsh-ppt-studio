@@ -48,7 +48,7 @@ if (missing.length) { console.error(`✗ 缺夹具的族：${missing.join(',')}�
 rmSync(outDir, { recursive: true, force: true })
 mkdirSync(join(outDir, 'pages'), { recursive: true })
 writeFileSync(join(outDir, 'deck.yaml'), ['version: 1', 'title: family-render', 'size: [960, 540]', 'theme:',
-  '  colors: {primary: "#2563EB", accent: "#F59E0B", soft: "#0EA5E9", text: "#1F2937", bg: "#F8FAFC"}',
+  '  colors: {primary: "#2563EB", accent: "#B45309", soft: "#0EA5E9", text: "#1F2937", bg: "#F8FAFC"}',
   '  textStyles:', '    body: {fontSize: 13, color: "$text"}', '  spacing: {base: 22}',
   '  safeArea: {top: 40, bottom: 40, left: 40, right: 40}',
   'pages:', ...names.map((n) => `  - pages/${n}.yaml`), ''].join('\n'))
