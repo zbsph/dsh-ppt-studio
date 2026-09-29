@@ -64,3 +64,16 @@
 | 按轮廓修完反而报 `unexpected-overlap 形状×线` | **门禁按 bbox 判形状** ⇒ 端点进入 bbox 必报重叠 | 这属 bbox×斜边轮廓的**固有偏差**，按纪律 `expectedOverlaps` **显式声明并写明理由**（不是掩盖缺陷）；或改从**上下边**接入（水平边无内缩，最干净） |
 
 | E5 | `node scripts/smoke.mjs` 第二次跑**必然崩溃**（`templates.js:334 目标目录已存在 deck.yaml，拒绝覆盖`） | smoke **非幂等**：它固定用 `examples/smoke/.tmp-home/_ws` 做模板物化目标，跑完不清理 ⇒ 残留 | 复跑前先 `Remove-Item examples\smoke\.tmp-home -Recurse -Force`。另：**"崩"与"断言红"要分清**——崩多为环境/残留，红才是真回归；盲目把崩当成自己的代码问题会浪费整轮 |
+
+**E5 补充（2026-09 实测第二次踩到）**：只清 `.tmp-home` 不够 —— smoke 还会改写多种 fixture
+（`band-smoke / media-smoke / overlap-smoke / scaffold-smoke / v3-smoke / smoke`）。
+实测现象：`✗ 连线：全部 6 条 cxnSp 已导出` + `TypeError: Cannot read properties of undefined (reading 'flipH')`
+（看似"导入导出坏了"，实为**残留副本**）。稳妥配方：
+
+```powershell
+Remove-Item examples\smoke\.tmp-home -Recurse -Force -ErrorAction SilentlyContinue
+git checkout -- examples     # 把被 smoke 改写的跟踪 fixture 恢复原样
+node scripts/smoke.mjs
+```
+
+判据：**同一 HEAD 下上一轮 322/0、这一轮崩溃 ⇒ 先怀疑 fixture，再怀疑代码**（本阶段两次都是 fixture）。
