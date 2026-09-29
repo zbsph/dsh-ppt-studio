@@ -1,3 +1,4 @@
+import { checkStyleCompliance } from './pptd/style-compliance.js'
 /**
  * 布局断言引擎（数字审阅核心）：输入 layout.json（renderDeck 或引擎快照），
  * 输出机器结果 + markdown 报告。
@@ -289,6 +290,20 @@ export function analyzePage(page, size) {
   }
   // 折线绘制规则（阶段 A1，泛用性优先）：对**所有**页面生效（含手写自由发挥）——只警告，不改判定
   for (const w of checkLineRules(els)) findings.push({ severity: 'warning', code: w.code, message: w.message })
+  // ── Z2：风格合规接入（含 band-crossing：元素穿过**预留区**）──
+  // 预留区由族声明（含 owner 合法占用者）⇒ ir ⇒ schema ⇒ 快照 ⇒ 这里；连线的判定已改为**逐段相交**（R12）。
+  const __bands = []
+  for (const nm of ['page', 'pg', 'p', 'p2']) {
+    try {
+      const v = eval(nm)
+      if (v && Array.isArray(v.reservedBands)) { __bands.push(...v.reservedBands); break }
+    } catch (e) { /* 该名不存在 */ }
+  }
+  if (__bands.length) {
+    for (const f of checkStyleCompliance(els, { reservedBands: __bands })) {
+      findings.push({ severity: 'warning', code: f.code, id: f.id, message: f.message })
+    }
+  }
   const outOfSafe = new Set(page.expectedOutOfSafeArea ?? []) // 出界分级声明制（C3 修订）
   const lenient = page.overlapMode === 'lenient'
   const pairKey = (a, b) => [a, b].sort().join(' × ')
