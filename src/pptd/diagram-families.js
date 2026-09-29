@@ -1210,7 +1210,11 @@ function layoutState({ d, box, style, id, notes }) {
       mkTBOuter(deepBase, 'right'), mkTBOuter(deepBase + busStep, 'right'),
       mkTBOuter(deepBase, 'left'), mkTBOuter(deepBase + busStep, 'left'),
     ].map(post)
-    const cands = [...baseCands, ...outer]
+    const candsAll = [...baseCands, ...outer]
+    // label:below ⇒ 卡下有一条**横跨整卡宽**的标签带，上下出口的竖管必然穿过它
+    //（Y4 实测：d2_t_s3 × d2_e4 重叠 42×20.3px）⇒ 只保留**侧向候选**（判据 = 现成的 TB 签名）。
+    const cands = T.label === 'below' ? candsAll.filter((c) => Math.abs(c[0][0] - (A.x + A.w * 0.75)) >= 0.5) : candsAll
+    if (T.label === 'below' && cands.length !== candsAll.length) notes.push(`state：label=below ⇒ 禁用上下出口候选（${candsAll.length} → ${cands.length}），避免连线穿过卡下标签带`)
     // 候选全"脏"（所有车道都会穿过某个盒子）时，**取撞盒最少的那条**，而不是直接拿第一条
     // ——从零重画的状态机（多条同层回边）实测过：盲目取第一条会把线画到节点上（56×27px 重叠）。
     const hitsOf = (pts) => pts.reduce((n, p, i) => (i + 1 < pts.length && segHitsNode(p, pts[i + 1]) ? n + 1 : n), 0)
