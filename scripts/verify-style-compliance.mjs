@@ -95,6 +95,24 @@ const near = JSON.parse(JSON.stringify(far))
 near[0].bounds.x = 20
 ok('对照⑦b：连接符贴住目标（差 2px）⇒ 不再报', !codes(near).includes('style-connector-off-target'), codes(near).join(',') || '无 findings')
 
+// 负面对照⑧：**穿过预留区**（Z2 band-crossing）—— 线/文本压进禁区必须报；禁区外不该报
+const bands = [{ id: 'frame.title', x: 0, y: 0, w: 200, h: 30, reason: '顶部标题带' }]
+const crossLine = [
+  { id: 'ln', kind: 'line', points: [[10, 15], [180, 15]] },                                  // 整条在禁区内
+  { id: 'card', kind: 'shape', shape: 'roundRect', bounds: { x: 40, y: 100, w: 100, h: 40 }, fill: '#2563EB' },
+]
+ok('负面对照⑧：连线穿过预留区 ⇒ 报 band-crossing', codes(crossLine, { reservedBands: bands }).includes('band-crossing'), codes(crossLine, { reservedBands: bands }).join(','))
+const crossText = [
+  { id: 't', kind: 'text', bounds: { x: 20, y: 5, w: 80, h: 20 }, style: { color: '#111111' } }, // 文本压进禁区
+]
+ok('负面对照⑧b：文本压进预留区 ⇒ 同样报（不只连线）', codes(crossText, { reservedBands: bands }).includes('band-crossing'), codes(crossText, { reservedBands: bands }).join(','))
+const clean = [
+  { id: 'ln2', kind: 'line', points: [[10, 200], [180, 200]] },                               // 禁区之外
+  { id: 't2', kind: 'text', bounds: { x: 20, y: 210, w: 80, h: 20 }, style: { color: '#111111' } },
+]
+ok('对照⑧c：禁区之外不该报（避免噪声）', !codes(clean, { reservedBands: bands }).includes('band-crossing'), codes(clean, { reservedBands: bands }).join(',') || '无 findings')
+ok('对照⑧d：不传 reservedBands ⇒ 该判据完全不触发（向后兼容）', !codes(crossLine).includes('band-crossing'))
+
 // ---------- ② 既有交付物 0 误报 ----------
 const targets = []
 const latest = readdirSync(tmpdir()).filter((d) => d.startsWith('pptd-families-')).sort().pop()
