@@ -631,6 +631,10 @@ export async function resolveDeck(dir) {
         if (!(at.length === 2 && at.every((n) => typeof n === 'number'))) throw fail(`[${ref}] blocks[${i}].at: [x, y] numbers`)
         const out = materializeBlock(block, { at, prefix: `bk${i + 1}_` })
         page.elements = [...(page.elements ?? []), ...out.elements]
+      // ── Z1：族声明的**预留区**也要进页面快照（供门禁 band-crossing 判定）──
+      if (Array.isArray(out.reservedBands) && out.reservedBands.length) {
+        page.reservedBands = [...(page.reservedBands ?? []), ...out.reservedBands]
+      }
         if (out.groups.length) page.groups = [...(page.groups ?? []), ...out.groups]
         const doc = blocksExpanded.get(ref) ?? []
         doc.push({ name, at, elements: out.elements.length, groups: out.groups.length })
