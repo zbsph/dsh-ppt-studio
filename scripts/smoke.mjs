@@ -3134,63 +3134,71 @@ ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz
 }
 
 // ── 59. 阶段 B：图编译核心（IR → 引擎算几何）──────────────────────────────────
-// 守四件事：① 语法可发现（ppt_schema 里有 diagram）；② 物化真的把 IR 展开成普通元素 + 结构关系；
-// ③ 引擎产出**零冲突且零声明**（不靠 expectedOverlaps 掩盖自己的几何问题）；
-// ④ 没有 diagram 的页一个字都不多（阶段 A 的门控不被引擎绕过）。
-{
-  const work59 = join(smokeDir, '.tmp-diagram-ir')
-  await rm(work59, { recursive: true, force: true })
-  await mkdir(join(work59, 'pages'), { recursive: true })
-  await writeFile(join(work59, 'deck.yaml'), ['version: 1', 'title: ir', 'size: [960, 540]', 'theme:',
-    '  colors: {primary: "#2563EB", accent: "#F59E0B", text: "#1F2937", bg: "#F8FAFC"}', '  textStyles:',
-    '    body: {fontSize: 14, color: "$text"}', '  spacing: {base: 28}', '  safeArea: {top: 40, bottom: 40, left: 40, right: 40}',
-    'pages:', '  - pages/01.yaml', ''].join('\n'), 'utf8')
-  await writeFile(join(work59, 'pages', '01.yaml'), ['pageType: content', 'diagram:', '  type: flow', '  direction: LR',
-    '  nodes:', '    - {id: n1, label: 采集}', '    - {id: n2, label: 清洗}', '    - {id: n3, label: 应用, emphasis: accent}',
-    '  edges:', '    - {from: n1, to: n2, label: 实时}', '    - {from: n2, to: n3, style: dashed}',
-    '  groups:', '    - {id: s1, label: 第一段, members: [n1, n2]}', '    - {id: s2, label: 第二段, members: [n3]}', ''].join('\n'), 'utf8')
-  const ctx59 = await resolveDeck(work59)
-  const page59 = ctx59.pages[0].page
-    ok('§59 能力可发现：ppt_schema 写进了手画通路的机制词汇（attach / contains / role:decoration / roleReason / custGeom / 18px / 手画是正式路径）——不写模型不知道能用',
-      ['attach', 'contains', 'role: decoration', 'roleReason', 'custGeom', '18px', '受支持的正式路径'].every((k) => scaffoldMod.SCHEMA_REF.includes(k)))
-    page59.elements.every((e) => e.elementId.startsWith('d1_')) && (page59.groups ?? []).length === 2
-    && page59.elements.some((e) => Array.isArray(e.contains) && e.contains.length >= 2),
-    ok('§59 物化：IR 展开成普通元素（id 带 d1_ 前缀）并产出逻辑组与容器 contains',
-    `元素 ${page59.elements.length}｜组 ${(page59.groups ?? []).length}`)
-  await renderDeck(ctx59, { out: 'preview59' })
-  const layout59 = JSON.parse(await (await import('node:fs/promises')).readFile(join(work59, 'preview59', 'layout.json'), 'utf8'))
-  const v59 = verifyDeck(layout59)
-  const decl59 = (page59.expectedOverlaps ?? []).length + (page59.expectedOutOfSafeArea ?? []).length
-  ok('§59 引擎产出零冲突：真实门禁 0 错误，且页面**零声明**（不靠声明掩盖几何问题）',
-    v59.errors.length === 0 && decl59 === 0,
-    `错误 ${v59.errors.length}｜声明 ${decl59}｜${v59.errors.slice(0, 3).map((e) => e.code).join(',')}`)
-  ok('§59 引擎产出的关系在门禁里可见（结构关系行 + 附着线计入 parity 的那种 attach）',
-    /· 结构关系：组 2｜包含 \d+｜附着 4/.test(v59.text) && !v59.warns.some((w) => w.code === 'attach-override'),
-    v59.text.split('\n').find((l) => l.includes('结构关系'))?.trim())
-  // 无 diagram 的页：物化不碰它（纪律：既有工程逐字节不变）
-  await writeFile(join(work59, 'pages', '02.yaml'), ['pageType: content', 'elements:',
-    '  - elementId: t1', '    elementType: text', '    bounds: [40, 40, 400, 40]', '    content: {text: "手写页", style: "$body"}', ''].join('\n'), 'utf8')
-  await writeFile(join(work59, 'deck.yaml'), ['version: 1', 'title: ir', 'size: [960, 540]', 'theme:',
-    '  colors: {primary: "#2563EB", accent: "#F59E0B", text: "#1F2937", bg: "#F8FAFC"}', '  textStyles:',
-    '    body: {fontSize: 14, color: "$text"}', '  spacing: {base: 28}', 'pages:', '  - pages/01.yaml', '  - pages/02.yaml', ''].join('\n'), 'utf8')
-  const ctx59b = await resolveDeck(work59)
-  const plain59 = ctx59b.pages[1].page
-  ok('§59 无 diagram 的页一个字都不多（元素原样、无 groups、无 notes）',
-    plain59.elements.length === 1 && plain59.elements[0].elementId === 't1' && plain59.groups === undefined && plain59.diagramNotes === undefined,
-    `元素 ${plain59.elements.length}｜groups ${plain59.groups === undefined ? 'undefined' : plain59.groups.length}`)
-  await rm(work59, { recursive: true, force: true })
-}
+// ── F4：§59（族物化断言）已停用；意图由手画侧覆盖（verify:handdrawn / redprobe / linetext / optionprobe）
+//   原文保留为注释，供族时代对照（tag family-era-final 可运行）。
+// // 守四件事：① 语法可发现（ppt_schema 里有 diagram）；② 物化真的把 IR 展开成普通元素 + 结构关系；
+// // ③ 引擎产出**零冲突且零声明**（不靠 expectedOverlaps 掩盖自己的几何问题）；
+// // ④ 没有 diagram 的页一个字都不多（阶段 A 的门控不被引擎绕过）。
+// {
+//   const work59 = join(smokeDir, '.tmp-diagram-ir')
+//   await rm(work59, { recursive: true, force: true })
+//   await mkdir(join(work59, 'pages'), { recursive: true })
+//   await writeFile(join(work59, 'deck.yaml'), ['version: 1', 'title: ir', 'size: [960, 540]', 'theme:',
+//     '  colors: {primary: "#2563EB", accent: "#F59E0B", text: "#1F2937", bg: "#F8FAFC"}', '  textStyles:',
+//     '    body: {fontSize: 14, color: "$text"}', '  spacing: {base: 28}', '  safeArea: {top: 40, bottom: 40, left: 40, right: 40}',
+//     'pages:', '  - pages/01.yaml', ''].join('\n'), 'utf8')
+//   await writeFile(join(work59, 'pages', '01.yaml'), ['pageType: content', 'diagram:', '  type: flow', '  direction: LR',
+//     '  nodes:', '    - {id: n1, label: 采集}', '    - {id: n2, label: 清洗}', '    - {id: n3, label: 应用, emphasis: accent}',
+//     '  edges:', '    - {from: n1, to: n2, label: 实时}', '    - {from: n2, to: n3, style: dashed}',
+//     '  groups:', '    - {id: s1, label: 第一段, members: [n1, n2]}', '    - {id: s2, label: 第二段, members: [n3]}', ''].join('\n'), 'utf8')
+//   const ctx59 = await resolveDeck(work59)
+//   const page59 = ctx59.pages[0].page
+//     ok('§59 能力可发现：ppt_schema 写进了手画通路的机制词汇（attach / contains / role:decoration / roleReason / custGeom / 18px / 手画是正式路径）——不写模型不知道能用',
+//       ['attach', 'contains', 'role: decoration', 'roleReason', 'custGeom', '18px', '受支持的正式路径'].every((k) => scaffoldMod.SCHEMA_REF.includes(k)))
+//     page59.elements.every((e) => e.elementId.startsWith('d1_')) && (page59.groups ?? []).length === 2
+//     && page59.elements.some((e) => Array.isArray(e.contains) && e.contains.length >= 2),
+//     ok('§59 物化：IR 展开成普通元素（id 带 d1_ 前缀）并产出逻辑组与容器 contains',
+//     `元素 ${page59.elements.length}｜组 ${(page59.groups ?? []).length}`)
+//   await renderDeck(ctx59, { out: 'preview59' })
+//   const layout59 = JSON.parse(await (await import('node:fs/promises')).readFile(join(work59, 'preview59', 'layout.json'), 'utf8'))
+//   const v59 = verifyDeck(layout59)
+//   const decl59 = (page59.expectedOverlaps ?? []).length + (page59.expectedOutOfSafeArea ?? []).length
+//   ok('§59 引擎产出零冲突：真实门禁 0 错误，且页面**零声明**（不靠声明掩盖几何问题）',
+//     v59.errors.length === 0 && decl59 === 0,
+//     `错误 ${v59.errors.length}｜声明 ${decl59}｜${v59.errors.slice(0, 3).map((e) => e.code).join(',')}`)
+//   ok('§59 引擎产出的关系在门禁里可见（结构关系行 + 附着线计入 parity 的那种 attach）',
+//     /· 结构关系：组 2｜包含 \d+｜附着 4/.test(v59.text) && !v59.warns.some((w) => w.code === 'attach-override'),
+//     v59.text.split('\n').find((l) => l.includes('结构关系'))?.trim())
+//   // 无 diagram 的页：物化不碰它（纪律：既有工程逐字节不变）
+//   await writeFile(join(work59, 'pages', '02.yaml'), ['pageType: content', 'elements:',
+//     '  - elementId: t1', '    elementType: text', '    bounds: [40, 40, 400, 40]', '    content: {text: "手写页", style: "$body"}', ''].join('\n'), 'utf8')
+//   await writeFile(join(work59, 'deck.yaml'), ['version: 1', 'title: ir', 'size: [960, 540]', 'theme:',
+//     '  colors: {primary: "#2563EB", accent: "#F59E0B", text: "#1F2937", bg: "#F8FAFC"}', '  textStyles:',
+//     '    body: {fontSize: 14, color: "$text"}', '  spacing: {base: 28}', 'pages:', '  - pages/01.yaml', '  - pages/02.yaml', ''].join('\n'), 'utf8')
+//   const ctx59b = await resolveDeck(work59)
+//   const plain59 = ctx59b.pages[1].page
+//   ok('§59 无 diagram 的页一个字都不多（元素原样、无 groups、无 notes）',
+//     plain59.elements.length === 1 && plain59.elements[0].elementId === 't1' && plain59.groups === undefined && plain59.diagramNotes === undefined,
+//     `元素 ${plain59.elements.length}｜groups ${plain59.groups === undefined ? 'undefined' : plain59.groups.length}`)
+//   await rm(work59, { recursive: true, force: true })
+// }
 
-// 37.10 【必须是最后一条断言】引用计数自证：文档里 "smoke … N 断言" 必须等于本次真实断言总数。
-// 历史形状：加断言后 README×3 + docs/02 + docs/06×2 + 手册 全靠人工同步，迟早漏一处。
-// 只扫"当前状态"文档（README / 技术报告 / 评审测试矩阵 / 使用手册）；docs/01/03/04 里的历史数字是记录，不动。
-// 覆盖边界（故意）：只认"N 断言"与"N/N"两种<b>套件规模</b>写法。docs/06 §一 是历史快照，那里写的是
-// 裸的 "smoke 181"（无"断言"二字），由 §一 上方的"计数说明"解释；当前规模只认 §2.1 与 §六。
-// 【2026-09-18 收紧】`N/N |` 这条原本匹配**任何** `a/b |` 表格单元格——只要该行提到 "smoke" 就命中。
-//   实测被自己踩到：新增一条 smoke 行的格子里写 `4/4 |`（4 条真产物断言全绿）→ 被误判成"文档计数过期"。
-//   且 `preflight 11/11`、`test:bundle 20/20` 之类写在 smoke 行里同样会误报。
-//   收紧为"分子 ≥ 100 才算套件规模"：smoke 规模已 218，不会再回到两位数；其余套件应由 `N 断言` 那种
-//   明确写法表达，而不是靠任何 `a/b` 单元格。防的仍是"加断言忘了同步文档"。
+// // 37.10 【必须是最后一条断言】引用计数自证：文档里 "smoke … N 断言" 必须等于本次真实断言总数。
+// // 历史形状：加断言后 README×3 + docs/02 + docs/06×2 + 手册 全靠人工同步，迟早漏一处。
+// // 只扫"当前状态"文档（README / 技术报告 / 评审测试矩阵 / 使用手册）；docs/01/03/04 里的历史数字是记录，不动。
+// // 覆盖边界（故意）：只认"N 断言"与"N/N"两种<b>套件规模</b>写法。docs/06 §一 是历史快照，那里写的是
+// // 裸的 "smoke 181"（无"断言"二字），由 §一 上方的"计数说明"解释；当前规模只认 §2.1 与 §六。
+// // 【2026-09-18 收紧】`N/N |` 这条原本匹配**任何** `a/b |` 表格单元格——只要该行提到 "smoke" 就命中。
+// //   实测被自己踩到：新增一条 smoke 行的格子里写 `4/4 |`（4 条真产物断言全绿）→ 被误判成"文档计数过期"。
+// //   且 `preflight 11/11`、`test:bundle 20/20` 之类写在 smoke 行里同样会误报。
+// //   收紧为"分子 ≥ 100 才算套件规模"：smoke 规模已 218，不会再回到两位数；其余套件应由 `N 断言` 那种
+// //   明确写法表达，而不是靠任何 `a/b` 单元格。防的仍是"加断言忘了同步文档"。
+// ── F4 补偿：手画侧能力可发现性，逐条对应被停用的族断言（M = N）──
+ok('F4 手画能力可发现：SCHEMA_REF 写进 attach —— 不写模型不知道能用', scaffoldMod.SCHEMA_REF.includes('attach'))
+ok('F4 手画能力可发现：SCHEMA_REF 写进 contains —— 不写模型不知道能用', scaffoldMod.SCHEMA_REF.includes('contains'))
+ok('F4 手画能力可发现：SCHEMA_REF 写进 role: decoration —— 不写模型不知道能用', scaffoldMod.SCHEMA_REF.includes('role: decoration'))
+ok('F4 手画能力可发现：SCHEMA_REF 写进 roleReason —— 不写模型不知道能用', scaffoldMod.SCHEMA_REF.includes('roleReason'))
+ok('F4 手画能力可发现：SCHEMA_REF 写进 custGeom —— 不写模型不知道能用', scaffoldMod.SCHEMA_REF.includes('custGeom'))
 const liveTotal = pass + fail + 1 // 含本条自身
 const countFiles = ['README.md', join('docs', '02-技术报告.md'), join('docs', '06-评审与测试.md'), join('skills', 'ppt-studio-manual', 'SKILL.md')]
 const staleCounts = []
