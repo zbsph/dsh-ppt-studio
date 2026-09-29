@@ -18,7 +18,9 @@
 export const TRAIT_SPEC = {
   // 卡片：形态与投影属"结构"（会改文本安全内边距）；填充/描边属 paint（任意，不在此列）
   card: { shape: ['rect', 'roundRect', 'pill'], elevation: ['none', 'soft', 'strong'] },
-  badge: ['none', 'number'],              // 状态编号圆徽：会预留卡内左侧栏
+  badge: ['none', 'number'],
+  badgePosition: ['gutter', 'inline'], // 徽标位置：卡内左侧竖栏 / 与标题**同一行**（用户第4页是 inline）
+  align: ['center', 'left'],           // 卡内文本对齐（用户第4页是 left）              // 状态编号圆徽：会预留卡内左侧栏
   subtitle: [true, false],                // 卡内第二行（进入动作/说明）：会抬高卡片最小高度
   label: ['inside', 'below'],             // 状态名在卡内 / 卡下
   edge: { glyph: ['arrow', 'chevron', 'open'], backStyle: ['solid', 'dashed'] }, // 连接符形状；回边实/虚
@@ -32,6 +34,8 @@ export const TRAIT_SPEC = {
 export const DEFAULT_TRAITS = Object.freeze({
   card: Object.freeze({ shape: 'roundRect', elevation: 'none' }),
   badge: 'none',
+  badgePosition: 'gutter',
+  align: 'center',
   subtitle: false,
   label: 'inside',
   edge: Object.freeze({ glyph: 'arrow', backStyle: 'solid' }),
@@ -64,6 +68,8 @@ export function validateTraits(raw) {
     edge: { ...DEFAULT_TRAITS.edge },
     frame: { ...DEFAULT_TRAITS.frame },
     badge: DEFAULT_TRAITS.badge,
+    badgePosition: DEFAULT_TRAITS.badgePosition,
+    align: DEFAULT_TRAITS.align,
     subtitle: DEFAULT_TRAITS.subtitle,
     label: DEFAULT_TRAITS.label,
     edgeLabel: DEFAULT_TRAITS.edgeLabel,
@@ -103,7 +109,8 @@ export function traitSummary(traits) {
   const t = traits ?? DEFAULT_TRAITS
   return [
     `card=${t.card.shape}/${t.card.elevation}`,
-    `badge=${t.badge}`,
+    `badge=${t.badge}/${t.badgePosition}`,
+    `align=${t.align}`,
     `subtitle=${t.subtitle}`,
     `label=${t.label}`,
     `edge=${t.edge.glyph}/${t.edge.backStyle}`,
