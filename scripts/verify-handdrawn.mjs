@@ -74,6 +74,16 @@ if (process.argv.includes('--capture')) {
 if (!existsSync(BASE)) { console.log('✗ 无基线文件，请先 --capture'); process.exit(1) }
 const base = JSON.parse(readFileSync(BASE, 'utf8'))
 const bad = []
+// PNG sha：次要不变量（像素级）。渲染依赖 PowerPoint 版本/环境 ⇒ 差异只警告不失败（硬不变量是 layout 摘要）；
+// 交付目录不存在（如全新 clone）则整体跳过，保证 CI 可移植。
+let pngSame = 0
+const pngWarn = []
+let pngMiss = 0
+for (const [name, h] of Object.entries(base.pngs ?? {})) {
+  if (!(name in cur.pngs)) { pngMiss++; continue }
+  if (cur.pngs[name] === h) pngSame++
+  else pngWarn.push(name)
+}
 if (base.digest !== cur.digest) bad.push('layout 摘要变化：' + base.digest.slice(0, 12) + ' → ' + cur.digest.slice(0, 12))
 for (const p of cur.perPage) {
   const b = (base.perPage ?? []).find((x) => x.page === p.page)
@@ -85,6 +95,7 @@ for (const p of cur.perPage) {
 const errorsTotal = cur.perPage.reduce((a, p) => a + p.errors, 0)
 const warnsTotal = cur.perPage.reduce((a, p) => a + p.warns, 0)
 console.log('手画 13 页回归：' + cur.perPage.length + ' 页｜错 ' + errorsTotal + '｜警 ' + warnsTotal + '｜layout 摘要 ' + cur.digest.slice(0, 12))
+console.log('  产物对照: PNG 相同 ' + pngSame + ' 张｜缺失跳过 ' + pngMiss + ' 张｜差异 ' + pngWarn.length + ' 张' + (pngWarn.length ? '（' + pngWarn.slice(0, 3).join('; ') + '）—— 像素差异属环境/渲染差异, 硬不变量是 layout 摘要' : ''))
 if (errorsTotal > 0) bad.push('存在门禁错误')
 if (bad.length) { console.log('✗ 与基线不一致：'); bad.forEach((b) => console.log('   · ' + b)); process.exit(1) }
 console.log('✓ 与基线一致（layout 摘要逐字节相同 + 错警计数相同）')
