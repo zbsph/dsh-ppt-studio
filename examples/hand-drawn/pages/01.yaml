@@ -11,16 +11,16 @@ elements:
   - elementId: root
     elementType: shape
     kind: roundRect
-    bounds: [380, 124, 200, 58]
+    bounds: [380, 124, 200, 64]
     fill: '#7C3AED'
     contains: [rootT, rootS]
   - elementId: rootT
     elementType: text
-    bounds: [388, 136, 184, 26]
+    bounds: [388, 132, 184, 24]
     content: { text: '平台长', fontSize: 16, color: '#FFFFFF', bold: true, align: center }
   - elementId: rootS
     elementType: text
-    bounds: [388, 165, 184, 18]
+    bounds: [388, 160, 184, 18]
     content: { text: '养殖体系', fontSize: 10, color: '#EDE9FE', align: center }
   - elementId: g0
     elementType: shape
