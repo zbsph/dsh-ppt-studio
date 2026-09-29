@@ -60,6 +60,9 @@
     }
   },
   "scripts": {
+    "verify:handdrawn": "node scripts/verify-handdrawn.mjs",
+    "verify:redprobe": "node scripts/red-probe.mjs",
+    "verify:linetext": "node scripts/check-line-text.mjs",
     "build": "bash scripts/build.sh",
     "build:node": "node scripts/build.mjs",
     "sync": "node scripts/release-sync.mjs",

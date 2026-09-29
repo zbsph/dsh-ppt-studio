@@ -1,0 +1,171 @@
+{
+  "savedAt": "2026-09-29T15:46:32.075Z",
+  "head": "fe6bec50852291bb883859c5e918d61c9b5011cc",
+  "digest": "562afbc2f2678f2dbe6c5bd2d7aff0c38cd1dabfbd5ae7315b937e72eec758f0",
+  "perPage": [
+    {
+      "page": "01",
+      "els": 23,
+      "errors": 0,
+      "errorCodes": [],
+      "warns": 3,
+      "warnCodes": [
+        "hotspot"
+      ],
+      "digest": "cc0400aa6eb74da595cc69ee555418d2123c408eaebc739b389ba4ee142c1d17"
+    },
+    {
+      "page": "02",
+      "els": 19,
+      "errors": 0,
+      "errorCodes": [],
+      "warns": 1,
+      "warnCodes": [
+        "density"
+      ],
+      "digest": "fb901a860b2812aa8dc00b34e8d0f48b87b25fecc0eec6471cea92fa637d272c"
+    },
+    {
+      "page": "03",
+      "els": 27,
+      "errors": 0,
+      "errorCodes": [],
+      "warns": 5,
+      "warnCodes": [
+        "density",
+        "hotspot",
+        "line-end-off-edge"
+      ],
+      "digest": "82603d08ddeed43514ceca9dca6a26a72cff87bdd5009651c3444d6bd3d5b700"
+    },
+    {
+      "page": "04",
+      "els": 31,
+      "errors": 0,
+      "errorCodes": [],
+      "warns": 7,
+      "warnCodes": [
+        "arrow-tip-inside-shape",
+        "density",
+        "hotspot"
+      ],
+      "digest": "4ba29ae26b06e837e647c6c9ffe88139c8e853c637b78b1808c8a2c60512aad1"
+    },
+    {
+      "page": "05",
+      "els": 23,
+      "errors": 0,
+      "errorCodes": [],
+      "warns": 3,
+      "warnCodes": [
+        "density",
+        "hotspot"
+      ],
+      "digest": "08c7d4dc3efce9f743a96cd25489b94dbfd0d8ea03efb8650432769860fa5dd3"
+    },
+    {
+      "page": "06",
+      "els": 17,
+      "errors": 0,
+      "errorCodes": [],
+      "warns": 4,
+      "warnCodes": [
+        "line-diagonal-segment"
+      ],
+      "digest": "dc9bafef54b12d21bed5e158541f1338189ece093592d89b3534a024bb60956a"
+    },
+    {
+      "page": "07",
+      "els": 10,
+      "errors": 0,
+      "errorCodes": [],
+      "warns": 0,
+      "warnCodes": [],
+      "digest": "7dd49bca1f4d720972e5540ab00c08d11f1e543d0b50151126c0fee5944d22c8"
+    },
+    {
+      "page": "08",
+      "els": 23,
+      "errors": 0,
+      "errorCodes": [],
+      "warns": 6,
+      "warnCodes": [
+        "line-diagonal-segment"
+      ],
+      "digest": "e6955cc6d03591df46be9312201f2a5088c1c26a64248304ed1d00d1a48030d4"
+    },
+    {
+      "page": "09",
+      "els": 29,
+      "errors": 0,
+      "errorCodes": [],
+      "warns": 5,
+      "warnCodes": [
+        "line-crossing",
+        "line-end-off-edge"
+      ],
+      "digest": "bcda352c5e8b733e755a0b46b66ca4e2b91146faf35fe31593a4b652617954d7"
+    },
+    {
+      "page": "10",
+      "els": 27,
+      "errors": 0,
+      "errorCodes": [],
+      "warns": 2,
+      "warnCodes": [
+        "density",
+        "hotspot"
+      ],
+      "digest": "475fbd6aaa18735c00a211387a89a5eabc45e90294dbc36e480611c1554a8dc7"
+    },
+    {
+      "page": "11",
+      "els": 18,
+      "errors": 0,
+      "errorCodes": [],
+      "warns": 0,
+      "warnCodes": [],
+      "digest": "45e04425fe4a65830f3850c66f166efc492befee277862c3d62837f9d764a55a"
+    },
+    {
+      "page": "12",
+      "els": 29,
+      "errors": 0,
+      "errorCodes": [],
+      "warns": 4,
+      "warnCodes": [
+        "arrow-end-short-run",
+        "density"
+      ],
+      "digest": "2cd440ec234c244e5f7e9f86d9e0c922fa7be9e82d2529190b5cde2f66c69991"
+    },
+    {
+      "page": "13",
+      "els": 25,
+      "errors": 0,
+      "errorCodes": [],
+      "warns": 7,
+      "warnCodes": [
+        "attach-override",
+        "density",
+        "hotspot"
+      ],
+      "digest": "e4d6fc9e7aa69febc5af53cb659a3553f70655a0e2bafb85e2476ecb98ec6ee4"
+    }
+  ],
+  "pngs": {
+    "01-层级树（手画）.png": "e58fadc991edb4b57b6832cad9830ed28aa62f34fb8097e7ef56352fee915855",
+    "02-矩阵（手画）.png": "f72c62f4215b4f09643c90221adbd97ee8d725b3d55e8b7ca7f88ee25dee1a66",
+    "03-时间轴（手画）.png": "df7bd35389ab379c6cabdfac2ae82ebec29aebb2bdfd5b5ce82f895fd897adb5",
+    "04-泳道（手画）.png": "ee642e5989c1c4f09a079e26e82b1b720449910f3a92d8d6fdbebf5a23b888af",
+    "05-左右对比（手画）.png": "afa2caf3a16bcebc8cb1d3ead09a5dc5b3eaed6ca682281d8268402d50d0bd71",
+    "06-闭环（手画）.png": "f5b8cf822c503fbe1669fea5fc109fb84d946a87ddb35b6bd6a12ed90acf8bbd",
+    "07-漏斗（手画）.png": "f00e0251aef97510aec6336fe2a32fcd8f5acb0c5b2c1e361be95598909d72b1",
+    "08-步骤环（手画）.png": "50e1c1f175fea024c0c5b956cfb919dc44fa7e8329646199343097c538943d31",
+    "09-时序（手画）.png": "d463fc25e520df4eee9946f907ef567b42736971fa5c1523f978d98c5f638989",
+    "10-状态机（手画）.png": "9a84e28cabacf631118633e0c50ca4ef4a402fb659da0c8310b80c421a9ff36e",
+    "11-流程图（手画）.png": "dcf2887e1824496448bfaf2be3757fb7087a989e63a8f2eb55e3be150c5727ab",
+    "12-分层架构（手画）.png": "771c721de5a02e463cbf6da2f0865eea91d74fdc2ca8e2d7046137b4c3b38429",
+    "13-平台架构（手画）.png": "05a454b19ffd2aac351e2e343d4a545aeeb630f1bd5eda0183fe3fe2fb09c100"
+  }
+}
