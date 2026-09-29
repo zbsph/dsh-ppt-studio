@@ -663,6 +663,8 @@ export async function resolveDeck(dir) {
           ? (() => { const pt = profileToTheme(styleProfile); return { ...theme, ...pt, colors: { ...(theme.colors ?? {}), ...pt.colors } } })()
           : theme,
       )
+      // 阶段 E / Y2：风格档案里的 `traits` 必须**原样带到布局层**（styleProfileFrom 只产出令牌，不含 traits）
+      if (styleProfile && styleProfile.traits) prof.traits = styleProfile.traits
       const sa = page.safeArea ?? theme.safeArea ?? null
       const bounds = Array.isArray(page.diagram?.bounds)
         ? { x: page.diagram.bounds[0], y: page.diagram.bounds[1], w: page.diagram.bounds[2], h: page.diagram.bounds[3] }

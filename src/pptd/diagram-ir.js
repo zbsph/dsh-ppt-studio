@@ -1,3 +1,5 @@
+import { validateTraits } from './style-traits.js'
+
 /**
  * 图编译核心（阶段 B）：IR 校验 → 样式档案 → 布局 → 物化产出（元素 + 结构关系）。
  * 设计契约见 docs/12；本模块只做"结构 ⇒ 几何"，**没有任何审美决策**（取色/尺寸全部来自样式令牌）。
@@ -127,6 +129,14 @@ export function layoutDiagram(d, opts = {}) {
   if (!(type in DIAGRAM_TYPES)) return { elements, groups, notes: [`图类型 "${type ?? '(缺)'}" 未实现 ⇒ 优雅降级：不产出任何元素（请手写，或改用 ${Object.keys(DIAGRAM_TYPES).join('/')}）`], stats: { nodes: 0, edges: 0, groups: 0 } }
 
   const style = opts.style ?? styleProfileFrom({})
+  // 阶段 E / Y2：风格特型（traits）走**闭集校验** —— 未知键/非法值一律构建失败，绝不静默忽略（宪法③：
+  // 新做法必须先加入闭集并同时提交它的合规检查）。默认 traits 等于现状 ⇒ 不传风格时行为不变。
+  const traitsRes = validateTraits(style.traits)
+  if (traitsRes.errors.length) {
+    throw new Error('图风格特型非法（宪法③）—— 未知特型/非法值不得静默忽略：\n  - ' + traitsRes.errors.join('\n  - '))
+  }
+  style.traits = traitsRes.traits
+  style.traitHonored = traitsRes.honored
   const prefix = opts.idPrefix ?? 'd1_'
   const id = (x) => `${prefix}${x}`
   const nodes = d.nodes ?? []
