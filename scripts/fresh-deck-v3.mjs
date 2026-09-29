@@ -3,13 +3,13 @@
  *   领域：深海网箱养殖（投苗/投喂/巡检/起网/出栏）；
  *   配色：**紫·珊瑚系**（primary #7C3AED / accent #E11D48 / soft #EDE9FE / text #2E1065 / bg #FAF5FF）；
  *   第 13 页为**手写暖色**架构图（保留用户要的暖色调测试图）。
- * 用法：node scripts/fresh-deck-v3.mjs [输出目录，缺省 examples/fresh-sea]
+ * 用法：node scripts/fresh-deck-v3.mjs [输出目录，缺省 examples/archive/fresh-sea-family（族时代工具，F4 后将被删除）]
  */
 import { mkdirSync, writeFileSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
 import YAML from 'yaml'
 
-const out = process.argv[2] ?? 'examples/fresh-sea'
+const out = process.argv[2] ?? 'examples/archive/fresh-sea-family'
 rmSync(out, { recursive: true, force: true })
 mkdirSync(join(out, 'pages'), { recursive: true })
 
