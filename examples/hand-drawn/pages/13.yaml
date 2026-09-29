@@ -128,10 +128,10 @@ elements:
   - elementId: backChip
     elementType: shape
     kind: roundRect
-    bounds: [402, 418, 180, 26]
+    bounds: [402, 400, 180, 26]
     fill: '#FFFFFF'
     contains: [backChipT]
   - elementId: backChipT
     elementType: text
-    bounds: [406, 422, 172, 20]
+    bounds: [406, 404, 172, 20]
     content: { text: '投喂计划回写', fontSize: 11, color: '#475569', align: center }

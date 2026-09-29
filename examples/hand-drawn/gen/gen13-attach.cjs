@@ -36,8 +36,8 @@ L.push(...lnA('l2', [[256, 275], [290, 275], [290, 328], [356, 328]], '#1F2937',
 L.push(...lnA('l3', [[628, 275], [688, 275]], '#1F2937', 1.5, false, true, ['m1', 'right', 'right', 'left']))
 // 底部回路：决策层底边 → 感知层底边（两端 attach 到真实边）
 L.push(...lnA('back2', [[776, 334], [776, 430], [168, 430], [168, 334]], '#94A3B8', 1.5, true, true, ['right', 'bottom', 'left', 'bottom']))
-L.push(...sh('backChip', 'roundRect', [402, 418, 180, 26], '#FFFFFF', ['backChipT']))
-L.push(...tx('backChipT', [406, 422, 172, 20], '投喂计划回写', 11, '#475569', ', align: center'))
+L.push(...sh('backChip', 'roundRect', [402, 400, 180, 26], '#FFFFFF', ['backChipT']))
+L.push(...tx('backChipT', [406, 404, 172, 20], '投喂计划回写', 11, '#475569', ', align: center'))
 
 fs.writeFileSync(R + '/examples/hand-drawn/pages/13.yaml', L.join('\n') + '\n')
 console.log('13.yaml 已重写：元素 =', L.filter((x) => x.includes('elementId')).length, '｜attach 线 = 5｜expectedOverlaps 已移除（不再需要）')
