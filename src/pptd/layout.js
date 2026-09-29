@@ -134,6 +134,8 @@ function boundsOf(el) {
 // 阶段 A-④：`attach`（把线段两端锚到元素边）在归一化阶段解析成坐标。
 // 方向是 layout → relations（relations 不依赖 layout），无循环依赖。
 import { resolveAttach } from './relations.js'
+// G1：手画与族共用同一份路由后处理（正交化 + 箭头端最短直段），带 n<3 与折返两道守卫
+import { routePolyline, isAxisAligned } from './route-geometry.js'
 
 /** 归一化一个页面：元素 → 统一对象（含解析样式与文本度量）。 */
 export function normalizePage(page, ctx) {
@@ -175,7 +177,12 @@ export function normalizePage(page, ctx) {
         // 阶段 A-④：`attach` **优先于**手写 points —— 解析成坐标，被改写的端点进 attachNotes（另行提示，不静默覆盖）。
         // 导出侧只认 points（保持纯写盘层）；几何仍由 relations 的反验证兜底。
         const resolved = el.attach ? resolveAttach(el, srcById) : null
-        const pts = resolved?.points ?? (el.points ? el.points.map((p) => p) : [[el.x1, el.y1], [el.x2, el.y2]])
+        const raw = resolved?.points ?? (el.points ? el.points.map((p) => p) : [[el.x1, el.y1], [el.x2, el.y2]])
+        // ── G1（2026-09）：把只服务图族的两个后处理接到**显式 elements**（纯手画）通路 ──
+        //   复用 route-geometry.js 的同一实现（族与手画不再双标），守卫详情见该模块注释。
+        //   例外与族一致：斜段图形（环/放射语义）豁免正交化；亦可显式写 orthogonal: false。
+        const exempt = el.orthogonal === false || el.line?.orthogonal === false || !isAxisAligned(raw)
+        const pts = exempt ? raw : routePolyline(raw, el.arrow ?? false)
         const line = { color: resolveColor(el.line?.color ?? '#000'), width: el.line?.width ?? 1, ...(el.line?.dash ? { dash: el.line.dash } : {}) }
         // 阶段 A：`arrow` 必须**原样**透传。原先写作 `!!el.arrow` 会把 `'both'` 压成 `true`
         // ⇒ 两端箭头/虚线折线走到导出层时已经不认得（本轮实测：headEnd 计数 0）。
