@@ -3151,11 +3151,11 @@ ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz
     '  groups:', '    - {id: s1, label: 第一段, members: [n1, n2]}', '    - {id: s2, label: 第二段, members: [n3]}', ''].join('\n'), 'utf8')
   const ctx59 = await resolveDeck(work59)
   const page59 = ctx59.pages[0].page
-  ok('§59 能力可发现：ppt_schema 写进了 diagram 语法与两个已实现族（flow/layers）——不写模型不知道能用',
-    scaffoldMod.SCHEMA_REF.includes('diagram:') && /type: flow/.test(scaffoldMod.SCHEMA_REF) && /layers/.test(scaffoldMod.SCHEMA_REF))
-  ok('§59 物化：IR 展开成普通元素（id 带 d1_ 前缀）并产出逻辑组与容器 contains',
+    ok('§59 能力可发现：ppt_schema 写进了手画通路的机制词汇（attach / contains / role:decoration / roleReason / custGeom / 18px / 手画是正式路径）——不写模型不知道能用',
+      ['attach', 'contains', 'role: decoration', 'roleReason', 'custGeom', '18px', '受支持的正式路径'].every((k) => scaffoldMod.SCHEMA_REF.includes(k)))
     page59.elements.every((e) => e.elementId.startsWith('d1_')) && (page59.groups ?? []).length === 2
     && page59.elements.some((e) => Array.isArray(e.contains) && e.contains.length >= 2),
+    ok('§59 物化：IR 展开成普通元素（id 带 d1_ 前缀）并产出逻辑组与容器 contains',
     `元素 ${page59.elements.length}｜组 ${(page59.groups ?? []).length}`)
   await renderDeck(ctx59, { out: 'preview59' })
   const layout59 = JSON.parse(await (await import('node:fs/promises')).readFile(join(work59, 'preview59', 'layout.json'), 'utf8'))

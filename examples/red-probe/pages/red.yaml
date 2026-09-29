@@ -38,8 +38,13 @@ elements:
     points: [[660, 410], [760, 410]]
     line: { color: '#E11D48', width: 2 }
     arrow: true
-  - elementId: diag
+  - elementId: diag2
     elementType: line
     points: [[100, 140], [220, 200]]
+    line: { color: '#64748B', width: 1.5 }
+    arrow: false
+  - elementId: poly
+    elementType: line
+    points: [[600, 120], [700, 180], [760, 180]]
     line: { color: '#64748B', width: 1.5 }
     arrow: false

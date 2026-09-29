@@ -151,38 +151,26 @@ expectedOverlaps:
 - **没用到结构声明的页面行为与从前完全一致**（门控）——你可以只在新页上逐步采用。
 - 复杂图导出基元：points >2 点 = 折线（一帧 custGeom 开放路径，不是多条拼的）；arrow: 'both' = 两端箭头（arrow: true 等价 'end'）；line.dash: solid|dash|dot|dashDot；kind: notchedRightArrow（流程图常用）。
 
-## 图编译（阶段 B：只写结构，引擎算几何）
-需要流程图/分层图时，**不要手算坐标**——在页面里写 diagram: 块，引擎产出元素与结构关系：
-\`\`\`yaml
-diagram:
-  type: flow                 # flow 流程图(LR/TB)｜layers 分层架构｜tree 层级树/组织图(用 edges 表父子)｜matrix 矩阵/象限(cols/rowLabels/colLabels)｜timeline 时间轴/里程碑
-  direction: LR              # flow 用：LR | TB
-  nodes:
-    - {id: n1, label: 采集}                    # emphasis: primary|accent|plain（只影响取色）
-    - {id: n2, label: 清洗}
-    - {id: n3, label: 应用, emphasis: accent}
-  edges:
-    - {from: n1, to: n2, label: 实时}          # label 放不下会自动省略并在 notes 里说明
-    - {from: n2, to: n3, style: dashed}       # style: solid|dashed
-  groups:                                      # 可选：分组 → 产出容器 + 逻辑组
-    - {id: s1, label: 第一段, members: [n1, n2]}
-    - {id: s2, label: 第二段, members: [n3]}
-  bounds: [60, 120, 840, 300]                  # 可选：画布区（缺省用安全区内接区）
-\`\`\`
-- **物化**：引擎展开成普通元素（id 带 d1_ 前缀，便于你接管与手改）并追加到本页；预览/导出/门禁用的是同一份元素 ⇒ 天然同源。
-- **结构关系自动产出**：分组 → 容器 + contains + groups；连线 → attach（锚在节点边）⇒ 箭头必然落边，不会触发"箭头脱靶"。
-- **样式来自主题**：取色/字号/线宽/间距全部来自 theme（引擎自身没有审美）；换主题图跟着换。**容器底色用 theme 的 bg 或中性灰**（主色混白会被主题一致性门禁判"不在色板"）。
-- **优雅降级**：未实现的 type 或无效画布 ⇒ **不产任何元素** + 在页面 notes 里说明，绝不产半成品图（此时请手写元素）。
-- 一页可以**既有 diagram 又有手写 element**（缝合页），两者共用命名空间与安全区校验。
+## 复杂图：直接手写 elements（图族机制已移除）
+
+不要再指望引擎替你算几何 —— 按需读 skills/diagram-drawing/（调度手册 mechanisms.md + 12 份子 skill 配方），用显式 elements 把图拼出来。
+这是受支持的正式路径，不是退路（13 页实测：零族依赖、门禁 0 错、与旧族产物同内容对照 10 更好 / 1 持平 / 2 持平偏旧 / 0 变差）。
+
+关键机制（都在手画侧）：
+- 连边优先 attach: {from: {ref, side}, to: {ref, side}} —— 引擎锚到真实边缘（斜边图形也不例外），不要手算像素；
+- 折线（≥3 点）自动正交化 + 箭头端自动保证 ≥18px 直段；2 点直连线是连接符（导出 cxnSp），保持直线、不要正交化它；
+- 容器/分组：contains 声明相邻层；语义底板用 role: decoration；刻意穿过用 roleReason 说明；
+- 收工前逐条读门禁警告（line-cross-text / arrow-end-short-run / line-end-off-edge / arrow-tip-inside-shape / line-crossing / line-diagonal-segment）；
+- 历史档案：族机制原始设计见 docs/07 / docs/12 / docs/13（已废弃，仅对照）。
 - **风格来自参考稿（阶段 D）**：deck.styles.<名> 放一份样式档案（palette / ink / bg / neutral / lineWidth / fontSize / radius），diagram.style: <名> 让该图用这份令牌 ⇒ 图跟着参考稿换色换线宽（引擎自身仍没有审美）。档案色板会自动并入主题色板，不会触发主题一致性门禁。
 - **组合作为可复用块（阶段 D）**：deck.blocks.<名> = {elements, groups?} 定义块，页面里 blocks: [{name: <名>, at: [x, y]}] 复用它（**copy 语义**：id 自动加 bk<n>_ 前缀、内部 contains / attach / badgeOf / groups 引用同步重映射、按 at 平移；改一份不影响另一份）。
-- **手写折线/箭头（不属于任何族、完全自由发挥时）同样要守这几条**（族库内部已经这么做，手写时请照做，否则会出现"箭头像断了/看不出指向"这类观感问题）：
+- **手写折线/箭头（不属于任何族、完全自由发挥时）同样要守这几条**（引擎内部已经这么做，手写时请照做，否则会出现"箭头像断了/看不出指向"这类观感问题）：
   1. 折线**只用轴对齐段**（横段/竖段）——环形、放射、漏斗这类**本身就是斜的**图形除外（那类斜线是设计意图）；
   2. **箭头端紧邻的那一段必须 ≥ 18px 直线**，拐点不要贴着箭头（附着线用 attach 锚边即可，不必手算像素点）；
   3. 连线端点点在元素边上时优先用 attach: {from: {ref, side}, to: {ref, side}} —— 引擎会把它解析到真实边缘，比手写坐标稳；
   4. **边标签贴着它标注的那条线**放（线上方或线下方 6px 左右，或竖线旁边 8px），不要放在两条线中间；标签文字短就用小框（框宽≈文字宽+8），别用大框占位；
   5. 语义性的背景带 / 引导环 / 分组底板用 role: decoration（完全豁免重叠判定），**不要**用 expectedOverlaps 去掩盖"压字/压盒"；
-  6. 一页可以**既用 diagram 又手写元素**（缝合页）；assistant 想要家族库没有的图，就按上面几条手写 elements 拼出来——这是被支持的路径，不是退路。
+  6. 一页可以**既写结构声明又手写元素**（缝合页）；assistant 想要家族库没有的图，就按上面几条手写 elements 拼出来——这是被支持的路径，不是退路。
   7. **斜边图形**（parallelogram / triangle / diamond）直接用 attach 就行：引擎会接到**真实斜边**上（不是包围盒边）——不要自己算斜边坐标；按包围盒边取点会出现"箭头插进图形里"或"离图形差一截"。
   8. 门禁对"箭头插进图形里"（arrow-tip-inside-shape）与"端点离目标 2–10px 没接上"（arrow-end-gap）只给**警告**（不是错误）——因为这两种**都可能是刻意设计**：确实要插进去 / 刻意留空时，给该线加 roleReason: "…" 声明即可不再提示。
 
