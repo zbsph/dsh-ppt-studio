@@ -1,0 +1,90 @@
+pageType: content
+elements:
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 760, 38]
+    content: { text: '出栏流程', fontSize: 25, color: '#2E1065', bold: true }
+  - elementId: sub
+    elementType: text
+    bounds: [60, 76, 820, 22]
+    content: { text: '申报 → 准备 → 起网 → 装箱 → 转运；抽检不合格则回到起网准备', fontSize: 12, color: '#64748B' }
+  - elementId: s0
+    elementType: shape
+    kind: roundRect
+    bounds: [60, 208, 150, 64]
+    fill: '#7C3AED'
+    contains: [st0]
+  - elementId: st0
+    elementType: text
+    bounds: [66, 228, 138, 26]
+    content: { text: '出栏申报', fontSize: 14, color: '#FFFFFF', bold: true, align: center }
+  - elementId: a0
+    elementType: line
+    points: [[210, 240], [232, 240]]
+    line: { color: '#E11D48', width: 2 }
+    arrow: true
+  - elementId: s1
+    elementType: shape
+    kind: rect
+    bounds: [232, 208, 150, 64]
+    fill: '#7C3AED'
+    contains: [st1]
+  - elementId: st1
+    elementType: text
+    bounds: [238, 228, 138, 26]
+    content: { text: '起网准备', fontSize: 14, color: '#FFFFFF', bold: true, align: center }
+  - elementId: a1
+    elementType: line
+    points: [[382, 240], [404, 240]]
+    line: { color: '#E11D48', width: 2 }
+    arrow: true
+  - elementId: s2
+    elementType: shape
+    kind: rect
+    bounds: [404, 208, 150, 64]
+    fill: '#7C3AED'
+    contains: [st2]
+  - elementId: st2
+    elementType: text
+    bounds: [410, 228, 138, 26]
+    content: { text: '起网', fontSize: 14, color: '#FFFFFF', bold: true, align: center }
+  - elementId: a2
+    elementType: line
+    points: [[554, 240], [576, 240]]
+    line: { color: '#E11D48', width: 2 }
+    arrow: true
+  - elementId: s3
+    elementType: shape
+    kind: rect
+    bounds: [576, 208, 150, 64]
+    fill: '#7C3AED'
+    contains: [st3]
+  - elementId: st3
+    elementType: text
+    bounds: [582, 228, 138, 26]
+    content: { text: '冰鲜装箱', fontSize: 14, color: '#FFFFFF', bold: true, align: center }
+  - elementId: a3
+    elementType: line
+    points: [[726, 240], [748, 240]]
+    line: { color: '#E11D48', width: 2 }
+    arrow: true
+  - elementId: s4
+    elementType: shape
+    kind: roundRect
+    bounds: [748, 208, 150, 64]
+    fill: '#E11D48'
+    contains: [st4]
+  - elementId: st4
+    elementType: text
+    bounds: [754, 228, 138, 26]
+    content: { text: '驳船转运', fontSize: 14, color: '#FFFFFF', bold: true, align: center }
+  - elementId: back
+    elementType: line
+    points: [[651, 272], [651, 360], [307, 360], [307, 272]]
+    dash: dash
+    line: { color: '#94A3B8', width: 1.5 }
+    arrow: true
+  - elementId: backLab
+    elementType: text
+    bounds: [429, 332, 100, 20]
+    content: { text: '抽检不合格', fontSize: 11, color: '#475569', align: center }

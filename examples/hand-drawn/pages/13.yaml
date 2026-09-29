@@ -1,0 +1,122 @@
+pageType: content
+elements:
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 760, 38]
+    content: { text: '深海养殖平台架构', fontSize: 25, color: '#2E1065', bold: true }
+  - elementId: sub
+    elementType: text
+    bounds: [60, 76, 820, 22]
+    content: { text: '感知层采集 → 平台层建模与决策 → 决策层排程；投喂计划回写形成闭环', fontSize: 12, color: '#64748B' }
+  - elementId: k1
+    elementType: text
+    bounds: [70, 118, 200, 22]
+    content: { text: '① 感知层', fontSize: 14, color: '#E11D48', bold: true }
+  - elementId: k2
+    elementType: text
+    bounds: [374, 118, 220, 22]
+    content: { text: '② 平台层', fontSize: 14, color: '#7C3AED', bold: true, align: center }
+  - elementId: k3
+    elementType: text
+    bounds: [690, 118, 200, 22]
+    content: { text: '③ 决策层', fontSize: 14, color: '#E11D48', bold: true, align: right }
+  - elementId: left
+    elementType: shape
+    kind: parallelogram
+    bounds: [80, 216, 176, 118]
+    fill: '#E11D48'
+    contains: [leftT, leftS]
+  - elementId: leftT
+    elementType: text
+    bounds: [110, 252, 116, 24]
+    content: { text: '溶氧·水温', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
+  - elementId: leftS
+    elementType: text
+    bounds: [110, 280, 116, 20]
+    content: { text: '水下相机', fontSize: 11, color: '#FECDD3', align: center }
+  - elementId: mid
+    elementType: shape
+    kind: roundRect
+    bounds: [336, 176, 292, 214]
+    fill: '#EDE9FE'
+    contains: [midH, m0, mt0, m1, mt1, m2, mt2]
+  - elementId: m0
+    elementType: shape
+    kind: roundRect
+    bounds: [356, 196, 252, 52]
+    fill: '#7C3AED'
+    contains: [mt0]
+  - elementId: mt0
+    elementType: text
+    bounds: [362, 210, 240, 24]
+    content: { text: '海缆与微波链路', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
+  - elementId: m1
+    elementType: shape
+    kind: roundRect
+    bounds: [356, 262, 252, 52]
+    fill: '#7C3AED'
+    contains: [mt1]
+  - elementId: mt1
+    elementType: text
+    bounds: [362, 276, 240, 24]
+    content: { text: '生长与环境模型', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
+  - elementId: m2
+    elementType: shape
+    kind: roundRect
+    bounds: [356, 328, 252, 52]
+    fill: '#7C3AED'
+    contains: [mt2]
+  - elementId: mt2
+    elementType: text
+    bounds: [362, 342, 240, 24]
+    content: { text: '投喂决策引擎', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
+  - elementId: right
+    elementType: shape
+    kind: parallelogram
+    bounds: [688, 216, 176, 118]
+    fill: '#7C3AED'
+    contains: [rightT, rightS]
+  - elementId: rightT
+    elementType: text
+    bounds: [718, 252, 116, 24]
+    content: { text: '出栏排程', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
+  - elementId: rightS
+    elementType: text
+    bounds: [718, 280, 116, 20]
+    content: { text: '看板下发', fontSize: 11, color: '#DDD6FE', align: center }
+  - elementId: l0
+    elementType: line
+    points: [[256, 275], [290, 275], [290, 222], [356, 222]]
+    line: { color: '#1F2937', width: 1.5 }
+    arrow: true
+  - elementId: l1
+    elementType: line
+    points: [[256, 275], [356, 275]]
+    line: { color: '#1F2937', width: 1.5 }
+    arrow: true
+  - elementId: l2
+    elementType: line
+    points: [[256, 275], [290, 275], [290, 328], [356, 328]]
+    line: { color: '#1F2937', width: 1.5 }
+    arrow: true
+  - elementId: l3
+    elementType: line
+    points: [[628, 275], [688, 275]]
+    line: { color: '#1F2937', width: 1.5 }
+    arrow: true
+  - elementId: back2
+    elementType: line
+    points: [[776, 334], [776, 430], [168, 430], [168, 334]]
+    dash: dash
+    line: { color: '#94A3B8', width: 1.5 }
+    arrow: true
+  - elementId: backChip
+    elementType: shape
+    kind: roundRect
+    bounds: [402, 418, 180, 26]
+    fill: '#FFFFFF'
+    contains: [backChipT]
+  - elementId: backChipT
+    elementType: text
+    bounds: [406, 422, 172, 20]
+    content: { text: '投喂计划回写', fontSize: 11, color: '#475569', align: center }
