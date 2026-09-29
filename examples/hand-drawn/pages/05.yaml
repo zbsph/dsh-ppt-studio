@@ -120,5 +120,5 @@ elements:
     content: { text: '购置成本高', fontSize: 13, color: '#1F2937', align: center }
   - elementId: vs
     elementType: text
-    bounds: [452, 290, 56, 24]
-    content: { text: '对比', fontSize: 12, color: '#7C3AED', bold: true, align: center }
+    bounds: [462, 292, 36, 22]
+    content: { text: '对比', fontSize: 11, color: '#7C3AED', bold: true, align: center }
