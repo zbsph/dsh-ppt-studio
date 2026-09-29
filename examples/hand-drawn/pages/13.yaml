@@ -1,4 +1,10 @@
 pageType: content
+# 平行四边形的可见轮廓比 bbox 内缩 ~15px；箭头端点按轮廓算 ⇒ 必然进入 bbox，属几何固有偏差
+expectedOverlaps:
+  - { pair: [left, l0] }
+  - { pair: [left, l2] }
+  - { pair: [left, l1] }
+  - { pair: [right, l3] }
 elements:
   - elementId: title
     elementType: text
@@ -86,22 +92,22 @@ elements:
     content: { text: '看板下发', fontSize: 11, color: '#DDD6FE', align: center }
   - elementId: l0
     elementType: line
-    points: [[256, 275], [290, 275], [290, 222], [356, 222]]
+    points: [[241, 275], [290, 275], [290, 222], [356, 222]]
     line: { color: '#1F2937', width: 1.5 }
     arrow: true
   - elementId: l1
     elementType: line
-    points: [[256, 275], [356, 275]]
+    points: [[241, 275], [356, 275]]
     line: { color: '#1F2937', width: 1.5 }
     arrow: true
   - elementId: l2
     elementType: line
-    points: [[256, 275], [290, 275], [290, 328], [356, 328]]
+    points: [[241, 275], [290, 275], [290, 328], [356, 328]]
     line: { color: '#1F2937', width: 1.5 }
     arrow: true
   - elementId: l3
     elementType: line
-    points: [[628, 275], [688, 275]]
+    points: [[628, 275], [703, 275]]
     line: { color: '#1F2937', width: 1.5 }
     arrow: true
   - elementId: back2

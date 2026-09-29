@@ -6959,7 +6959,32 @@
         "left": 0,
         "right": 0
       },
-      "expectedOverlaps": [],
+      "expectedOverlaps": [
+        {
+          "pair": [
+            "left",
+            "l0"
+          ]
+        },
+        {
+          "pair": [
+            "left",
+            "l2"
+          ]
+        },
+        {
+          "pair": [
+            "left",
+            "l1"
+          ]
+        },
+        {
+          "pair": [
+            "right",
+            "l3"
+          ]
+        }
+      ],
       "expectedOutOfSafeArea": [],
       "contrastExempt": [],
       "overlapMode": "declared",
@@ -7414,15 +7439,15 @@
           "id": "l0",
           "kind": "line",
           "bounds": {
-            "x": 256,
+            "x": 241,
             "y": 222,
-            "w": 100,
+            "w": 115,
             "h": 53
           },
           "arrow": true,
           "points": [
             [
-              256,
+              241,
               275
             ],
             [
@@ -7443,15 +7468,15 @@
           "id": "l1",
           "kind": "line",
           "bounds": {
-            "x": 256,
+            "x": 241,
             "y": 275,
-            "w": 100,
+            "w": 115,
             "h": 1
           },
           "arrow": true,
           "points": [
             [
-              256,
+              241,
               275
             ],
             [
@@ -7464,15 +7489,15 @@
           "id": "l2",
           "kind": "line",
           "bounds": {
-            "x": 256,
+            "x": 241,
             "y": 275,
-            "w": 100,
+            "w": 115,
             "h": 53
           },
           "arrow": true,
           "points": [
             [
-              256,
+              241,
               275
             ],
             [
@@ -7495,7 +7520,7 @@
           "bounds": {
             "x": 628,
             "y": 275,
-            "w": 60,
+            "w": 75,
             "h": 1
           },
           "arrow": true,
@@ -7505,7 +7530,7 @@
               275
             ],
             [
-              688,
+              703,
               275
             ]
           ]
