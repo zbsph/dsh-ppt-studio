@@ -6959,32 +6959,7 @@
         "left": 0,
         "right": 0
       },
-      "expectedOverlaps": [
-        {
-          "pair": [
-            "left",
-            "l0"
-          ]
-        },
-        {
-          "pair": [
-            "left",
-            "l2"
-          ]
-        },
-        {
-          "pair": [
-            "left",
-            "l1"
-          ]
-        },
-        {
-          "pair": [
-            "right",
-            "l3"
-          ]
-        }
-      ],
+      "expectedOverlaps": [],
       "expectedOutOfSafeArea": [],
       "contrastExempt": [],
       "overlapMode": "declared",
@@ -7439,15 +7414,28 @@
           "id": "l0",
           "kind": "line",
           "bounds": {
-            "x": 241,
+            "x": 256,
             "y": 222,
-            "w": 115,
+            "w": 100,
             "h": 53
           },
+          "attach": {
+            "from": {
+              "ref": "left",
+              "side": "right"
+            },
+            "to": {
+              "ref": "m0",
+              "side": "left"
+            }
+          },
+          "attachNotes": [
+            "from 端手写坐标 [256, 275] 与 attach 解析结果 [241, 275] 不一致（相差 14.8px）⇒ 按 attach 覆盖"
+          ],
           "arrow": true,
           "points": [
             [
-              241,
+              241.25,
               275
             ],
             [
@@ -7468,15 +7456,28 @@
           "id": "l1",
           "kind": "line",
           "bounds": {
-            "x": 241,
+            "x": 256,
             "y": 275,
-            "w": 115,
+            "w": 100,
             "h": 1
           },
+          "attach": {
+            "from": {
+              "ref": "left",
+              "side": "right"
+            },
+            "to": {
+              "ref": "m1",
+              "side": "left"
+            }
+          },
+          "attachNotes": [
+            "from 端手写坐标 [256, 275] 与 attach 解析结果 [241, 275] 不一致（相差 14.8px）⇒ 按 attach 覆盖"
+          ],
           "arrow": true,
           "points": [
             [
-              241,
+              241.25,
               275
             ],
             [
@@ -7489,15 +7490,28 @@
           "id": "l2",
           "kind": "line",
           "bounds": {
-            "x": 241,
+            "x": 256,
             "y": 275,
-            "w": 115,
+            "w": 100,
             "h": 53
           },
+          "attach": {
+            "from": {
+              "ref": "left",
+              "side": "right"
+            },
+            "to": {
+              "ref": "m2",
+              "side": "left"
+            }
+          },
+          "attachNotes": [
+            "from 端手写坐标 [256, 275] 与 attach 解析结果 [241, 275] 不一致（相差 14.8px）⇒ 按 attach 覆盖"
+          ],
           "arrow": true,
           "points": [
             [
-              241,
+              241.25,
               275
             ],
             [
@@ -7520,17 +7534,31 @@
           "bounds": {
             "x": 628,
             "y": 275,
-            "w": 75,
+            "w": 60,
             "h": 1
           },
+          "attach": {
+            "from": {
+              "ref": "m1",
+              "side": "right"
+            },
+            "to": {
+              "ref": "right",
+              "side": "left"
+            }
+          },
+          "attachNotes": [
+            "from 端手写坐标 [628, 275] 与 attach 解析结果 [608, 275] 不一致（相差 20.0px）⇒ 按 attach 覆盖",
+            "to 端手写坐标 [688, 275] 与 attach 解析结果 [703, 275] 不一致（相差 14.8px）⇒ 按 attach 覆盖"
+          ],
           "arrow": true,
           "points": [
             [
-              628,
+              608,
               275
             ],
             [
-              703,
+              702.75,
               275
             ]
           ]
@@ -7543,6 +7571,16 @@
             "y": 334,
             "w": 608,
             "h": 96
+          },
+          "attach": {
+            "from": {
+              "ref": "right",
+              "side": "bottom"
+            },
+            "to": {
+              "ref": "left",
+              "side": "bottom"
+            }
           },
           "arrow": true,
           "points": [
