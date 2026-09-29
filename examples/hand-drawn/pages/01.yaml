@@ -37,7 +37,7 @@ elements:
     elementType: line
     points: [[480, 188], [480, 220], [175, 220], [175, 258]]
     line: { color: '#7C3AED', width: 1.5 }
-    arrow: false
+    arrow: true
   - elementId: g1
     elementType: shape
     kind: roundRect
@@ -53,7 +53,7 @@ elements:
     elementType: line
     points: [[480, 188], [480, 220], [480, 220], [480, 258]]
     line: { color: '#7C3AED', width: 1.5 }
-    arrow: false
+    arrow: true
   - elementId: g2
     elementType: shape
     kind: roundRect
@@ -69,7 +69,7 @@ elements:
     elementType: line
     points: [[480, 188], [480, 220], [785, 220], [785, 258]]
     line: { color: '#7C3AED', width: 1.5 }
-    arrow: false
+    arrow: true
   - elementId: lf0
     elementType: shape
     kind: roundRect
@@ -85,7 +85,7 @@ elements:
     elementType: line
     points: [[175, 310], [175, 344], [135, 344], [135, 380]]
     line: { color: '#C4B5FD', width: 1.2 }
-    arrow: false
+    arrow: true
   - elementId: lf1
     elementType: shape
     kind: roundRect
@@ -101,7 +101,7 @@ elements:
     elementType: line
     points: [[175, 310], [175, 344], [293, 344], [293, 380]]
     line: { color: '#C4B5FD', width: 1.2 }
-    arrow: false
+    arrow: true
   - elementId: lf2
     elementType: shape
     kind: roundRect
@@ -117,4 +117,4 @@ elements:
     elementType: line
     points: [[480, 310], [480, 344], [451, 344], [451, 380]]
     line: { color: '#C4B5FD', width: 1.2 }
-    arrow: false
+    arrow: true

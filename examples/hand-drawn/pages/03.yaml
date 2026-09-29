@@ -17,7 +17,7 @@ elements:
     elementType: shape
     kind: ellipse
     bounds: [81, 291, 18, 18]
-    fill: '#E11D48'
+    fill: '#7C3AED'
   - elementId: mt0
     elementType: text
     bounds: [20, 204, 140, 22]
@@ -35,7 +35,7 @@ elements:
     elementType: shape
     kind: ellipse
     bounds: [237, 291, 18, 18]
-    fill: '#E11D48'
+    fill: '#7C3AED'
   - elementId: mt1
     elementType: text
     bounds: [176, 334, 140, 22]
@@ -71,7 +71,7 @@ elements:
     elementType: shape
     kind: ellipse
     bounds: [549, 291, 18, 18]
-    fill: '#E11D48'
+    fill: '#7C3AED'
   - elementId: mt3
     elementType: text
     bounds: [488, 334, 140, 22]
@@ -89,7 +89,7 @@ elements:
     elementType: shape
     kind: ellipse
     bounds: [705, 291, 18, 18]
-    fill: '#E11D48'
+    fill: '#7C3AED'
   - elementId: mt4
     elementType: text
     bounds: [644, 204, 140, 22]
@@ -107,7 +107,7 @@ elements:
     elementType: shape
     kind: ellipse
     bounds: [861, 291, 18, 18]
-    fill: '#E11D48'
+    fill: '#7C3AED'
   - elementId: mt5
     elementType: text
     bounds: [800, 334, 140, 22]
