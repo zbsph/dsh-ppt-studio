@@ -98,6 +98,11 @@ writeFileSync(join(dir, 'pages', '04.yaml'), [
   // R3 缺口正例：端点离图形边 ~6px（该报）
   '  - elementId: ov_gap', '    elementType: line', '    points: [[560, 210], [572, 210]]', '    arrow: true',
   '  - {elementId: gapbox, elementType: shape, kind: rect, bounds: [578, 150, 200, 120], fill: "$soft"}',
+  // X2 正反例：折返尖刺（该报）与其声明版（不该报）
+  '  - elementId: ov_spike', '    elementType: line', '    points: [[300, 470], [400, 470], [350, 470]]', '    arrow: false',
+  '  - elementId: ov_spike_declared', '    elementType: line', '    points: [[300, 495], [400, 495], [350, 495]]', '    arrow: false', '    roleReason: 刻意的往返重叠',
+  // X2 正例：**无箭头**连线端点离盒子 ~6px（该报 line-end-off-edge）
+  '  - elementId: ov_noarrow_gap', '    elementType: line', '    points: [[560, 230], [572, 230]]', '    arrow: false',
   '',
 ].join('\n'))
 
@@ -167,6 +172,21 @@ ok('端点离目标 ~6px ⇒ 报 `arrow-end-gap`',
 ok('**声明刻意如此**（roleReason）⇒ 同样的几何**不报**（用户要求：意料之内不提示）',
   !v4.warns.some((w) => w.code === 'arrow-tip-inside-shape' && /ov_declared/.test(w.message)),
   v4.warns.map((w) => w.code).join(',') || '无警告')
+
+// X2：尖刺与"没接上"两条门禁（只警告、可声明）
+// 注意：管线在 normalizePage 末尾已**兜底修掉**折返尖刺 ⇒ 正常路径上页里看不到它，
+// 所以这里直接测**规则函数**（保证"护栏本身有效"；页级想验证请临时关掉兜底规整）。
+ok('折返尖刺 ⇒ 规则函数报 `line-spike`（护栏有效性；页级已被兜底规整修掉）',
+  checkLineRules([{ elementId: 'sp', elementType: 'line', points: [[300, 470], [400, 470], [350, 470]], arrow: false }])
+    .some((w) => w.code === 'line-spike'), '')
+ok('规则函数对**声明版**尖刺不报（可声明豁免）',
+  !checkLineRules([{ elementId: 'sp2', elementType: 'line', points: [[300, 470], [400, 470], [350, 470]], arrow: false, roleReason: '刻意往返重叠' }])
+    .some((w) => w.code === 'line-spike'), '')
+ok('**声明刻意往返重叠** ⇒ 不报 line-spike',
+  !v4.warns.some((w) => w.code === 'line-spike' && /ov_spike_declared/.test(w.message)), '')
+ok('**无箭头**连线端点离盒子 ~6px ⇒ 报 `line-end-off-edge`（与 arrow-end-gap 分工）',
+  v4.warns.some((w) => w.code === 'line-end-off-edge' && /ov_noarrow_gap/.test(w.message)),
+  v4.warns.filter((w) => w.code === 'line-end-off-edge').map((w) => w.message.slice(0, 30)).join(' ｜ ') || '无')
 
 // ⑥ 手写路径能出成品：导出 parity 自证
 const r = await exportPptx(ctx, { out: join(dir, 'hand.pptx') })
