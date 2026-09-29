@@ -1306,7 +1306,7 @@
           "bounds": {
             "x": 60,
             "y": 76,
-            "w": 780,
+            "w": 800,
             "h": 22
           },
           "style": {
@@ -1331,25 +1331,70 @@
           "id": "f0",
           "kind": "shape",
           "bounds": {
-            "x": 120,
-            "y": 150,
-            "w": 720,
-            "h": 52
+            "x": 80,
+            "y": 148,
+            "w": 800,
+            "h": 70
           },
           "contains": [
             "ft0"
           ],
-          "shape": "roundRect",
+          "shape": "custGeom",
           "fill": "#7C3AED",
+          "path": {
+            "w": 800,
+            "h": 70,
+            "commands": [
+              {
+                "cmd": "moveTo",
+                "pts": [
+                  [
+                    20,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    780,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    680,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    120,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "close"
+              }
+            ]
+          },
           "rotation": 0
         },
         {
           "id": "ft0",
           "kind": "text",
           "bounds": {
-            "x": 128,
-            "y": 164,
-            "w": 704,
+            "x": 230,
+            "y": 172,
+            "w": 500,
             "h": 26
           },
           "style": {
@@ -1373,55 +1418,73 @@
           "text": "存栏 52000"
         },
         {
-          "id": "fd0",
-          "kind": "text",
-          "bounds": {
-            "x": 860,
-            "y": 164,
-            "w": 100,
-            "h": 24
-          },
-          "style": {
-            "fontSize": 11,
-            "color": "#64748B",
-            "lineHeight": 1.2,
-            "wrap": true
-          },
-          "metrics": {
-            "textW": 44.55,
-            "textH": 13.2,
-            "lines": 1,
-            "lineWidths": [
-              40.15
-            ],
-            "overflowY": 0,
-            "overflowX": 0
-          },
-          "text": "↓ 转规格"
-        },
-        {
           "id": "f1",
           "kind": "shape",
           "bounds": {
-            "x": 210,
-            "y": 224,
-            "w": 540,
-            "h": 52
+            "x": 80,
+            "y": 218,
+            "w": 800,
+            "h": 70
           },
           "contains": [
             "ft1"
           ],
-          "shape": "roundRect",
+          "shape": "custGeom",
           "fill": "#7C3AED",
+          "path": {
+            "w": 800,
+            "h": 70,
+            "commands": [
+              {
+                "cmd": "moveTo",
+                "pts": [
+                  [
+                    120,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    680,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    580,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    220,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "close"
+              }
+            ]
+          },
           "rotation": 0
         },
         {
           "id": "ft1",
           "kind": "text",
           "bounds": {
-            "x": 218,
-            "y": 238,
-            "w": 524,
+            "x": 330,
+            "y": 242,
+            "w": 300,
             "h": 26
           },
           "style": {
@@ -1445,55 +1508,73 @@
           "text": "达捕捞规格 31000"
         },
         {
-          "id": "fd1",
-          "kind": "text",
-          "bounds": {
-            "x": 860,
-            "y": 238,
-            "w": 100,
-            "h": 24
-          },
-          "style": {
-            "fontSize": 11,
-            "color": "#64748B",
-            "lineHeight": 1.2,
-            "wrap": true
-          },
-          "metrics": {
-            "textW": 33.55,
-            "textH": 13.2,
-            "lines": 1,
-            "lineWidths": [
-              29.15
-            ],
-            "overflowY": 0,
-            "overflowX": 0
-          },
-          "text": "↓ 筛选"
-        },
-        {
           "id": "f2",
           "kind": "shape",
           "bounds": {
-            "x": 300,
-            "y": 298,
-            "w": 360,
-            "h": 52
+            "x": 80,
+            "y": 288,
+            "w": 800,
+            "h": 70
           },
           "contains": [
             "ft2"
           ],
-          "shape": "roundRect",
+          "shape": "custGeom",
           "fill": "#7C3AED",
+          "path": {
+            "w": 800,
+            "h": 70,
+            "commands": [
+              {
+                "cmd": "moveTo",
+                "pts": [
+                  [
+                    220,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    580,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    500,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    300,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "close"
+              }
+            ]
+          },
           "rotation": 0
         },
         {
           "id": "ft2",
           "kind": "text",
           "bounds": {
-            "x": 308,
+            "x": 410,
             "y": 312,
-            "w": 344,
+            "w": 140,
             "h": 26
           },
           "style": {
@@ -1517,55 +1598,73 @@
           "text": "抽检合格 18400"
         },
         {
-          "id": "fd2",
-          "kind": "text",
-          "bounds": {
-            "x": 860,
-            "y": 312,
-            "w": 100,
-            "h": 24
-          },
-          "style": {
-            "fontSize": 11,
-            "color": "#64748B",
-            "lineHeight": 1.2,
-            "wrap": true
-          },
-          "metrics": {
-            "textW": 33.55,
-            "textH": 13.2,
-            "lines": 1,
-            "lineWidths": [
-              29.15
-            ],
-            "overflowY": 0,
-            "overflowX": 0
-          },
-          "text": "↓ 筛选"
-        },
-        {
           "id": "f3",
           "kind": "shape",
           "bounds": {
-            "x": 370,
-            "y": 372,
-            "w": 220,
-            "h": 52
+            "x": 80,
+            "y": 358,
+            "w": 800,
+            "h": 70
           },
           "contains": [
             "ft3"
           ],
-          "shape": "roundRect",
+          "shape": "custGeom",
           "fill": "#E11D48",
+          "path": {
+            "w": 800,
+            "h": 70,
+            "commands": [
+              {
+                "cmd": "moveTo",
+                "pts": [
+                  [
+                    300,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    500,
+                    0
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    450,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "lnTo",
+                "pts": [
+                  [
+                    350,
+                    70
+                  ]
+                ]
+              },
+              {
+                "cmd": "close"
+              }
+            ]
+          },
           "rotation": 0
         },
         {
           "id": "ft3",
           "kind": "text",
           "bounds": {
-            "x": 378,
-            "y": 386,
-            "w": 204,
+            "x": 410,
+            "y": 382,
+            "w": 140,
             "h": 26
           },
           "style": {
