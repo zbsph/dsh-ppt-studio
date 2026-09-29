@@ -82,7 +82,7 @@ layers.forEach(([name, comps], i) => {
   })
   if (i < layers.length - 1) {
     const cx = bandX + bandW / 2
-    push('- elementId: ar' + i + '\n  elementType: line\n  points: [[' + cx + ', ' + (y + bandH) + '], [' + cx + ', ' + (y + step) + ']]\n  line: { color: \'#7C3AED\', width: 2 }\n  arrow: true')
+    push('- elementId: ar' + i + '\n  elementType: line\n  points: [[' + cx + ', ' + (y + bandH - 2) + '], [' + cx + ', ' + (y + step) + ']]\n  line: { color: \'#7C3AED\', width: 2 }\n  arrow: true')
   }
 })
 const dir = 'examples/hand-drawn'

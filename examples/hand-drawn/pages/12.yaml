@@ -48,7 +48,7 @@ elements:
     content: { text: '水下相机', fontSize: 12, color: '#2E1065', align: center }
   - elementId: ar0
     elementType: line
-    points: [[520, 204], [520, 220]]
+    points: [[520, 202], [520, 220]]
     line: { color: '#7C3AED', width: 2 }
     arrow: true
   - elementId: chip1
@@ -80,7 +80,7 @@ elements:
     content: { text: '海缆与微波', fontSize: 12, color: '#2E1065', align: center }
   - elementId: ar1
     elementType: line
-    points: [[520, 292], [520, 308]]
+    points: [[520, 290], [520, 308]]
     line: { color: '#7C3AED', width: 2 }
     arrow: true
   - elementId: chip2
@@ -123,7 +123,7 @@ elements:
     content: { text: '投喂决策', fontSize: 12, color: '#2E1065', align: center }
   - elementId: ar2
     elementType: line
-    points: [[520, 380], [520, 396]]
+    points: [[520, 378], [520, 396]]
     line: { color: '#7C3AED', width: 2 }
     arrow: true
   - elementId: chip3
