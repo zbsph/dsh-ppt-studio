@@ -14,6 +14,7 @@ import { tmpdir } from 'node:os'
 import { resolveDeck } from '../lib/pptd/schema.js'
 import { renderDeck } from '../lib/pptd/render-html.js'
 import { verifyDeck } from '../lib/verify.js'
+import { rectOf, isLine } from './lib/snapshot-compat.mjs'
 
 let pass = 0
 let fail = 0
@@ -22,7 +23,8 @@ const ok = (name, cond, detail = '') => {
   if (cond) { pass++; console.log(`✓ ${name}${detail ? ` — ${detail}` : ''}`) }
   else { fail++; failures.push(name); console.log(`✗ ${name}${detail ? ` — ${detail}` : ''}`) }
 }
-const rect = (b) => (Array.isArray(b) ? { x: b[0], y: b[1], w: b[2], h: b[3] } : b)
+// bounds 归一与"是不是线"一律走共用工具（本会话同类误读踩过三次，不再各写各的）
+const rect = rectOf
 
 const PAGE = `pageType: content
 diagram:
@@ -55,7 +57,7 @@ async function build(label, traitsYaml) {
   ok('标题元素存在', !!title, title ? `${title.id} ${JSON.stringify(rect(title.bounds))}` : '无')
   const tb = title ? rect(title.bounds) : null
   const bandBottom = tb ? tb.y + tb.h : null
-  const lines = els.filter((e) => e.kind === 'line')
+  const lines = els.filter(isLine)
   const tops = lines.map((l) => Math.min(...l.points.map((p) => p[1])))
   const worst = tops.length ? Math.min(...tops) : null
   ok('所有连线的最高点都**不进标题带**', worst !== null && bandBottom !== null && worst >= bandBottom - 0.5,
@@ -73,7 +75,7 @@ async function build(label, traitsYaml) {
   const els = off.layout.pages[0].elements
   const title = els.find((e) => /title/i.test(e.id))
   const tb = title ? rect(title.bounds) : null
-  const worst = Math.min(...els.filter((e) => e.kind === 'line').map((l) => Math.min(...l.points.map((p) => p[1]))))
+  const worst = Math.min(...els.filter(isLine).map((l) => Math.min(...l.points.map((p) => p[1]))))
   ok('关闭时沿用原布局（线最高点应明显更靠上 / 或与标题带无约束关系）', tb !== null && worst !== null,
     `标题带下沿 y=${tb ? tb.y + tb.h : 'n/a'} ｜ 线最高点 y=${worst.toFixed(1)}`)
 }
