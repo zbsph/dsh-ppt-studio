@@ -47,3 +47,7 @@ templates/smoke-*/
 # 范例的运行产物（源码与渲染证据仍跟踪）
 examples/warm-arch/preview/
 examples/warm-arch/*.pptx
+
+# 从零重画范例的运行产物（源码与 shots/ 仍跟踪）
+examples/fresh-tea/preview/
+examples/fresh-tea/*.pptx
