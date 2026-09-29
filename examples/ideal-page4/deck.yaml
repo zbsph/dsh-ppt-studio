@@ -1,0 +1,17 @@
+version: 1
+title: 目标风格（对齐用户第 4 页）
+size: [960, 540]
+styles:
+  ideal:
+    traits:
+      layout: column
+      badge: number
+      badgePosition: inline
+      align: left
+      subtitle: true
+      edge: { glyph: chevron, backStyle: dashed }
+      frame: { title: false, rails: return }
+    palette: ["#2563EB", "#10B981"]
+    cardFill: { type: gradient, angle: 90, stops: [{ pos: 0, color: "#DBEAFE" }, { pos: 100, color: "#93C5FD" }] }
+pages:
+  - pages/01.yaml
