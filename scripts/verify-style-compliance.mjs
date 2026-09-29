@@ -113,6 +113,18 @@ const clean = [
 ok('对照⑧c：禁区之外不该报（避免噪声）', !codes(clean, { reservedBands: bands }).includes('band-crossing'), codes(clean, { reservedBands: bands }).join(',') || '无 findings')
 ok('对照⑧d：不传 reservedBands ⇒ 该判据完全不触发（向后兼容）', !codes(crossLine).includes('band-crossing'))
 
+// ── Z5：渐变填充的对比度必须**按 stops 两端分别判、取最差**（不许用平均值蒙混）──
+const gradLight = [
+  { id: 'c1', kind: 'shape', shape: 'roundRect', bounds: { x: 0, y: 0, w: 200, h: 60 }, fill: { type: 'gradient', stops: [{ pos: 0, color: '#93C5FD' }, { pos: 100, color: '#1E3A8A' }] } },
+  { id: 't1', kind: 'text', bounds: { x: 10, y: 20, w: 120, h: 20 }, style: { color: '#FFFFFF' }, fill: { type: 'gradient', stops: [{ pos: 0, color: '#93C5FD' }, { pos: 100, color: '#1E3A8A' }] } },
+]
+ok('负面对照⑨：白字压"浅蓝→深蓝"渐变 ⇒ **浅端**必须被抓（1.6:1）', codes(gradLight).includes('style-contrast-low'), codes(gradLight).join(','))
+const gradDark = [
+  { id: 'c2', kind: 'shape', shape: 'roundRect', bounds: { x: 0, y: 0, w: 200, h: 60 }, fill: { type: 'gradient', stops: [{ pos: 0, color: '#1E3A8A' }, { pos: 100, color: '#0F172A' }] } },
+  { id: 't2', kind: 'text', bounds: { x: 10, y: 20, w: 120, h: 20 }, style: { color: '#FFFFFF' }, fill: { type: 'gradient', stops: [{ pos: 0, color: '#1E3A8A' }, { pos: 100, color: '#0F172A' }] } },
+]
+ok('对照⑨b：白字压"深蓝→更深蓝"渐变（两端都够暗）⇒ 不该报（修此前误报）', !codes(gradDark).includes('style-contrast-low'), codes(gradDark).join(',') || '无 findings')
+
 // ---------- ② 既有交付物 0 误报 ----------
 const targets = []
 const latest = readdirSync(tmpdir()).filter((d) => d.startsWith('pptd-families-')).sort().pop()
