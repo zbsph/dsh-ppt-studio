@@ -796,6 +796,8 @@ function layoutState({ d, box, style, id, notes }) {
   const T = style.traits ?? DEFAULT_TRAITS
   const D = DENSITY[T.density] ?? DENSITY.normal
   let badgeSeq = 0 // badge:number 的序号（按插入顺序，即分层顺序）
+  // 左侧预留栏（frame.rails）：导轨要占一条竖带 ⇒ **先预留**（此前只判断"有没有空间"，实测得到 -10px 直接降级 ✗）
+  const railInset = T.frame.rails === 'return' ? 30 : 0
   // ── 顶部预留带（特型 frame.title）──────────────────────────────────────
   // 族**不负责画标题**（标题元素由外层产出），但必须把"标题带"当作禁区：
   // 节点整体下移、上方绕行车道的起点被挡在带下 ⇒"标题与回边车道/标签打架"由**机制**避免
@@ -850,9 +852,12 @@ function layoutState({ d, box, style, id, notes }) {
   // 列间距按"是否有边标签"预留：**要能放下一个标签**（实测 96px 时，入口横段只有 ~57px 长，
   // 标签放不下 ⇒ 回退到"竖管中段"⇒ 标签落在两条横线中间，用户读作"离线太远、太高"）。
   // 密度特型：只改间距常量（宪法②之"常量"通道）；normal 时乘数为 1 ⇒ 与既有输出逐像素一致
-  const gap = (edges.some((e) => e.label) ? Math.max(style.gap, 150) : style.gap) * D.laneStep
-  const colW = (box.w - gap * maxLayer) / (maxLayer + 1)
-  const nodeW = Math.max(56, Math.min(colW * 0.8, 180))
+  // 标签间距是**间距常量**（宪法②允许随风格改）：副标题风格卡片更高更宽，5 列时 150px 会把列压到 42px
+  // ⇒ 文本槽位只剩 20px（Y4 实测 10 条 text-overflow）⇒ 副标题风格收紧到 104px。
+  const gap = (edges.some((e) => e.label) ? Math.max(style.gap, T.subtitle ? 104 : 150) : style.gap) * D.laneStep
+  const colW = (box.w - railInset - gap * maxLayer) / (maxLayer + 1)
+  // 副标题（subtitle）需要在卡内放两行 ⇒ 提高卡宽上限（只改"常量"，不动拓扑与端口）
+  const nodeW = Math.max(T.subtitle ? 100 : 56, Math.min(colW * (T.subtitle ? 0.92 : 0.8), T.subtitle ? 232 : 180))
   const rowMax = Math.max(...[...byLayer.values()].map((v) => v.length), 1)
   const areaH = (box.h - bandH) * 0.62 // 节点区只占 62%（并让出顶部预留带），下方 38% 留给"转移总线"
   // subtitle 特型：卡内要放第二行 ⇒ 抬高最小卡高（宪法②只改"常量"，不动拓扑与端口）
@@ -862,7 +867,7 @@ function layoutState({ d, box, style, id, notes }) {
     const colH = ids.length * (nodeH + gap * 0.5) - gap * 0.5
     const y0 = bandBottom + Math.max(0, (areaH - colH) / 2)
     ids.forEach((nid, i) => {
-      const r = { x: box.x + l * (colW + gap) + (colW - nodeW) / 2, y: y0 + i * (nodeH + gap * 0.5), w: nodeW, h: nodeH }
+      const r = { x: box.x + railInset + l * (colW + gap) + (colW - nodeW) / 2, y: y0 + i * (nodeH + gap * 0.5), w: nodeW, h: nodeH }
       pos.set(nid, r)
       const nd = byId.get(nid)
       const nodeEls = makeNode(style, id, { id: nid, ...r, label: nd?.label, emphasis: nd?.emphasis })
@@ -892,7 +897,7 @@ function layoutState({ d, box, style, id, notes }) {
         const seqEl = {
           elementId: id(`bt_${nid}`), elementType: 'text',
           bounds: [bx, by + dia * 0.12, dia, dia * 0.8],
-          content: { text: String(badgeSeq), fontSize: Math.max(8, dia * 0.58), color: '#FFFFFF', align: 'center' },
+          content: { text: String(badgeSeq), fontSize: Math.max(8, dia * 0.58), color: style.ink, align: 'center' }, // 深色：绿底白字只有 2.9:1（Y4 实测）
         }
         // **结构关系必须声明**：徽标属于卡片、序号属于徽标 —— 否则门禁按"设计预期外重叠"报错
         //（实测漏声明会报 9 条错误；这正是"新增做法必须同时带合规检查"要防的事）
@@ -917,7 +922,7 @@ function layoutState({ d, box, style, id, notes }) {
           tEl.content = { ...tEl.content, wrap: false }
           const subEl = {
             elementId: id(`s_${nid}`), elementType: 'text',
-            bounds: [R(r.x + 6), R(r.y + r.h * 0.52), R(r.w - 12), R(Math.max(12, r.h * 0.32))],
+            bounds: [R(r.x + 6 + (T.badge === 'number' ? Math.min(15, Math.max(10, r.h * 0.34)) + 9 : 0)), R(r.y + r.h * 0.52), R(r.w - 12 - (T.badge === 'number' ? Math.min(15, Math.max(10, r.h * 0.34)) + 9 : 0)), R(Math.max(12, r.h * 0.32))],
             content: { text: String(nd.sub), fontSize: Math.max(9, fsT * 0.78), color: tEl.content.color, align: 'center', wrap: false },
           }
           if (Array.isArray(nodeEls[0].contains)) nodeEls[0].contains.push(subEl.elementId)
