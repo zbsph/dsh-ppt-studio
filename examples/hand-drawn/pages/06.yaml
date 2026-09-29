@@ -60,30 +60,26 @@ elements:
     content: { text: '阈值回写', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
   - elementId: c0
     elementType: line
-    points: [[480, 180], [599, 180], [599, 271], [718, 271]]
+    points: [[570, 214], [628, 237]]
     line: { color: '#C4B5FD', width: 1.5 }
     arrow: true
   - elementId: c1
     elementType: line
-    points: [[718, 271], [673, 271], [673, 419], [627, 419]]
+    points: [[668, 353], [677, 337]]
     line: { color: '#C4B5FD', width: 1.5 }
     arrow: true
   - elementId: c2
     elementType: line
-    points: [[627, 419], [480, 419], [480, 419], [333, 419]]
+    points: [[531, 419], [429, 419]]
     line: { color: '#C4B5FD', width: 1.5 }
     arrow: true
   - elementId: c3
     elementType: line
-    points: [[333, 419], [288, 419], [288, 271], [242, 271]]
+    points: [[283, 337], [292, 353]]
     line: { color: '#C4B5FD', width: 1.5 }
     arrow: true
   - elementId: c4
     elementType: line
-    points: [[242, 271], [361, 271], [361, 180], [480, 180]]
+    points: [[332, 237], [390, 214]]
     line: { color: '#C4B5FD', width: 1.5 }
     arrow: true
-  - elementId: core
-    elementType: text
-    bounds: [330, 292, 300, 30]
-    content: { text: '调控闭环', fontSize: 18, color: '#7C3AED', bold: true, align: center }
