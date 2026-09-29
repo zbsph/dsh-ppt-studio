@@ -106,7 +106,10 @@ export function checkStyleCompliance(els, opts = {}) {
     for (const t of texts2) {
       const tr = rectOf(t.bounds)
       if (!tr || !br) continue
-      if (tr.x < br.x + br.w - 0.5) {
+      // **同一行**才判"太挤"：用户第 4 页的副标题是齐左、在徽标**下方**（合法画法）
+      // ⇒ 不加这个前提会把合法的副标题误报成互压（实测 5 条误报，已修）。
+      const sameRow = tr.y < br.y + br.h && tr.y + tr.h > br.y
+      if (sameRow && tr.x < br.x + br.w - 0.5) {
         out.push({
           code: 'style-badge-too-tight',
           id: `${idOf(s)} · ${idOf(t)}`,
