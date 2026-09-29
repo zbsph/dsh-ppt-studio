@@ -1,26 +1,15 @@
 pageType: content
-# 跨道连线穿泳道带属设计意图（泳道图本质），非缺陷
 expectedOverlaps:
   - { pair: [lb0, a0] }
   - { pair: [lb3, a0] }
-  - { pair: [ln0, a0] }
-  - { pair: [ln3, a0] }
   - { pair: [lb3, a1] }
   - { pair: [lb1, a1] }
-  - { pair: [ln3, a1] }
-  - { pair: [ln1, a1] }
   - { pair: [lb1, a2] }
   - { pair: [lb2, a2] }
-  - { pair: [ln1, a2] }
-  - { pair: [ln2, a2] }
   - { pair: [lb2, a3] }
   - { pair: [lb3, a3] }
-  - { pair: [ln2, a3] }
-  - { pair: [ln3, a3] }
   - { pair: [lb3, a4] }
   - { pair: [lb0, a4] }
-  - { pair: [ln3, a4] }
-  - { pair: [ln0, a4] }
 elements:
   - elementId: title
     elementType: text
@@ -101,91 +90,91 @@ elements:
   - elementId: s0
     elementType: shape
     kind: roundRect
-    bounds: [176, 170, 110, 44]
+    bounds: [172, 170, 96, 44]
     fill: '#FFFFFF'
     line: { color: '#7C3AED', width: 1.2 }
     contains: [st0]
   - elementId: st0
     elementType: text
-    bounds: [180, 182, 102, 22]
+    bounds: [175, 182, 90, 22]
     content: { text: '投喂计划', fontSize: 11, color: '#2E1065', bold: true, align: center }
   - elementId: a0
     elementType: line
-    points: [[286, 192], [293, 192], [293, 444], [300, 444]]
+    points: [[268, 192], [290, 192], [290, 444], [296, 444]]
     line: { color: '#7C3AED', width: 1.5 }
     arrow: true
   - elementId: s1
     elementType: shape
     kind: roundRect
-    bounds: [300, 422, 110, 44]
+    bounds: [296, 422, 96, 44]
     fill: '#FFFFFF'
     line: { color: '#7C3AED', width: 1.2 }
     contains: [st1]
   - elementId: st1
     elementType: text
-    bounds: [304, 434, 102, 22]
+    bounds: [299, 434, 90, 22]
     content: { text: '水质复核', fontSize: 11, color: '#2E1065', bold: true, align: center }
   - elementId: a1
     elementType: line
-    points: [[410, 444], [417, 444], [417, 276], [424, 276]]
+    points: [[392, 444], [414, 444], [414, 276], [420, 276]]
     line: { color: '#7C3AED', width: 1.5 }
     arrow: true
   - elementId: s2
     elementType: shape
     kind: roundRect
-    bounds: [424, 254, 110, 44]
+    bounds: [420, 254, 96, 44]
     fill: '#FFFFFF'
     line: { color: '#7C3AED', width: 1.2 }
     contains: [st2]
   - elementId: st2
     elementType: text
-    bounds: [428, 266, 102, 22]
+    bounds: [423, 266, 90, 22]
     content: { text: '自动投喂', fontSize: 11, color: '#2E1065', bold: true, align: center }
   - elementId: a2
     elementType: line
-    points: [[534, 276], [541, 276], [541, 360], [548, 360]]
+    points: [[516, 276], [538, 276], [538, 360], [544, 360]]
     line: { color: '#7C3AED', width: 1.5 }
     arrow: true
   - elementId: s3
     elementType: shape
     kind: roundRect
-    bounds: [548, 338, 110, 44]
+    bounds: [544, 338, 96, 44]
     fill: '#FFFFFF'
     line: { color: '#7C3AED', width: 1.2 }
     contains: [st3]
   - elementId: st3
     elementType: text
-    bounds: [552, 350, 102, 22]
+    bounds: [547, 350, 90, 22]
     content: { text: '水下巡检', fontSize: 11, color: '#2E1065', bold: true, align: center }
   - elementId: a3
     elementType: line
-    points: [[658, 360], [665, 360], [665, 444], [672, 444]]
+    points: [[640, 360], [662, 360], [662, 444], [668, 444]]
     line: { color: '#7C3AED', width: 1.5 }
     arrow: true
   - elementId: s4
     elementType: shape
     kind: roundRect
-    bounds: [672, 422, 110, 44]
+    bounds: [668, 422, 96, 44]
     fill: '#FFFFFF'
     line: { color: '#7C3AED', width: 1.2 }
     contains: [st4]
   - elementId: st4
     elementType: text
-    bounds: [676, 434, 102, 22]
+    bounds: [671, 434, 90, 22]
     content: { text: '取样检测', fontSize: 11, color: '#2E1065', bold: true, align: center }
   - elementId: a4
     elementType: line
-    points: [[782, 444], [789, 444], [789, 192], [796, 192]]
+    points: [[764, 444], [786, 444], [786, 192], [792, 192]]
     line: { color: '#7C3AED', width: 1.5 }
     arrow: true
   - elementId: s5
     elementType: shape
     kind: roundRect
-    bounds: [796, 170, 110, 44]
+    bounds: [792, 170, 96, 44]
     fill: '#FFFFFF'
     line: { color: '#7C3AED', width: 1.2 }
     contains: [st5]
   - elementId: st5
     elementType: text
-    bounds: [800, 182, 102, 22]
+    bounds: [795, 182, 90, 22]
     content: { text: '结果归档', fontSize: 11, color: '#2E1065', bold: true, align: center }

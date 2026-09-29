@@ -2,11 +2,11 @@ pageType: content
 elements:
   - elementId: title
     elementType: text
-    bounds: [60, 34, 720, 38]
+    bounds: [60, 34, 760, 38]
     content: { text: '养殖平台组织', fontSize: 25, color: '#2E1065', bold: true }
   - elementId: sub
     elementType: text
-    bounds: [60, 76, 780, 22]
+    bounds: [60, 76, 820, 22]
     content: { text: '平台长统管三个组；养殖组与装备组下再设班组', fontSize: 12, color: '#64748B' }
   - elementId: root
     elementType: shape
@@ -105,16 +105,16 @@ elements:
   - elementId: lf2
     elementType: shape
     kind: roundRect
-    bounds: [376, 380, 150, 48]
+    bounds: [405, 380, 150, 48]
     fill: '#FFFFFF'
     line: { color: '#C4B5FD', width: 1 }
     contains: [lft2]
   - elementId: lft2
     elementType: text
-    bounds: [384, 393, 134, 22]
+    bounds: [413, 393, 134, 22]
     content: { text: '网衣维护', fontSize: 12, color: '#2E1065', align: center }
   - elementId: lfl2
     elementType: line
-    points: [[480, 310], [480, 344], [451, 344], [451, 380]]
+    points: [[480, 310], [480, 380]]
     line: { color: '#C4B5FD', width: 1.2 }
     arrow: true

@@ -16,7 +16,7 @@ elements:
     contains: [nt0]
   - elementId: nt0
     elementType: text
-    bounds: [401, 171, 158, 22]
+    bounds: [399, 171, 162, 22]
     content: { text: '① 出海申报', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
   - elementId: n1
     elementType: shape
@@ -26,7 +26,7 @@ elements:
     contains: [nt1]
   - elementId: nt1
     elementType: text
-    bounds: [612, 223, 158, 22]
+    bounds: [610, 223, 162, 22]
     content: { text: '② 断电挂牌', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
   - elementId: n2
     elementType: shape
@@ -36,7 +36,7 @@ elements:
     contains: [nt2]
   - elementId: nt2
     elementType: text
-    bounds: [664, 340, 158, 22]
+    bounds: [662, 340, 162, 22]
     content: { text: '③ 网衣外观', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
   - elementId: n3
     elementType: shape
@@ -46,7 +46,7 @@ elements:
     contains: [nt3]
   - elementId: nt3
     elementType: text
-    bounds: [518, 433, 158, 22]
+    bounds: [516, 433, 162, 22]
     content: { text: '④ 锚链张力', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
   - elementId: n4
     elementType: shape
@@ -56,7 +56,7 @@ elements:
     contains: [nt4]
   - elementId: nt4
     elementType: text
-    bounds: [284, 433, 158, 22]
+    bounds: [282, 433, 162, 22]
     content: { text: '⑤ 溶氧复测', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
   - elementId: n5
     elementType: shape
@@ -66,7 +66,7 @@ elements:
     contains: [nt5]
   - elementId: nt5
     elementType: text
-    bounds: [138, 340, 158, 22]
+    bounds: [136, 340, 162, 22]
     content: { text: '⑥ 设备保养', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
   - elementId: n6
     elementType: shape
@@ -76,40 +76,40 @@ elements:
     contains: [nt6]
   - elementId: nt6
     elementType: text
-    bounds: [190, 223, 158, 22]
+    bounds: [188, 223, 162, 22]
     content: { text: '⑦ 数据回传', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
   - elementId: c0
     elementType: line
-    points: [[571, 204], [600, 212]]
-    line: { color: '#C4B5FD', width: 1.5 }
+    points: [[565, 203], [606, 213]]
+    line: { color: '#7C3AED', width: 2.5 }
     arrow: true
   - elementId: c1
     elementType: line
-    points: [[729, 320], [705, 265]]
-    line: { color: '#C4B5FD', width: 1.5 }
+    points: [[702, 258], [732, 327]]
+    line: { color: '#7C3AED', width: 2.5 }
     arrow: true
   - elementId: c2
     elementType: line
-    points: [[664, 402], [676, 393]]
-    line: { color: '#C4B5FD', width: 1.5 }
+    points: [[705, 375], [635, 420]]
+    line: { color: '#7C3AED', width: 2.5 }
     arrow: true
   - elementId: c3
     elementType: line
-    points: [[503, 444], [457, 444]]
-    line: { color: '#C4B5FD', width: 1.5 }
+    points: [[512, 444], [448, 444]]
+    line: { color: '#7C3AED', width: 2.5 }
     arrow: true
   - elementId: c4
     elementType: line
-    points: [[284, 393], [296, 402]]
-    line: { color: '#C4B5FD', width: 1.5 }
+    points: [[325, 420], [255, 375]]
+    line: { color: '#7C3AED', width: 2.5 }
     arrow: true
   - elementId: c5
     elementType: line
-    points: [[255, 265], [231, 320]]
-    line: { color: '#C4B5FD', width: 1.5 }
+    points: [[228, 327], [258, 258]]
+    line: { color: '#7C3AED', width: 2.5 }
     arrow: true
   - elementId: c6
     elementType: line
-    points: [[360, 212], [389, 204]]
-    line: { color: '#C4B5FD', width: 1.5 }
+    points: [[354, 213], [395, 203]]
+    line: { color: '#7C3AED', width: 2.5 }
     arrow: true

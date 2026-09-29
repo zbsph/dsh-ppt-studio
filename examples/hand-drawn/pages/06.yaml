@@ -16,7 +16,7 @@ elements:
     contains: [nt0]
   - elementId: nt0
     elementType: text
-    bounds: [399, 169, 162, 24]
+    bounds: [399, 168, 162, 24]
     content: { text: '传感器采集', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
   - elementId: n1
     elementType: shape
@@ -26,17 +26,17 @@ elements:
     contains: [nt1]
   - elementId: nt1
     elementType: text
-    bounds: [637, 260, 162, 24]
+    bounds: [637, 259, 162, 24]
     content: { text: '趋势预测', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
   - elementId: n2
     elementType: shape
     kind: roundRect
     bounds: [542, 393, 170, 52]
-    fill: '#E11D48'
+    fill: '#7C3AED'
     contains: [nt2]
   - elementId: nt2
     elementType: text
-    bounds: [546, 408, 162, 24]
+    bounds: [546, 407, 162, 24]
     content: { text: '投喂调整', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
   - elementId: n3
     elementType: shape
@@ -46,40 +46,40 @@ elements:
     contains: [nt3]
   - elementId: nt3
     elementType: text
-    bounds: [252, 408, 162, 24]
+    bounds: [252, 407, 162, 24]
     content: { text: '效果复核', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
   - elementId: n4
     elementType: shape
     kind: roundRect
     bounds: [157, 245, 170, 52]
-    fill: '#7C3AED'
+    fill: '#E11D48'
     contains: [nt4]
   - elementId: nt4
     elementType: text
-    bounds: [161, 260, 162, 24]
+    bounds: [161, 259, 162, 24]
     content: { text: '阈值回写', fontSize: 13, color: '#FFFFFF', bold: true, align: center }
   - elementId: c0
     elementType: line
-    points: [[570, 214], [628, 237]]
-    line: { color: '#C4B5FD', width: 1.5 }
+    points: [[548, 206], [650, 245]]
+    line: { color: '#7C3AED', width: 2.5 }
     arrow: true
   - elementId: c1
     elementType: line
-    points: [[668, 353], [677, 337]]
-    line: { color: '#C4B5FD', width: 1.5 }
+    points: [[702, 297], [643, 393]]
+    line: { color: '#7C3AED', width: 2.5 }
     arrow: true
   - elementId: c2
     elementType: line
-    points: [[531, 419], [429, 419]]
-    line: { color: '#C4B5FD', width: 1.5 }
+    points: [[542, 419], [418, 419]]
+    line: { color: '#7C3AED', width: 2.5 }
     arrow: true
   - elementId: c3
     elementType: line
-    points: [[283, 337], [292, 353]]
-    line: { color: '#C4B5FD', width: 1.5 }
+    points: [[317, 393], [258, 297]]
+    line: { color: '#7C3AED', width: 2.5 }
     arrow: true
   - elementId: c4
     elementType: line
-    points: [[332, 237], [390, 214]]
-    line: { color: '#C4B5FD', width: 1.5 }
+    points: [[310, 245], [412, 206]]
+    line: { color: '#7C3AED', width: 2.5 }
     arrow: true
