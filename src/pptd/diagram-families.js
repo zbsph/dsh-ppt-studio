@@ -985,7 +985,19 @@ function layoutState({ d, box, style, id, notes }) {
     // 候选 = 若干"盒子外走廊"上的折线（由浅到深的车道 + 上方回绕）；先剔除**穿过节点盒**的候选，
     // 再按 (与他线的交叉数, 总长度, 拐点数) 择优。判据是**优化绕行与交叉**，**不是**拆共用干线
     //（共用竖管是标准树状画法，用户已裁定；见 line-rules 的"共用端点扇出豁免"）。
-    const mkRoute = (y) => [ptA, [riserA, A.y + A.h / 2], [riserA, y], [corB, y], [corB, B.y + B.h / 2], ptB]
+    const mkSide = (y) => [ptA, [riserA, A.y + A.h / 2], [riserA, y], [corB, y], [corB, B.y + B.h / 2], ptB]
+    // 用户给的参考画法：从**源框底边靠右**出 → 走下方 → **目标框底边中点竖直向上**进（箭头朝上）。
+    // 侧向走法的进出点落在左右边中点，容易与主干/入场边共点而读不出方向 ⇒ 上下走法作为另一类候选。
+    const mkTB = (y) => {
+      const below = y >= Math.max(A.y + A.h, B.y + B.h) + g4 - 0.01
+      const ax = A.x + A.w * 0.75
+      const bx = B.x + B.w * 0.5
+      const aEdge = below ? A.y + A.h : A.y
+      const bEdge = below ? B.y + B.h : B.y
+      const aStub = below ? aEdge + g4 : aEdge - g4
+      const bStub = below ? bEdge + g4 : bEdge - g4
+      return [[ax, aEdge], [ax, aStub], [ax, y], [bx, y], [bx, bStub], [bx, bEdge]]
+    }
     const segHitsNode = (p, q) => {
       const x0 = Math.min(p[0], q[0]); const x1 = Math.max(p[0], q[0])
       const y0 = Math.min(p[1], q[1]); const y1 = Math.max(p[1], q[1])
@@ -1002,32 +1014,69 @@ function layoutState({ d, box, style, id, notes }) {
       const vy0 = Math.min(v[0][1], v[1][1]); const vy1 = Math.max(v[0][1], v[1][1])
       return v[0][0] > hx0 + 1 && v[0][0] < hx1 - 1 && h[0][1] > vy0 + 1 && h[0][1] < vy1 - 1
     }
+    // R9 罚项：本线路端点与**已定路由的端点**重合、且相邻段与之共线反向 ⇒ 读者会把两条边读成一条直线贯穿节点
+    //（用户实测的真缺陷：返工边从"已成样"左边出发，而"烘焙毕"的箭头正落在同一点）。
+    // 用户裁定：中点进出、合并后分叉、共线不重叠都是标准画法 ⇒ 只有"同点 + 共线反向"才罚。
+    const dirAt = (a, b) => { const d = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1; return [(b[0] - a[0]) / d, (b[1] - a[1]) / d] }
+    const samePointPenalty = (pts) => {
+      const head = pts[0]
+      const tail = pts[pts.length - 1]
+      const hd = dirAt(head, pts[1])
+      const td = dirAt(pts[pts.length - 2], tail)
+      const opp = (x, y) => Math.abs(x[0] + y[0]) < 0.01 && Math.abs(x[1] + y[1]) < 0.01
+      let pen = 0
+      for (const e of edgeRoutes) {
+        const o = e.pts
+        if (Math.hypot(head[0] - o[o.length - 1][0], head[1] - o[o.length - 1][1]) < 2 && opp(hd, dirAt(o[o.length - 2], o[o.length - 1]))) pen++
+        if (Math.hypot(tail[0] - o[0][0], tail[1] - o[0][1]) < 2 && opp(td, dirAt(o[0], o[1]))) pen++
+      }
+      return pen
+    }
     const scoreRoute = (pts) => {
       let cross = 0; let len = 0
       for (let i = 0; i + 1 < pts.length; i++) {
         len += Math.abs(pts[i + 1][0] - pts[i][0]) + Math.abs(pts[i + 1][1] - pts[i][1])
         for (const s of routedSegs) if (segCrosses(pts[i], pts[i + 1], s[0], s[1])) cross++
       }
-      return cross * 1000 + Math.round(len) + (pts.length - 2) * 10
+      return cross * 1000 + samePointPenalty(pts) * 500 + Math.round(len) + (pts.length - 2) * 10
     }
-    const cands = [
-      mkRoute(pickLane()), mkRoute(laneBase + busStep), mkRoute(laneBase + 2 * busStep),
-      mkRoute(laneBase + 3 * busStep), mkRoute(box.y + 14),
+    // 参考画法要求"返回段离框底足够远"（竖线长度 ≳ 框高一半）⇒ 车道从框底再下移一档起步。
+    const deepBase = Math.max(A.y + A.h, B.y + B.h) + Math.max(36, Math.min(A.h, B.h) * 0.35)
+    const lane1 = pickLane()
+    const raw = [
+      // **深车道优先**（用户参考画法：返回段必须与框体视觉分离，竖线要够长）——
+      // 平局时保留先入者，所以把 deepBase 放最前；lane1（贴框底）只作最后兜底。
+      mkTB(deepBase), mkSide(deepBase),
+      mkTB(deepBase + busStep), mkSide(deepBase + busStep),
+      mkTB(deepBase + 2 * busStep), mkSide(deepBase + 2 * busStep),
+      mkTB(deepBase + 3 * busStep), mkSide(deepBase + 3 * busStep),
+      mkTB(lane1), mkSide(lane1),
     ]
+    // 打分必须针对**后处理后的几何**（makeEdge = 轴对齐 → 箭头端直段 → 轴对齐，后处理会挪拐点）。
+    const cands = raw.map((pts) => orthogonalize(arrowEndRuns(orthogonalize(pts), true)))
     // 候选全"脏"（所有车道都会穿过某个盒子）时，**取撞盒最少的那条**，而不是直接拿第一条
     // ——从零重画的状态机（多条同层回边）实测过：盲目取第一条会把线画到节点上（56×27px 重叠）。
     const hitsOf = (pts) => pts.reduce((n, p, i) => (i + 1 < pts.length && segHitsNode(p, pts[i + 1]) ? n + 1 : n), 0)
+    const crossOf = (pts) => {
+      let c = 0
+      for (let i = 0; i + 1 < pts.length; i++) for (const sg of routedSegs) if (segCrosses(pts[i], pts[i + 1], sg[0], sg[1])) c++
+      return c
+    }
+    const perfect = cands.filter((pts) => hitsOf(pts) === 0 && crossOf(pts) === 0)
     const clean = cands.filter((pts) => hitsOf(pts) === 0)
-    const pool = clean.length ? clean : cands.slice().sort((a, b) => hitsOf(a) - hitsOf(b))
+    const pool = perfect.length ? perfect : (clean.length ? clean : cands.slice().sort((a, b) => hitsOf(a) - hitsOf(b)))
     let busPts = pool[0]; let bestScore = scoreRoute(busPts)
     for (const c of pool) { const sc = scoreRoute(c); if (sc < bestScore) { bestScore = sc; busPts = c } }
+    const tbRoute = Math.abs(busPts[0][0] - (A.x + A.w * 0.75)) < 0.5
+      && (Math.abs(busPts[0][1] - A.y) < 0.5 || Math.abs(busPts[0][1] - (A.y + A.h)) < 0.5)
     usedLane.set(Math.round(busPts[2][1]), 1)
     for (let i = 0; i + 1 < busPts.length; i++) routedSegs.push([busPts[i], busPts[i + 1]])
     edgeRoutes.push({ e, pts: busPts, preferSeg: 2 }) // 2 = 车道那段（长横线）：回边的视觉主体
     elements.push(...makeEdge(style, id, {
       id: `e${ei++}`,
       points: busPts,
-      from: { ref: id(e.from), side: sideOf(A, lA) }, to: { ref: id(e.to), side: sideB },
+      from: { ref: id(e.from), side: tbRoute ? (busPts[0][1] > A.y + A.h / 2 ? 'bottom' : 'top') : sideOf(A, lA) },
+      to: { ref: id(e.to), side: tbRoute ? (busPts[0][1] > A.y + A.h / 2 ? 'bottom' : 'top') : sideB },
       dashed: e.style === 'dashed',
     }))
   }
