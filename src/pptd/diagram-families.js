@@ -1235,6 +1235,30 @@ function layoutState({ d, box, style, id, notes }) {
     elements.push(makeText(style, id, { id: `lbl_${e.from}_${e.to}`, x: tbox.x, y: tbox.y, w: tbox.w, text: txt, align: 'center' }))
   }
   if (d.title) elements.unshift(makeText(style, id, { id: 'stt_title', x: box.x, y: box.y, w: box.w, text: String(d.title), sizeFactor: 1.05 }))
+  // ── 进度导轨（特型 frame.rails=return）────────────────────────────────────
+  // 位置说明：放在**函数出口之前**（上一版插在回边循环内 ⇒ 无回边的页永远不执行，实测 0 条导轨 ✗）。
+  // 语义：把"整张图自上而下的推进方向"用左侧竖向虚线标出来（用户附图那种画法）；
+  // 声明为 decoration + roleReason 含「导轨」⇒ 直接受风格合规护栏 style-rail-over-content 约束。
+  // 放不下（左侧没留空间）就跳过并写 notes（优雅降级，不硬塞）。
+  if (T.frame.rails === 'return') {
+    const rows = [...pos.values()]
+    const leftMost = Math.min(...rows.map((r) => r.x))
+    const railX = box.x + 6
+    if (leftMost - railX >= 10) {
+      const yTop = Math.min(...rows.map((r) => r.y)) + 6
+      const yBot = Math.max(...rows.map((r) => r.y + r.h)) - 6
+      elements.push({
+        elementId: id('rail_return'), elementType: 'line', arrow: true,
+        points: [[railX, yTop], [railX, yBot]],
+        line: { color: style.palette[1] ?? style.palette[0], width: 1.2, dash: 'dash' },
+        role: 'decoration', roleReason: '进度导轨（frame.rails=return）',
+      })
+      notes.push(`state：进度导轨已画（x=${railX}, y=${Math.round(yTop)}→${Math.round(yBot)}）—— 装饰件声明，受"导轨不得穿内容"护栏约束`)
+    } else {
+      notes.push(`state：frame.rails=return 但左侧只剩 ${(leftMost - railX).toFixed(0)}px ⇒ 导轨未画（优雅降级）`)
+    }
+  }
+
   return { elements, groups: [], pos }
 }
 
