@@ -1,0 +1,20 @@
+pageType: content
+diagram:
+  type: steps
+  title: 制茶七步
+  nodes:
+    - id: s1
+      label: 采摘
+    - id: s2
+      label: 摊青
+    - id: s3
+      label: 杀青
+    - id: s4
+      label: 揉捻
+    - id: s5
+      label: 解块
+    - id: s6
+      label: 烘焙
+    - id: s7
+      label: 复焙提香
+      emphasis: accent

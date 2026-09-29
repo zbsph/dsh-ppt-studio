@@ -1,0 +1,35 @@
+version: 1
+title: 谷雨茶场 · 从采到销（从零重画）
+size:
+  - 960
+  - 540
+theme:
+  colors:
+    primary: "#15803D"
+    accent: "#CA8A04"
+    soft: "#DCFCE7"
+    text: "#14532D"
+    bg: "#F7FEE7"
+  textStyles:
+    body:
+      fontSize: 13
+      color: $text
+  safeArea:
+    top: 40
+    bottom: 40
+    left: 40
+    right: 40
+pages:
+  - pages/01.yaml
+  - pages/02.yaml
+  - pages/03.yaml
+  - pages/04.yaml
+  - pages/05.yaml
+  - pages/06.yaml
+  - pages/07.yaml
+  - pages/08.yaml
+  - pages/09.yaml
+  - pages/10.yaml
+  - pages/11.yaml
+  - pages/12.yaml
+  - pages/13.yaml

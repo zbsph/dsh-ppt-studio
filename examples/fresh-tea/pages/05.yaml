@@ -1,0 +1,36 @@
+pageType: content
+diagram:
+  type: compare
+  title: 两种杀青工艺
+  nodes:
+    - id: a1
+      label: 手工铁锅
+    - id: a2
+      label: 香气层次足
+    - id: a3
+      label: 单锅 3 斤
+    - id: a4
+      label: 依赖师傅
+    - id: b1
+      label: 滚筒机械
+    - id: b2
+      label: 批次一致
+    - id: b3
+      label: 时产 120 斤
+    - id: b4
+      label: 香气偏平
+  groups:
+    - id: left
+      label: 工艺 A：手工
+      members:
+        - a1
+        - a2
+        - a3
+        - a4
+    - id: right
+      label: 工艺 B：机械
+      members:
+        - b1
+        - b2
+        - b3
+        - b4

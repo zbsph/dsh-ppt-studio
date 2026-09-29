@@ -1,0 +1,44 @@
+pageType: content
+diagram:
+  type: tree
+  title: 茶场组织架构
+  nodes:
+    - id: r
+      label: 场长
+    - id: p
+      label: 种植部
+    - id: m
+      label: 制茶部
+    - id: s
+      label: 销售部
+    - id: p1
+      label: 梯田一组
+    - id: p2
+      label: 梯田二组
+    - id: m1
+      label: 杀青组
+    - id: s1
+      label: 门店渠道
+      emphasis: accent
+  edges:
+    - from: r
+      to: p
+    - from: r
+      to: m
+    - from: r
+      to: s
+    - from: p
+      to: p1
+    - from: p
+      to: p2
+    - from: m
+      to: m1
+    - from: s
+      to: s1
+  groups:
+    - id: g_zhong
+      label: 种植体系
+      members:
+        - p
+        - p1
+        - p2
