@@ -863,7 +863,20 @@ function layoutState({ d, box, style, id, notes }) {
       const r = { x: box.x + l * (colW + gap) + (colW - nodeW) / 2, y: y0 + i * (nodeH + gap * 0.5), w: nodeW, h: nodeH }
       pos.set(nid, r)
       const nd = byId.get(nid)
-      elements.push(...makeNode(style, id, { id: nid, ...r, label: nd?.label, emphasis: nd?.emphasis }))
+      const nodeEls = makeNode(style, id, { id: nid, ...r, label: nd?.label, emphasis: nd?.emphasis })
+      // ── 风格特型：只动"绘制"与"文本槽位"，**不动卡片位置与端口**（宪法①）──────────
+      // ① 卡片形态：直接改 kind（不改几何；kind 由引擎按真实轮廓处理锚点）
+      if (T.card.shape !== 'roundRect') for (const el of nodeEls) if (el.elementType === 'shape') el.kind = T.card.shape
+      // ② 状态名槽位：inside（卡内，默认）| below（卡下）——卡内文字移出后必须**摘掉 contains**，
+      //    并把颜色从白改成正文墨色（卡片外的白字不可见），高度按字号算。
+      if (T.label === 'below' && nodeEls[1] && nodeEls[1].elementType === 'text') {
+        const txt = nodeEls[1]
+        const fs2 = txt.content.fontSize
+        txt.bounds = [r.x, r.y + r.h + 4, r.w, Math.max(12, fs2 * 1.45)]
+        txt.content = { ...txt.content, color: style.ink, align: 'center' }
+        nodeEls[0].contains = []
+      }
+      elements.push(...nodeEls)
     })
   }
   // ── 边标签：**两遍放置**（第一遍只放线，第二遍统一放标签）────────────────
