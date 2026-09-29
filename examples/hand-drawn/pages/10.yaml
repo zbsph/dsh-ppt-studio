@@ -1,0 +1,126 @@
+pageType: content
+elements:
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 700, 38]
+    content: { text: '网箱状态流转', fontSize: 25, color: '#2E1065', bold: true }
+  - elementId: sub
+    elementType: text
+    bounds: [60, 76, 700, 22]
+    content: { text: '空箱 → 已投苗 → 育肥中 → 待出栏 → 已清空；规格不足则退回育肥', fontSize: 12, color: '#64748B' }
+  - elementId: s0
+    elementType: shape
+    kind: roundRect
+    bounds: [60, 240, 150, 84]
+    fill: '#7C3AED'
+    contains: [t0, d0]
+  - elementId: t0
+    elementType: text
+    bounds: [68, 256, 134, 28]
+    content: { text: '空箱', fontSize: 16, color: '#FFFFFF', bold: true, align: center }
+  - elementId: d0
+    elementType: text
+    bounds: [68, 288, 134, 20]
+    content: { text: '待投苗', fontSize: 11, color: '#EDE9FE', align: center }
+  - elementId: a0
+    elementType: line
+    points: [[210, 282], [230, 282]]
+    line: { color: '#E11D48', width: 2 }
+    arrow: true
+  - elementId: s1
+    elementType: shape
+    kind: roundRect
+    bounds: [230, 240, 150, 84]
+    fill: '#7C3AED'
+    contains: [t1, d1]
+  - elementId: t1
+    elementType: text
+    bounds: [238, 256, 134, 28]
+    content: { text: '已投苗', fontSize: 16, color: '#FFFFFF', bold: true, align: center }
+  - elementId: d1
+    elementType: text
+    bounds: [238, 288, 134, 20]
+    content: { text: '苗种入箱', fontSize: 11, color: '#EDE9FE', align: center }
+  - elementId: a1
+    elementType: line
+    points: [[380, 282], [400, 282]]
+    line: { color: '#E11D48', width: 2 }
+    arrow: true
+  - elementId: s2
+    elementType: shape
+    kind: roundRect
+    bounds: [400, 240, 150, 84]
+    fill: '#7C3AED'
+    contains: [t2, d2]
+  - elementId: t2
+    elementType: text
+    bounds: [408, 256, 134, 28]
+    content: { text: '育肥中', fontSize: 16, color: '#FFFFFF', bold: true, align: center }
+  - elementId: d2
+    elementType: text
+    bounds: [408, 288, 134, 20]
+    content: { text: '长势跟踪', fontSize: 11, color: '#EDE9FE', align: center }
+  - elementId: a2
+    elementType: line
+    points: [[550, 282], [570, 282]]
+    line: { color: '#E11D48', width: 2 }
+    arrow: true
+  - elementId: s3
+    elementType: shape
+    kind: roundRect
+    bounds: [570, 240, 150, 84]
+    fill: '#E11D48'
+    contains: [t3, d3]
+  - elementId: t3
+    elementType: text
+    bounds: [578, 256, 134, 28]
+    content: { text: '待出栏', fontSize: 16, color: '#FFFFFF', bold: true, align: center }
+  - elementId: d3
+    elementType: text
+    bounds: [578, 288, 134, 20]
+    content: { text: '达规格', fontSize: 11, color: '#EDE9FE', align: center }
+  - elementId: a3
+    elementType: line
+    points: [[720, 282], [740, 282]]
+    line: { color: '#E11D48', width: 2 }
+    arrow: true
+  - elementId: s4
+    elementType: shape
+    kind: roundRect
+    bounds: [740, 240, 150, 84]
+    fill: '#7C3AED'
+    contains: [t4, d4]
+  - elementId: t4
+    elementType: text
+    bounds: [748, 256, 134, 28]
+    content: { text: '已清空', fontSize: 16, color: '#FFFFFF', bold: true, align: center }
+  - elementId: d4
+    elementType: text
+    bounds: [748, 288, 134, 20]
+    content: { text: '结算归档', fontSize: 11, color: '#EDE9FE', align: center }
+  - elementId: back
+    elementType: line
+    dash: dash
+    points: [[645, 324], [645, 400], [475, 400], [475, 324]]
+    line: { color: '#64748B', width: 1.5 }
+    arrow: true
+  - elementId: backLab
+    elementType: text
+    bounds: [515, 372, 90, 20]
+    content: { text: '规格不足', fontSize: 12, color: '#475569', align: center }
+  - elementId: l0
+    elementType: text
+    bounds: [180, 212, 80, 20]
+    content: { text: '投苗', fontSize: 11, color: '#64748B', align: center }
+  - elementId: l1
+    elementType: text
+    bounds: [350, 212, 80, 20]
+    content: { text: '转育肥', fontSize: 11, color: '#64748B', align: center }
+  - elementId: l2
+    elementType: text
+    bounds: [520, 212, 80, 20]
+    content: { text: '达规格', fontSize: 11, color: '#64748B', align: center }
+  - elementId: l3
+    elementType: text
+    bounds: [690, 212, 80, 20]
+    content: { text: '出栏完毕', fontSize: 11, color: '#64748B', align: center }

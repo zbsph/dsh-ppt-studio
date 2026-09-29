@@ -1,0 +1,7 @@
+version: 1
+title: 同内容三风格（手画版）
+size: [960, 540]
+pages:
+  - pages/01.yaml
+  - pages/02.yaml
+  - pages/03.yaml

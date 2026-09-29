@@ -1,0 +1,142 @@
+pageType: content
+title: 设备报修工单状态机（助手自设计）
+expectedOverlaps:
+  - { from: box, to: back, reason: 回路从左侧进入分组容器（有意穿入，非遮挡文字） }
+elements:
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 620, 38]
+    content: { text: '设备报修工单状态机', fontSize: 25, color: '#0F172A', bold: true }
+  - elementId: sub
+    elementType: text
+    bounds: [60, 74, 620, 22]
+    content: { text: '受理 → 派单 → 维修 → 验收 → 归档；验收不通过则返工', fontSize: 12, color: '#64748B' }
+  - elementId: k1
+    elementType: text
+    bounds: [66, 118, 200, 20]
+    content: { text: '① 受理', fontSize: 13, color: '#E11D48', bold: true }
+  - elementId: k2
+    elementType: text
+    bounds: [372, 118, 220, 20]
+    content: { text: '② 处理', fontSize: 13, color: '#7C3AED', bold: true, align: center }
+  - elementId: k3
+    elementType: text
+    bounds: [690, 118, 200, 20]
+    content: { text: '③ 归档', fontSize: 13, color: '#E11D48', bold: true, align: right }
+  - elementId: box
+    elementType: shape
+    kind: roundRect
+    bounds: [336, 148, 292, 262]
+    fill: '#EDE9FE'
+    contains: [m0, m1, m2]
+  - elementId: end0
+    elementType: shape
+    kind: parallelogram
+    bounds: [76, 236, 176, 92]
+    fill: '#E11D48'
+    contains: [end0t, end0s]
+  - elementId: end0t
+    elementType: text
+    bounds: [106, 258, 120, 26]
+    content: { text: '待受理', fontSize: 16, color: '#FFFFFF', bold: true, align: center }
+  - elementId: end0s
+    elementType: text
+    bounds: [106, 288, 120, 20]
+    content: { text: '工单已创建', fontSize: 11, color: '#FFFFFF', align: center }
+  - elementId: end4
+    elementType: shape
+    kind: parallelogram
+    bounds: [672, 236, 176, 92]
+    fill: '#E11D48'
+    contains: [end4t, end4s]
+  - elementId: end4t
+    elementType: text
+    bounds: [702, 258, 120, 26]
+    content: { text: '已归档', fontSize: 16, color: '#FFFFFF', bold: true, align: center }
+  - elementId: end4s
+    elementType: text
+    bounds: [702, 288, 120, 20]
+    content: { text: '计入台账', fontSize: 11, color: '#FFFFFF', align: center }
+  - elementId: m0
+    elementType: shape
+    kind: roundRect
+    bounds: [352, 166, 260, 62]
+    fill: '#7C3AED'
+    line: { color: '#5B21B6', width: 1 }
+    contains: [m0t, m0s]
+  - elementId: m0t
+    elementType: text
+    bounds: [366, 176, 180, 24]
+    content: { text: '已派单', fontSize: 15, color: '#FFFFFF', bold: true }
+  - elementId: m0s
+    elementType: text
+    bounds: [366, 200, 180, 20]
+    content: { text: '指定工程师', fontSize: 11, color: '#E9D5FF' }
+  - elementId: m1
+    elementType: shape
+    kind: roundRect
+    bounds: [352, 244, 260, 62]
+    fill: '#7C3AED'
+    line: { color: '#5B21B6', width: 1 }
+    contains: [m1t, m1s]
+  - elementId: m1t
+    elementType: text
+    bounds: [366, 254, 180, 24]
+    content: { text: '维修中', fontSize: 15, color: '#FFFFFF', bold: true }
+  - elementId: m1s
+    elementType: text
+    bounds: [366, 278, 180, 20]
+    content: { text: '现场处理', fontSize: 11, color: '#E9D5FF' }
+  - elementId: m2
+    elementType: shape
+    kind: roundRect
+    bounds: [352, 322, 260, 62]
+    fill: '#7C3AED'
+    line: { color: '#5B21B6', width: 1 }
+    contains: [m2t, m2s]
+  - elementId: m2t
+    elementType: text
+    bounds: [366, 332, 180, 24]
+    content: { text: '待验收', fontSize: 15, color: '#FFFFFF', bold: true }
+  - elementId: m2s
+    elementType: text
+    bounds: [366, 356, 180, 20]
+    content: { text: '用户确认', fontSize: 11, color: '#E9D5FF' }
+  - elementId: a0
+    elementType: line
+    points: [[252, 282], [336, 282]]
+    line: { color: '#0F172A', width: 1.5 }
+    arrow: true
+  - elementId: a1
+    elementType: line
+    points: [[628, 197], [336, 197]]
+    line: { color: '#0F172A', width: 1.5 }
+    arrow: true
+  - elementId: a2
+    elementType: line
+    points: [[336, 197], [252, 197], [252, 282]]
+    line: { color: '#0F172A', width: 1.5 }
+    arrow: false
+  - elementId: a3
+    elementType: line
+    points: [[612, 275], [672, 275]]
+    line: { color: '#0F172A', width: 1.5 }
+    arrow: true
+  - elementId: a1lab
+    elementType: text
+    bounds: [268, 173, 60, 20]
+    content: { text: '交运', fontSize: 11, color: '#64748B' }
+  - elementId: a3lab
+    elementType: text
+    bounds: [634, 253, 46, 20]
+    content: { text: '归档', fontSize: 11, color: '#64748B' }
+  - elementId: back
+    elementType: line
+    points: [[482, 400], [482, 448], [200, 448], [200, 332], [352, 332]]
+    dash: dash
+    line: { color: '#94A3B8', width: 1.5 }
+    arrow: true
+  - elementId: backLab
+    elementType: text
+    bounds: [300, 424, 90, 20]
+    content: { text: '返工（补件）', fontSize: 11, color: '#475569', align: center }

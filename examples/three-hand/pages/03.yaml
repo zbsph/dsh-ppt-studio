@@ -1,0 +1,183 @@
+pageType: content
+title: 设备报修工单状态机（用户要求的风格）
+elements:
+  - elementId: c0
+    elementType: shape
+    kind: roundRect
+    bounds: [300, 78, 470, 68]
+    fill:
+      type: gradient
+      angle: 90
+      stops:
+        - { pos: 0, color: '#DBEAFE' }
+        - { pos: 100, color: '#93C5FD' }
+    line: { color: '#3B82F6', width: 1 }
+    contains: [b0, t0, s0]
+  - elementId: b0
+    elementType: shape
+    kind: ellipse
+    bounds: [316, 90, 24, 24]
+    fill: '#2563EB'
+    contains: [n0]
+  - elementId: n0
+    elementType: text
+    bounds: [316, 93, 24, 20]
+    content: { text: '1', fontSize: 12, bold: true, color: '#FFFFFF', align: center }
+  - elementId: t0
+    elementType: text
+    bounds: [350, 88, 380, 24]
+    content: { text: '待受理', fontSize: 16, bold: true, color: '#1E3A8A' }
+  - elementId: s0
+    elementType: text
+    bounds: [350, 116, 380, 20]
+    content: { text: '工单已创建', fontSize: 11, color: '#334155' }
+  - elementId: a0
+    elementType: line
+    points: [[535, 148], [535, 170]]
+    line: { color: '#10B981', width: 3 }
+    arrow: true
+  - elementId: c1
+    elementType: shape
+    kind: roundRect
+    bounds: [300, 172, 470, 68]
+    fill:
+      type: gradient
+      angle: 90
+      stops:
+        - { pos: 0, color: '#DBEAFE' }
+        - { pos: 100, color: '#93C5FD' }
+    line: { color: '#3B82F6', width: 1 }
+    contains: [b1, t1, s1]
+  - elementId: b1
+    elementType: shape
+    kind: ellipse
+    bounds: [316, 184, 24, 24]
+    fill: '#2563EB'
+    contains: [n1]
+  - elementId: n1
+    elementType: text
+    bounds: [316, 187, 24, 20]
+    content: { text: '2', fontSize: 12, bold: true, color: '#FFFFFF', align: center }
+  - elementId: t1
+    elementType: text
+    bounds: [350, 182, 380, 24]
+    content: { text: '已派单', fontSize: 16, bold: true, color: '#1E3A8A' }
+  - elementId: s1
+    elementType: text
+    bounds: [350, 210, 380, 20]
+    content: { text: '指定工程师', fontSize: 11, color: '#334155' }
+  - elementId: a1
+    elementType: line
+    points: [[535, 242], [535, 264]]
+    line: { color: '#10B981', width: 3 }
+    arrow: true
+  - elementId: c2
+    elementType: shape
+    kind: roundRect
+    bounds: [300, 266, 470, 68]
+    fill:
+      type: gradient
+      angle: 90
+      stops:
+        - { pos: 0, color: '#DBEAFE' }
+        - { pos: 100, color: '#93C5FD' }
+    line: { color: '#3B82F6', width: 1 }
+    contains: [b2, t2, s2]
+  - elementId: b2
+    elementType: shape
+    kind: ellipse
+    bounds: [316, 278, 24, 24]
+    fill: '#2563EB'
+    contains: [n2]
+  - elementId: n2
+    elementType: text
+    bounds: [316, 281, 24, 20]
+    content: { text: '3', fontSize: 12, bold: true, color: '#FFFFFF', align: center }
+  - elementId: t2
+    elementType: text
+    bounds: [350, 276, 380, 24]
+    content: { text: '维修中', fontSize: 16, bold: true, color: '#1E3A8A' }
+  - elementId: s2
+    elementType: text
+    bounds: [350, 304, 380, 20]
+    content: { text: '现场处理', fontSize: 11, color: '#334155' }
+  - elementId: a2
+    elementType: line
+    points: [[535, 336], [535, 358]]
+    line: { color: '#10B981', width: 3 }
+    arrow: true
+  - elementId: c3
+    elementType: shape
+    kind: roundRect
+    bounds: [300, 360, 470, 68]
+    fill:
+      type: gradient
+      angle: 90
+      stops:
+        - { pos: 0, color: '#DBEAFE' }
+        - { pos: 100, color: '#93C5FD' }
+    line: { color: '#3B82F6', width: 1 }
+    contains: [b3, t3, s3]
+  - elementId: b3
+    elementType: shape
+    kind: ellipse
+    bounds: [316, 372, 24, 24]
+    fill: '#2563EB'
+    contains: [n3]
+  - elementId: n3
+    elementType: text
+    bounds: [316, 375, 24, 20]
+    content: { text: '4', fontSize: 12, bold: true, color: '#FFFFFF', align: center }
+  - elementId: t3
+    elementType: text
+    bounds: [350, 370, 380, 24]
+    content: { text: '待验收', fontSize: 16, bold: true, color: '#1E3A8A' }
+  - elementId: s3
+    elementType: text
+    bounds: [350, 398, 380, 20]
+    content: { text: '用户确认', fontSize: 11, color: '#334155' }
+  - elementId: a3
+    elementType: line
+    points: [[535, 430], [535, 452]]
+    line: { color: '#10B981', width: 3 }
+    arrow: true
+  - elementId: c4
+    elementType: shape
+    kind: roundRect
+    bounds: [300, 454, 470, 68]
+    fill:
+      type: gradient
+      angle: 90
+      stops:
+        - { pos: 0, color: '#DBEAFE' }
+        - { pos: 100, color: '#93C5FD' }
+    line: { color: '#3B82F6', width: 1 }
+    contains: [b4, t4, s4]
+  - elementId: b4
+    elementType: shape
+    kind: ellipse
+    bounds: [316, 466, 24, 24]
+    fill: '#2563EB'
+    contains: [n4]
+  - elementId: n4
+    elementType: text
+    bounds: [316, 469, 24, 20]
+    content: { text: '5', fontSize: 12, bold: true, color: '#FFFFFF', align: center }
+  - elementId: t4
+    elementType: text
+    bounds: [350, 464, 380, 24]
+    content: { text: '已归档', fontSize: 16, bold: true, color: '#1E3A8A' }
+  - elementId: s4
+    elementType: text
+    bounds: [350, 492, 380, 20]
+    content: { text: '计入台账', fontSize: 11, color: '#334155' }
+  - elementId: back
+    elementType: line
+    dash: dash
+    points: [[300, 394], [260, 394], [260, 300], [300, 300]]
+    line: { color: '#64748B', width: 1.5 }
+    arrow: true
+  - elementId: backLab
+    elementType: text
+    bounds: [206, 337, 48, 20]
+    content: { text: '返工', fontSize: 12, color: '#64748B', align: right }

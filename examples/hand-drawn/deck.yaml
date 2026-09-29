@@ -1,0 +1,13 @@
+version: 1
+title: 手画版 12+1
+size: [960, 540]
+theme:
+  colors:
+    primary: "#7C3AED"
+    accent: "#E11D48"
+    soft: "#EDE9FE"
+    text: "#2E1065"
+    bg: "#FAF5FF"
+pages:
+  - pages/10.yaml
+  - pages/12.yaml
