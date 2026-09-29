@@ -1,0 +1,9 @@
+version: 1
+title: t
+size: [960, 540]
+styles:
+  col:
+    traits: {layout: column, badge: number, badgePosition: inline, align: left, subtitle: true, edge: {glyph: chevron}, frame: {title: false}}
+    palette: ["#2563EB", "#10B981"]
+pages:
+  - pages/01.yaml
