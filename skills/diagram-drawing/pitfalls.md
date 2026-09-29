@@ -62,3 +62,5 @@
 |---|---|---|
 | 平行四边形/chevron 等斜边形状旁边，箭头看着"没接上"（留 ~15px 缝） | `parallelogram` 的路径是 `(0,h)→(x1,0)→(w,0)→(w−x1,h)`，`x1 = adj/100000 × min(w,h)`（默认 adj=25000）⇒ **腰高处可见边比 bbox 内缩 x1/2** | 端点按**轮廓**算：左/右侧各内缩 `x1/2`（118 高时约 15px） |
 | 按轮廓修完反而报 `unexpected-overlap 形状×线` | **门禁按 bbox 判形状** ⇒ 端点进入 bbox 必报重叠 | 这属 bbox×斜边轮廓的**固有偏差**，按纪律 `expectedOverlaps` **显式声明并写明理由**（不是掩盖缺陷）；或改从**上下边**接入（水平边无内缩，最干净） |
+
+| E5 | `node scripts/smoke.mjs` 第二次跑**必然崩溃**（`templates.js:334 目标目录已存在 deck.yaml，拒绝覆盖`） | smoke **非幂等**：它固定用 `examples/smoke/.tmp-home/_ws` 做模板物化目标，跑完不清理 ⇒ 残留 | 复跑前先 `Remove-Item examples\smoke\.tmp-home -Recurse -Force`。另：**"崩"与"断言红"要分清**——崩多为环境/残留，红才是真回归；盲目把崩当成自己的代码问题会浪费整轮 |
