@@ -1002,6 +1002,22 @@ function layoutState({ d, box, style, id, notes }) {
       const bStub = below ? bEdge + g4 : bEdge - g4
       return [[ax, aEdge], [ax, aStub], [ax, y], [bx, y], [bx, bStub], [bx, bEdge]]
     }
+    // **外侧走廊候选**：回边若要纵穿整排/多排，竖段落在所有节点之右（或之左）就不会穿过其他边的横向车道
+    //（实测：密集状态机里"退货"的竖段从上层右侧下行，穿过了"退款"的横线 ⇒ 真交叉）。
+    const mkTBOuter = (y, side) => {
+      const below = y >= Math.max(A.y + A.h, B.y + B.h) + g4 - 0.01
+      const all = [...pos.values()]
+      const maxRight = Math.max(...all.map((r) => r.x + r.w))
+      const minLeft = Math.min(...all.map((r) => r.x))
+      const axIn = side === 'right' ? A.x + A.w * 0.75 : A.x + A.w * 0.25
+      const aEdge = below ? A.y + A.h : A.y
+      const aOut = below ? aEdge + g4 : aEdge - g4
+      const axOut = side === 'right' ? maxRight + g4 + 8 : minLeft - g4 - 8
+      const bx = B.x + B.w * 0.5
+      const bEdge = below ? B.y + B.h : B.y
+      const bStub = below ? bEdge + g4 : bEdge - g4
+      return [[axIn, aEdge], [axIn, aOut], [axOut, aOut], [axOut, y], [bx, y], [bx, bStub], [bx, bEdge]]
+    }
     const segHitsNode = (p, q) => {
       const x0 = Math.min(p[0], q[0]); const x1 = Math.max(p[0], q[0])
       const y0 = Math.min(p[1], q[1]); const y1 = Math.max(p[1], q[1])
@@ -1046,6 +1062,9 @@ function layoutState({ d, box, style, id, notes }) {
     }
     // 参考画法要求"返回段离框底足够远"（竖线长度 ≳ 框高一半）⇒ 车道从框底再下移一档起步。
     const deepBase = Math.max(A.y + A.h, B.y + B.h) + Math.max(36, Math.min(A.h, B.h) * 0.35)
+    // **上方车道**：当长回边的"竖段+横段"在下方构成 L 形屏障（实测密集状态机：退货的竖段 + 它的横段
+    // 把下排的 s4 与 s5 隔开），从下方绕必定穿过；从**图形上方**绕才不交叉。
+    const minTopY = Math.min(...[...pos.values()].map((r) => r.y))
     const lane1 = pickLane()
     const raw = [
       // **深车道优先**（用户参考画法：返回段必须与框体视觉分离，竖线要够长）——
@@ -1054,10 +1073,27 @@ function layoutState({ d, box, style, id, notes }) {
       mkTB(deepBase + busStep), mkSide(deepBase + busStep),
       mkTB(deepBase + 2 * busStep), mkSide(deepBase + 2 * busStep),
       mkTB(deepBase + 3 * busStep), mkSide(deepBase + 3 * busStep),
+      // 上方车道：只作兜底（放在最后，不影响已有"平局先入"的画法）
+      mkTB(minTopY - 18), mkSide(minTopY - 18), mkTB(minTopY - 38), mkSide(minTopY - 38),
       mkTB(lane1), mkSide(lane1),
     ]
     // 打分必须针对**后处理后的几何**（makeEdge = 轴对齐 → 箭头端直段 → 轴对齐，后处理会挪拐点）。
-    const cands = raw.map((pts) => orthogonalize(arrowEndRuns(orthogonalize(pts), true)))
+    const post = (pts) => orthogonalize(arrowEndRuns(orthogonalize(pts), true))
+    const baseCands = raw.map(post)
+    // 先看基础候选能否做到"不撞盒且不交叉"：能则**完全不动**（保住已认可的观感）；
+    // 不能（密集多回边）才把外侧走廊候选纳入进来一起择优。
+    const baseHits = (pts) => pts.reduce((n, q, i) => (i + 1 < pts.length && segHitsNode(q, pts[i + 1]) ? n + 1 : n), 0)
+    const baseCross = (pts) => {
+      let c = 0
+      for (let i = 0; i + 1 < pts.length; i++) for (const sg of routedSegs) if (segCrosses(pts[i], pts[i + 1], sg[0], sg[1])) c++
+      return c
+    }
+    const baseOk = baseCands.some((pts) => baseHits(pts) === 0 && baseCross(pts) === 0)
+    const outer = baseOk ? [] : [
+      mkTBOuter(deepBase, 'right'), mkTBOuter(deepBase + busStep, 'right'),
+      mkTBOuter(deepBase, 'left'), mkTBOuter(deepBase + busStep, 'left'),
+    ].map(post)
+    const cands = [...baseCands, ...outer]
     // 候选全"脏"（所有车道都会穿过某个盒子）时，**取撞盒最少的那条**，而不是直接拿第一条
     // ——从零重画的状态机（多条同层回边）实测过：盲目取第一条会把线画到节点上（56×27px 重叠）。
     const hitsOf = (pts) => pts.reduce((n, p, i) => (i + 1 < pts.length && segHitsNode(p, pts[i + 1]) ? n + 1 : n), 0)
