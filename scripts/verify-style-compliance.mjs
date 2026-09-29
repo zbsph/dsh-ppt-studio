@@ -75,6 +75,26 @@ ok('对比度工具：黑白 ≈ 21、同色 = 1', Math.abs(contrastRatio('#0000
   `${contrastRatio('#000000', '#FFFFFF').toFixed(2)} / ${contrastRatio('#123456', '#123456').toFixed(2)}`)
 ok('对比度工具：非法颜色返回 null（不瞎报）', luminance('rgb(1,2,3)') === null && contrastRatio('#FFF', '#000') === null)
 
+// 负面对照⑥：导轨穿过内容 ⇒ 必须报；同一根线声明成"泳道分隔线"⇒ 不该报（豁免语义）
+const rail = [
+  { id: 'rail', kind: 'line', role: 'decoration', roleReason: '进度导轨', points: [[0, 20], [200, 20]] },
+  { id: 'box', kind: 'shape', shape: 'roundRect', bounds: { x: 60, y: 0, w: 60, h: 50 }, fill: '#2563EB' },
+]
+ok('负面对照⑥：导轨穿过内容 ⇒ 报 style-rail-over-content', codes(rail).includes('style-rail-over-content'), codes(rail).join(','))
+const sep = JSON.parse(JSON.stringify(rail))
+sep[0].roleReason = '泳道分隔线（结构线）'
+ok('对照⑥b：泳道分隔线**不算导轨** ⇒ 不报（避免结构性装饰被误判）', !codes(sep).includes('style-rail-over-content'), codes(sep).join(',') || '无 findings')
+
+// 负面对照⑦：连接符离目标太远 ⇒ 必须报；贴住时不该报
+const far = [
+  { id: 'ch', kind: 'shape', shape: 'chevron', bounds: { x: 0, y: 0, w: 18, h: 14 }, fill: '#B45309' },
+  { id: 'dst', kind: 'shape', shape: 'roundRect', bounds: { x: 40, y: 0, w: 60, h: 40 }, fill: '#2563EB' },
+]
+ok('负面对照⑦：连接符离目标 22px ⇒ 报 style-connector-off-target', codes(far).includes('style-connector-off-target'), codes(far).join(','))
+const near = JSON.parse(JSON.stringify(far))
+near[0].bounds.x = 20
+ok('对照⑦b：连接符贴住目标（差 2px）⇒ 不再报', !codes(near).includes('style-connector-off-target'), codes(near).join(',') || '无 findings')
+
 // ---------- ② 既有交付物 0 误报 ----------
 const targets = []
 const latest = readdirSync(tmpdir()).filter((d) => d.startsWith('pptd-families-')).sort().pop()
