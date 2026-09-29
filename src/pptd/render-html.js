@@ -256,6 +256,7 @@ export async function renderDeck(ctx, { out = 'preview', debug = false } = {}) {
       background: bgRes.record,
       safeArea: sa,
       expectedOverlaps: page.page.expectedOverlaps ?? [],
+      reservedBands: page.page.reservedBands ?? [],
       expectedOutOfSafeArea: page.page.expectedOutOfSafeArea ?? [],
       contrastExempt: page.page.contrastExempt ?? [],
       overlapMode: page.page.overlapMode ?? 'declared',
