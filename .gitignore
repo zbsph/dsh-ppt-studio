@@ -51,3 +51,6 @@ examples/warm-arch/*.pptx
 # 从零重画范例的运行产物（源码与 shots/ 仍跟踪）
 examples/fresh-tea/preview/
 examples/fresh-tea/*.pptx
+examples/hand-drawn/preview/
+examples/red-probe/preview/
+examples/smoke/.tmp-home/
