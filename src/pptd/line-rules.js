@@ -166,5 +166,33 @@ export function checkLineRules(els) {
     }
   }
 
+  // ── ⑥ 线×线"真交叉"（+ 型：两条都穿过对方）────────────────────────────
+  // 用户要求（2026-09-30）：门禁不是判死刑，而是**把问题定位到可修的程度**，让助手定向返工、
+  // 迭代到终态绿。所以这里必须给出**可执行信息**：哪两条线、在哪交叉、怎么改。
+  // 与 R9 一致：T 形结点、共线重叠、共用端点都**不算**交叉（那些是标准画法；共线重叠另有判据）。
+  // 刻意交叉（示意汇流/流程交叉点）加 roleReason 声明即静默。
+  {
+    const segs = []
+    for (const l of lines) for (let i = 0; i + 1 < l.pts.length; i++) segs.push({ id: l.id, a: l.pts[i], b: l.pts[i + 1] })
+    const seen = new Set()
+    for (let i = 0; i < segs.length; i++) {
+      for (let j = i + 1; j < segs.length; j++) {
+        const s = segs[i]; const t = segs[j]
+        if (s.id === t.id) continue
+        const key = s.id < t.id ? `${s.id}|${t.id}` : `${t.id}|${s.id}`
+        if (seen.has(key)) continue
+        const sh = Math.abs(s.a[1] - s.b[1]) < 0.5
+        const th = Math.abs(t.a[1] - t.b[1]) < 0.5
+        if (sh === th) continue
+        const h = sh ? s : t; const v = sh ? t : s
+        const hx0 = Math.min(h.a[0], h.b[0]); const hx1 = Math.max(h.a[0], h.b[0])
+        const vy0 = Math.min(v.a[1], v.b[1]); const vy1 = Math.max(v.a[1], v.b[1])
+        if (!(v.a[0] > hx0 + 1 && v.a[0] < hx1 - 1 && h.a[1] > vy0 + 1 && h.a[1] < vy1 - 1)) continue
+        seen.add(key)
+        out.push({ code: 'line-crossing', message: `${s.id} 与 ${t.id} 在 (${Math.round(v.a[0])}, ${Math.round(h.a[1])}) **交叉**（+ 型：两条都穿过对方）—— 给其中一条换车道/换进出边（或调换路由顺序）后重跑本门禁；若刻意交叉示意汇流，给该线加 roleReason 声明即静默` })
+      }
+    }
+  }
+
   return out
 }
