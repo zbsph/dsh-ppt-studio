@@ -211,7 +211,7 @@ const PAGES = {
         { from: 's1', to: 's2', label: '杀青毕' },
         { from: 's2', to: 's3', label: '揉捻毕' },
         { from: 's3', to: 's4', label: '烘焙毕' },
-        { from: 's4', to: 's3', label: '评审回炉' },
+        { from: 's4', to: 's3', label: '评审不合格' },
       ],
     },
   },

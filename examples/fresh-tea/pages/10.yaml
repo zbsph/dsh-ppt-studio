@@ -31,4 +31,4 @@ diagram:
       label: 烘焙毕
     - from: s4
       to: s3
-      label: 评审回炉
+      label: 评审不合格
