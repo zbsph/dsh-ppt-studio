@@ -9,5 +9,9 @@ theme:
     text: "#2E1065"
     bg: "#FAF5FF"
 pages:
+  - pages/01.yaml
+  - pages/03.yaml
+  - pages/07.yaml
+  - pages/09.yaml
   - pages/10.yaml
   - pages/12.yaml

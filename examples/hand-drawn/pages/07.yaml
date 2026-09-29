@@ -1,0 +1,62 @@
+pageType: content
+elements:
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 720, 38]
+    content: { text: '分级出栏漏斗', fontSize: 25, color: '#2E1065', bold: true }
+  - elementId: sub
+    elementType: text
+    bounds: [60, 76, 780, 22]
+    content: { text: '存栏 52000 → 达规格 31000 → 抽检合格 18400 → 直供 5600', fontSize: 12, color: '#64748B' }
+  - elementId: f0
+    elementType: shape
+    kind: roundRect
+    bounds: [120, 150, 720, 52]
+    fill: '#7C3AED'
+    contains: [ft0]
+  - elementId: ft0
+    elementType: text
+    bounds: [128, 164, 704, 26]
+    content: { text: '存栏 52000', fontSize: 15, color: '#FFFFFF', bold: true, align: center }
+  - elementId: fd0
+    elementType: text
+    bounds: [860, 164, 100, 24]
+    content: { text: '↓ 转规格', fontSize: 11, color: '#64748B' }
+  - elementId: f1
+    elementType: shape
+    kind: roundRect
+    bounds: [210, 224, 540, 52]
+    fill: '#7C3AED'
+    contains: [ft1]
+  - elementId: ft1
+    elementType: text
+    bounds: [218, 238, 524, 26]
+    content: { text: '达捕捞规格 31000', fontSize: 15, color: '#FFFFFF', bold: true, align: center }
+  - elementId: fd1
+    elementType: text
+    bounds: [860, 238, 100, 24]
+    content: { text: '↓ 筛选', fontSize: 11, color: '#64748B' }
+  - elementId: f2
+    elementType: shape
+    kind: roundRect
+    bounds: [300, 298, 360, 52]
+    fill: '#7C3AED'
+    contains: [ft2]
+  - elementId: ft2
+    elementType: text
+    bounds: [308, 312, 344, 26]
+    content: { text: '抽检合格 18400', fontSize: 15, color: '#FFFFFF', bold: true, align: center }
+  - elementId: fd2
+    elementType: text
+    bounds: [860, 312, 100, 24]
+    content: { text: '↓ 筛选', fontSize: 11, color: '#64748B' }
+  - elementId: f3
+    elementType: shape
+    kind: roundRect
+    bounds: [370, 372, 220, 52]
+    fill: '#E11D48'
+    contains: [ft3]
+  - elementId: ft3
+    elementType: text
+    bounds: [378, 386, 204, 26]
+    content: { text: '直供 5600', fontSize: 15, color: '#FFFFFF', bold: true, align: center }

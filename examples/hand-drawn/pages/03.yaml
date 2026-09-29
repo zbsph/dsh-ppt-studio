@@ -1,0 +1,123 @@
+pageType: content
+elements:
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 720, 38]
+    content: { text: '投苗到出栏', fontSize: 25, color: '#2E1065', bold: true }
+  - elementId: sub
+    elementType: text
+    bounds: [60, 76, 780, 22]
+    content: { text: '六个里程碑：检疫 → 投苗 → 分箱 → 育肥 → 抽检 → 出栏', fontSize: 12, color: '#64748B' }
+  - elementId: axis
+    elementType: line
+    points: [[70, 300], [890, 300]]
+    line: { color: '#C4B5FD', width: 3 }
+    arrow: false
+  - elementId: d0
+    elementType: shape
+    kind: ellipse
+    bounds: [81, 291, 18, 18]
+    fill: '#E11D48'
+  - elementId: mt0
+    elementType: text
+    bounds: [20, 204, 140, 22]
+    content: { text: '苗种检疫', fontSize: 14, color: '#2E1065', bold: true, align: center }
+  - elementId: md0
+    elementType: text
+    bounds: [20, 228, 140, 20]
+    content: { text: '入箱前检测', fontSize: 11, color: '#64748B', align: center }
+  - elementId: ml0
+    elementType: line
+    points: [[90, 291], [90, 252]]
+    line: { color: '#C4B5FD', width: 1 }
+    arrow: false
+  - elementId: d1
+    elementType: shape
+    kind: ellipse
+    bounds: [237, 291, 18, 18]
+    fill: '#E11D48'
+  - elementId: mt1
+    elementType: text
+    bounds: [176, 334, 140, 22]
+    content: { text: '分级投苗', fontSize: 14, color: '#2E1065', bold: true, align: center }
+  - elementId: md1
+    elementType: text
+    bounds: [176, 358, 140, 20]
+    content: { text: '按规格入箱', fontSize: 11, color: '#64748B', align: center }
+  - elementId: ml1
+    elementType: line
+    points: [[246, 309], [246, 334]]
+    line: { color: '#C4B5FD', width: 1 }
+    arrow: false
+  - elementId: d2
+    elementType: shape
+    kind: ellipse
+    bounds: [393, 291, 18, 18]
+    fill: '#E11D48'
+  - elementId: mt2
+    elementType: text
+    bounds: [332, 204, 140, 22]
+    content: { text: '中期分箱', fontSize: 14, color: '#2E1065', bold: true, align: center }
+  - elementId: md2
+    elementType: text
+    bounds: [332, 228, 140, 20]
+    content: { text: '降低密度', fontSize: 11, color: '#64748B', align: center }
+  - elementId: ml2
+    elementType: line
+    points: [[402, 291], [402, 252]]
+    line: { color: '#C4B5FD', width: 1 }
+    arrow: false
+  - elementId: d3
+    elementType: shape
+    kind: ellipse
+    bounds: [549, 291, 18, 18]
+    fill: '#E11D48'
+  - elementId: mt3
+    elementType: text
+    bounds: [488, 334, 140, 22]
+    content: { text: '强化育肥', fontSize: 14, color: '#2E1065', bold: true, align: center }
+  - elementId: md3
+    elementType: text
+    bounds: [488, 358, 140, 20]
+    content: { text: '配方调整', fontSize: 11, color: '#64748B', align: center }
+  - elementId: ml3
+    elementType: line
+    points: [[558, 309], [558, 334]]
+    line: { color: '#C4B5FD', width: 1 }
+    arrow: false
+  - elementId: d4
+    elementType: shape
+    kind: ellipse
+    bounds: [705, 291, 18, 18]
+    fill: '#E11D48'
+  - elementId: mt4
+    elementType: text
+    bounds: [644, 204, 140, 22]
+    content: { text: '起网抽检', fontSize: 14, color: '#2E1065', bold: true, align: center }
+  - elementId: md4
+    elementType: text
+    bounds: [644, 228, 140, 20]
+    content: { text: '规格确认', fontSize: 11, color: '#64748B', align: center }
+  - elementId: ml4
+    elementType: line
+    points: [[714, 291], [714, 252]]
+    line: { color: '#C4B5FD', width: 1 }
+    arrow: false
+  - elementId: d5
+    elementType: shape
+    kind: ellipse
+    bounds: [861, 291, 18, 18]
+    fill: '#E11D48'
+  - elementId: mt5
+    elementType: text
+    bounds: [800, 334, 140, 22]
+    content: { text: '成鱼出栏', fontSize: 14, color: '#2E1065', bold: true, align: center }
+  - elementId: md5
+    elementType: text
+    bounds: [800, 358, 140, 20]
+    content: { text: '冷链交付', fontSize: 11, color: '#64748B', align: center }
+  - elementId: ml5
+    elementType: line
+    points: [[870, 309], [870, 334]]
+    line: { color: '#C4B5FD', width: 1 }
+    arrow: false

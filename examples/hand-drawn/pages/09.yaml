@@ -1,0 +1,119 @@
+pageType: content
+elements:
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 700, 38]
+    content: { text: '投喂指令时序', fontSize: 25, color: '#2E1065', bold: true }
+  - elementId: sub
+    elementType: text
+    bounds: [60, 76, 760, 22]
+    content: { text: '岸基下发计划 → 平台转发 → 投喂机执行 → 水下相机回传 → 当班汇总', fontSize: 12, color: '#64748B' }
+  - elementId: h0
+    elementType: shape
+    kind: roundRect
+    bounds: [70, 110, 170, 48]
+    fill: '#7C3AED'
+    contains: [ht0]
+  - elementId: ht0
+    elementType: text
+    bounds: [78, 123, 154, 24]
+    content: { text: '岸基中心', fontSize: 14, color: '#FFFFFF', bold: true, align: center }
+  - elementId: life0
+    elementType: line
+    dash: dash
+    points: [[155, 158], [155, 470]]
+    line: { color: '#94A3B8', width: 1 }
+    arrow: false
+  - elementId: h1
+    elementType: shape
+    kind: roundRect
+    bounds: [275, 110, 170, 48]
+    fill: '#7C3AED'
+    contains: [ht1]
+  - elementId: ht1
+    elementType: text
+    bounds: [283, 123, 154, 24]
+    content: { text: '平台终端', fontSize: 14, color: '#FFFFFF', bold: true, align: center }
+  - elementId: life1
+    elementType: line
+    dash: dash
+    points: [[360, 158], [360, 470]]
+    line: { color: '#94A3B8', width: 1 }
+    arrow: false
+  - elementId: h2
+    elementType: shape
+    kind: roundRect
+    bounds: [480, 110, 170, 48]
+    fill: '#7C3AED'
+    contains: [ht2]
+  - elementId: ht2
+    elementType: text
+    bounds: [488, 123, 154, 24]
+    content: { text: '投喂机', fontSize: 14, color: '#FFFFFF', bold: true, align: center }
+  - elementId: life2
+    elementType: line
+    dash: dash
+    points: [[565, 158], [565, 470]]
+    line: { color: '#94A3B8', width: 1 }
+    arrow: false
+  - elementId: h3
+    elementType: shape
+    kind: roundRect
+    bounds: [685, 110, 170, 48]
+    fill: '#7C3AED'
+    contains: [ht3]
+  - elementId: ht3
+    elementType: text
+    bounds: [693, 123, 154, 24]
+    content: { text: '水下相机', fontSize: 14, color: '#FFFFFF', bold: true, align: center }
+  - elementId: life3
+    elementType: line
+    dash: dash
+    points: [[770, 158], [770, 470]]
+    line: { color: '#94A3B8', width: 1 }
+    arrow: false
+  - elementId: m0
+    elementType: line
+    points: [[155, 210], [360, 210]]
+    line: { color: '#E11D48', width: 1.8 }
+    arrow: true
+  - elementId: ml0
+    elementType: text
+    bounds: [213, 190, 90, 18]
+    content: { text: '下发计划', fontSize: 11, color: '#475569', align: center }
+  - elementId: m1
+    elementType: line
+    points: [[360, 255], [565, 255]]
+    line: { color: '#E11D48', width: 1.8 }
+    arrow: true
+  - elementId: ml1
+    elementType: text
+    bounds: [418, 235, 90, 18]
+    content: { text: '启动投喂', fontSize: 11, color: '#475569', align: center }
+  - elementId: m2
+    elementType: line
+    points: [[565, 300], [360, 300]]
+    line: { color: '#E11D48', width: 1.8 }
+    arrow: true
+  - elementId: ml2
+    elementType: text
+    bounds: [418, 280, 90, 18]
+    content: { text: '投喂完成', fontSize: 11, color: '#475569', align: center }
+  - elementId: m3
+    elementType: line
+    points: [[770, 345], [360, 345]]
+    line: { color: '#E11D48', width: 1.8 }
+    arrow: true
+  - elementId: ml3
+    elementType: text
+    bounds: [520, 325, 90, 18]
+    content: { text: '残饵画面', fontSize: 11, color: '#475569', align: center }
+  - elementId: m4
+    elementType: line
+    points: [[360, 390], [155, 390]]
+    line: { color: '#E11D48', width: 1.8 }
+    arrow: true
+  - elementId: ml4
+    elementType: text
+    bounds: [213, 370, 90, 18]
+    content: { text: '当班汇总', fontSize: 11, color: '#475569', align: center }

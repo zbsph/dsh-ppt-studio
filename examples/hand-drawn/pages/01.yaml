@@ -1,0 +1,120 @@
+pageType: content
+elements:
+  - elementId: title
+    elementType: text
+    bounds: [60, 34, 720, 38]
+    content: { text: '养殖平台组织', fontSize: 25, color: '#2E1065', bold: true }
+  - elementId: sub
+    elementType: text
+    bounds: [60, 76, 780, 22]
+    content: { text: '平台长统管三个组；养殖组与装备组下再设班组', fontSize: 12, color: '#64748B' }
+  - elementId: root
+    elementType: shape
+    kind: roundRect
+    bounds: [380, 124, 200, 58]
+    fill: '#7C3AED'
+    contains: [rootT, rootS]
+  - elementId: rootT
+    elementType: text
+    bounds: [388, 136, 184, 26]
+    content: { text: '平台长', fontSize: 16, color: '#FFFFFF', bold: true, align: center }
+  - elementId: rootS
+    elementType: text
+    bounds: [388, 165, 184, 18]
+    content: { text: '养殖体系', fontSize: 10, color: '#EDE9FE', align: center }
+  - elementId: g0
+    elementType: shape
+    kind: roundRect
+    bounds: [90, 258, 170, 52]
+    fill: '#EDE9FE'
+    line: { color: '#C4B5FD', width: 1 }
+    contains: [gt0]
+  - elementId: gt0
+    elementType: text
+    bounds: [98, 272, 154, 24]
+    content: { text: '养殖组', fontSize: 14, color: '#2E1065', bold: true, align: center }
+  - elementId: gl0
+    elementType: line
+    points: [[480, 182], [480, 220], [175, 220], [175, 258]]
+    line: { color: '#7C3AED', width: 1.5 }
+    arrow: false
+  - elementId: g1
+    elementType: shape
+    kind: roundRect
+    bounds: [395, 258, 170, 52]
+    fill: '#EDE9FE'
+    line: { color: '#C4B5FD', width: 1 }
+    contains: [gt1]
+  - elementId: gt1
+    elementType: text
+    bounds: [403, 272, 154, 24]
+    content: { text: '装备组', fontSize: 14, color: '#2E1065', bold: true, align: center }
+  - elementId: gl1
+    elementType: line
+    points: [[480, 182], [480, 220], [480, 220], [480, 258]]
+    line: { color: '#7C3AED', width: 1.5 }
+    arrow: false
+  - elementId: g2
+    elementType: shape
+    kind: roundRect
+    bounds: [700, 258, 170, 52]
+    fill: '#EDE9FE'
+    line: { color: '#C4B5FD', width: 1 }
+    contains: [gt2]
+  - elementId: gt2
+    elementType: text
+    bounds: [708, 272, 154, 24]
+    content: { text: '质检组', fontSize: 14, color: '#2E1065', bold: true, align: center }
+  - elementId: gl2
+    elementType: line
+    points: [[480, 182], [480, 220], [785, 220], [785, 258]]
+    line: { color: '#7C3AED', width: 1.5 }
+    arrow: false
+  - elementId: lf0
+    elementType: shape
+    kind: roundRect
+    bounds: [60, 380, 150, 48]
+    fill: '#FFFFFF'
+    line: { color: '#C4B5FD', width: 1 }
+    contains: [lft0]
+  - elementId: lft0
+    elementType: text
+    bounds: [68, 393, 134, 22]
+    content: { text: '投喂一班', fontSize: 12, color: '#2E1065', align: center }
+  - elementId: lfl0
+    elementType: line
+    points: [[175, 310], [175, 344], [135, 344], [135, 380]]
+    line: { color: '#C4B5FD', width: 1.2 }
+    arrow: false
+  - elementId: lf1
+    elementType: shape
+    kind: roundRect
+    bounds: [218, 380, 150, 48]
+    fill: '#FFFFFF'
+    line: { color: '#C4B5FD', width: 1 }
+    contains: [lft1]
+  - elementId: lft1
+    elementType: text
+    bounds: [226, 393, 134, 22]
+    content: { text: '投喂二班', fontSize: 12, color: '#2E1065', align: center }
+  - elementId: lfl1
+    elementType: line
+    points: [[175, 310], [175, 344], [293, 344], [293, 380]]
+    line: { color: '#C4B5FD', width: 1.2 }
+    arrow: false
+  - elementId: lf2
+    elementType: shape
+    kind: roundRect
+    bounds: [376, 380, 150, 48]
+    fill: '#FFFFFF'
+    line: { color: '#C4B5FD', width: 1 }
+    contains: [lft2]
+  - elementId: lft2
+    elementType: text
+    bounds: [384, 393, 134, 22]
+    content: { text: '网衣维护', fontSize: 12, color: '#2E1065', align: center }
+  - elementId: lfl2
+    elementType: line
+    points: [[480, 310], [480, 344], [451, 344], [451, 380]]
+    line: { color: '#C4B5FD', width: 1.2 }
+    arrow: false
