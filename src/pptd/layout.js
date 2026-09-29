@@ -225,5 +225,25 @@ export function normalizePage(page, ctx) {
         elements.push(base)
     }
   }
+  // ── 兜底规整：去除折线"折返尖刺"（X1 最终修复）──────────────────────────
+  // 用户实测（图 10 顶端多出一根线）：锚点解析/后处理之后，点序里会出现"共线且折返"的多余点
+  //（如 91.1 → 73.1 → 118.1），画出来就是一根戳出去的线。
+  // 放在 **normalizePage 末尾** 是因为：预览、导出、门禁**都**走本函数 ⇒ 这是唯一
+  // "改完不会被任何后续步骤覆盖"的位置（此前我改在它的上游，被解析/后处理覆盖 ⇒ 修不掉）。
+  for (const e of elements) {
+    if (e.type !== 'line' || !Array.isArray(e.points) || e.points.length < 3) continue
+    const res = []
+    for (const q of e.points) {
+      if (res.length >= 2) {
+        const a1 = res[res.length - 2]
+        const b1 = res[res.length - 1]
+        const sameX = Math.abs(a1[0] - b1[0]) < 0.5 && Math.abs(b1[0] - q[0]) < 0.5
+        const sameY = Math.abs(a1[1] - b1[1]) < 0.5 && Math.abs(b1[1] - q[1]) < 0.5
+        if ((sameX && (b1[1] - a1[1]) * (q[1] - b1[1]) < 0) || (sameY && (b1[0] - a1[0]) * (q[0] - b1[0]) < 0)) { res.pop(); continue }
+      }
+      res.push(q)
+    }
+    e.points = res
+  }
   return elements
 }
