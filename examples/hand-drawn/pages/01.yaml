@@ -35,7 +35,7 @@ elements:
     content: { text: '养殖组', fontSize: 14, color: '#2E1065', bold: true, align: center }
   - elementId: gl0
     elementType: line
-    points: [[480, 182], [480, 220], [175, 220], [175, 258]]
+    points: [[480, 188], [480, 220], [175, 220], [175, 258]]
     line: { color: '#7C3AED', width: 1.5 }
     arrow: false
   - elementId: g1
@@ -51,7 +51,7 @@ elements:
     content: { text: '装备组', fontSize: 14, color: '#2E1065', bold: true, align: center }
   - elementId: gl1
     elementType: line
-    points: [[480, 182], [480, 220], [480, 220], [480, 258]]
+    points: [[480, 188], [480, 220], [480, 220], [480, 258]]
     line: { color: '#7C3AED', width: 1.5 }
     arrow: false
   - elementId: g2
@@ -67,7 +67,7 @@ elements:
     content: { text: '质检组', fontSize: 14, color: '#2E1065', bold: true, align: center }
   - elementId: gl2
     elementType: line
-    points: [[480, 182], [480, 220], [785, 220], [785, 258]]
+    points: [[480, 188], [480, 220], [785, 220], [785, 258]]
     line: { color: '#7C3AED', width: 1.5 }
     arrow: false
   - elementId: lf0
