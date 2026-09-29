@@ -66,3 +66,20 @@
 3. `resolveDeck` → `renderDeck` → `verifyDeck`：**错清零，且逐条解释每一条警**；
 4. 导出 → **真渲染 PNG** → **自己读图**（层级/留白/避让/语义）→ 不满意回第 2 步；
 5. 与旧版/参考稿**并排对照**，记录"更好/持平/变差"及依据。
+
+## 6. 各子 skill 的专属机制速查
+
+| 子 skill | 必用机制 / 专属要点 |
+|---|---|
+| tree | 父→子折线用 `attach(bottom→top)`；同组子树加**分组容器**（contains 相邻层） |
+| matrix | 象限框为容器，**格内卡片写进其 contains**；高亮**唯一** |
+| timeline | 刻度线 `attach` 到标签/主轴端点（避免 4px 缝）；里程碑**只高亮一个** |
+| swimlane | 跨道箭头用 `attach` 两端 + 只声明**真正相交**的泳道带；带 contains 本道任务 |
+| compare | 面板 contains 要点卡；中间标记**宽度 ≤ 间隙**（36px 落进 40px） |
+| loop | 环形弦 = 刻意斜段 ⇒ `role: decoration` + `roleReason: 环形语义`；端点用 `attach` |
+| funnel | 用 **custGeom 梯形**（矩形堆叠是台阶不是漏斗）；段间边界相接不算重叠 |
+| steps-ring | 真圆用 `ellipse`（浅填充+主色描边）+ 编号小圆点；点与标签留 ≥24px |
+| sequence | 生命线 `attach` 到参与者卡底边；消息标签加**白底芯片**；汇流交叉写 `roleReason` |
+| state | 转移标签贴箭头上方 **4px**，卡距≥标签宽（70px）；返工回边走**外圈车道** |
+| flow | 起止 `roundRect`、末步 accent；异常回边标签放**车道上方**独立一行 |
+| layers | 层带 contains 层内卡；层间箭头用 `attach`（left/right 边） |
