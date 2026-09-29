@@ -1,5 +1,5 @@
 // 导出名可配置：node gen-1113.cjs <文件名> 或环境变量 PPTX_NAME（缺省用非锁定名，避免 PowerPoint 占用）
-const PPTX = process.argv[2] || process.env.PPTX_NAME || PPTX
+const PPTX = process.argv[2] || process.env.PPTX_NAME || '手画12+1-build.pptx'
 
 // 手画 11 流程图 / 13 手写样例（架构图）+ 管线
 const fs = require('fs')

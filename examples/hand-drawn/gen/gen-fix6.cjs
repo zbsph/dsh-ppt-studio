@@ -119,7 +119,7 @@ const arrowBetween = (id, A, B, hwA, hhA, hwB, hhB, color, w) => {
     L.push(...tx('ht' + i, [xs[i] - 81, 122, 162, 24], n, 14, '#FFFFFF', ', bold: true, align: center'))
   })
   const msgLastY = 210 + 4 * 45
-  xs.forEach((x, i) => L.push(...ln('life' + i, [[x, 158], [x, msgLastY + 24]], '#94A3B8', 1.2, true, false)))
+  xs.forEach((x, i) => L.push(...ln('life' + i, [[x, 146], [x, msgLastY + 24]], '#94A3B8', 1.2, true, false)))
   const msgs = [['下发计划', 0, 1], ['启动投喂', 1, 2], ['投喂完成', 2, 1], ['残饵画面', 3, 1], ['当班汇总', 1, 0]]
   msgs.forEach(([n, a, b], k) => {
     const y = 210 + k * 45

@@ -50,25 +50,25 @@ elements:
     content: { text: '水下相机', fontSize: 14, color: '#FFFFFF', bold: true, align: center }
   - elementId: life0
     elementType: line
-    points: [[155, 158], [155, 414]]
+    points: [[155, 146], [155, 414]]
     dash: dash
     line: { color: '#94A3B8', width: 1.2 }
     arrow: false
   - elementId: life1
     elementType: line
-    points: [[360, 158], [360, 414]]
+    points: [[360, 146], [360, 414]]
     dash: dash
     line: { color: '#94A3B8', width: 1.2 }
     arrow: false
   - elementId: life2
     elementType: line
-    points: [[565, 158], [565, 414]]
+    points: [[565, 146], [565, 414]]
     dash: dash
     line: { color: '#94A3B8', width: 1.2 }
     arrow: false
   - elementId: life3
     elementType: line
-    points: [[770, 158], [770, 414]]
+    points: [[770, 146], [770, 414]]
     dash: dash
     line: { color: '#94A3B8', width: 1.2 }
     arrow: false

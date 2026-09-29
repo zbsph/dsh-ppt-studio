@@ -1,7 +1,7 @@
 {
-  "savedAt": "2026-09-29T15:46:32.075Z",
-  "head": "fe6bec50852291bb883859c5e918d61c9b5011cc",
-  "digest": "562afbc2f2678f2dbe6c5bd2d7aff0c38cd1dabfbd5ae7315b937e72eec758f0",
+  "savedAt": "2026-09-29T16:44:19.107Z",
+  "head": "b2cba1ff1a715bc6d84b7da5e9eabc986e1e5671",
+  "digest": "5ec15cf86c1d915f2e56ad8e92224c39bdf76e3dc48f9b17b5c1669e5ca11d64",
   "perPage": [
     {
       "page": "01",
@@ -99,12 +99,11 @@
       "els": 29,
       "errors": 0,
       "errorCodes": [],
-      "warns": 5,
+      "warns": 1,
       "warnCodes": [
-        "line-crossing",
-        "line-end-off-edge"
+        "line-crossing"
       ],
-      "digest": "bcda352c5e8b733e755a0b46b66ca4e2b91146faf35fe31593a4b652617954d7"
+      "digest": "3bd30c8dc70278153553e829575e05818449883b8a1a101f5f4025c4660a5711"
     },
     {
       "page": "10",
@@ -162,7 +161,7 @@
     "06-闭环（手画）.png": "f5b8cf822c503fbe1669fea5fc109fb84d946a87ddb35b6bd6a12ed90acf8bbd",
     "07-漏斗（手画）.png": "f00e0251aef97510aec6336fe2a32fcd8f5acb0c5b2c1e361be95598909d72b1",
     "08-步骤环（手画）.png": "50e1c1f175fea024c0c5b956cfb919dc44fa7e8329646199343097c538943d31",
-    "09-时序（手画）.png": "d463fc25e520df4eee9946f907ef567b42736971fa5c1523f978d98c5f638989",
+    "09-时序（手画）.png": "1cc278d9a41f5f3e2217f0913af954b264a2e01a6326723fcce4584fdbe20331",
     "10-状态机（手画）.png": "9a84e28cabacf631118633e0c50ca4ef4a402fb659da0c8310b80c421a9ff36e",
     "11-流程图（手画）.png": "dcf2887e1824496448bfaf2be3757fb7087a989e63a8f2eb55e3be150c5727ab",
     "12-分层架构（手画）.png": "771c721de5a02e463cbf6da2f0865eea91d74fdc2ca8e2d7046137b4c3b38429",
