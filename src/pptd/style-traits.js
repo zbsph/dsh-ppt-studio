@@ -27,6 +27,9 @@ export const TRAIT_SPEC = {
   edgeLabel: ['masked', 'plain'],         // 转移标签是否带底板遮线
   markers: ['none', 'startEnd'],          // 初始/终止标记
   density: ['compact', 'normal', 'loose'],// 只影响间距常量（不得影响路由候选集合）
+  // 排布方向：**目前只支持 row**（横向分层）。column（竖向单列，用户第 4 页那种）尚未实现 ⇒
+  // 写 column 会**明确报错**，而不是悄悄出横排（宪法③：引擎不懂的做法必须拒绝，不许静默）。
+  layout: ['row'],
   frame: { title: [true, false], rails: ['none', 'rows', 'return'] }, // 预留带：顶部标题带 / 行导轨 / 回边导轨
 }
 
@@ -42,6 +45,7 @@ export const DEFAULT_TRAITS = Object.freeze({
   edgeLabel: 'masked',
   markers: 'none',
   density: 'normal',
+  layout: 'row',
   frame: Object.freeze({ title: false, rails: 'none' }),
 })
 
@@ -75,6 +79,7 @@ export function validateTraits(raw) {
     edgeLabel: DEFAULT_TRAITS.edgeLabel,
     markers: DEFAULT_TRAITS.markers,
     density: DEFAULT_TRAITS.density,
+  layout: DEFAULT_TRAITS.layout,
   }
   if (raw === undefined || raw === null) return { traits, errors, honored }
   if (!isPlainObject(raw)) return { traits, errors: [`style.traits 必须是对象，收到 ${typeof raw}`], honored }
