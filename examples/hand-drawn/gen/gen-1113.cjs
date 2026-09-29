@@ -1,3 +1,6 @@
+// 导出名可配置：node gen-1113.cjs <文件名> 或环境变量 PPTX_NAME（缺省用非锁定名，避免 PowerPoint 占用）
+const PPTX = process.argv[2] || process.env.PPTX_NAME || PPTX
+
 // 手画 11 流程图 / 13 手写样例（架构图）+ 管线
 const fs = require('fs')
 const R = 'D:/SharkCode/dsh-ppt-studio'
@@ -49,10 +52,10 @@ console.log('deck 已更新为', order.length, '页')
     for (const e of v.errors.slice(0, 4)) console.log('   [' + e.code + '] ' + String(e.message).replace(/\s+/g, ' ').slice(0, 96))
   })
   const NAME = { '01': '01-层级树（手画）.png', '02': '02-矩阵（手画）.png', '03': '03-时间轴（手画）.png', '04': '04-泳道（手画）.png', '05': '05-左右对比（手画）.png', '06': '06-闭环（手画）.png', '07': '07-漏斗（手画）.png', '08': '08-步骤环（手画）.png', '09': '09-时序（手画）.png', '10': '10-状态机（手画）.png', '11': '11-流程图（手画）.png', '12': '12-分层架构（手画）.png', '13': '13-平台架构（手画）.png' }
-  const r = await exportPptx(ctx, { out: out + '/手画12+1-build.pptx' })
+  const r = await exportPptx(ctx, { out: out + '/' + PPTX })
   console.log('导出 parity.ok =', r.parity?.ok, '｜页数', ctx.pages.length)
   try {
-    await renderPptxToPng(out + '/手画12+1-build.pptx', out, { pages: pages.map((_, i) => i + 1) })
+    await renderPptxToPng(out + '/' + PPTX, out, { pages: pages.map((_, i) => i + 1) })
     let ok = 0
     order.forEach((code, i) => { const f = out + '/' + String(i + 1).padStart(2, '0') + '.png'; if (fs.existsSync(f)) { fs.copyFileSync(f, out + '/' + NAME[code]); ok++ } })
     console.log('PNG 就位 =', ok + '/' + order.length)
