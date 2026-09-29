@@ -90,91 +90,91 @@ elements:
   - elementId: s0
     elementType: shape
     kind: roundRect
-    bounds: [172, 170, 96, 44]
+    bounds: [176, 170, 80, 44]
     fill: '#FFFFFF'
     line: { color: '#7C3AED', width: 1.2 }
     contains: [st0]
   - elementId: st0
     elementType: text
-    bounds: [175, 182, 90, 22]
+    bounds: [179, 182, 74, 22]
     content: { text: '投喂计划', fontSize: 11, color: '#2E1065', bold: true, align: center }
   - elementId: a0
     elementType: line
-    points: [[268, 192], [290, 192], [290, 444], [296, 444]]
+    points: [[256, 192], [274, 192], [274, 444], [296, 444]]
     line: { color: '#7C3AED', width: 1.5 }
     arrow: true
   - elementId: s1
     elementType: shape
     kind: roundRect
-    bounds: [296, 422, 96, 44]
+    bounds: [296, 422, 80, 44]
     fill: '#FFFFFF'
     line: { color: '#7C3AED', width: 1.2 }
     contains: [st1]
   - elementId: st1
     elementType: text
-    bounds: [299, 434, 90, 22]
+    bounds: [299, 434, 74, 22]
     content: { text: '水质复核', fontSize: 11, color: '#2E1065', bold: true, align: center }
   - elementId: a1
     elementType: line
-    points: [[392, 444], [414, 444], [414, 276], [420, 276]]
+    points: [[376, 444], [394, 444], [394, 276], [416, 276]]
     line: { color: '#7C3AED', width: 1.5 }
     arrow: true
   - elementId: s2
     elementType: shape
     kind: roundRect
-    bounds: [420, 254, 96, 44]
+    bounds: [416, 254, 80, 44]
     fill: '#FFFFFF'
     line: { color: '#7C3AED', width: 1.2 }
     contains: [st2]
   - elementId: st2
     elementType: text
-    bounds: [423, 266, 90, 22]
+    bounds: [419, 266, 74, 22]
     content: { text: '自动投喂', fontSize: 11, color: '#2E1065', bold: true, align: center }
   - elementId: a2
     elementType: line
-    points: [[516, 276], [538, 276], [538, 360], [544, 360]]
+    points: [[496, 276], [514, 276], [514, 360], [536, 360]]
     line: { color: '#7C3AED', width: 1.5 }
     arrow: true
   - elementId: s3
     elementType: shape
     kind: roundRect
-    bounds: [544, 338, 96, 44]
+    bounds: [536, 338, 80, 44]
     fill: '#FFFFFF'
     line: { color: '#7C3AED', width: 1.2 }
     contains: [st3]
   - elementId: st3
     elementType: text
-    bounds: [547, 350, 90, 22]
+    bounds: [539, 350, 74, 22]
     content: { text: '水下巡检', fontSize: 11, color: '#2E1065', bold: true, align: center }
   - elementId: a3
     elementType: line
-    points: [[640, 360], [662, 360], [662, 444], [668, 444]]
+    points: [[616, 360], [634, 360], [634, 444], [656, 444]]
     line: { color: '#7C3AED', width: 1.5 }
     arrow: true
   - elementId: s4
     elementType: shape
     kind: roundRect
-    bounds: [668, 422, 96, 44]
+    bounds: [656, 422, 80, 44]
     fill: '#FFFFFF'
     line: { color: '#7C3AED', width: 1.2 }
     contains: [st4]
   - elementId: st4
     elementType: text
-    bounds: [671, 434, 90, 22]
+    bounds: [659, 434, 74, 22]
     content: { text: '取样检测', fontSize: 11, color: '#2E1065', bold: true, align: center }
   - elementId: a4
     elementType: line
-    points: [[764, 444], [786, 444], [786, 192], [792, 192]]
+    points: [[736, 444], [754, 444], [754, 192], [776, 192]]
     line: { color: '#7C3AED', width: 1.5 }
     arrow: true
   - elementId: s5
     elementType: shape
     kind: roundRect
-    bounds: [792, 170, 96, 44]
+    bounds: [776, 170, 80, 44]
     fill: '#FFFFFF'
     line: { color: '#7C3AED', width: 1.2 }
     contains: [st5]
   - elementId: st5
     elementType: text
-    bounds: [795, 182, 90, 22]
+    bounds: [779, 182, 74, 22]
     content: { text: '结果归档', fontSize: 11, color: '#2E1065', bold: true, align: center }

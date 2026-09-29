@@ -54,7 +54,7 @@ const arrowBetween = (id, A, B, hwA, hhA, hwB, hhB, color, w) => {
     L.push(...tx('lnt' + i, [lx + 4, y + 24, lw - 8, 24], n, 14, '#FFFFFF', ', bold: true, align: center'))
     L.push(...sh('lb' + i, 'rect', [lx + lw, y, 780, lh], i % 2 === 0 ? '#F5F3FF' : '#FFFFFF', kids, "line: { color: '#E9D5FF', width: 1 }"))
   })
-  const sw = 96, sx0 = 172, step = 124   // 卡右沿到下一卡左沿留 28px ⇒ 折点可离端点 22px
+  const sw = 80, sx0 = 176, step = 120   // 卡右沿到下一卡左沿留 28px ⇒ 折点可离端点 22px
   steps.forEach(([n, lane], i) => {
     const x = sx0 + i * step
     const y = ly + lane * lstep + 14
@@ -65,7 +65,7 @@ const arrowBetween = (id, A, B, hwA, hhA, hwB, hhB, color, w) => {
       const ny = ly + steps[i + 1][1] * lstep + 14
       const pts = lane === steps[i + 1][1]
         ? [[x + sw, y + 22], [nx, ny + 22]]
-        : [[x + sw, y + 22], [x + sw + 22, y + 22], [x + sw + 22, ny + 22], [nx, ny + 22]]
+        : [[x + sw, y + 22], [x + sw + 18, y + 22], [x + sw + 18, ny + 22], [nx, ny + 22]]
       L.push(...ln('a' + i, pts, '#7C3AED', 1.5, false, true))
     }
   })
