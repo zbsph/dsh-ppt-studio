@@ -93,6 +93,7 @@
     "verify:shape": "node scripts/verify-shape.mjs",
     "verify:traits": "node scripts/verify-traits.mjs",
     "verify:style-band": "node scripts/verify-style-band.mjs",
+    "verify:traits-effect": "node scripts/verify-traits-effect.mjs",
     "render:group": "node scripts/render-group.mjs",
     "eval:skills": "node scripts/eval-skills-score.mjs"
   }

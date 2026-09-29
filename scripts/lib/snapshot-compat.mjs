@@ -42,6 +42,18 @@ export const isText = (el) => el?.elementType === 'text' || el?.kind === 'text'
 /** 线端点（两套形态都是 points）；拿不到返回 [] */
 export const pointsOf = (el) => (Array.isArray(el?.points) ? el.points : [])
 
+/** 文本内容：**多形态容错**（快照实测为 style+metrics 形态；不同来源可能是 text / content.text / runs / lines）
+ * —— 与其猜字段名（本会话已踩 6 次假设类错误），不如一次把所有已知形态都认掉。 */
+export function textOf(el) {
+  if (!el) return ''
+  if (typeof el.text === 'string') return el.text
+  if (typeof el.content?.text === 'string') return el.content.text
+  if (Array.isArray(el.runs)) return el.runs.map((r) => r?.text ?? '').join('')
+  if (Array.isArray(el.lines)) return el.lines.map((l) => (typeof l === 'string' ? l : l?.text ?? '')).join('\n')
+  if (typeof el.value === 'string') return el.value
+  return ''
+}
+
 /** 线的最高点（用于"是否进入预留带"这类判断）；无点返回 null */
 export function topMostY(el) {
   const pts = pointsOf(el)

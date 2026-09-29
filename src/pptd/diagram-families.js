@@ -884,15 +884,20 @@ function layoutState({ d, box, style, id, notes }) {
         const dia = Math.min(15, Math.max(10, r.h * 0.34))
         const bx = r.x + 5
         const by = r.y + (r.h - dia) / 2
-        nodeEls.push({
+        const badgeEl = {
           elementId: id(`bd_${nid}`), elementType: 'shape', kind: 'ellipse',
           bounds: [bx, by, dia, dia], fill: style.palette[1] ?? style.palette[0], line: { color: style.ink, width: style.lineWidth },
-        })
-        nodeEls.push({
+        }
+        const seqEl = {
           elementId: id(`bt_${nid}`), elementType: 'text',
           bounds: [bx, by + dia * 0.12, dia, dia * 0.8],
           content: { text: String(badgeSeq), fontSize: Math.max(8, dia * 0.58), color: '#FFFFFF', align: 'center' },
-        })
+        }
+        // **结构关系必须声明**：徽标属于卡片、序号属于徽标 —— 否则门禁按"设计预期外重叠"报错
+        //（实测漏声明会报 9 条错误；这正是"新增做法必须同时带合规检查"要防的事）
+        badgeEl.contains = [seqEl.elementId]
+        if (Array.isArray(nodeEls[0].contains)) nodeEls[0].contains.push(badgeEl.elementId)
+        nodeEls.push(badgeEl, seqEl)
         // 卡内标题左让栏位（卡下标签不受影响）
         if (T.label !== 'below' && nodeEls[1] && Array.isArray(nodeEls[1].bounds)) {
           const tb = nodeEls[1].bounds
