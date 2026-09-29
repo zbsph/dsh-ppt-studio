@@ -46,8 +46,7 @@ const insideAny = (pt, boxes) => {
 const latest = readdirSync(tmpdir()).filter((d) => d.startsWith('pptd-families-')).sort().pop()
 const targets = [
   ['既有 12 族夹具', latest ? join(tmpdir(), latest) : null],
-  ['从零批次 fresh-tea', 'examples/fresh-tea'],
-  ['从零批次 fresh-wind', 'examples/fresh-wind'],
+  ['从零批次 fresh-sea（当前交付批次）', 'examples/fresh-sea'],
 ]
 
 for (const [label, dir] of targets) {
