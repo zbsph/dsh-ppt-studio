@@ -151,7 +151,6 @@ expectedOverlaps:
 - **没用到结构声明的页面行为与从前完全一致**（门控）——你可以只在新页上逐步采用。
 - 复杂图导出基元：points >2 点 = 折线（一帧 custGeom 开放路径，不是多条拼的）；arrow: 'both' = 两端箭头（arrow: true 等价 'end'）；line.dash: solid|dash|dot|dashDot；kind: notchedRightArrow（流程图常用）。
 
-## 复杂图：直接手写 elements（图族机制已移除）
 
 不要再指望引擎替你算几何 —— 按需读 skills/diagram-drawing/（调度手册 mechanisms.md + 12 份子 skill 配方），用显式 elements 把图拼出来。
 这是受支持的正式路径，不是退路（13 页实测：零族依赖、门禁 0 错、与旧族产物同内容对照 10 更好 / 1 持平 / 2 持平偏旧 / 0 变差）。
@@ -162,7 +161,6 @@ expectedOverlaps:
 - 容器/分组：contains 声明相邻层；语义底板用 role: decoration；刻意穿过用 roleReason 说明；
 - 收工前逐条读门禁警告（line-cross-text / arrow-end-short-run / line-end-off-edge / arrow-tip-inside-shape / line-crossing / line-diagonal-segment）；
 - 历史档案：族机制原始设计见 docs/07 / docs/12 / docs/13（已废弃，仅对照）。
-- **风格来自参考稿（阶段 D）**：deck.styles.<名> 放一份样式档案（palette / ink / bg / neutral / lineWidth / fontSize / radius），diagram.style: <名> 让该图用这份令牌 ⇒ 图跟着参考稿换色换线宽（引擎自身仍没有审美）。档案色板会自动并入主题色板，不会触发主题一致性门禁。
 - **组合作为可复用块（阶段 D）**：deck.blocks.<名> = {elements, groups?} 定义块，页面里 blocks: [{name: <名>, at: [x, y]}] 复用它（**copy 语义**：id 自动加 bk<n>_ 前缀、内部 contains / attach / badgeOf / groups 引用同步重映射、按 at 平移；改一份不影响另一份）。
 - **手写折线/箭头（不属于任何族、完全自由发挥时）同样要守这几条**（引擎内部已经这么做，手写时请照做，否则会出现"箭头像断了/看不出指向"这类观感问题）：
   1. 折线**只用轴对齐段**（横段/竖段）——环形、放射、漏斗这类**本身就是斜的**图形除外（那类斜线是设计意图）；

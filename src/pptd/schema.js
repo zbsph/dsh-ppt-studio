@@ -638,10 +638,6 @@ export async function resolveDeck(dir) {
     // ── 阶段 B：`diagram` 物化（IR → 普通元素 + 结构关系）──
     // 展开在这里 ⇒ normalizePage / 预览 / 导出 / verify **全部零改动**，预览与成品天然同源（docs/12 §5）。
     // 没有 `diagram` 的页完全不进这段 ⇒ 既有工程逐字节不变。
-    if (page.diagram !== undefined) {
-      // F4：图族机制已移除 —— 明确报错并给迁移路径（不静默失败）
-      errors.push(`${ref}: page.diagram —— 图族机制（diagram:）已移除；请改用手写 elements（见 skills/diagram-drawing/mechanisms.md 与 docs/14-图族删除计划.md）`)
-    }
     pages.push({ file: join(dir, ref), ref, page, name: (page.title ?? ref.replace(/\.yaml$/, '')).toString(), index: pages.length })
   }
   const resolveColor = (v) => {

@@ -3133,21 +3133,18 @@ ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz
   await rm(work58, { recursive: true, force: true })
 }
 
-// ── 59. 阶段 B：图编译核心（IR → 引擎算几何）──────────────────────────────────
 // ── F4：§59（族物化断言）已停用；意图由手画侧覆盖（verify:handdrawn / redprobe / linetext / optionprobe）
 //   原文保留为注释，供族时代对照（tag family-era-final 可运行）。
 // // 守四件事：① 语法可发现（ppt_schema 里有 diagram）；② 物化真的把 IR 展开成普通元素 + 结构关系；
 // // ③ 引擎产出**零冲突且零声明**（不靠 expectedOverlaps 掩盖自己的几何问题）；
 // // ④ 没有 diagram 的页一个字都不多（阶段 A 的门控不被引擎绕过）。
 // {
-//   const work59 = join(smokeDir, '.tmp-diagram-ir')
 //   await rm(work59, { recursive: true, force: true })
 //   await mkdir(join(work59, 'pages'), { recursive: true })
 //   await writeFile(join(work59, 'deck.yaml'), ['version: 1', 'title: ir', 'size: [960, 540]', 'theme:',
 //     '  colors: {primary: "#2563EB", accent: "#F59E0B", text: "#1F2937", bg: "#F8FAFC"}', '  textStyles:',
 //     '    body: {fontSize: 14, color: "$text"}', '  spacing: {base: 28}', '  safeArea: {top: 40, bottom: 40, left: 40, right: 40}',
 //     'pages:', '  - pages/01.yaml', ''].join('\n'), 'utf8')
-//   await writeFile(join(work59, 'pages', '01.yaml'), ['pageType: content', 'diagram:', '  type: flow', '  direction: LR',
 //     '  nodes:', '    - {id: n1, label: 采集}', '    - {id: n2, label: 清洗}', '    - {id: n3, label: 应用, emphasis: accent}',
 //     '  edges:', '    - {from: n1, to: n2, label: 实时}', '    - {from: n2, to: n3, style: dashed}',
 //     '  groups:', '    - {id: s1, label: 第一段, members: [n1, n2]}', '    - {id: s2, label: 第二段, members: [n3]}', ''].join('\n'), 'utf8')
@@ -3155,9 +3152,7 @@ ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz
 //   const page59 = ctx59.pages[0].page
 //     ok('§59 能力可发现：ppt_schema 写进了手画通路的机制词汇（attach / contains / role:decoration / roleReason / custGeom / 18px / 手画是正式路径）——不写模型不知道能用',
 //       ['attach', 'contains', 'role: decoration', 'roleReason', 'custGeom', '18px', '受支持的正式路径'].every((k) => scaffoldMod.SCHEMA_REF.includes(k)))
-//     page59.elements.every((e) => e.elementId.startsWith('d1_')) && (page59.groups ?? []).length === 2
 //     && page59.elements.some((e) => Array.isArray(e.contains) && e.contains.length >= 2),
-//     ok('§59 物化：IR 展开成普通元素（id 带 d1_ 前缀）并产出逻辑组与容器 contains',
 //     `元素 ${page59.elements.length}｜组 ${(page59.groups ?? []).length}`)
 //   await renderDeck(ctx59, { out: 'preview59' })
 //   const layout59 = JSON.parse(await (await import('node:fs/promises')).readFile(join(work59, 'preview59', 'layout.json'), 'utf8'))

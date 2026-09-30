@@ -90,9 +90,7 @@
     "probe:prompt:check": "node scripts/probe-prompt-cost.mjs --check",
     "bench:scale": "node scripts/bench-diagram-scale.mjs",
     "verify:relations": "node scripts/verify-diagram-relations.mjs",
-    "verify:northstar": "node scripts/verify-northstar.mjs",
     "verify:handwritten": "node scripts/verify-handwritten.mjs",
-    "verify:route": "node scripts/verify-route.mjs",
     "verify:shape": "node scripts/verify-shape.mjs",
     "render:group": "node scripts/render-group.mjs",
     "eval:skills": "node scripts/eval-skills-score.mjs"
