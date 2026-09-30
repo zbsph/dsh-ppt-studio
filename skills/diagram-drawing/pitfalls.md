@@ -78,3 +78,12 @@ node scripts/smoke.mjs
 判据：**同一 HEAD 下上一轮 322/0、这一轮崩溃 ⇒ 先怀疑 fixture，再怀疑代码**（本阶段两次都是 fixture）。
 
 
+
+## F. 流程坑（发版准备期实测，血泪级）
+
+- **F1 清 fixture 只能用 `git checkout -- examples/smoke`** —— 用 `git checkout -- examples` 会连 `examples/hand-drawn/gen/*.cjs` 一起回滚，把刚做的手画/生成器修改一并抹掉（实测损失过一次修复）。
+- **F2 参数化功能必须同时测「缺省路径」** —— `const X = argv[2] || X` 这类自引用（TDZ）会被「只测带参数路径」短路掩盖 ⇒ 缺省路径必崩且躲过全部测试；生成器现由 `check-generators.mjs`（语法级）兜底，运行期覆盖仍未做（见已知限制）。
+- **F3 改基线必须留痕** —— `--capture` 曾整文件覆写导致上次原因丢失；现保留 `history` + 支持 `--reason`，且 `verify-handdrawn` 会**断言** history 与 reason 存在。
+- **F4 破坏性脚本先只读定位、全量断言，再动手** —— 边定位边删 ⇒「定位失败时已删一半」；范式：Phase A 打印现场 + 断言 ⇒ Phase B 执行（异常即 `git reset --hard`）。
+- **F5 多步脚本里每个判据都要单独取退出码** —— 曾在 `check-*` 子检查失败时因 `$LASTEXITCODE` 取到的是别的命令而**误提交**（后经 amend 更正）⇒ 判据不过不提交。
+- **F6 Windows 工具链三坑** —— `npm`/`tar` 是垫片 ⇒ 必须 `execSync`（`execFileSync` 直接 ENOENT）；命令输出带 `\r` ⇒ 精确匹配前先去掉；检查器扫描要排除自身（词表自指）。
