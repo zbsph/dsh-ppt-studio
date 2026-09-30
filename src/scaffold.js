@@ -152,7 +152,7 @@ expectedOverlaps:
 - 复杂图导出基元：points >2 点 = 折线（一帧 custGeom 开放路径，不是多条拼的）；arrow: 'both' = 两端箭头（arrow: true 等价 'end'）；line.dash: solid|dash|dot|dashDot；kind: notchedRightArrow（流程图常用）。
 
 
-不要再指望引擎替你算几何 —— 按需读 skills/diagram-drawing/（调度手册 mechanisms.md + 12 份子 skill 配方），用显式 elements 把图拼出来。
+不要再指望引擎替你算几何 —— 按需读 skills/ppt-studio-diagram/（调度手册 mechanisms.md + 12 份子 skill 配方），用显式 elements 把图拼出来。
 这是受支持的正式路径，不是退路（13 页实测：零族依赖、门禁 0 错、与旧族产物同内容对照 10 更好 / 1 持平 / 2 持平偏旧 / 0 变差）。
 
 关键机制（都在手画侧）：

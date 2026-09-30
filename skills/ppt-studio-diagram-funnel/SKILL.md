@@ -1,9 +1,11 @@
 ---
-name: diagram-funnel
-description: 漏斗/金字塔
-whenToUse: 漏斗、金字塔（custGeom 梯形逐段收窄）——需要画这类图时加载；先读 skills/diagram-drawing/mechanisms.md
+name: ppt-studio-diagram-funnel
+description: 漏斗/金字塔：custGeom 真梯形逐段收窄（段间严丝合缝）；段内标签声明在段内。
+whenToUse: 漏斗、金字塔（custGeom 梯形逐段收窄）——需要画这类图时加载；先读 skills/ppt-studio-diagram/mechanisms.md
 ---
 # 漏斗（funnel）· 手画配方
+
+> **优先级**：用户指令 > 本手册经验值 > 工具默认。本手册给的是启发式与反例，**不定义任何门禁数值**；
 
 ## 骨架
 用 **custGeom 梯形**逐段收窄（矩形堆叠是台阶，不是漏斗）。
@@ -28,3 +30,10 @@ path：w:800、h:70；moveTo[(800−wTop)/2,0] → lnTo[(800+wTop)/2,0] → lnTo
 - 折线交给引擎**自动正交化**；刻意斜段（环/放射/漏斗）写 `role: decoration` 或 `roleReason` 声明。
 - 箭头前直段 ≥18px 由引擎自动保证；修不了会由 `arrow-end-short-run` 报出 ⇒ **必须读警告**。
 - 收工前**逐条解释本页每一条警告**（见 verify.md 铁律之二）。
+
+
+## 收工自检（逐条过）
+
+- 门禁 0 错；本页**每一条警告**都有处置结论（见 `verify.md` 铁律之二）。
+- 连线端点与图形边重合（优先 `attach`，不手算像素）；箭头前直段 ≥18px、折线只用轴对齐段。
+- 容器/分组把内部元素写进 `contains`；刻意穿过或刻意留空用 `roleReason` 说明（不许掩盖真缺陷）。

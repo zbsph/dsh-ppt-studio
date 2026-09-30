@@ -2269,7 +2269,7 @@ ok('bundle：已转为公开发布 npm（无 private + publishConfig.access=publ
 // 第四次修订（2026-09-26）**按预设隔离**：`apply()` 按"作用域档"分两种——
 //   · profile 档（`config.scope` 缺省/`auto`/`profile`）＝ 全局管道 + 预设声明；缺省档还追加一行
 //     **自定位行**（本包入口的绝对 `file://`），让本包被自己的预设再挂一次 ⇒ 预设档。
-//   · preset 档（`config.scope === 'preset'`，由自定位行挂载）＝ 22 工具 / `/ppt` 命令 / 4 技能 /
+//   · preset 档（`config.scope === 'preset'`，由自定位行挂载）＝ 22 工具 / `/ppt` 命令 / 17 技能 /
 //     语义路由 / 提示段**全部注册在预设作用域** ⇒ 只对该预设的会话可见（其他预设零影响）。
 // 安全网：声明失败、注册表不可见、或"声明成功但预设档实例未装配" ⇒ **自动回落全局能力面**。
 // 历史两次失败的正确结论（2026-09-26 源码 + 真宿主实测）：① 只对"插件自己按 agent 动态门控"成立；
@@ -2343,7 +2343,7 @@ ok('bundle：已转为公开发布 npm（无 private + publishConfig.access=publ
     `tools=${tools} cmds=${cmds} skills=${skills} listeners=${listeners}`)
   await grace()
   ok('§40 自动回落：声明成功但预设档实例未装配 ⇒ 回落注册全局能力面（**功能不丢**，只是没隔离）',
-    tools === 22 && cmds >= 1 && skills === 4 && listeners >= 2
+    tools === 22 && cmds >= 1 && skills === 17 && listeners >= 2
       && presetMod.presetDeliveryStatus().isolation === 'profile-fallback',
     `tools=${tools} cmds=${cmds} skills=${skills} listeners=${listeners}｜isolation=${presetMod.presetDeliveryStatus().isolation}`)
   let promptOk = false
@@ -2371,8 +2371,8 @@ ok('bundle：已转为公开发布 npm（无 private + publishConfig.access=publ
   const tierBase = { tools, cmds, skills, listeners }
   indexMod.apply(makeCtx(), { scope: 'preset', autoPreset: false, presetIds: ['ppt'] })
   await flush()
-  ok('§40 预设档：22 工具 + `/ppt` 命令 + 4 技能 + 2 监听器**全部注册在预设作用域**（隔离的实现主体）',
-    tools - tierBase.tools === 22 && cmds - tierBase.cmds >= 1 && skills - tierBase.skills === 4 && listeners - tierBase.listeners === 2,
+  ok('§40 预设档：22 工具 + `/ppt` 命令 + 17 技能 + 2 监听器**全部注册在预设作用域**（隔离的实现主体）',
+    tools - tierBase.tools === 22 && cmds - tierBase.cmds >= 1 && skills - tierBase.skills === 17 && listeners - tierBase.listeners === 2,
     `增量 tools=${tools - tierBase.tools} cmds=${cmds - tierBase.cmds} skills=${skills - tierBase.skills} listeners=${listeners - tierBase.listeners}`)
   ok('§40 预设档：**不声明**预设（否则注册表对重复 id 直接 throw ⇒ 预设消失）',
     declared.length === 0, `声明次数=${declared.length}`)
@@ -2386,7 +2386,7 @@ ok('bundle：已转为公开发布 npm（无 private + publishConfig.access=publ
   indexMod.apply(makeCtx(), { scope: 'profile' })
   await grace()
   ok('§40 传统档：能力面注册在装入层（全局可见），且声明**不含**自定位行（19 行）',
-    tools - trBase.tools === 22 && skills - trBase.skills === 4 && declared.length === 1
+    tools - trBase.tools === 22 && skills - trBase.skills === 17 && declared.length === 1
       && declared[0]?.plugins?.length === 19 && declared[0]?.plugins?.at(-1)?.id !== 'ppt-studio-scope'
       && presetMod.presetDeliveryStatus().isolation === 'profile',
     `增量 tools=${tools - trBase.tools} skills=${skills - trBase.skills}｜行数=${declared[0]?.plugins?.length}｜isolation=${presetMod.presetDeliveryStatus().isolation}`)
@@ -2407,7 +2407,7 @@ ok('bundle：已转为公开发布 npm（无 private + publishConfig.access=publ
     await new Promise((r) => setTimeout(r, 3400))
   } catch { noRegThrew = true }
   ok('§40 注册表不可见：只告警不抛，并靠**兜底超时**回落全局能力面（极简部署仍完整可用）',
-    // 注意：这个假 ctx 连 `skills` 服务都没有（`get` 恒 undefined）⇒ 技能数应为 0，不是 4。
+    // 注意：这个假 ctx 连 `skills` 服务都没有（`get` 恒 undefined）⇒ 技能数应为 0（该假 ctx 没有 skills 服务）。
     noRegThrew === false && tools - noRegBase.tools === 22 && cmds >= 1
       && presetMod.presetDeliveryStatus().isolation === 'profile-fallback',
     `抛错=${noRegThrew}｜增量 tools=${tools - noRegBase.tools} cmds=${cmds}｜isolation=${presetMod.presetDeliveryStatus().isolation}`)
@@ -2697,8 +2697,8 @@ ok('npm 发布通道：发布的是**下载下来的 Release 资产**（等 .tgz
   // 本节测的是**管道韧性**（附加能力坏掉只该降级），与隔离无关 ⇒ 用传统档（`scope: 'profile'`）
   // 让能力面直接落在装入层；隔离路径的判定见 §40。
   try { indexMod2.apply(pipeCtx, { scope: 'profile', presetIds: ['ppt'] }) } catch (e) { applyThrew = e }
-  ok('§52 装配韧性：全局管道抛错时 apply 仍完成装配（22 工具 / 命令面 / 4 技能）——附加能力坏掉只该降级',
-    applyThrew === null && pTools === 22 && pCmds >= 1 && pSkills === 4,
+  ok('§52 装配韧性：全局管道抛错时 apply 仍完成装配（22 工具 / 命令面 / 17 技能）——附加能力坏掉只该降级',
+    applyThrew === null && pTools === 22 && pCmds >= 1 && pSkills === 17,
     `threw=${applyThrew ? String(applyThrew.message) : 'null'}｜tools=${pTools} cmds=${pCmds} skills=${pSkills}`)
 
   // ③ 真宿主实测的组合顺序：webServer 比本插件**晚激活**。此时直接 `ctx.get('webServer')` 拿不到服务，

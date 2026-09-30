@@ -1,9 +1,11 @@
 ---
-name: diagram-flow
-description: 流程图
-whenToUse: 流程、步骤链（顺序 + 回边）——需要画这类图时加载；先读 skills/diagram-drawing/mechanisms.md
+name: ppt-studio-diagram-flow
+description: 流程图：单行/单列顺序 + 轴对齐连线；回边（如抽检不合格）走车道间隙并带标签。
+whenToUse: 流程、步骤链（顺序 + 回边）——需要画这类图时加载；先读 skills/ppt-studio-diagram/mechanisms.md
 ---
 # 流程图（flow）· 手画配方
+
+> **优先级**：用户指令 > 本手册经验值 > 工具默认。本手册给的是启发式与反例，**不定义任何门禁数值**；
 
 ## 骨架
 横向流程：起止 roundRect、中间 rect；末步 accent；**异常分支用回边并标条件**。
@@ -27,3 +29,10 @@ whenToUse: 流程、步骤链（顺序 + 回边）——需要画这类图时加
 - 折线交给引擎**自动正交化**；刻意斜段（环/放射/漏斗）写 `role: decoration` 或 `roleReason` 声明。
 - 箭头前直段 ≥18px 由引擎自动保证；修不了会由 `arrow-end-short-run` 报出 ⇒ **必须读警告**。
 - 收工前**逐条解释本页每一条警告**（见 verify.md 铁律之二）。
+
+
+## 收工自检（逐条过）
+
+- 门禁 0 错；本页**每一条警告**都有处置结论（见 `verify.md` 铁律之二）。
+- 连线端点与图形边重合（优先 `attach`，不手算像素）；箭头前直段 ≥18px、折线只用轴对齐段。
+- 容器/分组把内部元素写进 `contains`；刻意穿过或刻意留空用 `roleReason` 说明（不许掩盖真缺陷）。
