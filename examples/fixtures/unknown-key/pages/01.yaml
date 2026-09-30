@@ -1,0 +1,13 @@
+pageType: content
+tittle: 故意写错的页面键
+elements:
+  - elementId: b1
+    elementType: shape
+    kind: roundRect
+    bounds: [120, 140, 300, 80]
+    knd: 故意写错的元素键
+    fill: '#7C3AED'
+  - elementId: t1
+    elementType: text
+    bounds: [140, 165, 260, 30]
+    content: { text: '红样本', fontSize: 14, color: '#FFFFFF' }
