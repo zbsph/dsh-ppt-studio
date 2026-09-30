@@ -47,7 +47,7 @@ const walk = (d) => {
   for (const e of readdirSync(d, { withFileTypes: true })) {
     const p = join(d, e.name)
     if (/\.(png|jpg|pptx|tgz|zip)$/.test(e.name)) continue
-    if (e.name === 'check-package.mjs') continue // 本文件自带该词表(检查器自指), 不算痕迹
+    if (e.name === 'check-package.mjs' || e.name === 'check-removed-traces.mjs') continue // 本文件自带该词表(检查器自指), 不算痕迹
     if (e.isDirectory()) walk(p)
     else if (/\.(js|mjs|cjs|md|ya?ml|json|txt)$/.test(e.name)) {
       readFileSync(p, 'utf8').split('\n').forEach((l, i) => { if (TERM.test(l)) hits.push(p.replace(inst + '/', '') + ':' + (i + 1)) })
