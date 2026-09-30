@@ -1,3 +1,8 @@
+---
+name: diagram-funnel
+description: 漏斗/金字塔
+whenToUse: 漏斗、金字塔（custGeom 梯形逐段收窄）——需要画这类图时加载；先读 skills/diagram-drawing/mechanisms.md
+---
 # 漏斗（funnel）· 手画配方
 
 ## 骨架

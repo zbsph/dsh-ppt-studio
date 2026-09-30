@@ -1,3 +1,8 @@
+---
+name: diagram-layers
+description: 分层架构
+whenToUse: 分层架构、技术栈（层芯片 + 层带）——需要画这类图时加载；先读 skills/diagram-drawing/mechanisms.md
+---
 # 分层架构（layers）· 手画配方
 
 ## 骨架

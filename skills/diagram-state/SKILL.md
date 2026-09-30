@@ -1,3 +1,8 @@
+---
+name: diagram-state
+description: 状态机
+whenToUse: 状态机、状态转移（分层 + 转移总线）——需要画这类图时加载；先读 skills/diagram-drawing/mechanisms.md
+---
 # 状态机（state）· 手画配方
 
 ## 骨架

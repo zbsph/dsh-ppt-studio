@@ -1,3 +1,8 @@
+---
+name: diagram-timeline
+description: 时间轴/里程碑
+whenToUse: 时间轴、里程碑（水平轴 + 上下交替标签）——需要画这类图时加载；先读 skills/diagram-drawing/mechanisms.md
+---
 # 时间轴（timeline）· 手画配方
 
 ## 骨架

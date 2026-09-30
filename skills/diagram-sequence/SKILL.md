@@ -1,3 +1,8 @@
+---
+name: diagram-sequence
+description: 时序图
+whenToUse: 时序、消息序列（生命线 + 水平消息箭头）——需要画这类图时加载；先读 skills/diagram-drawing/mechanisms.md
+---
 # 时序图（sequence）· 手画配方
 
 ## 骨架

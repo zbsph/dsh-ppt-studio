@@ -1,3 +1,8 @@
+---
+name: diagram-steps-ring
+description: 步骤环
+whenToUse: 步骤环（真圆+编号点 或 卡片环）——需要画这类图时加载；先读 skills/diagram-drawing/mechanisms.md
+---
 # 步骤环（steps-ring）· 手画配方
 
 ## 两种画法

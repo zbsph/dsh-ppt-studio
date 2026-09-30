@@ -1,3 +1,8 @@
+---
+name: diagram-compare
+description: 左右对比
+whenToUse: 左右对比、双栏方案比对——需要画这类图时加载；先读 skills/diagram-drawing/mechanisms.md
+---
 # 左右对比（compare）· 手画配方
 
 ## 骨架

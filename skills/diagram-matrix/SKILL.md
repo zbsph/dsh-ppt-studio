@@ -1,3 +1,8 @@
+---
+name: diagram-matrix
+description: 矩阵/象限
+whenToUse: 矩阵、象限、行列网格 + 表头——需要画这类图时加载；先读 skills/diagram-drawing/mechanisms.md
+---
 # 矩阵（matrix）· 手画配方
 
 ## 骨架

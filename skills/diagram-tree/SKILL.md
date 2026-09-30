@@ -1,3 +1,8 @@
+---
+name: diagram-tree
+description: 层级树/组织图
+whenToUse: 层级树、组织图、分组子树（正交折线 + 分组容器）——需要画这类图时加载；先读 skills/diagram-drawing/mechanisms.md
+---
 # 层级树（tree）· 手画配方
 
 ## 骨架

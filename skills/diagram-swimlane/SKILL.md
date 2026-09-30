@@ -1,3 +1,8 @@
+---
+name: diagram-swimlane
+description: 泳道图
+whenToUse: 泳道、跨角色流程（装饰泳道带 + 跨道走车道间隙）——需要画这类图时加载；先读 skills/diagram-drawing/mechanisms.md
+---
 # 泳道图（swimlane）· 手画配方
 
 ## 骨架

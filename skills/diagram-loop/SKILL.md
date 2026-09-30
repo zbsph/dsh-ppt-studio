@@ -1,3 +1,8 @@
+---
+name: diagram-loop
+description: 闭环反馈
+whenToUse: 闭环、反馈回路（环形排布 + 环外折线）——需要画这类图时加载；先读 skills/diagram-drawing/mechanisms.md
+---
 # 闭环（loop）· 手画配方
 
 ## 骨架

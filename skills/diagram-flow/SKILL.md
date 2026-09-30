@@ -1,3 +1,8 @@
+---
+name: diagram-flow
+description: 流程图
+whenToUse: 流程、步骤链（顺序 + 回边）——需要画这类图时加载；先读 skills/diagram-drawing/mechanisms.md
+---
 # 流程图（flow）· 手画配方
 
 ## 骨架
