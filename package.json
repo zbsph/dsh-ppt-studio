@@ -28,7 +28,6 @@
   },
   "files": [
     "lib",
-    "vendor",
     "templates",
     "docs",
     "skills",
@@ -60,6 +59,7 @@
     }
   },
   "scripts": {
+    "verify:package": "node scripts/check-package.mjs",
     "verify:products": "node scripts/verify-products.mjs",
     "verify:handdrawn": "node scripts/verify-handdrawn.mjs",
     "verify:optionprobe": "node scripts/handdrawn-option-probe.mjs",
