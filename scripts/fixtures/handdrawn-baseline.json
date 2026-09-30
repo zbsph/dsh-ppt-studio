@@ -1,6 +1,6 @@
 {
-  "savedAt": "2026-09-29T16:50:32.205Z",
-  "head": "fef15ffd2bd9c1cd91559d2c07ea957fa250666f",
+  "savedAt": "2026-09-30T04:24:38.618Z",
+  "head": "55f17ad08101da726b73a9001134a6746ae86299",
   "digest": "f675371b5e56d694d80e4915cc443ccd0aa3e88b7c97d367aceaf5539ae35fbd",
   "perPage": [
     {
@@ -165,5 +165,13 @@
     "11-流程图（手画）.png": "dcf2887e1824496448bfaf2be3757fb7087a989e63a8f2eb55e3be150c5727ab",
     "12-分层架构（手画）.png": "69989c267bf13a89279f4d192e752f8aff918d49b0583c1e0888a60ea22e37a0",
     "13-平台架构（手画）.png": "05a454b19ffd2aac351e2e343d4a545aeeb630f1bd5eda0183fe3fe2fb09c100"
-  }
+  },
+  "history": [
+    {
+      "at": "2026-09-30T04:24:38.616Z",
+      "from": "f675371b5e56d694d80e4915cc443ccd0aa3e88b7c97d367aceaf5539ae35fbd",
+      "to": "f675371b5e56d694d80e4915cc443ccd0aa3e88b7c97d367aceaf5539ae35fbd",
+      "reason": "摘要未变（重采）: P2-3 补采：为基线补写变更沿革（history 断言上线前的一次留痕）"
+    }
+  ]
 }

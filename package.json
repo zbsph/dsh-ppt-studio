@@ -60,6 +60,7 @@
     }
   },
   "scripts": {
+    "verify:products": "node scripts/verify-products.mjs",
     "verify:handdrawn": "node scripts/verify-handdrawn.mjs",
     "verify:optionprobe": "node scripts/handdrawn-option-probe.mjs",
     "verify:redprobe": "node scripts/red-probe.mjs",

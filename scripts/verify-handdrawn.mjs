@@ -80,6 +80,13 @@ if (process.argv.includes('--capture')) {
 
 if (!existsSync(BASE)) { console.log('✗ 无基线文件，请先 --capture'); process.exit(1) }
 const base = JSON.parse(readFileSync(BASE, 'utf8'))
+// history 断言（P2-3）：基线必须留有**变更沿革**，且每条都要写明原因（不许静默改基线）
+{
+  const h = base.history
+  const bad = !Array.isArray(h) || h.length === 0 || h.some((e) => !e || typeof e.reason !== 'string' || !e.reason.trim())
+  if (bad) bad.push('基线 history 缺失或条目无 reason ⇒ 请用: node scripts/verify-handdrawn.mjs --capture --reason "原因"')
+  if (bad !== false && bad) { console.log('✗ ' + (Array.isArray(bad) ? bad[bad.length - 1] : bad)); process.exit(1) }
+}
 const bad = []
 // PNG sha：次要不变量（像素级）。渲染依赖 PowerPoint 版本/环境 ⇒ 差异只警告不失败（硬不变量是 layout 摘要）；
 // 交付目录不存在（如全新 clone）则整体跳过，保证 CI 可移植。
