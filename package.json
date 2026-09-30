@@ -68,7 +68,7 @@
     "build": "bash scripts/build.sh",
     "build:node": "node scripts/build.mjs",
     "sync": "node scripts/release-sync.mjs",
-    "test": "node scripts/build.mjs && node scripts/check-tracked-lf.mjs && node scripts/check-lib-sync.mjs && node scripts/check-unknown-keys.mjs && node scripts/check-generators.mjs && node scripts/smoke.mjs && node scripts/check-preset.mjs && node scripts/verify-handdrawn.mjs && node scripts/red-probe.mjs && node scripts/check-line-text.mjs && node scripts/handdrawn-option-probe.mjs",
+    "test": "node scripts/build.mjs && node scripts/check-tracked-lf.mjs && node scripts/check-lib-sync.mjs && node scripts/check-unknown-keys.mjs && node scripts/check-removed-traces.mjs && node scripts/check-generators.mjs && node scripts/smoke.mjs && node scripts/check-preset.mjs && node scripts/verify-handdrawn.mjs && node scripts/red-probe.mjs && node scripts/check-line-text.mjs && node scripts/handdrawn-option-probe.mjs",
     "test:fast": "node scripts/test-fast.mjs",
     "test:release": "node scripts/test-release.mjs",
     "test:map": "node scripts/test-map.mjs",
