@@ -87,3 +87,11 @@ node scripts/smoke.mjs
 - **F4 破坏性脚本先只读定位、全量断言，再动手** —— 边定位边删 ⇒「定位失败时已删一半」；范式：Phase A 打印现场 + 断言 ⇒ Phase B 执行（异常即 `git reset --hard`）。
 - **F5 多步脚本里每个判据都要单独取退出码** —— 曾在 `check-*` 子检查失败时因 `$LASTEXITCODE` 取到的是别的命令而**误提交**（后经 amend 更正）⇒ 判据不过不提交。
 - **F6 Windows 工具链三坑** —— `npm`/`tar` 是垫片 ⇒ 必须 `execSync`（`execFileSync` 直接 ENOENT）；命令输出带 `\r` ⇒ 精确匹配前先去掉；检查器扫描要排除自身（词表自指）。
+
+## G. 发布通道坑（2026-09-30 实测）
+
+- **G1 推 tag ≠ 发布** ✗ —— `publish.yml` 由 **`release` 事件**触发（OIDC 受信发布）⇒ 只推 `v1.2.1` 不会发；必须创建 GitHub Release。1.2.1 首次就因此静默没发（registry 停在 1.2.0）。
+- **G2 别把本地 `npm publish` 的失败当发布失败** ✗ —— 本机无 npm 凭据（E401）是**设计如此**；发布判据只能是 **registry 现状**（`npm view … version`）。
+- **G3 创建 Release 就等于发布** ✗ —— 未获用户明确指令不得创建 Release；撤回需**删 Release + `gh run cancel`**（本地 pack 的 tag 不会自动发）。
+- **G4 skill 的 frontmatter 是 YAML** ✗ —— 描述里写 `role: decoration` 这类含 **`: `** 的纯量会导致该 skill **静默解析失败**（症状：14 个对、1 个不见）⇒ 描述里用全角「：」或加引号。
+- **G5 用自己的注册器自证** ✓ —— 改完 skill 立刻跑 `bundledSkillNames()`（插件自带扫描器）确认数量与名字，**别等装到用户机器上才发现**。
