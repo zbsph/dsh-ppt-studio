@@ -83,12 +83,15 @@ jobs:
         if: github.event_name != 'pull_request'
         run: npm test
 
-  # 门禁 2：**用户会敲的那条命令**（钉的 CLI 版本必须与桌面端/网页端目标一致：0.2.1-rc.2），在一个隔离的 DSH_HOME 里真跑一遍。
+  # 门禁 2：**用户会敲的那条命令**（被测 DSH 版本来自 dsh-target.json，必须与桌面端/网页端目标一致），在一个隔离的 DSH_HOME 里真跑一遍。
   # 只跑单元测试是不够的：安装路径（pnpm 规格、dsh.bundle.patch 是否被认到、bundles 是否自动入栈、
   # 升级时字节是否真换）只有真 launcher 才能证明。钉 Windows 是因为插件的真实用户几乎都在 Windows
   # （PowerPoint 用户），顺带覆盖 junction / 路径分隔符 / 无 Office 三条真实差异。
   install-path:
     name: one-command install (Windows, isolated DSH_HOME)
+    # PR 只跑快测档（干净检出的 test:fast）；安装链在 main / 手动 时跑全量，
+    # 避免"钉版/上游变化"把 PR 假红挡住。
+    if: github.event_name != 'pull_request'
     runs-on: windows-latest
     timeout-minutes: 40
     steps:
@@ -98,8 +101,10 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install dsh CLI (pinned to the version this plugin targets)
-        run: npm install -g @deepseek-ai/dsh@0.2.1-rc.2
+      - name: Install dsh CLI (version comes from dsh-target.json — single source of truth)
+        shell: bash
+        run: npm install -g "@deepseek-ai/dsh@$(node -p "require('./dsh-target.json').dsh")"
+
 
       # `dsh plugin` 是 pnpm 转发器（缺 pnpm 时脚本会自行跳过并打印原因）
       - name: Install pnpm

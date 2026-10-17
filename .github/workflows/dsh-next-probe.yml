@@ -1,0 +1,45 @@
+# DSH @next 预检（**只告警、不拦 PR**）
+#
+# 背景：CI 的安装链必须有确定的被测 DSH 版本（dsh-target.json）。但上游 DSH 会持续前进，
+# 于是"DSH 更新了、插件还没适配"这件事需要**提前知道**，而不是等它突然把 PR 卡红。
+# 本工作流用 `@next` 装 CLI 跑同一套安装自证：失败只表示"上游已有变化、该适配了"，
+# 作业级 continue-on-error ⇒ 整体运行仍为成功，不会挡住任何合并。
+name: DSH next probe (advisory)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 3 * * 1' # 每周一 03:17 UTC
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dsh-next-probe
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    name: install self-check against dsh@next
+    continue-on-error: true
+    runs-on: windows-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Install dsh CLI @next (advisory only)
+        shell: bash
+        run: npm install -g "@deepseek-ai/dsh@next"
+      - name: Install pnpm
+        run: npm install -g pnpm@11
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Probe: bundle install self-check (same assertions as CI install-path)
+        run: npm run test:bundle
+      - name: Report current target vs probed version
+        shell: bash
+        run: |
+          echo "target in repo: $(node -p "require('./dsh-target.json').dsh")"
+          echo "probed: $(dsh --version)"

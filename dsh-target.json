@@ -1,0 +1,4 @@
+{
+  "dsh": "0.2.1-rc.2",
+  "note": "CI install-path 的被测 DSH 版本（唯一事实源）。升级 DSH 时：改本文件 + docs/14 的 `dsh-target:` 行 + 适配预设，三处由 npm test 的 check-dsh-target 守卫强制一致。"
+}

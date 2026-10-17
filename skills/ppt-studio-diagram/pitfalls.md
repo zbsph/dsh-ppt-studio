@@ -104,4 +104,4 @@ node scripts/smoke.mjs
 - **H4 verify:products 需要导出目录存在** ✗ —— 缺 `ppt-deliverable/手画12+1/` 会在导出阶段 ENOENT；先建目录再跑。
 - **H5 历史生成器会写 skills** ✗ —— `examples/hand-drawn/gen/s3.cjs` 曾直接写 `skills/*`；已加 `ALLOW_HISTORICAL=1` 保护、默认跳过，防误跑覆盖正式 skill。
 
-- **H6 CI 的 DSH 钉版必须与目标端一致** ✗ —— `ci.yml` 的 one-command install 曾把 CLI 钉在 `0.1.6-alpha.2`，而预设来自 0.2.1 标准组合（22 行，含 `dsh-tool-schedule`、`dsh-plugin-market/tools`）⇒ 旧 CLI 的 mount base 解析不到 ⇒ 预设健康断言失败（27/1）。钉版要跟随桌面端目标版本（现为 `0.2.1-rc.2`）。
+- **H6 CI 被测的 DSH 版本必须是单源、并与目标端一致** ✗ —— 版本写在 `dsh-target.json`（唯一事实源），CI 用 `node -p` 读它；`docs/14` 的 `dsh-target:` 行与 `dsh.engines.dsh` 下限由 `scripts/check-dsh-target.mjs`（并入 `npm test`）强制一致。历史上曾把手写死版钉在 `0.1.6-alpha.2`，而预设来自 0.2.1 ⇒ 旧 mount base 解析不到新行 ⇒ 安装自证 27/1 假红；另设 `dsh-next-probe.yml` 用 `@next` 周检（只告警、不拦 PR），提前暴露「上游已变、该适配了」。
