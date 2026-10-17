@@ -95,3 +95,11 @@ node scripts/smoke.mjs
 - **G3 创建 Release 就等于发布** ✗ —— 未获用户明确指令不得创建 Release；撤回需**删 Release + `gh run cancel`**（本地 pack 的 tag 不会自动发）。
 - **G4 skill 的 frontmatter 是 YAML** ✗ —— 描述里写 `role: decoration` 这类含 **`: `** 的纯量会导致该 skill **静默解析失败**（症状：14 个对、1 个不见）⇒ 描述里用全角「：」或加引号。
 - **G5 用自己的注册器自证** ✓ —— 改完 skill 立刻跑 `bundledSkillNames()`（插件自带扫描器）确认数量与名字，**别等装到用户机器上才发现**。
+
+## H. DSH 升级适配坑（2026-10-17）
+
+- **H1 升级会改标准预设** ✗ —— 0.2.1-rc.2 把 standard 组合行 19→22，且参照位置迁到 `dsh-web-app/presets/standard.patch.yml` 的 `config.plugins` ⇒ 升级后**先跑 `check-preset`**，再按新基准重写 `agent-presets/ppt/agent.cordis.yml`（保留 `persona` 有意差异）。
+- **H2 别拿旧清单判版本** ✗ —— `~/.dsh/dsh-runtimes/*/runtime.json` 的 `desktopVersion` 可能是旧的；运行宿主版本看 `app.asar/package.json` + `plugin_manager list_bundles` 的 bundle 版本。
+- **H3 全局 npm CLI 中断安装会坏** ✗ —— 超时/断网会留下残缺树 + `EEXIST` shim，表现为 `Cannot find module ...lib/bin.js`；修法：删 `%APPDATA%\npm\dsh*` 与 `node_modules\@deepseek-ai\dsh` 后**后台**重装；且**不要用 `| tail` 之类的管道去取退出码**。
+- **H4 verify:products 需要导出目录存在** ✗ —— 缺 `ppt-deliverable/手画12+1/` 会在导出阶段 ENOENT；先建目录再跑。
+- **H5 历史生成器会写 skills** ✗ —— `examples/hand-drawn/gen/s3.cjs` 曾直接写 `skills/*`；已加 `ALLOW_HISTORICAL=1` 保护、默认跳过，防误跑覆盖正式 skill。

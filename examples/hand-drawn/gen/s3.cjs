@@ -1,7 +1,10 @@
+// HISTORICAL: 一次性脚本（2026-09 建 skill 时用）。正式 skill 已由 skills/ppt-studio-* 取代；
+// 默认跳过，避免误跑覆盖正式内容（确需重跑设 ALLOW_HISTORICAL=1）。
+if (process.env.ALLOW_HISTORICAL !== "1") { console.log("s3.cjs: historical, skipped"); process.exit(0) }
 const fs = require('fs')
 const R = 'D:/SharkCode/dsh-ppt-studio'
 // ① 总纲补铁律：每条边都必须有标签（本轮实测换来的）
-const sk = R + '/skills/diagram-drawing/SKILL.md'
+const sk = R + '/skills/ppt-studio-diagram/SKILL.md'
 let g = fs.readFileSync(sk, 'utf8')
 if (g.indexOf('每条边都必须有标签') < 0) {
   g = g.replace('7. **有意重叠要声明**', '7. **每条边都必须有标签**：图上任何转移/连线都要能读出"从哪到哪、什么条件"；缺标签 = **内容缺失**。门禁抓不到（实测主链 5 条标签全丢，门禁仍 0 错）——只能靠看图与旧版并排发现。\n8. **有意重叠要声明**')
@@ -9,7 +12,7 @@ if (g.indexOf('每条边都必须有标签') < 0) {
   console.log('OK 总纲 + 铁律8')
 }
 // ② state 子 skill 补标签规则
-const st = R + '/skills/diagrams/state.md'
+const st = R + '/skills/ppt-studio-diagram-state/SKILL.md'
 let d = fs.readFileSync(st, 'utf8')
 if (d.indexOf('主链每条转移都要标签') < 0) {
   d = d.replace('## 竖向变体', '## 标签（最容易漏）\n**主链每条转移都要标签**，放在箭头**上方**（y = 卡顶 − 28），宽 80 居中于箭头中点；只标回边不标主链 ⇒ 内容就丢了（实测）。\n\n## 竖向变体')
@@ -17,7 +20,7 @@ if (d.indexOf('主链每条转移都要标签') < 0) {
   console.log('OK state.md + 标签规则')
 }
 // ③ 新写两个子 skill：layers / sequence
-fs.writeFileSync(R + '/skills/diagrams/layers.md', `# 分层架构（layers）· 手画配方
+fs.writeFileSync(R + '/skills/ppt-studio-diagram-layers/SKILL.md', `# 分层架构（layers）· 手画配方
 
 ## 骨架
 左侧**层标签芯片**（窄条）+ 右侧**层内容带**（长条，软填充），自上而下 N 层；层间用竖直箭头表示"上行/下行"。
@@ -36,7 +39,7 @@ fs.writeFileSync(R + '/skills/diagrams/layers.md', `# 分层架构（layers）·
 - [ ] 每层"芯片 + 带 + 带内卡片"三层包含关系都声明；[ ] 层间箭头两端贴带边；
 - [ ] 看图能一眼数清层数；[ ] 带内文字对比度 ≥3:1（浅底用深字）。
 `, 'utf8')
-fs.writeFileSync(R + '/skills/diagrams/sequence.md', `# 时序图（sequence）· 手画配方
+fs.writeFileSync(R + '/skills/ppt-studio-diagram-sequence/SKILL.md', `# 时序图（sequence）· 手画配方
 
 ## 骨架
 顶部一排**参与者头卡**（等宽）+ 每人一条**虚线生命线**（垂直到页底）+ 自上而下的**消息箭头**（实线，标签在箭头上方）。

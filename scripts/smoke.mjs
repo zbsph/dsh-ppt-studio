@@ -2331,12 +2331,12 @@ ok('bundle：已转为公开发布 npm（无 private + publishConfig.access=publ
   ok('§40 自定位行：入口文件真实存在（拿不到入口就不追加该行——宁可不隔离，也不加一行注定 broken 的）',
     selfRow !== null && existsSync(fileURLToPath(selfRow.name)), String(selfRow?.name))
 
-  // ── 缺省档（auto）：声明 20 行（19 + 自定位行）→ 预设档实例未出现 ⇒ 自动回落全局 ────────────
+  // ── 缺省档（auto）：声明 23 行（22 + 自定位行）→ 预设档实例未出现 ⇒ 自动回落全局 ────────────
   resetAll()
   indexMod.apply(makeCtx(), { presetIds: ['ppt'] })
   await flush() // 声明走的是异步队列（inject → register），让它落地
-  ok('§40 缺省档：声明 20 行 = 19 条 standard 组合行 + 第 20 行自定位行（"只在预设里可见"靠它）',
-    declared.length === 1 && declared[0]?.plugins?.length === 20 && declared[0]?.plugins?.at(-1)?.id === 'ppt-studio-scope',
+  ok('§40 缺省档：声明 23 行 = 22 条 standard 组合行 + 第 23 行自定位行（"只在预设里可见"靠它）',
+    declared.length === 1 && declared[0]?.plugins?.length === 23 && declared[0]?.plugins?.at(-1)?.id === 'ppt-studio-scope',
     `声明=${declared.length} 次｜行数=${declared[0]?.plugins?.length}｜末行=${declared[0]?.plugins?.at(-1)?.id ?? '(无)'}`)
   ok('§40 缺省档：健康判定期间**不注册**能力面（隔离生效时 profile 档必须零能力面）',
     tools === 0 && cmds === 0 && skills === 0 && listeners === 0,
@@ -2380,14 +2380,14 @@ ok('bundle：已转为公开发布 npm（无 private + publishConfig.access=publ
     typeof globalThis.__pptScopeApplied?.at === 'number' && globalThis.__pptScopeApplied.at > 0,
     JSON.stringify(globalThis.__pptScopeApplied))
 
-  // ── 传统档（scope=profile）：不隔离、能力面全局，声明回到 19 行（不含自定位行）──────────────
+  // ── 传统档（scope=profile）：不隔离、能力面全局，声明回到 22 行（不含自定位行）──────────────
   resetAll()
   const trBase = { tools, skills }
   indexMod.apply(makeCtx(), { scope: 'profile' })
   await grace()
-  ok('§40 传统档：能力面注册在装入层（全局可见），且声明**不含**自定位行（19 行）',
+  ok('§40 传统档：能力面注册在装入层（全局可见），且声明**不含**自定位行（22 行）',
     tools - trBase.tools === 22 && skills - trBase.skills === 17 && declared.length === 1
-      && declared[0]?.plugins?.length === 19 && declared[0]?.plugins?.at(-1)?.id !== 'ppt-studio-scope'
+      && declared[0]?.plugins?.length === 22 && declared[0]?.plugins?.at(-1)?.id !== 'ppt-studio-scope'
       && presetMod.presetDeliveryStatus().isolation === 'profile',
     `增量 tools=${tools - trBase.tools} skills=${skills - trBase.skills}｜行数=${declared[0]?.plugins?.length}｜isolation=${presetMod.presetDeliveryStatus().isolation}`)
 
@@ -2426,8 +2426,8 @@ ok('bundle：已转为公开发布 npm（无 private + publishConfig.access=publ
   // ── 0.1.7 的**真适配**：预设靠"向注册表声明"交付（写目录那条路已被上游删除）────────────
   // 判据分三层：① 真的调到 register 了；② 声明形状对（id/名/序/行数/内容）；③ 双挂载不会声明两次。
   const declDirect = presetMod.presetDeclaration()
-  ok('§40 预设组合：名字/简介/序号取自包内 `agent-presets/ppt/`（19 条 standard 组合行；选择器里显示的就是这些）',
-    declDirect.name === 'PPT 工作室' && declDirect.order === 2 && declDirect.plugins.length === 19
+  ok('§40 预设组合：名字/简介/序号取自包内 `agent-presets/ppt/`（22 条 standard 组合行；选择器里显示的就是这些）',
+    declDirect.name === 'PPT 工作室' && declDirect.order === 2 && declDirect.plugins.length === 22
       && typeof declDirect.description === 'string' && declDirect.description.length > 10,
     `name=${declDirect.name}｜order=${declDirect.order}｜行数=${declDirect.plugins.length}｜desc=${declDirect.description.length} 字`)
   // `!!js` 必须**保真**成 Loader 认的 `{__jsExpr}`：降级成普通字符串会让
