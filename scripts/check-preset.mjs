@@ -187,3 +187,14 @@ if (fail > 0) {
   console.log('若这是**有意**差异，请加进本脚本顶部的 INTENTIONAL 白名单并写明理由（否则它会在下次升级时被当成漂移）。')
 }
 process.exit(fail > 0 ? 1 : 0)
+
+// ── 模板变量守卫（2026-10-18 真实事故）──────────────────────────────────────────
+// DSH 的 prompt 段按 section 注册变量：`deployment:persona-suffix` 只注册 provider/model，
+// 写 {{cwd}} 这类未注册变量会在**回合开始**直接失败（"unknown prompt variable"）。
+// 预设正文只应出现已知可用变量；新增变量前先去 dsh-system-prompt 的注册点确认。
+const ALLOWED_VARS = new Set(['model', 'provider'])
+const badVars = [...new Set([...presetText.matchAll(/\{\{\s*([a-zA-Z_][\w.]*)\s*\}\}/g)].map((m) => m[1]))]
+  .filter((v) => !ALLOWED_VARS.has(v))
+if (badVars.length > 0) {
+  fail.push(`预设里出现未注册的模板变量：${badVars.join(', ')}（只允许 ${[...ALLOWED_VARS].join(', ')}；未注册变量会让回合直接失败）`)
+}

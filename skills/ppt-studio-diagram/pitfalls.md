@@ -107,3 +107,5 @@ node scripts/smoke.mjs
 - **H6 CI 被测的 DSH 版本必须是单源、并与目标端一致** ✗ —— 版本写在 `dsh-target.json`（唯一事实源），CI 用 `node -p` 读它；`docs/14` 的 `dsh-target:` 行与 `dsh.engines.dsh` 下限由 `scripts/check-dsh-target.mjs`（并入 `npm test`）强制一致。历史上曾把手写死版钉在 `0.1.6-alpha.2`，而预设来自 0.2.1 ⇒ 旧 mount base 解析不到新行 ⇒ 安装自证 27/1 假红；另设 `dsh-next-probe.yml` 用 `@next` 周检（只告警、不拦 PR），提前暴露「上游已变、该适配了」。
 
 - **H7 link: ↔ registry 规格切换会留下符号链接残骸** ✗ —— 把本地 `link:` 安装换成 npm 规格时，pnpm 的 `importPackage` 会尝试导入旧链接目标（内含符号链接）⇒ Windows 普通用户报 `ERR_PNPM_EPERM`。修法：删掉 profile 的 `node_modules/dsh-ppt-studio` 链接与 `node_modules/.pnpm/*dsh-ppt-studio*`，再重新安装。
+
+- **H8 prompt 段模板变量越界会在回合开始直接失败** ✗ —— DSH 的 prompt section 按 section 注册变量：`deployment:persona-suffix` 只有 `provider`/`model`。写 `{{cwd}}` 这类未注册变量 ⇒ `unknown prompt variable`，**整轮对话起不来**（静态检查与装配探针都不一定发现）。现由 `check-preset.mjs` 的模板变量守卫在 `npm test` 拦住（白名单 `model`/`provider`）。
