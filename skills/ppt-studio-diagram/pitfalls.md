@@ -103,3 +103,5 @@ node scripts/smoke.mjs
 - **H3 全局 npm CLI 中断安装会坏** ✗ —— 超时/断网会留下残缺树 + `EEXIST` shim，表现为 `Cannot find module ...lib/bin.js`；修法：删 `%APPDATA%\npm\dsh*` 与 `node_modules\@deepseek-ai\dsh` 后**后台**重装；且**不要用 `| tail` 之类的管道去取退出码**。
 - **H4 verify:products 需要导出目录存在** ✗ —— 缺 `ppt-deliverable/手画12+1/` 会在导出阶段 ENOENT；先建目录再跑。
 - **H5 历史生成器会写 skills** ✗ —— `examples/hand-drawn/gen/s3.cjs` 曾直接写 `skills/*`；已加 `ALLOW_HISTORICAL=1` 保护、默认跳过，防误跑覆盖正式 skill。
+
+- **H6 CI 的 DSH 钉版必须与目标端一致** ✗ —— `ci.yml` 的 one-command install 曾把 CLI 钉在 `0.1.6-alpha.2`，而预设来自 0.2.1 标准组合（22 行，含 `dsh-tool-schedule`、`dsh-plugin-market/tools`）⇒ 旧 CLI 的 mount base 解析不到 ⇒ 预设健康断言失败（27/1）。钉版要跟随桌面端目标版本（现为 `0.2.1-rc.2`）。

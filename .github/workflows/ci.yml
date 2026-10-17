@@ -83,7 +83,7 @@ jobs:
         if: github.event_name != 'pull_request'
         run: npm test
 
-  # 门禁 2：**用户会敲的那条命令**，在一个隔离的 DSH_HOME 里真跑一遍。
+  # 门禁 2：**用户会敲的那条命令**（钉的 CLI 版本必须与桌面端/网页端目标一致：0.2.1-rc.2），在一个隔离的 DSH_HOME 里真跑一遍。
   # 只跑单元测试是不够的：安装路径（pnpm 规格、dsh.bundle.patch 是否被认到、bundles 是否自动入栈、
   # 升级时字节是否真换）只有真 launcher 才能证明。钉 Windows 是因为插件的真实用户几乎都在 Windows
   # （PowerPoint 用户），顺带覆盖 junction / 路径分隔符 / 无 Office 三条真实差异。
@@ -99,7 +99,7 @@ jobs:
           node-version: 22
 
       - name: Install dsh CLI (pinned to the version this plugin targets)
-        run: npm install -g @deepseek-ai/dsh@0.1.6-alpha.2
+        run: npm install -g @deepseek-ai/dsh@0.2.1-rc.2
 
       # `dsh plugin` 是 pnpm 转发器（缺 pnpm 时脚本会自行跳过并打印原因）
       - name: Install pnpm
