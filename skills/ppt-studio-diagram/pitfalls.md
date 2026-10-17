@@ -109,3 +109,5 @@ node scripts/smoke.mjs
 - **H7 link: ↔ registry 规格切换会留下符号链接残骸** ✗ —— 把本地 `link:` 安装换成 npm 规格时，pnpm 的 `importPackage` 会尝试导入旧链接目标（内含符号链接）⇒ Windows 普通用户报 `ERR_PNPM_EPERM`。修法：删掉 profile 的 `node_modules/dsh-ppt-studio` 链接与 `node_modules/.pnpm/*dsh-ppt-studio*`，再重新安装。
 
 - **H8 prompt 段模板变量越界会在回合开始直接失败** ✗ —— DSH 的 prompt section 按 section 注册变量：`deployment:persona-suffix` 只有 `provider`/`model`。写 `{{cwd}}` 这类未注册变量 ⇒ `unknown prompt variable`，**整轮对话起不来**（静态检查与装配探针都不一定发现）。现由 `check-preset.mjs` 的模板变量守卫在 `npm test` 拦住（白名单 `model`/`provider`）。
+
+- **H9 `npm publish` 的 registry 元数据是异步传播的** ✗ —— 发布步会先输出 `Your package is being processed…` 并返回 0，但 `registry.npmjs.org/<pkg>/<version>` 可能数分钟后才可见。**短窗口的"发后自证"会假红**（1.2.3 就是这样：发布成功、自证 5 分钟超时失败）。判据：以 registry 直接 HTTP 可见 + integrity 与本地 tgz 一致为准；自证窗口已放宽到 20 分钟。

@@ -90,7 +90,7 @@ jobs:
             [ -n "$n" ] || n=0
             if [ "$n" -ge 1 ]; then echo "✓ 资产已就绪（第 $i 次探测，共 $n 条 tgz）"; exit 0; fi
             echo "…等待 .tgz（第 $i/60 次，当前 0 条）"
-            sleep 15
+            sleep 30
           done
           echo "::error::15 分钟内没等到 $TAG 的 .tgz 资产（本机 npm run sync 是否失败？）——修好后用 workflow_dispatch 重跑本工作流"
           exit 1
@@ -140,7 +140,7 @@ jobs:
           LOCAL="sha512-$(node -e 'const c=require("node:crypto"),f=require("node:fs");process.stdout.write(c.createHash("sha512").update(f.readFileSync(process.argv[1])).digest("base64"))' dist/*.tgz)"
           echo "包版本 = $V"
           echo "本地 sha512 = $LOCAL"
-          for i in $(seq 1 20); do
+          for i in $(seq 1 40); do
             REG="$(npm view "dsh-ppt-studio@$V" dist.integrity 2>/dev/null || true)"
             if [ -n "$REG" ]; then
               echo "registry integrity = $REG"
@@ -149,6 +149,6 @@ jobs:
               exit 1
             fi
             echo "…等 registry 元数据（$i/20）"
-            sleep 15
+            sleep 30
           done
-          echo "::error::已发布但 5 分钟内查不到 registry 元数据"; exit 1
+          echo "::error::已发布但 20 分钟内查不到 registry 元数据（npm 对 publish 先回 accepted、再异步传播元数据，见 docs/14 §8.2）"; exit 1
