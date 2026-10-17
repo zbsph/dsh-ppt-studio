@@ -36,7 +36,7 @@ jobs:
         run: npm install -g pnpm@11
       - name: Install dependencies
         run: npm install --no-audit --no-fund
-      - name: Probe: bundle install self-check (same assertions as CI install-path)
+      - name: 'Probe: bundle install self-check (same assertions as CI install-path)'
         run: npm run test:bundle
       - name: Report current target vs probed version
         shell: bash
