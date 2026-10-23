@@ -1515,6 +1515,49 @@ await (await import('node:fs/promises')).rm(sl.out, { force: true })
   await fsp.rm(b7, { recursive: true, force: true }).catch(() => {})
 }
 
+// ── 31d. 2026-10-23（1.2.5）：预览层线基元必须与导出层同口径 ────────────────────────────
+// 背景：导出层（阶段 A）早已支持 >2 点折线（custGeom 开放路径）/ arrow:'both'（headEnd+tailEnd）/
+// line.dash（prstDash）；但预览 render-html 从 v0.3.0 起只画 points 前两点、只画尾箭头、忽略 dash
+// ⇒ "预览≠成品"（ppt_shot / 预览链接里看到的和交付的 pptx 不是一回事）。这里钉四件事：
+// 全点折线（与 layout.json 的正交化结果逐点一致）/ 双箭头两端 / dash 映射 / 每元素独立 marker。
+{
+  const fsp = await import('node:fs/promises')
+  const lp = join(smokeDir, '.tmp-line-preview')
+  await fsp.rm(lp, { recursive: true, force: true })
+  await fsp.mkdir(join(lp, 'pages'), { recursive: true })
+  await fsp.writeFile(join(lp, 'deck.yaml'), ['version: 1', 'title: line preview', 'size: [960, 540]',
+    'theme:', '  colors: {ink: "#1F2937"}', '  textStyles:', '    body: {fontSize: 16, color: "$ink"}',
+    'pages:', '  - pages/01.yaml', ''].join('\n'))
+  await fsp.writeFile(join(lp, 'pages/01.yaml'), ['pageType: content', 'elements:',
+    '  - elementId: poly', '    elementType: line', '    points: [[100, 100], [200, 160], [300, 100], [400, 160]]',
+    '    arrow: both', '    line: {color: "#1F2937", width: 2, dash: dash}',
+    '  - elementId: straight', '    elementType: line', '    points: [[100, 300], [400, 300]]',
+    '    arrow: true', '    line: {color: "#2563EB", width: 2}', ''].join('\n'))
+  const lctx = await resolveDeck(lp)
+  const lr = await renderDeck(lctx, { out: 'preview' })
+  const lhtml = await fsp.readFile(join(lr.outDir, lr.htmlFiles[0]), 'utf8')
+  const svgOf = (id) => (lhtml.match(new RegExp(`<svg id="${id}"[\\s\\S]*?</svg>`)) ?? [''])[0]
+  const svgPoly = svgOf('poly')
+  const svgStraight = svgOf('straight')
+  const layoutLine = lr.layout.pages[0].elements.find((e) => e.id === 'poly')
+  const wantPoints = layoutLine.points.map(([px, py]) => `${px},${py}`).join(' ')
+  ok('1.2.5 预览=成品：>2 点折线预览画全部点（<polyline> 坐标 == layout.json 正交化结果）',
+    svgPoly.includes(`<polyline points="${wantPoints}"`),
+    `polyline=${/<polyline/.test(svgPoly)}｜want=${wantPoints.slice(0, 90)}`)
+  ok("1.2.5 预览=成品：arrow:'both' 预览画两端箭头（marker-start + marker-end），arrow:true 只画尾端",
+    svgPoly.includes('marker-start="url(#ln-poly-start)"') && svgPoly.includes('marker-end="url(#ln-poly-end)"')
+      && svgStraight.includes('marker-end="url(#ln-straight-end)"') && !svgStraight.includes('marker-start'),
+    `polyStart=${svgPoly.includes('marker-start')}｜polyEnd=${svgPoly.includes('marker-end')}｜straightStart=${svgStraight.includes('marker-start')}`)
+  ok('1.2.5 预览=成品：line.dash 预览画 stroke-dasharray（按线宽近似 OOXML prstDash 比例）',
+    svgPoly.includes('stroke-dasharray="8 6"') && !svgStraight.includes('stroke-dasharray'),
+    `polyDash=${(/stroke-dasharray="([^"]*)"/.exec(svgPoly) ?? [])[1] ?? '无'}`)
+  ok('1.2.5 预览=成品：每元素独立 marker（同页两条不同颜色的线不得串色）',
+    svgPoly.includes('id="ln-poly-end"') && svgStraight.includes('id="ln-straight-end"')
+      && /fill="#1F2937"/.test(svgPoly) && /fill="#2563EB"/.test(svgStraight),
+    `polyMarker=${svgPoly.includes('ln-poly-end')}｜straightMarker=${svgStraight.includes('ln-straight-end')}`)
+  await fsp.rm(lp, { recursive: true, force: true })
+}
+
 // ══ 32. v1.0.0-修订：P1 表格导出结构回归 + parity + P6 线真实相交（一致性）═══════════
 const { collectDeclarable } = await import('../lib/verify.js')
 // P1：带表格 deck 导出 → graphicFrame 无嵌套 a:xfrm + tableStyleId + parity 完整
