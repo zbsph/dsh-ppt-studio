@@ -113,8 +113,11 @@ if (LOCAL) {
   }
 } else {
   console.log('① 远端 tag 与本地 HEAD 的一致性（release 模式）')
-  const ls = run('git', ['ls-remote', '--tags', 'origin', `refs/tags/${tag}`])
-  const remoteTagSha = isFail(ls) ? '' : (ls.split(/\s+/)[0] ?? '')
+  // 注解 tag 必须**解引用**：`ls-remote --tags … refs/tags/X` 返回 tag 对象 sha 而非提交 sha，
+  // 直接与 HEAD 比较会恒不相等（2026-10-23 实测）。先查 `refs/tags/X^{}`（peeled），再退回原 ref。
+  const pick = (s) => (isFail(s) ? '' : (s.split(/\s+/)[0] ?? ''))
+  const remoteTagSha = pick(run('git', ['ls-remote', '--tags', 'origin', `refs/tags/${tag}^{}`]))
+    || pick(run('git', ['ls-remote', '--tags', 'origin', `refs/tags/${tag}`]))
   const head = run('git', ['rev-parse', 'HEAD'])
   check(`远端存在 tag ${tag}`, remoteTagSha.length === 40, remoteTagSha || `(没有这个 tag)`,
     'README 与创意工坊卡片都按 tag/资产指路；tag 不存在时用户按图索骥会 404。')

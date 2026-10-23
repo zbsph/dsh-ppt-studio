@@ -42,17 +42,11 @@ import { join, dirname, resolve } from 'node:path'
 import { homedir } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { tmpdir } from 'node:os'
+import { extractTgz } from './tar-extract.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const GH = process.env.GH || 'C:\\Program Files\\GitHub CLI\\gh.exe'
-// 解压用的 tar：显式优先 Windows 自带的 System32\tar.exe（bsdtar，对 `C:\…` 路径无歧义），
-// 其次 PATH。2026-10-23 CI 上出现"tar: Error exit delayed from previous errors"且只在 CI 复现，
-// 这里先消除"PATH 上解析到另一个 tar 实现"这一变量，并把完整 stdout/stderr 打进诊断（见 ⑤）。
-const TAR = process.env.PPT_SYNC_TAR
-  || (process.platform === 'win32' && existsSync(join(process.env.SystemRoot || 'C:\\Windows', 'System32', 'tar.exe'))
-    ? join(process.env.SystemRoot || 'C:\\Windows', 'System32', 'tar.exe')
-    : 'tar')
 const args = process.argv.slice(2)
 const opt = (k, d) => {
   const i = args.indexOf(k)
@@ -146,7 +140,11 @@ if (!local) {
   // tag 与 HEAD 的一致性没法确认 ⇒ 拒绝继续（发布目标可能是错的，比"没发布"更糟）。
   let lsTag = ''
   try {
-    lsTag = run(`git ls-remote --tags origin refs/tags/${tag}`).trim()
+    // **注解 tag 必须解引用**：`git ls-remote --tags … refs/tags/X` 对注解 tag 返回的是 **tag 对象**sha，
+    // 而 HEAD 是提交 sha ⇒ 直接比较会恒不相等（2026-10-23 实测：本地 tag 正确却被判"指向别的提交"）。
+    // 先查 peeled 形式 `refs/tags/X^{}`（注解 tag ⇒ 提交 sha）；查不到再退回原 ref（轻量 tag）。
+    lsTag = run(`git ls-remote --tags origin "refs/tags/${tag}^{}"`).trim()
+      || run(`git ls-remote --tags origin refs/tags/${tag}`).trim()
   } catch (e) {
     const detail = String(e?.stderr ?? e?.stdout ?? e?.message ?? e).trim().split('\n').find((l) => l.trim()) ?? '(无输出)'
     console.error(`✗ ⓪b git：**无法查询远端 tag ${tag}**（网络不可达或代理拦截）——本次未能确认"发布目标 == 发布内容"，拒绝继续。\n`
@@ -248,18 +246,18 @@ if (local) {
 console.log(`⑤ 本机部署（${deployRoot}\\package，源=同一 tgz）...`)
 rmSync(join(deployRoot, 'package'), { recursive: true, force: true })
 mkdirSync(deployRoot, { recursive: true })
-// 解压失败诊断（2026-10-23 CI 实测）：`tar: Error exit delayed from previous errors` 只有最终摘要，
-// 具体是哪个条目失败要 stdout/stderr 才能定位 ⇒ 失败时把两路输出完整打出来（截断保护），再抛。
+// 解压用**纯 Node** 实现（scripts/tar-extract.mjs），不再依赖系统 tar：
+// 2026-10-23 CI 上 `npm pack` 为中文文件名写 PAX 头，GitHub Windows runner 的 bsdtar 报
+// "Archive entry has empty or unreadable filename ... skipping" 并以 1 退出 ⇒ 发版链在 CI 假红。
+// Node 解包按 UTF-8 读名，跨平台/跨代码页一致；解包结果与系统 tar 的产物逐字节相同（本机自证 252/252）。
 try {
-  run(`"${TAR}" -xzf "${tgzPath}" -C "${deployRoot}"`)
+  const ex = extractTgz(tgzPath, deployRoot)
+  console.log(`    extracted（Node 解包：${ex.files} 文件 / ${ex.dirs} 目录${ex.skipped.length ? ` / 跳过 ${ex.skipped.length}（${ex.skipped.slice(0, 2).join(', ')}）` : ''}）`)
 } catch (e) {
-  console.error(`✗ 解压发版 tgz 失败（tar 退出非 0；tar=${TAR}）——诊断：`)
-  console.error(`  tar stdout: ${JSON.stringify(String(e?.stdout ?? '').slice(0, 4000))}`)
-  console.error(`  tar stderr: ${JSON.stringify(String(e?.stderr ?? '').slice(0, 4000))}`)
+  console.error(`✗ 解压发版 tgz 失败（Node 解包）：${String(e?.message ?? e).slice(0, 4000)}`)
   console.error(`  tgz: ${tgzPath}｜目标: ${deployRoot}`)
   throw e
 }
-console.log('    extracted')
 const installOut = run(`node "${join(deployRoot, 'package', 'scripts', 'install.mjs')}"`)
 console.log(installOut.split('\n').slice(0, 6).join('\n'))
 
