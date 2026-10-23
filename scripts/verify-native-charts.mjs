@@ -493,6 +493,10 @@ h('8. 回归：不含图表的工程产物逐部件零变化（对照"原生图�
   } else {
     check(`回归对照：参照版本 = ${ref}（整棵 src/ 已取出，相对 import 可解析）`, true, `文件数 = 已复制`)
     // 无图表的工程：文本 / 表格 / 形状 / 连线 / 图片 / 讲稿（覆盖媒体 rId + 讲稿 rId 两条编号路径）
+    // 2026-10-23：图片显式 `fit: fill`。原因：P0-2 起"图片 fit 进成品"（缺省 cover 会写 `<a:srcRect>`），
+    //   而本条 §8 的判据是"**除原生图表外**产物逐字节零变化"，对照的是原生图表之前的导出器（它只会拉伸）。
+    //   夹具显式 fill 让新旧导出器的图片编码保持一致，这条回归才继续测"图表改动没碰 media/notes 的 rId 编号"；
+    //   缺省 cover 的语义由 smoke §31b 单独钉住。
     const noChart = join(WORK, 'no-chart')
     mkdirSync(join(noChart, 'pages'), { recursive: true })
     mkdirSync(join(noChart, 'media'), { recursive: true })
@@ -508,7 +512,7 @@ h('8. 回归：不含图表的工程产物逐部件零变化（对照"原生图�
       '  - elementId: tb', '    elementType: table', '    bounds: [40, 100, 300, 80]', '    cols: [指标, 值]', '    rows: [["甲", "1"], ["乙", "2"]]',
       '  - elementId: sh1', '    elementType: shape', '    bounds: [400, 100, 120, 80]', '    kind: roundRect', '    fill: "$primary"',
       '  - elementId: ln1', '    elementType: line', '    points: [[560, 120], [700, 80]]', '    line: {color: "#1F2937", width: 2}', '    arrow: true',
-      '  - elementId: im1', '    elementType: image', '    bounds: [560, 160, 120, 80]', '    src: media/px.png',
+      '  - elementId: im1', '    elementType: image', '    bounds: [560, 160, 120, 80]', '    src: media/px.png', '    fit: fill',
       '', ''].join('\n'), 'utf8')
     const ncCtx = await resolveDeck(noChart)
     const newOut = join(noChart, 'new.pptx')

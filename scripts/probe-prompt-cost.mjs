@@ -3,8 +3,12 @@
  * 常驻 prompt 成本探针（阶段 A 硬门槛之一："无图任务 prompt 增幅 ≤5%"）。
  *
  * 用法：
- *   node scripts/probe-prompt-cost.mjs            # 测量并**写入**基线 scripts/fixtures/prompt-cost-baseline.json
- *   node scripts/probe-prompt-cost.mjs --check     # 与基线对比；总成本增幅 > 5% ⇒ 退出码 1（阶段 B 引入 ppt_diagram 时用）
+ *   node scripts/probe-prompt-cost.mjs --check                     # 与基线对比；超 5% ⇒ 退出码 1
+ *   node scripts/probe-prompt-cost.mjs --reason "为什么改基线"      # 重新测量并**写入**基线（自动留痕）
+ *
+ * **接线（2026-10-23）**：`--check` 已并入 `npm test` 与 `test:fast`（此前只是手动脚本，
+ * 1.2.1 把技能从 4 本扩到 17 本后基线没跟、门禁长期假红却无人发现）。改基线的纪律与手画回归基线一致：
+ * **必须给 `--reason`**，历史快照写进 `history` 数组（不许静默移动门槛）。
  *
  * 度量口径（**只看模型真正要读的部分**，不看执行结果文本）：
  *   ① 工具面：每个工具的 name + description + parameters schema（JSON 形态）——output 渲染器不进模型
@@ -23,6 +27,11 @@ import { workflowSection } from '../lib/router.js'
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const BASELINE = join(ROOT, 'scripts', 'fixtures', 'prompt-cost-baseline.json')
 const GROWTH_LIMIT = 1.05
+const ARGV = process.argv.slice(2)
+const reasonOf = (() => {
+  const i = ARGV.indexOf('--reason')
+  return i >= 0 && ARGV[i + 1] ? String(ARGV[i + 1]) : ''
+})()
 
 /** CJK 感知的 token 估算（保守：CJK 每字 1 token）。 */
 export function estTokens(s) {
@@ -116,12 +125,29 @@ if (check) {
   const growth = nowResident / baseResident
   const okAll = totals.all <= base.totals.all * GROWTH_LIMIT
   const okResident = nowResident <= baseResident * GROWTH_LIMIT
-  console.log(`\n基线（${base.measuredAt}）：常驻 ${baseResident} / 含工作流 ${base.totals.all}`)
+  console.log(`\n基线（${base.measuredAt}${base.reason ? `｜${base.reason.slice(0, 60)}` : ''}）：常驻 ${baseResident} / 含工作流 ${base.totals.all}`)
+  console.log(`  分项：工具 ${base.totals.tools}→${totals.tools}｜技能 ${base.totals.skills}→${totals.skills}｜工作流 ${base.totals.workflow}→${totals.workflow}`)
   console.log(`${okResident ? '✓' : '✗'} 常驻面增幅 ${((growth - 1) * 100).toFixed(2)}%（上限 +5%）`)
   console.log(`${okAll ? '✓' : '✗'} 含工作流段增幅 ${(((totals.all / base.totals.all) - 1) * 100).toFixed(2)}%（上限 +5%）`)
   if (!okResident || !okAll) fail = 1
 } else {
+  if (!reasonOf) {
+    console.error('✗ 重设基线必须给理由：node scripts/probe-prompt-cost.mjs --reason "为什么改基线"')
+    console.error('  为什么强制：基线就是门槛，静默移动基线 = 静默放宽门禁（与手画回归基线同一条纪律）。')
+    process.exit(1)
+  }
+  // 留痕：历史快照进 history（含旧基线自身的理由），当前条目的 reason 记本次理由。
+  let history = []
+  if (existsSync(BASELINE)) {
+    try {
+      const prev = JSON.parse(readFileSync(BASELINE, 'utf8'))
+      history = Array.isArray(prev.history) ? prev.history.slice(-9) : []
+      history.push({ measuredAt: prev.measuredAt, totals: prev.totals, reason: prev.reason ?? '' })
+    } catch { /* 旧基线坏了：不阻断重设，但历史从空开始 */ }
+  }
+  report.reason = reasonOf
+  report.history = history
   writeFileSync(BASELINE, JSON.stringify(report, null, 2) + '\n')
-  console.log(`\n✓ 基线已写入 ${BASELINE.replace(ROOT + '\\', '')}`)
+  console.log(`\n✓ 基线已写入 ${BASELINE.replace(ROOT + '\\', '')}（理由：${reasonOf}）`)
 }
 if (fail) { console.log('\n✗ 常驻 prompt 成本超出门槛'); process.exit(1) }

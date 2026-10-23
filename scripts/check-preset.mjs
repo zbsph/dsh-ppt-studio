@@ -29,7 +29,15 @@
  * `--ref <文件>` 可**钉住参照物**（自动识别新旧格式）：本机装了 DSH 时无法制造"找不到参照"的
  * 场景，测试要靠它；CI 也可用它固定一份参照做回归。
  *
- * 用法：node scripts/check-preset.mjs [--preset <文件>] [--ref <文件>] [--verbose] [--require]
+ * ── 模板变量守卫（2026-10-18 事故；**2026-10-23 修复死代码**）────────────────────────
+ *  DSH 的 prompt 段按 section 注册变量：`deployment:persona-suffix` 只注册 provider/model，
+ *  预设里写 `{{cwd}}` 这类未注册变量会在**回合开始**直接失败（"unknown prompt variable"）。
+ *  守卫规则：预设正文的 `{{变量}}` 只允许 model / provider。
+ *  **历史缺陷**：1.2.3 号称"已加该守卫"，但代码写在 `process.exit()` 之后（永不可达），且引用了
+ *  未定义变量 —— 等于没有防线。本轮把守卫移到出口之前，并加 `--self-test`：
+ *  `npm test` / `test:fast` 都带 `--self-test`，用"合成坏预设必须被抓、合法变量必须放行"做自证。
+ *
+ * 用法：node scripts/check-preset.mjs [--preset <文件>] [--ref <文件>] [--verbose] [--require] [--self-test]
  */
 import { existsSync, readFileSync } from 'node:fs'
 import { join, dirname, resolve } from 'node:path'
@@ -48,6 +56,42 @@ const verbose = args.includes('--verbose')
 const requireRef = args.includes('--require')
 /** `--ref <文件>`：钉住参照物（自动识别新旧格式）。本机装了 DSH 时无法制造"找不到参照"的场景，测试靠它。 */
 const refPin = opt('--ref', null) === null ? null : resolve(opt('--ref'))
+const selfTest = args.includes('--self-test')
+
+/**
+ * 模板变量守卫的**纯函数**（可被 --self-test 直接测）：
+ * 返回预设文本里出现的、不在允许清单中的 `{{变量}}` 名。
+ * 为什么是"扫描整个预设正文"而不是只看 persona：任何 section（persona-suffix/instructions…）里的
+ * 未注册变量都会在回合开始时炸，而它们的注册集合可能不同 —— 保守口径：只允许已知全段可用的两个。
+ */
+const ALLOWED_VARS = new Set(['model', 'provider'])
+function badTemplateVars(text) {
+  return [...new Set([...String(text).matchAll(/\{\{\s*([a-zA-Z_][\w.]*)\s*\}\}/g)].map((m) => m[1]))]
+    .filter((v) => !ALLOWED_VARS.has(v))
+}
+if (selfTest) {
+  const bad = badTemplateVars('x {{cwd}} y {{model}} z {{ provider }}')
+  const good = badTemplateVars('{{model}} {{provider}} {{ model }}')
+  if (bad.join(',') !== 'cwd' || good.length !== 0) {
+    console.error(`✗ 模板变量守卫自检失败（识别到 ${JSON.stringify(bad)}，合法变量误报 ${JSON.stringify(good)}）`)
+    process.exit(1)
+  }
+  console.log('✓ 模板变量守卫自检：能抓 {{cwd}}、放行 {{model}}/{{provider}}')
+}
+
+// 模板变量守卫在**任何出口之前**执行（包括"找不到随包参照"的降级路径——那种部署仍会跑预设，
+// 未注册变量照样会在回合开始炸）。先读文本、算结果；统计与出口分别处理。
+let presetText = ''
+try {
+  presetText = readFileSync(oursPath, 'utf8')
+} catch (e) {
+  console.error(`✗ 读不到本预设，模板变量守卫无法执行：${oursPath}（${String(e?.message ?? e).slice(0, 160)}）`)
+  process.exit(1)
+}
+const badVars = badTemplateVars(presetText)
+if (badVars.length > 0) {
+  console.log(`  ✗ [模板变量] 预设里出现未注册变量：${badVars.join(', ')}（只允许 ${[...ALLOWED_VARS].join(', ')}；未注册变量会让回合直接失败）`)
+}
 
 /** 参照物的相对路径（相对 DSH 安装根）：新格式与旧格式各一条。 */
 const REF_MODERN = join('node_modules', '@deepseek-ai', 'dsh-web-app', 'presets', 'standard.patch.yml')
@@ -123,7 +167,7 @@ if (ref === null) {
     }
     console.log('  修法：装好 DSH 再跑，或显式给 DSH_CHECKOUT=<DSH 安装根> / --ref <参照文件>。')
   }
-  process.exit(requireRef ? 1 : 0)
+  process.exit(requireRef || badVars.length > 0 ? 1 : 0)
 }
 
 const std = new Map(rowsOf(ref.path, ref.kind).map((r) => [r.id, r]))
@@ -181,20 +225,12 @@ for (const [id, s] of std) {
   }
 }
 
+// ── 模板变量守卫：结果已在出口前算出（见上方）；这里并入漂移计数 ──
+if (badVars.length > 0) fail++
+
 console.log(`\n==== 预设自检：漂移 ${fail} / 缺行 ${warn} / 有意差异 ${intentional}（参照格式 ${ref.kind}） ====`)
 if (fail > 0) {
   console.log('修复方式：把漂移行的 config 改成随包 standard 的形状（预设是它的全量副本），再 npm pack 发版；')
   console.log('若这是**有意**差异，请加进本脚本顶部的 INTENTIONAL 白名单并写明理由（否则它会在下次升级时被当成漂移）。')
 }
 process.exit(fail > 0 ? 1 : 0)
-
-// ── 模板变量守卫（2026-10-18 真实事故）──────────────────────────────────────────
-// DSH 的 prompt 段按 section 注册变量：`deployment:persona-suffix` 只注册 provider/model，
-// 写 {{cwd}} 这类未注册变量会在**回合开始**直接失败（"unknown prompt variable"）。
-// 预设正文只应出现已知可用变量；新增变量前先去 dsh-system-prompt 的注册点确认。
-const ALLOWED_VARS = new Set(['model', 'provider'])
-const badVars = [...new Set([...presetText.matchAll(/\{\{\s*([a-zA-Z_][\w.]*)\s*\}\}/g)].map((m) => m[1]))]
-  .filter((v) => !ALLOWED_VARS.has(v))
-if (badVars.length > 0) {
-  fail.push(`预设里出现未注册的模板变量：${badVars.join(', ')}（只允许 ${[...ALLOWED_VARS].join(', ')}；未注册变量会让回合直接失败）`)
-}

@@ -83,6 +83,23 @@ jobs:
         if: github.event_name != 'pull_request'
         run: npm test
 
+      # 防"改了 src、忘了 build 并提交 lib"：两条测试档的第一步都是 build（src→lib）。
+      # `npm test` 里的 check-lib-sync 跑在 build **之后** ⇒ 恒真，抓不到漏提交；
+      # 这里在测试结束后检查工作区：若 lib/ 出现未提交变更，说明提交的构建产物是旧的
+      # （package.json 的 files 只发 lib，git 安装 / npm 包都会拿到旧代码）。
+      # 只查 lib/，避开不同平台上其它生成物的无意义字节差异。
+      - name: 构建产物必须已提交（lib/ 干净）
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -n "$(git status --porcelain -- lib)" ]; then
+            echo "::error::测试后 lib/ 出现未提交变更——src 改了却没有 build 并提交 lib（files 只发 lib，装出来的包会是旧代码）"
+            git status --porcelain -- lib
+            git --no-pager diff --stat -- lib
+            exit 1
+          fi
+          echo "✓ lib/ 与提交内容一致（构建产物已入库）"
+
   # 门禁 2：**用户会敲的那条命令**（被测 DSH 版本来自 dsh-target.json，必须与桌面端/网页端目标一致），在一个隔离的 DSH_HOME 里真跑一遍。
   # 只跑单元测试是不够的：安装路径（pnpm 规格、dsh.bundle.patch 是否被认到、bundles 是否自动入栈、
   # 升级时字节是否真换）只有真 launcher 才能证明。钉 Windows 是因为插件的真实用户几乎都在 Windows
@@ -112,6 +129,13 @@ jobs:
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+
+      # 预设漂移门禁在"干净检出 + 没装 DSH"时会打印"门禁本轮没有生效"后跳过（check-preset 的设计是
+      # 不阻断无 DSH 的极简装配）。本 job **真装了** dsh-target.json 钉的那版 CLI ⇒ 用 --require
+      # 把它变成硬门禁：上游改了 standard 预设而本仓副本没跟，这里必须红。
+      # （另外模板变量守卫在任何部署都生效，与参照物是否存在无关。）
+      - name: Preset drift gate（--require，DSH 目标版本已装）
+        run: node scripts/check-preset.mjs --require --self-test
 
       # scripts/verify-bundle-install.mjs：npm pack → 隔离 DSH_HOME →
       # `dsh plugin --profile web add <tgz>` → 断言依赖入栈 / bundles 自动包含本包 /

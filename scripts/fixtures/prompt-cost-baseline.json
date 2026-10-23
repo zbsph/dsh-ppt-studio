@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-09-27",
+  "measuredAt": "2026-10-23",
   "estimator": "CJK=1 token/字；其余=4 字节/token",
   "toolCount": 22,
   "tools": [
@@ -11,9 +11,15 @@
     },
     {
       "name": "ppt_patch",
-      "chars": 767,
-      "bytes": 1283,
-      "tokens": 380
+      "chars": 784,
+      "bytes": 1326,
+      "tokens": 394
+    },
+    {
+      "name": "ppt_splice",
+      "chars": 784,
+      "bytes": 1320,
+      "tokens": 390
     },
     {
       "name": "ppt_visual",
@@ -28,12 +34,6 @@
       "tokens": 353
     },
     {
-      "name": "ppt_splice",
-      "chars": 677,
-      "bytes": 1071,
-      "tokens": 310
-    },
-    {
       "name": "ppt_export",
       "chars": 637,
       "bytes": 955,
@@ -46,10 +46,22 @@
       "tokens": 244
     },
     {
+      "name": "ppt_render",
+      "chars": 566,
+      "bytes": 810,
+      "tokens": 233
+    },
+    {
       "name": "ppt_crosscheck",
       "chars": 425,
       "bytes": 761,
       "tokens": 233
+    },
+    {
+      "name": "ppt_slice",
+      "chars": 479,
+      "bytes": 717,
+      "tokens": 208
     },
     {
       "name": "ppt_new",
@@ -62,12 +74,6 @@
       "chars": 533,
       "bytes": 711,
       "tokens": 199
-    },
-    {
-      "name": "ppt_slice",
-      "chars": 459,
-      "bytes": 657,
-      "tokens": 188
     },
     {
       "name": "ppt_measure",
@@ -98,12 +104,6 @@
       "chars": 318,
       "bytes": 410,
       "tokens": 114
-    },
-    {
-      "name": "ppt_render",
-      "chars": 315,
-      "bytes": 399,
-      "tokens": 110
     },
     {
       "name": "ppt_check",
@@ -160,6 +160,84 @@
       "chars": 121,
       "bytes": 307,
       "tokens": 99
+    },
+    {
+      "name": "ppt-studio-diagram",
+      "chars": 83,
+      "bytes": 175,
+      "tokens": 56
+    },
+    {
+      "name": "ppt-studio-diagram-sequence",
+      "chars": 73,
+      "bytes": 151,
+      "tokens": 48
+    },
+    {
+      "name": "ppt-studio-diagram-steps-ring",
+      "chars": 76,
+      "bytes": 152,
+      "tokens": 47
+    },
+    {
+      "name": "ppt-studio-diagram-tree",
+      "chars": 66,
+      "bytes": 142,
+      "tokens": 45
+    },
+    {
+      "name": "ppt-studio-diagram-timeline",
+      "chars": 70,
+      "bytes": 140,
+      "tokens": 44
+    },
+    {
+      "name": "ppt-studio-diagram-flow",
+      "chars": 64,
+      "bytes": 136,
+      "tokens": 43
+    },
+    {
+      "name": "ppt-studio-diagram-loop",
+      "chars": 72,
+      "bytes": 138,
+      "tokens": 43
+    },
+    {
+      "name": "ppt-studio-diagram-matrix",
+      "chars": 83,
+      "bytes": 141,
+      "tokens": 43
+    },
+    {
+      "name": "ppt-studio-diagram-state",
+      "chars": 68,
+      "bytes": 134,
+      "tokens": 42
+    },
+    {
+      "name": "ppt-studio-diagram-swimlane",
+      "chars": 86,
+      "bytes": 140,
+      "tokens": 42
+    },
+    {
+      "name": "ppt-studio-diagram-funnel",
+      "chars": 68,
+      "bytes": 132,
+      "tokens": 41
+    },
+    {
+      "name": "ppt-studio-diagram-compare",
+      "chars": 62,
+      "bytes": 126,
+      "tokens": 40
+    },
+    {
+      "name": "ppt-studio-diagram-layers",
+      "chars": 64,
+      "bytes": 128,
+      "tokens": 40
     }
   ],
   "workflow": {
@@ -170,9 +248,22 @@
     "note": ""
   },
   "totals": {
-    "tools": 4492,
-    "skills": 433,
+    "tools": 4729,
+    "skills": 1007,
     "workflow": 4409,
-    "all": 9334
-  }
+    "all": 10145
+  },
+  "reason": "1.2.4 发版前重设基线：1.2.1 把技能从 4 本扩到 17 本（技能目录 433→1007 tokens）后旧基线（2026-09-27，常驻 4925/含工作流 9334）未同步、门禁长期假红却无人发现；本批把 --check 接入 npm test/test:fast 并重设到当前实测",
+  "history": [
+    {
+      "measuredAt": "2026-09-27",
+      "totals": {
+        "tools": 4492,
+        "skills": 433,
+        "workflow": 4409,
+        "all": 9334
+      },
+      "reason": ""
+    }
+  ]
 }

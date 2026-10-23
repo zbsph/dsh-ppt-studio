@@ -1328,6 +1328,193 @@ await (await import('node:fs/promises')).rm(seedOut, { force: true })
 await (await import('node:fs/promises')).rm(spl.out, { force: true })
 await (await import('node:fs/promises')).rm(sl.out, { force: true })
 
+// ── 31b. P0 回归（2026-10-23 用户实测反馈）──────────────────────────────────────────────
+// 问题单：① `ppt_splice` 替换含**原生图表**的页 → PowerPoint 报 0x80070570（旧实现只搬图片关系，
+//   chart 部件/内嵌工作簿/类型声明全缺 ⇒ OPC 关系不闭包）；② 导出忽略 `image.fit`（cover/contain
+//   一律写成拉伸，而预览层是支持 object-fit 的 ⇒ "预览对、成品错"）。
+// 两条都**不被现有门禁拦截**（verify/measure/parity 全绿），只有真打开/真渲染才暴露 ⇒ 这里钉住
+// "OPC 闭包"与"OOXML 几何"两类**从产物反推**的断言（不需要 Office，CI 可跑）。
+{
+  const fsp = await import('node:fs/promises')
+  const p0 = join(smokeDir, '.tmp-p0-splice')
+  await fsp.rm(p0, { recursive: true, force: true })
+  const themeLines = ['theme:', '  colors: {primary: "#2563EB", accent: "#F59E0B", text: "#1F2937"}', '  textStyles:', '    body: {fontSize: 16, color: "$text"}']
+  // 源稿（2 页纯文本）→ 作为 splice 的 source
+  const srcW = join(p0, 'src')
+  await fsp.mkdir(join(srcW, 'pages'), { recursive: true })
+  await fsp.writeFile(join(srcW, 'deck.yaml'), ['version: 1', 'title: p0-src', 'size: [960, 540]', ...themeLines, 'pages:', '  - pages/01.yaml', '  - pages/02.yaml', ''].join('\n'))
+  await fsp.writeFile(join(srcW, 'pages/01.yaml'), ['pageType: cover', 'elements:', '  - elementId: t1', '    elementType: text', '    bounds: [80, 200, 800, 60]', '    content: {text: "源稿第 1 页", style: "$body"}', ''].join('\n'))
+  await fsp.writeFile(join(srcW, 'pages/02.yaml'), ['pageType: content', 'elements:', '  - elementId: t2', '    elementType: text', '    bounds: [80, 200, 800, 60]', '    content: {text: "源稿第 2 页（将被替换）", style: "$body"}', ''].join('\n'))
+  const srcP0 = join(p0, 'source.pptx')
+  await exportPptx(await resolveDeck(srcW), { out: srcP0, engine: 'pptd' })
+  // 目标页：柱状图 + 饼图（原生图表部件 + 内嵌 xlsx）
+  const chartW = join(p0, 'chart')
+  await fsp.mkdir(join(chartW, 'pages'), { recursive: true })
+  await fsp.writeFile(join(chartW, 'deck.yaml'), ['version: 1', 'title: p0-chart', 'size: [960, 540]', ...themeLines, 'pages:', '  - pages/01.yaml', ''].join('\n'))
+  await fsp.writeFile(join(chartW, 'pages/01.yaml'), ['pageType: content', 'elements:',
+    '  - elementId: bar', '    elementType: chart', '    bounds: [60, 60, 400, 260]',
+    '    chart: {type: bar, data: {cols: ["季度", "营收"], rows: [["Q1", 12], ["Q2", 18]]}}',
+    '  - elementId: pie', '    elementType: chart', '    bounds: [500, 60, 300, 260]',
+    '    chart: {type: pie, data: {cols: ["份额", "值"], rows: [["甲", 60], ["乙", 40]]}}', ''].join('\n'))
+  const splicedP0 = await spliceIntoSource({ deckDir: chartW, source: srcP0, page: 1, sourcePage: 2, out: join(p0, 'spliced-chart.pptx') })
+  const zP0 = zipRead(await fsp.readFile(splicedP0.out))
+  const kP0 = [...zP0.keys()]
+  const chartPartsP0 = kP0.filter((k) => /^ppt\/charts\/chart\d+\.xml$/.test(k))
+  const chartRelPartsP0 = kP0.filter((k) => /^ppt\/charts\/_rels\/chart\d+\.xml\.rels$/.test(k))
+  const embedPartsP0 = kP0.filter((k) => /^ppt\/embeddings\/.+\.xlsx$/.test(k))
+  const ctP0 = decodeXml(zP0.get('[Content_Types].xml'))
+  const slideP0 = decodeXml(zP0.get(splicedP0.replaced.slide))
+  const relsP0 = decodeXml(zP0.get(splicedP0.replaced.slide.replace('slides/', 'slides/_rels/') + '.rels'))
+  const relMapP0 = new Map([...relsP0.matchAll(/<Relationship\b([^>]*?)\/>/g)].map((m) => [/Id="([^"]+)"/.exec(m[1])?.[1], /Target="([^"]+)"/.exec(m[1])?.[1] ?? '']))
+  const refsP0 = [...new Set([...slideP0.matchAll(/r:(?:id|embed|link)="([^"]+)"/g)].map((m) => m[1]))]
+  const danglingRefsP0 = refsP0.filter((id) => !relMapP0.has(id))
+  const danglingTargetsP0 = [...relMapP0.entries()]
+    .map(([, t]) => t).filter((t) => t && !/^[a-z][a-z0-9+.-]*:/i.test(t))
+    .map((t) => 'ppt/' + t.replace(/^(\.\.\/)+/, '')).filter((k) => !zP0.has(k))
+  ok('P0-1（2026-10-23 反馈）：含原生图表的页 splice 后 OPC 关系闭包（图表部件 + 内嵌工作簿进包、无悬空 rId/Target）',
+    chartPartsP0.length === 2 && chartRelPartsP0.length === 2 && embedPartsP0.length === 2
+      && danglingRefsP0.length === 0 && danglingTargetsP0.length === 0 && splicedP0.relsClosed === true
+      && /drawingml\.chart\+xml/.test(ctP0) && ctP0.includes('/ppt/charts/') && /spreadsheetml\.sheet/.test(ctP0),
+    `chart=${chartPartsP0.length} rels=${chartRelPartsP0.length} embed=${embedPartsP0.length}｜悬空引用=${JSON.stringify(danglingRefsP0)}｜悬空部件=${JSON.stringify(danglingTargetsP0)}｜relsClosed=${splicedP0.relsClosed}｜partsAdded=${splicedP0.partsAdded}`)
+  // slice（单页独立版）也必须保住图表部件，否则"改一页后导出单页"同样打不开
+  const slicedP0 = await sliceSource({ source: splicedP0.out, page: 2, out: join(p0, 'sliced-chart.pptx') })
+  const zSP0 = zipRead(await fsp.readFile(slicedP0.out))
+  const kSP0 = [...zSP0.keys()]
+  ok('P0-1：含图表页 splice 后再 slice 单页化，图表部件/嵌入工作簿仍随包保留',
+    kSP0.filter((k) => /^ppt\/charts\/chart\d+\.xml$/.test(k)).length === 2
+      && kSP0.filter((k) => /^ppt\/embeddings\/.+\.xlsx$/.test(k)).length === 2,
+    `chart=${kSP0.filter((k) => /^ppt\/charts\/chart\d+\.xml$/.test(k)).length}｜embed=${kSP0.filter((k) => /^ppt\/embeddings\//.test(k)).length}`)
+  // ── 图片 fit：4:1 图放进 1:1 框，三种显式 fit + 缺省 ──
+  const fitW = join(p0, 'fit')
+  await fsp.mkdir(join(fitW, 'pages'), { recursive: true })
+  await fsp.mkdir(join(fitW, 'media'), { recursive: true })
+  await fsp.writeFile(join(fitW, 'media/wide.png'), makePng(400, 100, [37, 99, 235])) // 4:1
+  await fsp.writeFile(join(fitW, 'deck.yaml'), ['version: 1', 'title: p0-fit', 'size: [960, 540]', ...themeLines, 'pages:', '  - pages/01.yaml', ''].join('\n'))
+  await fsp.writeFile(join(fitW, 'pages/01.yaml'), ['pageType: content', 'elements:',
+    '  - elementId: contain', '    elementType: image', '    bounds: [40, 40, 200, 200]', '    src: media/wide.png', '    fit: contain',
+    '  - elementId: cover', '    elementType: image', '    bounds: [300, 40, 200, 200]', '    src: media/wide.png', '    fit: cover',
+    '  - elementId: fill', '    elementType: image', '    bounds: [560, 40, 200, 200]', '    src: media/wide.png', '    fit: fill',
+    '  - elementId: dflt', '    elementType: image', '    bounds: [40, 300, 200, 200]', '    src: media/wide.png', ''].join('\n'))
+  const fitExp = await exportPptx(await resolveDeck(fitW), { out: join(p0, 'out-fit.pptx'), engine: 'pptd' })
+  const zFit = zipRead(await fsp.readFile(fitExp.file))
+  const xmlFit = decodeXml(zFit.get('ppt/slides/slide1.xml'))
+  const picSeg = (id) => {
+    const i = xmlFit.indexOf(`name="${id}"`)
+    if (i < 0) return ''
+    const s = xmlFit.lastIndexOf('<p:pic>', i)
+    const e = xmlFit.indexOf('</p:pic>', i)
+    return xmlFit.slice(s, e)
+  }
+  const geomOf = (seg) => ({ off: /<a:off x="(-?\d+)" y="(-?\d+)"\/>/.exec(seg)?.slice(1).map(Number), ext: /<a:ext cx="(\d+)" cy="(\d+)"\/>/.exec(seg)?.slice(1).map(Number), srcRect: /<a:srcRect[^/]*\/>/.exec(seg)?.[0] ?? null })
+  const EMU1 = 12700
+  const gContain = geomOf(picSeg('contain'))
+  ok('P0-2（2026-10-23 反馈）：image fit=contain ⇒ 等比缩小并居中（不裁剪；旧实现一律拉伸）',
+    gContain.off?.[0] === 40 * EMU1 && gContain.off?.[1] === 115 * EMU1
+      && gContain.ext?.[0] === 200 * EMU1 && gContain.ext?.[1] === 50 * EMU1 && gContain.srcRect === null,
+    `off=${JSON.stringify(gContain.off)} ext=${JSON.stringify(gContain.ext)} srcRect=${gContain.srcRect}`)
+  const gCover = geomOf(picSeg('cover'))
+  const gFill = geomOf(picSeg('fill'))
+  const gDflt = geomOf(picSeg('dflt'))
+  ok('P0-2：image fit=cover ⇒ 框不变 + 按纵横比裁 <a:srcRect>（fill 保持拉伸；缺省与预览一致按 cover）',
+    gCover.ext?.[0] === 200 * EMU1 && gCover.ext?.[1] === 200 * EMU1 && gCover.srcRect === '<a:srcRect l="37500" r="37500"/>'
+      && gFill.ext?.[0] === 200 * EMU1 && gFill.ext?.[1] === 200 * EMU1 && gFill.srcRect === null
+      && gDflt.srcRect === '<a:srcRect l="37500" r="37500"/>',
+    `cover.srcRect=${gCover.srcRect}｜fill.srcRect=${gFill.srcRect}｜缺省.srcRect=${gDflt.srcRect}`)
+  await fsp.rm(p0, { recursive: true, force: true })
+}
+
+// ── 31c. 2026-10-23 发布前收口：A1 预设守卫自证 / B7 out 相对路径 / B8 blocks 过 schema ──────
+// 三条都是"静默失败"型缺陷：守卫是死代码、输出写到宿主 cwd、块内非法元素绕过门禁。全部钉成可观测判据。
+{
+  const fsp = await import('node:fs/promises')
+  const { execFileSync } = await import('node:child_process')
+  const theme31 = ['theme:', '  colors: {ink: "#1F2937"}', '  textStyles:', '    body: {fontSize: 16, color: "$ink"}']
+  const mkDeck31 = async (name, pageTexts) => {
+    const d = join(smokeDir, '.tmp-b7b8', name)
+    await fsp.mkdir(join(d, 'pages'), { recursive: true })
+    await fsp.writeFile(join(d, 'deck.yaml'), ['version: 1', `title: ${name}`, 'size: [960, 540]', ...theme31, 'pages:', ...pageTexts.map((_, i) => `  - pages/0${i + 1}.yaml`), ''].join('\n'))
+    for (let i = 0; i < pageTexts.length; i++) {
+      await fsp.writeFile(join(d, 'pages', `0${i + 1}.yaml`), ['pageType: content', 'elements:',
+        '  - elementId: t', '    elementType: text', '    bounds: [80, 200, 800, 60]',
+        `    content: {text: ${JSON.stringify(pageTexts[i])}, style: "$body"}`, ''].join('\n'))
+    }
+    return d
+  }
+
+  // A1：check-preset 的模板变量守卫自证（1.2.3 的守卫曾是 process.exit 之后的死代码）
+  let selfOk = false
+  let selfInfo = ''
+  try {
+    const o = execFileSync(process.execPath, [join(root, 'scripts', 'check-preset.mjs'), '--self-test'], { cwd: root, encoding: 'utf8', timeout: 60000 })
+    selfOk = /模板变量守卫自检/.test(String(o))
+    selfInfo = String(o).split('\n')[0].slice(0, 90)
+  } catch (e) { selfInfo = String(e.message).slice(0, 160) }
+  ok('A1：check-preset 模板变量守卫自检可执行（{{cwd}} 必被抓、model/provider 放行）——此前是 process.exit 之后的死代码',
+    selfOk, selfInfo)
+
+  // B7：out 相对路径的落点——splice/patch 相对 deck 目录、slice 相对**源文件所在目录**。
+  // 旧实现把相对 out 直接交给 writeFile ⇒ 落到宿主进程 cwd（可能是 harness/profile 目录），用户找不到文件。
+  const b7 = join(smokeDir, '.tmp-b7b8')
+  let b7Info = ''
+  try {
+    const srcDir = await mkDeck31('b7src', ['源 1', '源 2'])
+    const srcPptx = join(b7, 'source.pptx')
+    await exportPptx(await resolveDeck(srcDir), { out: srcPptx, engine: 'pptd' })
+    const spliceDir = await mkDeck31('b7splice', ['替换页'])
+    const spliced = await spliceIntoSource({ deckDir: spliceDir, source: srcPptx, page: 1, sourcePage: 2, out: 'rel-spliced.pptx' })
+    await mkDeck31('b7slice', ['x'])
+    const sliced = await sliceSource({ source: srcPptx, page: 1, out: 'rel-slice.pptx' })
+    const patchDir = await mkDeck31('b7patch', ['补丁页'])
+    const patched = await surgicalPatch({ template: srcPptx, deckDir: patchDir, out: 'rel-patch.pptx' })
+    const wantSplice = join(spliceDir, 'rel-spliced.pptx')
+    const wantSlice = join(b7, 'rel-slice.pptx')
+    const wantPatch = join(patchDir, 'rel-patch.pptx')
+    const b7Ok = spliced.out === wantSplice && existsSync(wantSplice)
+      && sliced.out === wantSlice && existsSync(wantSlice)
+      && patched.out === wantPatch && existsSync(wantPatch)
+    b7Info = `splice=${spliced.out === wantSplice}｜slice=${sliced.out === wantSlice}｜patch=${patched.out === wantPatch}`
+    ok('B7：out 相对路径落到 deck 目录（splice/patch）与源文件目录（slice），不再落到宿主 cwd',
+      b7Ok, b7Info)
+  } catch (e) {
+    ok('B7：out 相对路径落到 deck 目录（splice/patch）与源文件目录（slice），不再落到宿主 cwd', false, String(e.message).slice(0, 200))
+  }
+
+  // B8：blocks 物化后的元素必须过 schema（此前 validatePage 在物化**之前**跑 ⇒ 块内非法元素绕过 ppt_check）
+  let b8BadRejected = false
+  let b8BadInfo = ''
+  try {
+    const badDir = join(b7, 'b8bad')
+    await fsp.mkdir(join(badDir, 'pages'), { recursive: true })
+    await fsp.writeFile(join(badDir, 'deck.yaml'), ['version: 1', 'title: b8bad', 'size: [960, 540]', ...theme31,
+      'blocks:', '  bad:', '    elements:', '      - elementId: s', '        elementType: shape', '        kind: notAKind', '        bounds: [0, 0, 10, 10]',
+      'pages:', '  - pages/01.yaml', ''].join('\n'))
+    await fsp.writeFile(join(badDir, 'pages/01.yaml'), ['pageType: content', 'blocks:', '  - name: bad', '    at: [10, 10]', 'elements: []', ''].join('\n'))
+    try { await resolveDeck(badDir); b8BadInfo = '未报错（非法块被接受）' } catch (e) {
+      b8BadRejected = /#blocks/.test(String(e.message)) && /kind/.test(String(e.message))
+      b8BadInfo = String(e.message).split('\n')[0].slice(0, 140)
+    }
+  } catch (e) { b8BadInfo = String(e.message).slice(0, 160) }
+  ok('B8：块内非法元素（shape kind=notAKind）被 schema 拒绝，且错误带块名/页来源',
+    b8BadRejected, b8BadInfo)
+  let b8GoodOk = false
+  let b8GoodInfo = ''
+  try {
+    const goodDir = join(b7, 'b8good')
+    await fsp.mkdir(join(goodDir, 'pages'), { recursive: true })
+    await fsp.writeFile(join(goodDir, 'deck.yaml'), ['version: 1', 'title: b8good', 'size: [960, 540]', ...theme31,
+      'blocks:', '  card:', '    elements:', '      - elementId: t', '        elementType: text', '        bounds: [0, 0, 100, 40]', '        content: {text: "块"}',
+      'pages:', '  - pages/01.yaml', ''].join('\n'))
+    await fsp.writeFile(join(goodDir, 'pages/01.yaml'), ['pageType: content', 'blocks:', '  - name: card', '    at: [10, 10]', 'elements: []', ''].join('\n'))
+    const g = await resolveDeck(goodDir)
+    const ids = (g.pages[0].page.elements ?? []).map((e) => e.elementId)
+    b8GoodOk = ids.includes('bk1_t')
+    b8GoodInfo = JSON.stringify(ids)
+  } catch (e) { b8GoodInfo = String(e.message).slice(0, 160) }
+  ok('B8：合法 blocks 仍正常物化（id 前缀 bk1_ 透传、不被新校验误杀）', b8GoodOk, b8GoodInfo)
+
+  await fsp.rm(b7, { recursive: true, force: true }).catch(() => {})
+}
+
 // ══ 32. v1.0.0-修订：P1 表格导出结构回归 + parity + P6 线真实相交（一致性）═══════════
 const { collectDeclarable } = await import('../lib/verify.js')
 // P1：带表格 deck 导出 → graphicFrame 无嵌套 a:xfrm + tableStyleId + parity 完整
@@ -2013,6 +2200,49 @@ if (pyEnv.has) {
   ok('python-pptx 兜底：图表是原生可编辑图表（无 python-pptx：跳过）', true)
 }
 await rm(pyDeck, { recursive: true, force: true })
+
+// 43.4 python-pptx 兜底引擎：image fit 也必须进 OOXML（2026-10-23 用户反馈 P0-2 的引擎覆盖）
+// 兜底/显式引擎的旧实现是 `add_picture(..., w, h)` —— 一律拉伸；只有与 pptd/预览层同口径才算"彻底修好"。
+if (pyEnv.has) {
+  let pass434 = false
+  let info434 = ''
+  const fitPyDir = join(root, 'examples', 'smoke', '.tmp-py-fit')
+  try {
+    await rm(fitPyDir, { recursive: true, force: true })
+    await mkdir(join(fitPyDir, 'pages'), { recursive: true })
+    await mkdir(join(fitPyDir, 'media'), { recursive: true })
+    await writeFile(join(fitPyDir, 'media', 'wide.png'), makePng(400, 100, [37, 99, 235])) // 4:1
+    await writeFile(join(fitPyDir, 'deck.yaml'), ['version: 1', 'title: py-fit', 'size: [960, 540]', 'theme:',
+      '  colors: {ink: "#1F2937"}', '  textStyles:', '    body: {fontSize: 16, color: "$ink"}',
+      'pages:', '  - pages/01.yaml', ''].join('\n'), 'utf8')
+    await writeFile(join(fitPyDir, 'pages', '01.yaml'), ['pageType: content', 'elements:',
+      '  - elementId: contain', '    elementType: image', '    bounds: [40, 40, 200, 200]', '    src: media/wide.png', '    fit: contain',
+      '  - elementId: cover', '    elementType: image', '    bounds: [300, 40, 200, 200]', '    src: media/wide.png', '    fit: cover',
+      '  - elementId: fill', '    elementType: image', '    bounds: [560, 40, 200, 200]', '    src: media/wide.png', '    fit: fill',
+      '  - elementId: dflt', '    elementType: image', '    bounds: [40, 300, 200, 200]', '    src: media/wide.png', ''].join('\n'), 'utf8')
+    const e434 = await runPythonExport(await resolveDeck(fitPyDir), join(fitPyDir, 'out.pptx'))
+    const z434 = zipRead(readFileSync(e434.file))
+    const x434 = decodeXml(z434.get('ppt/slides/slide1.xml'))
+    const pics434 = [...x434.matchAll(/<p:pic>[\s\S]*?<\/p:pic>/g)].map((m) => m[0])
+    const g434 = pics434.map((seg) => ({
+      off: /<a:off x="(-?\d+)" y="(-?\d+)"\/>/.exec(seg)?.slice(1).map(Number),
+      ext: /<a:ext cx="(\d+)" cy="(\d+)"\/>/.exec(seg)?.slice(1).map(Number),
+      srcRect: /<a:srcRect[^/]*\/>/.exec(seg)?.[0] ?? null,
+    }))
+    const EMU1 = 12700
+    pass434 = g434.length === 4
+      && g434[0].off?.[0] === 40 * EMU1 && g434[0].off?.[1] === 115 * EMU1
+      && g434[0].ext?.[0] === 200 * EMU1 && g434[0].ext?.[1] === 50 * EMU1 && g434[0].srcRect === null
+      && g434[1].ext?.[0] === 200 * EMU1 && g434[1].ext?.[1] === 200 * EMU1 && g434[1].srcRect === '<a:srcRect l="37500" r="37500"/>'
+      && g434[2].srcRect === null
+      && g434[3].srcRect === '<a:srcRect l="37500" r="37500"/>'
+    info434 = JSON.stringify(g434)
+  } catch (e) { info434 = String(e.message).slice(0, 240) }
+  ok('python-pptx 兜底：image fit 进 OOXML（contain 等比居中 + cover srcRect；旧实现一律拉伸）', pass434, info434)
+  await rm(fitPyDir, { recursive: true, force: true }).catch(() => {})
+} else {
+  ok('python-pptx 兜底：image fit 进 OOXML（无 python-pptx：跳过）', true)
+}
 
 // ── 44. 表格字号：audit 档的最小字号断言不得被表格自己架空（2026-09-18 新增）──────────────
 // 背景（真 bug · 自相矛盾）：export-pptx 的表格 cell 硬编码 `sz="1100"`（11pt），而 audit 回读断言

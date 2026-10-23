@@ -7,7 +7,7 @@
  *       全局管道（`/ppt-preview` 路由）+ 预设**声明**（想隔离时追加一行**自定位行**）；
  *       隔离生效时**不注册任何能力面**——本档只负责"让预设存在 + 判定健康 + 出问题时兜底"。
  *     · **preset 档**（由自定位行挂进「PPT 工作室」预设的那一份，`config.scope === 'preset'`）：
- *       22 个 `ppt_*` 工具 / `/ppt` 命令面 / `ppt_state` / 4 本内嵌技能 / 语义路由 / 工作流提示段，
+ *       22 个 `ppt_*` 工具 / `/ppt` 命令面 / `ppt_state` / 17 本内嵌技能 / 语义路由 / 工作流提示段，
  *       **全部注册在预设作用域** ⇒ 只对该预设的会话可见（用户要求：其他预设完全不受影响）。
  *   ⇒ 「PPT 工作室」预设第一次成为**真正的开关**（此前它只提供人格，工具全局可见）。
  *
@@ -201,7 +201,7 @@ function registerRouting(ctx) {
   })
 }
 
-/** 能力面：22 个 `ppt_*` 工具 / `/ppt` 命令面 / `ppt_state` / 4 本内嵌技能，注册进**本 ctx 所在的作用域**。 */
+/** 能力面：22 个 `ppt_*` 工具 / `/ppt` 命令面 / `ppt_state` / 17 本内嵌技能，注册进**本 ctx 所在的作用域**。 */
 function registerFaces(ctx, tier) {
   const faces = []
   const step = (label, fn) => { try { fn() } catch (e) { faces.push(`${label}: ${String(e?.message ?? e)}`) } }

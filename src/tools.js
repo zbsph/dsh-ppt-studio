@@ -787,13 +787,13 @@ export function registerTools(ctx) {
 
   reg({
     name: 'ppt_splice',
-    description: '保真交付（v0.15.0，反馈二 A3/A9 ★★）：把工作区某一页**替换进源 .pptx**——保留源母版/布局（横幅/页脚原样）、保留该页备注关系、媒体合并；**其余页条目逐字节不变（SHA256 自动自证）**。适用"编辑既有精美 PPT 的某一页"场景（整册近似重渲会伤其他页，A4）。输出 = 整册副本（仅目标页被替换）——与手工 zip 手术等价，一次命令',
+    description: '保真交付（v0.15.0，反馈二 A3/A9 ★★）：把工作区某一页**替换进源 .pptx**——保留源母版/布局（横幅/页脚原样）、保留该页备注关系；**其余页条目逐字节不变（SHA256 自动自证）**。该页引用的全部部件按 rels 搬运（图片/图表/内嵌工作簿），并在写出前做 OPC 关系闭包自检（含图表页不再产出打不开的文件，2026-10-23 P0 修复）。适用"编辑既有精美 PPT 的某一页"场景（整册近似重渲会伤其他页，A4）。输出 = 整册副本（仅目标页被替换）——与手工 zip 手术等价，一次命令',
     parameters: {
       dir: { type: 'string', required: true, description: '工作区目录（含 deck.yaml——被替换页的内容真相）' },
       source: { type: 'string', required: true, description: '源 .pptx 绝对路径（用户原稿）' },
       page: { type: 'number', required: true, description: 'deck 页号（1 基）——用工作区第几页替换' },
       sourcePage: { type: 'number', description: '源 .pptx 中要被替换的页号（缺省 = page）' },
-      out: { type: 'string', description: '输出 .pptx（缺省 <源>-spliced.pptx）' },
+      out: { type: 'string', description: '输出 .pptx：绝对路径原样；相对路径相对 dir（deck 工作区目录）；缺省 <源>-spliced.pptx' },
     },
     output: markdownResult(),
     async execute(args) {
@@ -808,9 +808,11 @@ export function registerTools(ctx) {
           `  - 目标页：源第 ${r.replaced.sourcePage} 页 ← deck 第 ${r.replaced.deckPage} 页（${r.replaced.slide}）`,
           `  - 其余条目：${r.unchangedCount} 个 SHA256 与源逐字节一致（${r.changed.length ? `变更：${r.changed.join('、')}` : '零非预期变更'}）`,
           `  - 媒体：新增 ${r.mediaAdded} / 复用源同名 ${r.mediaReused}；备注关系：${r.notesKept ? '保留' : '（源该页无备注）'}`,
+          r.partsAdded > r.mediaAdded ? `  - 随页部件：${r.partsAdded - r.mediaAdded} 个（图表/内嵌工作簿等，按 rels 全量搬运）` : '',
+          r.relsClosed === false ? '  - ✗ OPC 关系闭包自检未通过（不应发生，请反馈插件团队）' : '  - OPC 关系闭包：✓ 无悬空引用/部件',
           `  - 源母版/布局/主题：原样保留（横幅/页脚不动）；若需"单页独立版"→ 下一步 ppt_slice source=... page=...`,
           '下一步：ppt_visual pages=' + r.replaced.sourcePage + '（抽查该页真渲染观感）。',
-        ].join('\n')
+        ].filter(Boolean).join('\n')
       } catch (error) {
         return `✗ 替换失败：\n${errText(error)}`
       }
@@ -823,7 +825,7 @@ export function registerTools(ctx) {
     parameters: {
       source: { type: 'string', required: true, description: '源 .pptx 绝对路径' },
       page: { type: 'number', required: true, description: '保留的页号（1 基）' },
-      out: { type: 'string', description: '输出 .pptx（缺省 <源>-single.pptx）' },
+      out: { type: 'string', description: '输出 .pptx：绝对路径原样；相对路径相对源文件所在目录；缺省 <源>-single.pptx' },
     },
     output: markdownResult(),
     async execute(args) {
@@ -868,7 +870,7 @@ export function registerTools(ctx) {
     parameters: {
       template: { type: 'string', required: true, description: '模板 .pptx 绝对路径（优先用工作区 reference/template.pptx——双轨真相层）' },
       dir: { type: 'string', required: true, description: '工作区目录（含 deck.yaml；页面内容为内容真相）' },
-      out: { type: 'string', description: '输出 .pptx（缺省 <dir>/out-surgical.pptx）' },
+      out: { type: 'string', description: '输出 .pptx：绝对路径原样；相对路径相对 dir；缺省 <dir>/out-surgical.pptx' },
       map: { type: 'string', description: '页映射 JSON（可选）：{"1":3,"2":1} 模板页号(1-based)→deck 页号(1-based)；缺省=序号对齐' },
     },
     output: markdownResult(),
@@ -879,8 +881,9 @@ export function registerTools(ctx) {
           pageMap = JSON.parse(map)
           if (!pageMap || typeof pageMap !== 'object' || Array.isArray(pageMap)) return '✗ map 必须是 JSON 对象：{"模板页号": "deck 页号"}'
         }
-        const outPath = out ?? join(dir, 'out-surgical.pptx')
-        const r = await surgicalPatch({ template, deckDir: dir, out: outPath, map: pageMap })
+        // out 的路径解析统一在库层（相对路径相对 deckDir；绝对路径原样）——2026-10-23 P1：
+        // 旧实现把用户给的相对 out 直接丢给 writeFile，落点变成宿主进程 cwd（可能是 harness/profile 目录）。
+        const r = await surgicalPatch({ template, deckDir: dir, out, map: pageMap })
         const lines = [
           `✓ 手术完成：${r.out}（模板 ${r.templateSlides} 页 / deck ${r.deckPages} 页）`,
           '',

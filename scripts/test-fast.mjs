@@ -85,8 +85,11 @@ run('build（src → lib）', 'node scripts/build.mjs')
 run('语法体检（src/lib/scripts 全覆盖）', 'node scripts/check-syntax.mjs')
 run('LF 守卫', 'node scripts/check-tracked-lf.mjs')
 run('lib 新鲜度', 'node scripts/check-lib-freshness.mjs')
-run('预设门禁', 'node scripts/check-preset.mjs')
+run('预设门禁', 'node scripts/check-preset.mjs --self-test')
 run('手册事实审计', 'node scripts/audit-manual-facts.mjs')
+// 常驻 prompt 成本门禁（2026-10-23 接线）：之前只在本机手动跑，基线漂移长期无人发现。
+// 它读 lib/（build 已在本档第一步完成），代价 ~1s，属于"廉价跨切面守卫"，故进快测固定底座。
+run('常驻 prompt 成本门禁', 'node scripts/probe-prompt-cost.mjs --check')
 
 // ② 主体：按影响面决定
 if (has('--full') || guarded) {

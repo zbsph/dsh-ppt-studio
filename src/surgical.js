@@ -18,7 +18,7 @@
  */
 import { readFile, writeFile } from 'node:fs/promises'
 import { createHash } from 'node:crypto'
-import { join, basename } from 'node:path'
+import { isAbsolute, join, basename } from 'node:path'
 import { zipRead, zipWrite, decodeXml } from './zips.js'
 import { parseXml, first, children, allText } from './xmljs.js'
 
@@ -333,13 +333,16 @@ export async function surgicalPatch({ template, deckDir, out, map = {} }) {
   if (extraDeckPages.length) {
     warnings.push(`deck 有 ${extraDeckPages.length} 页（第 ${extraDeckPages.join('、')} 页）超过模板页数——v1 手术只处理模板已有页；新增页请用常规 ppt_export（成品为两段混合）`)
   }
+  // 输出路径：绝对路径原样；相对路径相对 **deck 工作区目录**（2026-10-23 P1 修复：
+  // 旧实现把相对路径直接交给 writeFile ⇒ 落到宿主进程 cwd，可能是 harness/profile 目录，用户找不到文件）。
+  const outPath = out ? (isAbsolute(out) ? out : join(deckDir, out)) : join(deckDir, 'out-surgical.pptx')
   // 重打包（条目保序）
   const outBuf = zipWrite(Object.fromEntries(entries))
   // 验证：未手术条目内容 sha256 与模板一致
   const ver = verifySurgical(outBuf, tplZip, patched)
-  await writeFile(out, outBuf)
+  await writeFile(outPath, outBuf)
   return {
-    out,
+    out: outPath,
     pages,
     patched: patched.size,
     fields,

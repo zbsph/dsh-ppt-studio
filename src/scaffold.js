@@ -84,7 +84,7 @@ elements:
   elementType: image
   bounds: [60, 100, 400, 300]
   src: media/pic.png          # 相对 deck 根；子目录与中文/空格名都可以（media/子目录/图.png）
-  fit: cover                  # cover|contain|fill
+  fit: cover                  # cover|contain|fill（缺省 cover；预览与成品一致）
 - elementId: tbl
   elementType: table
   bounds: [60, 420, 840, 80]

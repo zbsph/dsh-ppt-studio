@@ -2,10 +2,10 @@
 
 在 DeepSeek Harness 里说需求，它把 PPT 做出来：先定大纲和版式，再逐页制作，每页过一遍自动检查，最后交付一个能用 PowerPoint 打开、继续改的 `.pptx`。
 
-当前版本 **1.1.5**，安装包约 **890 kB**（1.0.3 及更早的版本是 35 MB，因为随包带着 4 套没人用过的导入模板，1.0.4 把它们删了）。
+当前版本 **1.2.4**，安装包约 **1.2 MB**（1.0.3 及更早的版本是 35 MB，因为随包带着 4 套没人用过的导入模板，1.0.4 把它们删了）。
 
 **隔离是默认的**：装好之后，这套能力**只出现在「PPT 工作室」预设里**，其他预设与"没装插件"完全一样（§1.6）。
-新建会话时选「PPT 工作室」即可；预设提供的是"完整工作台"——人格 + 22 个工具 + `/ppt` 命令 + 4 本手册 + 工作流提示段。
+新建会话时选「PPT 工作室」即可；预设提供的是"完整工作台"——人格 + 22 个工具 + `/ppt` 命令 + 17 本内置技能（4 本手册 + 13 本复杂图）+ 工作流提示段。
 
 ---
 
@@ -13,7 +13,7 @@
 
 ### 1.1 需要什么
 
-一台能跑 `dsh web` 的机器，或者 **DeepSeek Harness 桌面端**（桌面端见 §1.7，装法不同）。宿主版本要求 **DSH `>= 0.1.7-rc.1`**（本包 1.0.7 起；`0.1.7-rc.1` 命令行版验过，`0.1.7-rc.2` 命令行版与**桌面端**都验过）。Office、Edge/Chrome、python-pptx 都是**可选增强**：没有它们插件照常工作，只是真渲染、截图、兜底引擎这些能力自动降级，交付说明里会写明。
+一台能跑 `dsh web` 的机器，或者 **DeepSeek Harness 桌面端**（桌面端见 §1.7，装法不同）。宿主版本要求 **DSH `>= 0.1.7-rc.1`**（`engines.dsh` 声明的下限）；本包 1.2.2 起按 **0.2.1-rc.2**（命令行版与**桌面端**）适配实测，1.2.4 沿同一目标版本。Office、Edge/Chrome、python-pptx 都是**可选增强**：没有它们插件照常工作，只是真渲染、截图、兜底引擎这些能力自动降级，交付说明里会写明。
 
 ### 1.2 一条命令（默认走 npm）
 
@@ -36,10 +36,10 @@ dsh plugin --profile web add dsh-ppt-studio
 dsh plugin --profile web add <粘贴那条资产 URL>
 ```
 
-资产名形如 `dsh-ppt-studio-<版本>-<YYYYMMDD-HHmm>-<构建戳前 8 位>.tgz`：版本、构建时间、构建内容的前 8 位哈希。页面会保留历次构建，所以**按上传时间取最新那条**。懒得翻页面就用这行拿名字（把 `<版本>` 换成当前 tag，例如 `v1.1.1`）：
+资产名形如 `dsh-ppt-studio-<版本>-<YYYYMMDD-HHmm>-<构建戳前 8 位>.tgz`：版本、构建时间、构建内容的前 8 位哈希。页面会保留历次构建，所以**按上传时间取最新那条**。懒得翻页面就用这行拿名字（把 `<版本>` 换成当前 tag，例如 `v1.2.4`）：
 
 ```powershell
-gh release view v1.1.0 --json assets --jq '.assets | sort_by(.createdAt) | last | .name'
+gh release view v1.2.4 --json assets --jq '.assets | sort_by(.createdAt) | last | .name'
 ```
 
 也可以直接装仓库地址，产物和 tgz 一样（`lib/` 已入库）：
@@ -103,8 +103,8 @@ node D:\plugins\package\scripts\install.mjs
 
 ### 1.6 隔离：默认只有「PPT 工作室」能看到这些工具
 
-**默认就是隔离的**：装完之后，**其他预设完全不受影响**——看不到 `ppt_*` 工具、看不到那 4 本手册，
-也不会被注入任何 PPT 工作流提示段；只有在「PPT 工作室」预设里才有完整能力面（22 个工具 + `/ppt` + 4 本手册 + 工作流）。
+**默认就是隔离的**：装完之后，**其他预设完全不受影响**——看不到 `ppt_*` 工具、看不到那 17 本内置技能，
+也不会被注入任何 PPT 工作流提示段；只有在「PPT 工作室」预设里才有完整能力面（22 个工具 + `/ppt` + 17 本内置技能 + 工作流）。
 要切换：新建会话时选「PPT 工作室」；已经开着的会话也可以直接切预设，工具会立刻出现。
 
 怎么做到的（一句话）：插件声明预设时，会给自己那份组合**追加一行自定位行**——内容是本包入口的**绝对 `file://` 地址**，
@@ -191,9 +191,11 @@ node D:\plugins\package\scripts\install-desktop.mjs
 
 任务是按语义识别的：说清楚是 PPT 需求才进入工作流，随便提一句"我昨天做了个 PPT"不会误触发。
 
-### 2.3 自带 4 本手册
+### 2.3 自带 17 本内置技能（4 本手册 + 13 本复杂图）
 
-插件里内置了 4 本手册，模型按需加载，不用你管：
+插件里内置 **17 本技能**，模型按需加载，不用你管。**技能描述常驻在系统提示里（只写触发条件），正文只在真正用到时加载**——所以"装了很多本"不会让你每一轮都多付上下文成本。
+
+**4 本手册**（提问与制作手艺）：
 
 | 手册 | 什么时候用 |
 |---|---|
@@ -202,7 +204,26 @@ node D:\plugins\package\scripts\install-desktop.mjs
 | `ppt-studio-data` | 页面要放数字或图表 |
 | `ppt-studio-copy` | 写标题要点，"太 AI 了 / 像机器写的" |
 
-这 4 本是纯增量：只给启发式和反例，不改规则、也不定义任何检查数值。没有 `dsh-skill` 服务的极简装配下也能用，只是手册不以目录形式出现。
+**13 本复杂图技能**（1 本总纲 `ppt-studio-diagram` + 12 份配方）：总纲讲**何时用哪个机制**（attach / 正交化 / 结构声明）、门禁 code 对照、配方索引与验证纪律；每份配方只讲一种图怎么画。
+
+| 配方 | 画什么 |
+|---|---|
+| `ppt-studio-diagram-tree` | 层级树 / 组织图（根居中、同组子树用分组容器） |
+| `ppt-studio-diagram-matrix` | 矩阵 / 象限（行列网格 + 表头） |
+| `ppt-studio-diagram-timeline` | 时间轴 / 里程碑（水平主轴 + 上下交替标签） |
+| `ppt-studio-diagram-swimlane` | 泳道图 |
+| `ppt-studio-diagram-compare` | 左右对比（双列容器 + 中缝） |
+| `ppt-studio-diagram-loop` | 闭环 / 反馈回路（环形排布 + 环外折线） |
+| `ppt-studio-diagram-funnel` | 漏斗 / 金字塔（custGeom 梯形逐段收窄） |
+| `ppt-studio-diagram-steps-ring` | 步骤环（真圆 + 圆周编号点） |
+| `ppt-studio-diagram-sequence` | 时序图（生命线 + 水平消息箭头） |
+| `ppt-studio-diagram-state` | 状态机（分层 + 转移总线） |
+| `ppt-studio-diagram-flow` | 流程图（顺序 + 回边） |
+| `ppt-studio-diagram-layers` | 分层架构 / 技术栈（层芯片 + 层带） |
+
+**加载时机**：要画任何非模板化的复杂图（或手画遇阻、门禁报错）→ 先加载总纲；图型确定后只加载**对应那一份配方**。普通页面（模板母版、文字 / 表格 / 原生图表）不会加载这 13 本。
+
+这 17 本是纯增量：只给启发式和反例，不改规则、也不定义任何检查数值。没有 `dsh-skill` 服务的极简装配下也能用，只是技能不以目录形式出现（`ppt_state` 的 `manualSkill` 字段可查注册与可见状态）。
 
 ---
 
@@ -283,11 +304,9 @@ ppt_visual(pptx=<spliced 产物>, pages="15")          # 抽查这页真实观�
 能。截图、实测、真渲染会自动降级并标注，HTML 预览和结构检查照常。交付说明里会写"未经视觉审阅"。
 
 **图表支持哪些？**
-bar / line / pie，**矢量拼绘**：我们在 pptx 里画的是**普通形状**（柱=矩形、折线=连接线+圆点、饼=按角度切分的饼形扇区），
-**不是 PowerPoint 的图表对象**。所以成品里：移动/缩放/改色/改字号照常（它们就是形状），但**没有"编辑数据"**、不能切换图表类型，
-改一个数字也不会让柱子高度或扇形角度跟着变（图形和文字是各自独立的对象）。
-另外 `chart` 只画**图形本身**，分类名/数值/单位/图例要用文本元素自己写（DSL 里没有这些字段）——改了数字记得同时改形状或回来改 DSL 重导。
-用 python-pptx 兜底引擎时图表是**原生可编辑图表**（带内嵌数据工作簿：PowerPoint 里能"编辑数据"、能换图表类型）——正好补上引擎 A 矢量图表不可改数据的短板。复杂图表也可以直接用图片或形状拼；引擎 A 要不要也改成原生图表，见 docs/04 的「原生图表」路线项。
+bar / line / pie。**默认导出的是 PowerPoint 原生可编辑图表**（1.1.4 起）：成品里是真正的图表对象（`ppt/charts/*.xml` + 内嵌数据工作簿），可以**编辑数据**、**换图表类型**，改数字后柱子 / 折线 / 扇区会跟着重算——和你直接在 PowerPoint 里插入的图表一样。分类名、数值与多系列都由图表数据（`data.cols/rows` + `series`）直接驱动：默认画坐标轴；饼图默认显示"分类名 + 百分比"标签，多系列/饼图默认带图例（`legend` 可改位置或关闭），柱/线要显示数值可写 `labels: true`。**单位没有专门字段**，写在标题或文本元素里。
+只有显式写 `chart.render: vector` 才回退到旧的**矢量拼绘**降级：画的是**普通形状**（柱=矩形、折线=连接线+圆点、饼=按角度切分的饼形扇区），**不是 PowerPoint 的图表对象**。所以成品里：移动 / 缩放 / 改色 / 改字号照常（它们就是形状），但**没有"编辑数据"**、不能切换图表类型，改一个数字也不会让柱子高度或扇形角度跟着变；这条通路也不画坐标轴 / 图例 / 分类名（要的话得自己用文本元素补）。
+python-pptx 兜底引擎 / 显式指定引擎产出的同样是**原生可编辑图表**（带内嵌数据工作簿），与默认通路一致。复杂图表也可以直接用图片或形状拼。
 
 **讲稿能进 pptx 吗？**
 能。页面写 `notes:`（多行用 `|` 块标量），导出就成了 PowerPoint 备注页，`ppt_import` 也能读回来改。没写 `notes:` 的页不会产生备注部件，老工程导出结果不变。翻页和计时属于放映设置，不在插件范围内。
@@ -331,23 +350,24 @@ v1.0.0 修订前旧引擎的结构 bug（graphicFrame 里嵌了 `<a:xfrm>`，Pow
 - **机制变更**：`0.1.7` 换了预设的交付方式（磁盘目录 → 注册表声明，见 §1.6），参照物文件也从 `dsh-agent-presets/presets/standard/agent.cordis.yml` 换成了 `dsh-web-app/presets/standard.patch.yml`。本包 1.0.7 起已适配；`check-preset.mjs` 两种格式都认，认到哪种会在输出第一屏写明。
 - **完全看不到这个预设**：调一次 `ppt_state`，看 `presetDelivery` 字段——它会写明是否已声明、以及失败原因（例如宿主没装配 `agentPresets` 注册表）。这比翻日志可靠。
 
-**插件对外只交付三样东西**：`ppt_*` 工具面 + `/ppt` 命令面、工作流提示段、内置手册。都挂在插件实例上，卸载即净。想确认手册通道：调一次 `ppt_state`，`manualSkill` 会报注册与可见状态。
+**插件对外只交付三样东西**：`ppt_*` 工具面 + `/ppt` 命令面、工作流提示段、内置技能（17 本）。都挂在插件实例上，卸载即净。想确认技能通道：调一次 `ppt_state`，`manualSkill` 会报注册与可见状态（`skills` 字段逐本列出）。
 
 ---
 
 ## 6. 环境要求与已知边界
 
-**环境**：DSH web `0.1.7-rc.2`（Windows 主机实测；COM/Edge 探测路径按 Windows 写的，macOS/Linux 未验证）。路径与中间层一律 UTF-8，也兼容 WPS 导出的 UTF-16 文件。
+**环境**：DSH web `0.2.1-rc.2`（Windows 主机实测；COM/Edge 探测路径按 Windows 写的，macOS/Linux 未验证）。路径与中间层一律 UTF-8，也兼容 WPS 导出的 UTF-16 文件。
 
 **支持的元素**：text / shape / line / image / table / chart。
 
 - shape 支持 rect、roundRect、ellipse、triangle，常见的 prst 自选图形（箭头、菱形、五边形、流程图等），以及 custGeom 自定义路径，带旋转、纯色/渐变/透明度填充。
 - line 只有两个点，多点折线要拆成首尾相接的多条。
-- chart 支持 bar/line/pie；图表里的分类名、数值、单位、图例需要你自己用文本元素补上（DSL 里没有这些字段）。
+- chart 支持 bar/line/pie，**默认导出 PowerPoint 原生可编辑图表**（数据在 `data.cols/rows`，多系列加 `series`；分类名 / 数值 / 图例 / 坐标轴随图表对象走）；只有显式 `chart.render: vector` 才回退到不可改数据的矢量拼绘（见 §5）。
 - 背景支持 hex、主题引用、纯色、图片（cover/contain/fill）。
 - 图片 `src` 是相对 deck 根的路径：`media/子目录/图.png`、中文或带空格的文件名都可以（预览会正确处理）。
   两个**不同目录下的同名文件**也没问题——导出会自动给包内部件名加哈希避免互相覆盖（PPT 里的图片内容不受影响，导出输出里会说明改了什么）。
   `src` 写 http(s) 网址时**只有预览能显示**，导出会写 1×1 白色占位并醒目警告（插件不联网取图）。
+- 图片 `fit`（`cover`/`contain`/`fill`）**在预览与成品里一致**（2026-10-23 修复；此前导出一律拉伸）：`cover` 按框裁切、`contain` 等比缩小留白、`fill` 拉伸填满；不写 `fit` 时按 `cover`（与预览同口径）。
 
 **这些不做，都有替代路径**：
 
@@ -463,10 +483,10 @@ ppt_visual                  # Office 真渲染复核（有 Office 时；audit �
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
 npm run test:fast               # 【每条改动默认跑】廉价跨切面守卫 + 按改动文件选影响面（实测：只改文档 ≈8s）
-npm test                        # 【批次边界/发版】全量门禁：build + LF 守卫 + smoke（322 断言）+ 预设自检（≈5.5min）
-npm run test:release            # 【发版】全量 + e2e + 隔离矩阵 + 原生图表 + 损失审计 + 安装自证（并行，≈5min）
+npm test                        # 【批次边界/发版】全量门禁：build + LF 守卫（文本 LF + 二进制魔数）+ smoke（331 断言）+ 预设自检（--self-test）+ 常驻 prompt 成本门禁（≈5.5min）
+npm run test:release            # 【发版】全量 + e2e + 隔离矩阵 + 原生图表 + 损失审计 + 安装自证（COM 相关串行、其余并行，本机实测 ≈5.3min）
 npm run test:map:audit          # 防"孤儿分节"：每个 smoke 分节都必须能被影响面选中
-npm run check:eol               # 发行字节守卫：跟踪的文本文件必须全 LF（--fix 就地修）
+npm run check:eol               # 发行字节守卫：跟踪文本必须全 LF + 跟踪二进制魔数有效（--fix 只修 LF）
 npm run fresh                   # 用户视角终验：干净克隆 npm test + 真装一遍
 npm run test:bundle             # 安装路径自证：隔离 DSH_HOME + 真 dsh plugin add + dump-config
 npm run test:preset             # 预设自检：本预设 vs 随包 standard 逐行比对（DSH 升级后必跑）
@@ -476,29 +496,33 @@ node scripts/e2e-1.0.mjs        # 端到端（13 断言：真浏览器测量 + �
 node scripts/audit-manual-facts.mjs   # 手册事实审计：逐条核对"手册 vs 源码"（39 条）
 ```
 
-**"干净检出"才算验收**。`.github/workflows/ci.yml` 在 ubuntu 和 windows 上各自干净检出后跑 `npm test`，并在 windows 上真跑一遍用户会敲的那条命令。这条规矩来自两次真实事故：Windows 干净克隆是 CRLF（Git for Windows 默认 `core.autocrlf=true`），按 `\n` 做的文本手术会**静默失效**；没有 Office 的机器上，整页预览断言必红，而预览本来就是 PowerPoint COM 渲染出来的。现在 `.gitattributes` 把检出字节钉成 LF，`normalizeText()` 兜住手改过的 CRLF/BOM 文件，Office 和浏览器相关的断言一律显式降级为跳过、且保持断言总数恒定。
+**"干净检出"才算验收**。`.github/workflows/ci.yml` 在 ubuntu 和 windows 上各自干净检出后跑 `npm test`，并在 windows 上真跑一遍用户会敲的那条命令。这条规矩来自两次真实事故：Windows 干净克隆是 CRLF（Git for Windows 默认 `core.autocrlf=true`），按 `\n` 做的文本手术会**静默失效**；没有 Office 的机器上，整页预览断言必红，而预览本来就是 PowerPoint COM 渲染出来的。现在 `.gitattributes` 把检出字节钉成 LF，`normalizeText()` 兜住手改过的 CRLF/BOM 文件，Office 和浏览器相关的断言一律显式降级为跳过、且保持断言总数恒定。同一条守卫现在也校验**跟踪二进制的文件头**（PNG 另外验证 IHDR 宽高）：4 套模板预览图曾因一次文本脚本被整批写坏（2026-10-23 修复）。
 
 **改完代码让本机跑上新版**（都要重启 `dsh web`，profile bundle 不热更）：
 
 ```bash
-npm run sync -- --local   # 日常迭代：不发 GitHub，本机跑刚构建的字节
-npm run sync              # 发版：上传资产 + 本机与 GitHub 拉齐 + 用户视角终验
+npm run sync -- --local   # 日常迭代：只在本机跑刚构建的字节，不发 GitHub、不动 npm
 ```
 
-**发版三步 + npm 自动发布（顺序不能换）**。`npm run sync` 在"本地有未推送提交"或"tag 不指向 HEAD"时会拒绝继续。
+`release-sync` **不带** `--local` 时的上传模式（build → pack → 上传资产 → 按资产 URL 重装本机）是**历史 / 备选通道，不再作为发版步骤**。发版一律按下面这条唯一口径——`docs/14-发布清单（草稿）.md` **§8.2**（1.2.1–1.2.3 实际走的都是这条路）。
 
-```bash
-git push origin main                                    # ① 推提交
-gh release create v<版本> --target "$(git rev-parse HEAD)" --title ... --notes-file ...   # ② tag 显式指到这一提交
-npm run sync                                            # ③ 构建 → 上传资产 → git 前置检查 + 用户视角终验
-```
+**发版 = 按 `docs/14` §8.2 执行（顺序不能换）**：
 
-**④ 不用你做**：资产一上传，`.github/workflows/publish.yml` 就被 `release: published` 唤醒 → 等 Release 资产出现 → **下载那个 tgz**（不重新打包，保证两条通道同一份字节）→ 用 **OIDC（Trusted Publishing）** 发到 npm → 发后自证 `registry dist.integrity == 本地 tgz 的 sha512`。**零长期 token，也不需要点任何按钮。**
+1. **发版前检查**：`npm test` 全绿 + `npm run verify:package` + `npm run verify:products`（本机专用，需 Office）。
+2. **版本与日志**：`package.json` 的 version、`docs/03` 的正式版本条目（含已知限制）；提交并推 `main`。
+3. **打标签**：`git tag -a v<版本> -m "<一句话>"` + `git push origin v<版本>`。**只推 tag 不会发布。**
+4. **创建 GitHub Release（附发版 tgz）——这一步才触发发布**：
+   ```bash
+   gh release create v<版本> <发版 tgz> -R zbsph/dsh-ppt-studio -t "dsh-ppt-studio <版本>" -n "<发布说明>"
+   ```
+   `release: published` 唤醒 `.github/workflows/publish.yml` → 等 Release 资产出现 → **下载那个 tgz**（不重新打包，保证两条通道同一份字节）→ 用 **OIDC（Trusted Publishing）** 发到 npm → 发后自证 `registry dist.integrity == 本地 tgz 的 sha512`。**零长期 token，也不需要点任何按钮。**
+5. **发布判据只看 registry**：`npm view dsh-ppt-studio version` 与 `dist-tags` 必须等于目标版本（registry 元数据可能延迟几十秒，轮询到可见为止）。本机 `npm publish` 必然 `E401/E404`——本机没有也不该有 npm 凭据，这是**设计如此，不是故障**，它的退出码不能当发布判据。
+6. **发布后两端升级**：web 端 `dsh plugin --profile web add dsh-ppt-studio@<版本>`；桌面端在「插件管理」里升级并**重启应用**（命令行对 `desktop` profile 会被拒）。宿主有 `minimumReleaseAge`（约 12 小时）窗口，窗口期内按名字装可能静默装回旧版（见 §1.4）。
 
-`gh release create` 不指定 `--target` 时会按默认分支 HEAD 建 tag，本地没推就把 tag 建在旧提交上。v1.0.1 第一次发布就是这么错的：资产哈希全绿，而 GitHub 上的 tag 指向 v1.0.0 的代码。所以加了机器判据。`--skip-fresh` 能跳过终验，但状态文件里会留 `freshInstall: null`，不把"没验"伪装成"验过"。
+`gh release create` 在 tag 还不存在时会按默认分支 HEAD 建 tag：本地没推时就把 tag 建在了旧提交上。v1.0.1 第一次发布就是这么错的——资产哈希全绿，而 GitHub 上的 tag 指向 v1.0.0 的代码。所以按上面的顺序**先打 tag 再建 Release**。
 
-**npm 通道的现状（2026-09-26）**：`dsh-ppt-studio@1.1.0` **已发布**（`dist-tags.latest`、public、发布者 `zbsph`、`fileCount` 179）；registry 的 tarball 与 GitHub Release 资产**逐字节相同**（sha256 `9303cc5c…`，`dist.integrity` 等于本地重算的 sha512）。
-- 首版是 `npm publish <发版 tgz>` 直发完成的；**从下一版起改走 Trusted Publishing（OIDC）全自动通道** —— npm 已公告 Bypass-2FA 直发将于 2027-01 移除。
+**npm 通道的现状（2026-10-23）**：`dsh-ppt-studio` 是公开包（无 scope），`dist-tags.latest = 1.2.4`，此后发布一律走 **Trusted Publishing（OIDC）全自动通道** —— 本机没有也不该有 npm 凭据。
+- 历史沿革：首版 `dsh-ppt-studio@1.1.0`（2026-09-26）是 `npm publish <发版 tgz>` 直发完成的，registry 的 tarball 与 GitHub Release 资产**逐字节相同**（sha256 `9303cc5c…`，`dist.integrity` 等于本地重算的 sha512）；从下一版起改走 OIDC 全自动通道（npm 已公告 Bypass-2FA 直发将于 2027-01 移除）。
 - 通道的**一次性人工前提**（npmjs.com 上那条 Trusted Publisher 连接）与失败排查清单写在 `docs/05-迭代流程.md`「发布-同步纪律」；通道**前提本身**由 `npm test` 的 smoke §51 四条断言钉住。
 - 手动补发 / 重发：GitHub → Actions → *Publish to npm* → *Run workflow*（填 tag）。
 > 留档：最早的卡点是 npm **网站**对出口 IP 返回 403（registry API 一直正常）；换出口后卡点转为 2FA 写入策略；最终按"直发一发版 + OIDC 常态化"两步走通。

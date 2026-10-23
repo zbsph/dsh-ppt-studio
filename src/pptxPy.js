@@ -53,6 +53,39 @@ export function genPythonScript(ctx) {
   py.push('        fs = max(int(fs * box_w * lines / need), int(fs * 0.6))')
   py.push('        font.size = Pt(fs)')
   py.push('')
+  // P0-2（2026-10-23 用户反馈）：兜底引擎也必须尊重 image.fit —— 旧实现 add_picture(..., w, h) 一律拉伸，
+  // 与预览层 object-fit 不一致（"预览对、成品错"）。cover ⇒ 按纵横比设 crop_*（python-pptx 会写成 srcRect）；
+  // contain ⇒ 等比缩小并居中（改帧几何）；fill/尺寸未知 ⇒ 保持旧行为（拉伸）。
+  py.push('def add_picture_fit(slide, path, b, fit):')
+  py.push('    x, y, w, h = b')
+  py.push('    pic = slide.shapes.add_picture(path, Emu(x*12700), Emu(y*12700), Emu(w*12700), Emu(h*12700))')
+  py.push('    if fit not in ("cover", "contain"):')
+  py.push('        return')
+  py.push('    try:')
+  py.push('        iw, ih = pic.image.size')
+  py.push('    except Exception:')
+  py.push('        return')
+  py.push('    if not iw or not ih or w <= 0 or h <= 0:')
+  py.push('        return')
+  py.push('    img_a = iw / ih')
+  py.push('    box_a = w / h')
+  py.push('    if fit == "cover":')
+  py.push('        if img_a > box_a:')
+  py.push('            c = (1 - box_a / img_a) / 2')
+  py.push('            pic.crop_left = c; pic.crop_right = c')
+  py.push('        elif img_a < box_a:')
+  py.push('            c = (1 - img_a / box_a) / 2')
+  py.push('            pic.crop_top = c; pic.crop_bottom = c')
+  py.push('    else:')
+  py.push('        if img_a > box_a:')
+  py.push('            nw, nh = w, w / img_a')
+  py.push('        else:')
+  py.push('            nw, nh = h * img_a, h')
+  py.push('        pic.left = Emu(int((x + (w - nw) / 2) * 12700))')
+  py.push('        pic.top = Emu(int((y + (h - nh) / 2) * 12700))')
+  py.push('        pic.width = Emu(int(nw * 12700))')
+  py.push('        pic.height = Emu(int(nh * 12700))')
+  py.push('')
   py.push('def add_text(slide, b, text, st):')
   py.push('    box = slide.shapes.add_textbox(Emu(b[0]*12700), Emu(b[1]*12700), Emu(b[2]*12700), Emu(b[3]*12700))')
   py.push('    tf = box.text_frame')
@@ -120,7 +153,7 @@ export function genPythonScript(ctx) {
           break
         }
         case 'image':
-          py.push(`slide.shapes.add_picture(${JSON.stringify(join(ctx.dir, el.src))}, Emu(${x}*12700), Emu(${y}*12700), Emu(${w}*12700), Emu(${h}*12700))`)
+          py.push(`add_picture_fit(slide, ${JSON.stringify(join(ctx.dir, el.src))}, [${x}, ${y}, ${w}, ${h}], ${pyLit(el.fit ?? 'cover')})`)
           break
         case 'table': {
           py.push(`rows, cols = ${JSON.stringify(el.rows.length + (el.header ? 1 : 0))}, ${Math.max(1, el.cols.length)}`)

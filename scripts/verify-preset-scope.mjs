@@ -130,9 +130,31 @@ try {
   // ⇒ 被测对象 = 你此刻的 src，且**仓库零写入**。
   const scratch = join(work, 'repo')
   mkdirSync(scratch, { recursive: true })
+  // 只复制 **git 跟踪**的文件（+ 其祖先目录）⇒ 等价于"干净检出"，不复制被忽略的生成物。
+  // 为什么（2026-10-23 修假红）：旧实现 `cpSync(root, …)` 把整个工作区（含 examples/**/preview 等生成物）
+  // 一起复制——发版档并行时 e2e/smoke 正在那些目录里写/删临时文件，复制一侧会撞 `ENOENT: lstat
+  // _measure-tmp-*`（实测假红）；而且仓库实际发布的就是 tracked 内容，复制未跟踪产物本就不符合口径。
+  const trackedFiles = new Set()
+  const trackedDirs = new Set()
+  try {
+    const listed = spawnSync('git', ['-C', root, 'ls-files', '-z'], { encoding: 'utf8' })
+    for (const rel of String(listed.stdout ?? '').split('\0').filter(Boolean)) {
+      const abs = resolve(root, rel)
+      trackedFiles.add(abs)
+      for (let d = dirname(abs); d.length >= root.length && d !== dirname(d); d = dirname(d)) {
+        trackedDirs.add(d)
+        if (d === root) break
+      }
+    }
+  } catch { /* 无 git：下面 filter 退化为"排除生成物目录" */ }
+  const VOLATILE = /[\\/](\.git|node_modules|preview|previews|_measure-tmp-[^\\/]*|\.tmp-[^\\/]*)([\\/]|$)/
   cpSync(root, scratch, {
     recursive: true,
-    filter: (src) => !/[\\/](\.git|node_modules)([\\/]|$)/.test(src),
+    filter: (src) => {
+      if (/[\\/](\.git|node_modules)([\\/]|$)/.test(src)) return false
+      if (trackedFiles.size) return trackedFiles.has(src) || trackedDirs.has(src)
+      return !VOLATILE.test(src)
+    },
   })
   const build = run('node', [join(scratch, 'scripts', 'build.mjs')], { cwd: scratch })
   check('副本里构建成功（src → lib，测的是你此刻的 src）', build.status === 0, tail(mergeOut(build)))
