@@ -1,8 +1,8 @@
 {
   "name": "dsh-ppt-studio",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "在 DeepSeek Harness 里做 PPT：说需求 → 逐页制作 → 导出可编辑的 .pptx。含布局检查、Office 真渲染复核，以及可扩展的本地模板库",
-  "//publish": "2026-10-23：版本 1.2.4 起统一走 npm Trusted Publishing（OIDC）发布——GitHub Release（published 事件）触发 .github/workflows/publish.yml → 下载该 Release 的 tgz（不二次打包，保证 npm 字节 == Release 资产字节）→ OIDC npm publish → 发后自证 registry dist.integrity == 本地 tgz 的 sha512。零长期 token。发布纪律：发版用发版时那个 tgz；不要在 main 前进后跑裸 npm publish（会按当前工作区重新打包 ⇒ 破坏两条通道同一字节）；本机 npm publish 必然 E401/E404 属设计如此，判据只看 registry。手动补发：Actions → Publish to npm → Run workflow。见 README §10 与 docs/14 §8.2。",
+  "//publish": "2026-10-23：版本 1.2.5 起统一走 npm Trusted Publishing（OIDC）发布——GitHub Release（published 事件）触发 .github/workflows/publish.yml → 下载该 Release 的 tgz（不二次打包，保证 npm 字节 == Release 资产字节）→ OIDC npm publish → 发后自证 registry dist.integrity == 本地 tgz 的 sha512。零长期 token。发布纪律：发版用发版时那个 tgz；不要在 main 前进后跑裸 npm publish（会按当前工作区重新打包 ⇒ 破坏两条通道同一字节）；本机 npm publish 必然 E401/E404 属设计如此，判据只看 registry。手动补发：Actions → Publish to npm → Run workflow。见 README §10 与 docs/14 §8.2。",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zbsph/dsh-ppt-studio.git"
