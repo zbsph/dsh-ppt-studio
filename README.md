@@ -2,7 +2,7 @@
 
 在 DeepSeek Harness 里说需求，它把 PPT 做出来：先定大纲和版式，再逐页制作，每页过一遍自动检查，最后交付一个能用 PowerPoint 打开、继续改的 `.pptx`。
 
-当前版本 **1.2.5**，安装包约 **1.2 MB**（1.0.3 及更早的版本是 35 MB，因为随包带着 4 套没人用过的导入模板，1.0.4 把它们删了）。
+当前版本 **1.2.6**，安装包约 **1.0 MB**（1.0.3 及更早的版本是 35 MB，因为随包带着 4 套没人用过的导入模板，1.0.4 把它们删了）。
 
 **隔离是默认的**：装好之后，这套能力**只出现在「PPT 工作室」预设里**，其他预设与"没装插件"完全一样（§1.6）。
 新建会话时选「PPT 工作室」即可；预设提供的是"完整工作台"——人格 + 22 个工具 + `/ppt` 命令 + 17 本内置技能（4 本手册 + 13 本复杂图）+ 工作流提示段。
@@ -13,7 +13,7 @@
 
 ### 1.1 需要什么
 
-一台能跑 `dsh web` 的机器，或者 **DeepSeek Harness 桌面端**（桌面端见 §1.7，装法不同）。宿主版本要求 **DSH `>= 0.1.7-rc.1`**（`engines.dsh` 声明的下限）；本包 1.2.2 起按 **0.2.1-rc.2**（命令行版与**桌面端**）适配实测，1.2.5 沿同一目标版本。Office、Edge/Chrome、python-pptx 都是**可选增强**：没有它们插件照常工作，只是真渲染、截图、兜底引擎这些能力自动降级，交付说明里会写明。
+一台能跑 `dsh web` 的机器，或者 **DeepSeek Harness 桌面端**（桌面端见 §1.7，装法不同）。宿主版本要求 **DSH `>= 0.1.7-rc.1`**（`engines.dsh` 声明的下限）；本包 1.2.2 起按 **0.2.1-rc.2**（命令行版与**桌面端**）适配实测，1.2.6 沿同一目标版本。Office、Edge/Chrome、python-pptx 都是**可选增强**：没有它们插件照常工作，只是真渲染、截图、兜底引擎这些能力自动降级，交付说明里会写明。
 
 ### 1.2 一条命令（默认走 npm）
 
@@ -36,10 +36,10 @@ dsh plugin --profile web add dsh-ppt-studio
 dsh plugin --profile web add <粘贴那条资产 URL>
 ```
 
-资产名形如 `dsh-ppt-studio-<版本>-<YYYYMMDD-HHmm>-<构建戳前 8 位>.tgz`：版本、构建时间、构建内容的前 8 位哈希。页面会保留历次构建，所以**按上传时间取最新那条**。懒得翻页面就用这行拿名字（把 `<版本>` 换成当前 tag，例如 `v1.2.5`）：
+资产名形如 `dsh-ppt-studio-<版本>-<YYYYMMDD-HHmm>-<构建戳前 8 位>.tgz`：版本、构建时间、构建内容的前 8 位哈希。页面会保留历次构建，所以**按上传时间取最新那条**。懒得翻页面就用这行拿名字（把 `<版本>` 换成当前 tag，例如 `v1.2.6`）：
 
 ```powershell
-gh release view v1.2.5 --json assets --jq '.assets | sort_by(.createdAt) | last | .name'
+gh release view v1.2.6 --json assets --jq '.assets | sort_by(.createdAt) | last | .name'
 ```
 
 也可以直接装仓库地址，产物和 tgz 一样（`lib/` 已入库）：
@@ -363,7 +363,7 @@ v1.0.0 修订前旧引擎的结构 bug（graphicFrame 里嵌了 `<a:xfrm>`，Pow
 - shape 支持 rect、roundRect、ellipse、triangle，常见的 prst 自选图形（箭头、菱形、五边形、流程图等），以及 custGeom 自定义路径，带旋转、纯色/渐变/透明度填充。
 - line 支持 ≥2 个点：2 点直线导出为 `straightConnector1`；**>2 点折线导出为一帧 custGeom 开放路径**（可挂 `arrow: both` 两端箭头、`line.dash` 虚线）。**预览与成品同口径**（2026-10-23/1.2.5 修复：此前预览只画前两点、只画尾箭头、忽略 dash）。
 - chart 支持 bar/line/pie，**默认导出 PowerPoint 原生可编辑图表**（数据在 `data.cols/rows`，多系列加 `series`；分类名 / 数值 / 图例 / 坐标轴随图表对象走）；只有显式 `chart.render: vector` 才回退到不可改数据的矢量拼绘（见 §5）。
-- 背景支持 hex、主题引用、纯色、图片（cover/contain/fill）。
+- 背景支持 hex、主题引用、纯色、图片（`cover`/`contain`/`fill`）；**图片背景的 fit 在预览与成品里一致**（2026-10-23/1.2.6 修复）：`cover` 按页面裁切（缺省）、`contain` 等比留白（留白色由 `background.color` 指定，缺省白）、`fill` 拉伸。**行为变化**：以前不写 fit 的背景导出是拉伸，现在按 cover；依赖拉伸请显式写 `fit: fill`。
 - 图片 `src` 是相对 deck 根的路径：`media/子目录/图.png`、中文或带空格的文件名都可以（预览会正确处理）。
   两个**不同目录下的同名文件**也没问题——导出会自动给包内部件名加哈希避免互相覆盖（PPT 里的图片内容不受影响，导出输出里会说明改了什么）。
   `src` 写 http(s) 网址时**只有预览能显示**，导出会写 1×1 白色占位并醒目警告（插件不联网取图）。
@@ -483,7 +483,7 @@ ppt_visual                  # Office 真渲染复核（有 Office 时；audit �
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
 npm run test:fast               # 【每条改动默认跑】廉价跨切面守卫 + 按改动文件选影响面（实测：只改文档 ≈8s）
-npm test                        # 【批次边界/发版】全量门禁：build + LF 守卫（文本 LF + 二进制魔数）+ smoke（335 断言）+ 预设自检（--self-test）+ 常驻 prompt 成本门禁（≈5.5min）
+npm test                        # 【批次边界/发版】全量门禁：build + LF 守卫（文本 LF + 二进制魔数）+ smoke（348 断言）+ 预设自检（--self-test）+ 常驻 prompt 成本门禁（≈5.5min）
 npm run test:release            # 【发版】全量 + e2e + 隔离矩阵 + 原生图表 + 损失审计 + 安装自证（COM 相关串行、其余并行，本机实测 ≈5.3min）
 npm run test:map:audit          # 防"孤儿分节"：每个 smoke 分节都必须能被影响面选中
 npm run check:eol               # 发行字节守卫：跟踪文本必须全 LF + 跟踪二进制魔数有效（--fix 只修 LF）
@@ -521,7 +521,7 @@ npm run sync -- --local   # 日常迭代：只在本机跑刚构建的字节，�
 
 `gh release create` 在 tag 还不存在时会按默认分支 HEAD 建 tag：本地没推时就把 tag 建在了旧提交上。v1.0.1 第一次发布就是这么错的——资产哈希全绿，而 GitHub 上的 tag 指向 v1.0.0 的代码。所以按上面的顺序**先打 tag 再建 Release**。
 
-**npm 通道的现状（2026-10-23）**：`dsh-ppt-studio` 是公开包（无 scope），`dist-tags.latest = 1.2.5`，此后发布一律走 **Trusted Publishing（OIDC）全自动通道** —— 本机没有也不该有 npm 凭据。
+**npm 通道的现状（2026-10-23）**：`dsh-ppt-studio` 是公开包（无 scope），`dist-tags.latest = 1.2.6`，此后发布一律走 **Trusted Publishing（OIDC）全自动通道** —— 本机没有也不该有 npm 凭据。
 - 历史沿革：首版 `dsh-ppt-studio@1.1.0`（2026-09-26）是 `npm publish <发版 tgz>` 直发完成的，registry 的 tarball 与 GitHub Release 资产**逐字节相同**（sha256 `9303cc5c…`，`dist.integrity` 等于本地重算的 sha512）；从下一版起改走 OIDC 全自动通道（npm 已公告 Bypass-2FA 直发将于 2027-01 移除）。
 - 通道的**一次性人工前提**（npmjs.com 上那条 Trusted Publisher 连接）与失败排查清单写在 `docs/05-迭代流程.md`「发布-同步纪律」；通道**前提本身**由 `npm test` 的 smoke §51 四条断言钉住。
 - 手动补发 / 重发：GitHub → Actions → *Publish to npm* → *Run workflow*（填 tag）。

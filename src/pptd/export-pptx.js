@@ -181,11 +181,17 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
       }
     }
 
-    // 页面背景（原生 p:bg：solid 或 image，背景图进入本页 media 列表）
+    // 页面背景（1.2.6：image 背景的 fit 真正落地 —— cover 用 p:bg + srcRect 裁切；
+    // contain 用"纯色底 p:bg + 锁定整页图片形状"（p:bg 单一填充无法表达留白）；fill 保持旧行为）
     const bg = resolveBg(page.page.background, ctx)
-    if (bg?.kind === 'image') {
+    if (bg?.kind === 'image-fill' || bg?.kind === 'image-cover' || bg?.kind === 'image-contain') {
       bg.rId = addMedia(bg.src)
-      bg.xml = bg.xml.replace('BGPLACEHOLDER', bg.rId)
+      if (bg.kind === 'image-contain') {
+        bg.uid = 'bgpic' + nid()
+        shapes.unshift(bgPicSp(bg.uid)) // 第一层 = 最底（内容都画在它上面）
+      } else {
+        bg.xml = bg.xml.replace('BGPLACEHOLDER', bg.rId)
+      }
     }
 
     // ── 关系编号（媒体之后）：讲稿 → 图表 ──────────────────────────────────
@@ -304,6 +310,25 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
       }
       files[`ppt/slides/slide${n}.xml`] = xml
     }
+    // 1.2.6：背景图 fit 落地（与图片元素同一套算法/口径）
+    //  cover   ⇒ 在 p:bg 的 blipFill 内补 <a:srcRect>（媒体像素读出后才能算）
+    //  contain ⇒ 给 spTree 第一层的锁定图片形状写 blipFill + xfrm（等比居中；底色由 p:bg solidFill 提供）
+    if (s.bg?.rId && (s.bg.kind === 'image-cover' || s.bg.kind === 'image-contain')) {
+      let xml = files[`ppt/slides/slide${n}.xml`]
+      const m = s.media.find((x) => x.rId === s.bg.rId)
+      const buf = m ? files[`ppt/media/${m.part}`] : null
+      const nat = Buffer.isBuffer(buf) ? imageInfo(buf) : null
+      const known = nat && nat.width > 0 && nat.height > 0
+      if (s.bg.kind === 'image-cover') {
+        // 尺寸未知 ⇒ 不写 srcRect（回退到旧的"拉伸"，与图片元素 fallback 同口径）
+        xml = xml.replace('__BG_SRC_RECT__', known ? coverSrcRect(nat.width / nat.height, ctx.size.width / ctx.size.height) : '')
+      } else {
+        const built = picFitXml({ bounds: { x: 0, y: 0, w: ctx.size.width, h: ctx.size.height }, fit: 'contain' }, s.bg.rId, nat)
+        if (!known) report.warnings.push(`第 ${n} 页背景图 fit=contain 但读不到图片像素尺寸 ⇒ 已按 fill 降级`)
+        xml = xml.replace(`__BGPICFILL_${s.bg.uid}__`, built.fill).replace(`__BGPICXFRM_${s.bg.uid}__`, built.xfrm)
+      }
+      files[`ppt/slides/slide${n}.xml`] = xml
+    }
   }
 
   // P1 防线（测试反馈 ★）：导出产物 parity 回读——
@@ -312,7 +337,8 @@ export async function exportPptx(ctx, { out = 'out.pptx', engine = 'pptd' } = {}
   for (let i = 0; i < slides.length; i++) {
     const s = slides[i]
     tablesExp += s.counts.table
-    imagesExp += s.counts.image
+    // 1.2.6：contain 背景是"真实图片形状"（见 resolveBg），产物里会多一个 <p:pic> ⇒ parity 期望值同步
+    imagesExp += s.counts.image + (s.bg?.kind === 'image-contain' ? 1 : 0)
     const xml = files[`ppt/slides/slide${i + 1}.xml`]
     const txt = typeof xml === 'string' ? xml : String(xml)
     tablesOut += (txt.match(/graphicData uri="http:\/\/schemas\.openxmlformats\.org\/drawingml\/2006\/table"/g) ?? []).length
@@ -828,6 +854,20 @@ function picSp(el, rId, pics) {
  * - `contain` ⇒ 等比缩到框内并居中（写更小的 ext + 偏移），不裁剪。
  * 缺省 fit 与预览层一致取 `cover`（render-html.js 的 `?? 'cover'`）。
  */
+/**
+ * cover 裁切：源图纵横比 imgA、目标框纵横比 boxA ⇒ `a:srcRect`（无需裁切返回空串）。
+ * 图片元素与**页面背景图**共用同一份算法（2026-10-23 1.2.6：背景 fit 落地，避免两处各算一遍漂移）。
+ */
+function coverSrcRect(imgA, boxA) {
+  if (Math.abs(imgA - boxA) <= 1e-6) return ''
+  if (imgA > boxA) {
+    const c = Math.round(((1 - boxA / imgA) / 2) * 100000)
+    return '<a:srcRect l="' + c + '" r="' + c + '"/>'
+  }
+  const c = Math.round(((1 - imgA / boxA) / 2) * 100000)
+  return '<a:srcRect t="' + c + '" b="' + c + '"/>'
+}
+
 function picFitXml(el, rId, nat) {
   const b = el.bounds ?? { x: 0, y: 0, w: 0, h: 0 }
   const fit = el.fit ?? 'cover'
@@ -839,20 +879,10 @@ function picFitXml(el, rId, nat) {
   const imgA = nat.width / nat.height
   const boxA = b.w / b.h
   if (fit === 'cover') {
-    let sr = ''
-    if (Math.abs(imgA - boxA) > 1e-6) {
-      if (imgA > boxA) {
-        const c = Math.round(((1 - boxA / imgA) / 2) * 100000)
-        sr = '<a:srcRect l="' + c + '" r="' + c + '"/>'
-      } else {
-        const c = Math.round(((1 - imgA / boxA) / 2) * 100000)
-        sr = '<a:srcRect t="' + c + '" b="' + c + '"/>'
-      }
-    }
     return {
       // 注意：`a:srcRect` 必须是 `a:blipFill` 的子元素、`a:blip` 的**兄弟**。
       // 写进 `<a:blip>` 里会被 PowerPoint 静默忽略（表现为"没裁切、照旧拉伸"，2026-10-22 实测踩过）。
-      fill: '<a:blip r:embed="' + rId + '"/>' + sr + '<a:stretch><a:fillRect/></a:stretch>',
+      fill: '<a:blip r:embed="' + rId + '"/>' + coverSrcRect(imgA, boxA) + '<a:stretch><a:fillRect/></a:stretch>',
       xfrm: plainXfrm,
     }
   }
@@ -1152,7 +1182,14 @@ function notesMasterRels() {
     + '</Relationships>'
 }
 
-/** 页面背景 → 导出结构：{ kind:'solid', xml } | { kind:'image', src, rId, xml } | null */
+/** 页面背景 → 导出结构。
+ *  - `{ kind:'solid', xml }`
+ *  - `{ kind:'image-fill'|'image-cover', src, rId, xml }`：`p:bg` 的 blipFill；cover 预留
+ *    `__BG_SRC_RECT__`（媒体字节读出后用真实像素补 `<a:srcRect>`，与图片元素同一算法）
+ *  - `{ kind:'image-contain', src, rId, uid, xml }`：`p:bg` 只放**纯色底**，图片另以
+ *    "整页锁定图片形状"挂在 spTree 第一层（`p:bg` 单一填充无法表达 contain 留白）。
+ *  缺省 fit 与预览层一致取 `cover`（render-html 的 `bg.fit ?? 'cover'`）。
+ */
 function resolveBg(bg, ctx) {
   if (!bg) return null
   if (typeof bg === 'string') {
@@ -1162,14 +1199,36 @@ function resolveBg(bg, ctx) {
     return { kind: 'solid', xml: '<p:bgPr><a:solidFill><a:srgbClr val="' + hex(ctx.resolveColor(bg.color ?? '#FFFFFF')) + '"/></a:solidFill><a:effectLst/></p:bgPr>' }
   }
   if (bg.type === 'image') {
+    const fit = ['cover', 'contain', 'fill'].includes(bg.fit) ? bg.fit : 'cover'
+    if (fit === 'contain') {
+      // contain 的留白需要底色：允许 background.color 指定；缺省白（与"无背景"页一致）。
+      const base = bg.color ? ctx.resolveColor(bg.color) : '#FFFFFF'
+      return {
+        kind: 'image-contain',
+        src: bg.src,
+        rId: null,
+        uid: null, // 由调用方分配占位 uid
+        xml: '<p:bgPr><a:solidFill><a:srgbClr val="' + hex(base) + '"/></a:solidFill><a:effectLst/></p:bgPr>',
+      }
+    }
     return {
-      kind: 'image',
+      kind: fit === 'fill' ? 'image-fill' : 'image-cover',
       src: bg.src,
       rId: null, // 由调用方 addMedia 后回填
-      xml: '<p:bgPr><a:blipFill><a:blip r:embed="BGPLACEHOLDER"/><a:stretch><a:fillRect/></a:stretch></a:blipFill><a:effectLst/></p:bgPr>',
+      xml: fit === 'fill'
+        ? '<p:bgPr><a:blipFill><a:blip r:embed="BGPLACEHOLDER"/><a:stretch><a:fillRect/></a:stretch></a:blipFill><a:effectLst/></p:bgPr>'
+        : '<p:bgPr><a:blipFill><a:blip r:embed="BGPLACEHOLDER"/>__BG_SRC_RECT__<a:stretch><a:fillRect/></a:stretch></a:blipFill><a:effectLst/></p:bgPr>',
     }
   }
   return null
+}
+
+/** contain 背景的"整页锁定图片形状"：放在 spTree 第一层（内容之下），锁住移动/缩放/选中，避免被当成普通素材拖动。 */
+function bgPicSp(uid) {
+  const id = nid()
+  return '<p:pic><p:nvPicPr><p:cNvPr id="' + id + '" name="背景图（contain，自动）"/><p:cNvPicPr><a:picLocks noChangeAspect="1" noMove="1" noResize="1" noSelect="1"/></p:cNvPicPr><p:nvPr/></p:nvPicPr>'
+    + '<p:blipFill>__BGPICFILL_' + uid + '__</p:blipFill>'
+    + '<p:spPr>__BGPICXFRM_' + uid + '__<a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr></p:pic>'
 }
 
 function themeXml() {

@@ -2,12 +2,49 @@
  * PPTD → HTML 预览渲染器 + layout.json（渲染器同源快照）。
  * 产出 preview/<n>_<name>.html（单页）、preview/deck.html（整览）、preview/layout.json。
  */
-import { writeFile, mkdir } from 'node:fs/promises'
+import { writeFile, mkdir, readdir, readFile } from 'node:fs/promises'
+import { createHash } from 'node:crypto'
 import { join } from 'node:path'
 import { normalizePage } from './layout.js'
 import { chartSvg, chartIssue } from './svgCharts.js'
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+
+/**
+ * deck 输入指纹（deck.yaml + pages/** 的**内容**；顺序稳定）——写入 layout.json，供 `ppt_verify`
+ * 判断快照是否过期（2026-10-23 1.2.6：旧实现存在 layout.json 就直接用，手改 YAML 后会基于旧快照报"✓ 通过"）。
+ * 读盘而不是复用内存 ctx：renderDeck 与 verify 两条路径必须得到**同一份**指纹。
+ */
+export async function deckInputsHash(dir) {
+  const h = createHash('sha256')
+  let deckTxt = ''
+  try { deckTxt = await readFile(join(dir, 'deck.yaml'), 'utf8') } catch { /* 无 deck.yaml 时按空 */ }
+  h.update('deck.yaml\0' + deckTxt + '\0')
+  const walk = async (d, prefix = '') => {
+    let ents = []
+    try { ents = await readdir(d, { withFileTypes: true }) } catch { return [] }
+    const files = []
+    for (const e of ents.sort((a, b) => a.name.localeCompare(b.name))) {
+      if (e.isDirectory()) files.push(...await walk(join(d, e.name), prefix + e.name + '/'))
+      else files.push(prefix + e.name)
+    }
+    return files
+  }
+  for (const rel of await walk(join(dir, 'pages'))) {
+    const buf = await readFile(join(dir, 'pages', rel))
+    h.update('page\0' + rel + '\0' + buf.toString('utf8') + '\0')
+  }
+  return h.digest('hex')
+}
+
+/** 快照新鲜度：返回 null = 新鲜；否则返回"为什么过期"（供 ppt_verify 自动重渲并打印原因）。 */
+export function layoutStale(layout, currentHash) {
+  if (!layout || typeof layout.inputsHash !== 'string' || !layout.inputsHash) {
+    return '旧版 layout.json 没有输入指纹（无法判断是否过期）'
+  }
+  if (layout.inputsHash !== currentHash) return 'deck/pages 在上次渲染后已被修改'
+  return null
+}
 
 /**
  * v0.9.1 常见 prst → clip-path polygon（百分比点，近似 OOXML prst 几何）。
@@ -219,8 +256,15 @@ function resolveBackground(bg, ctx) {
   if (bg?.type === 'image') {
     const src = bg.src
     const uri = /^(https?:|data:|file:)/.test(src) ? src : '../' + (src.startsWith('./') ? src.slice(2) : src)
-    const fit = bg.fit === 'fill' ? '100% 100%' : bg.fit ?? 'cover'
-    return { css: `url("${uri}") center / ${fit} no-repeat`, record: { type: 'image', src, fit: bg.fit ?? 'cover' } }
+    const recordFit = bg.fit ?? 'cover'
+    const fit = bg.fit === 'fill' ? '100% 100%' : recordFit
+    // 1.2.6：contain 的留白需要底色（与导出层同口径：background.color ?? 白）。预览是单层 CSS，
+    // 所以底色与图片合并成一条 background 简写；cover/fill 不需要底色。
+    const base = recordFit === 'contain' && bg.color ? ctx.resolveColor(bg.color) : null
+    const css = base
+      ? `${base} url("${uri}") center / ${fit} no-repeat`
+      : `url("${uri}") center / ${fit} no-repeat`
+    return { css, record: { type: 'image', src, fit: recordFit, ...(base ? { color: base } : {}) } }
   }
   return { css: '#FFFFFF', record: { type: 'solid', color: '#FFFFFF' } }
 }
@@ -229,6 +273,8 @@ export async function renderDeck(ctx, { out = 'preview', debug = false } = {}) {
   const outDir = join(ctx.dir, out)
   await mkdir(outDir, { recursive: true })
   const layout = {
+    // 2026-10-23 1.2.6：输入指纹。ppt_verify 读 layout.json 前先比对它，过期则自动重渲（防"旧快照假绿"）。
+    inputsHash: await deckInputsHash(ctx.dir),
     size: ctx.size,
     theme: {
       colors: ctx.colors ?? {},

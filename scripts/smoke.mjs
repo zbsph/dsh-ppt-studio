@@ -161,6 +161,55 @@ ok('背景回环：背景媒体被打包', [...expFiles.keys()].filter((k) => k.
 const impBgYaml = await (await import('node:fs/promises')).readFile(join(mediaDeck, 'imported', 'pages', 'slide_02.yaml'), 'utf8')
 ok('背景回环：import 识别 background image', impBgYaml.includes('background') && impBgYaml.includes('media/pic.png'))
 
+// ── 8b. 1.2.6：页面背景图 fit 真正落地（cover 裁切 / contain 底色+锁定整页图片 / 缺省 cover / 导入对称）──
+{
+  const fsp = await import('node:fs/promises')
+  const bgDir = join(smokeDir, '.tmp-bgfit')
+  await fsp.rm(bgDir, { recursive: true, force: true })
+  await fsp.mkdir(join(bgDir, 'pages'), { recursive: true })
+  await fsp.mkdir(join(bgDir, 'media'), { recursive: true })
+  // 1×1 方形 PNG：页面 960×540 ⇒ cover 上下各裁 21.875%（t/b=21875）；contain = 540×540 居中 x=210
+  await fsp.writeFile(join(bgDir, 'media', 'sq.png'), Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64'))
+  await fsp.writeFile(join(bgDir, 'deck.yaml'), ['version: 1', 'title: bg fit smoke', 'size: [960, 540]',
+    'theme:', '  colors: {ink: "#1F2937"}', '  textStyles:', '    body: {fontSize: 16, color: "$ink"}',
+    'pages:', '  - pages/01.yaml', '  - pages/02.yaml', '  - pages/03.yaml', '  - pages/04.yaml', ''].join('\n'))
+  const pageYaml = (bg) => ['pageType: content', `background: ${bg}`, 'elements: []', ''].join('\n')
+  await fsp.writeFile(join(bgDir, 'pages/01.yaml'), pageYaml('{type: image, src: media/sq.png, fit: cover}'))
+  await fsp.writeFile(join(bgDir, 'pages/02.yaml'), pageYaml('{type: image, src: media/sq.png, fit: contain, color: "#F8FAFC"}'))
+  await fsp.writeFile(join(bgDir, 'pages/03.yaml'), pageYaml('{type: image, src: media/sq.png, fit: fill}'))
+  await fsp.writeFile(join(bgDir, 'pages/04.yaml'), pageYaml('{type: image, src: media/sq.png}'))
+  const bgCtx = await resolveDeck(bgDir)
+  const bgExp = await exportPptx(bgCtx, { out: 'out-bgfit.pptx' })
+  const bgFiles = zipRead(await fsp.readFile(bgExp.file))
+  const bgSlide = (i) => decodeXml(bgFiles.get(`ppt/slides/slide${i}.xml`))
+  const bgPr = (xml) => (xml.match(/<p:bg>[\s\S]*?<\/p:bg>/) ?? [''])[0]
+  ok('1.2.6 背景 fit：cover 在 p:bg 的 blipFill 内写 srcRect（方形图 → 上下各裁 21.875%）',
+    /<a:srcRect t="21875" b="21875"\/>/.test(bgPr(bgSlide(1))), bgPr(bgSlide(1)).replace(/></g, '> <').slice(0, 200))
+  ok('1.2.6 背景 fit：缺省 fit = cover（与预览层同口径）',
+    /<a:srcRect t="21875"/.test(bgPr(bgSlide(4))), bgPr(bgSlide(4)).replace(/></g, '> <').slice(0, 200))
+  ok('1.2.6 背景 fit：fill 保持旧行为（blipFill + stretch、不写 srcRect）',
+    !/<a:srcRect/.test(bgPr(bgSlide(3))) && bgPr(bgSlide(3)).includes('<a:stretch>'), bgPr(bgSlide(3)).replace(/></g, '> <').slice(0, 200))
+  const containXml = bgSlide(2)
+  ok('1.2.6 背景 fit：contain = 纯色底 + 锁定整页图片形状（540×540 居中 x=210，位于 spTree 第一层）',
+    bgPr(containXml).includes('F8FAFC')
+      && /<p:spTree>[\s\S]*?<p:pic>[\s\S]*?name="背景图（contain，自动）"[\s\S]*?<a:picLocks noChangeAspect="1" noMove="1" noResize="1" noSelect="1"\/>[\s\S]*?<a:off x="2667000" y="0"\/><a:ext cx="6858000" cy="6858000"\/>/.test(containXml),
+    containXml.replace(/></g, '> <').slice(0, 320))
+  const bgPrev = await renderDeck(bgCtx, { out: 'preview' })
+  const bgPrev2 = await fsp.readFile(join(bgPrev.outDir, bgPrev.htmlFiles[1]), 'utf8')
+  ok('1.2.6 背景 fit：预览 contain 带底色（#F8FAFC + contain），与成品同口径',
+    bgPrev2.includes('#F8FAFC') && bgPrev2.includes('center / contain no-repeat'), bgPrev2.slice(0, 120))
+  await importPptx(bgExp.file, join(bgDir, 'imported'))
+  const impBg = []
+  for (let i = 1; i <= 4; i++) {
+    const y = await fsp.readFile(join(bgDir, 'imported', 'pages', `slide_0${i}.yaml`), 'utf8')
+    impBg.push(y.split('\n').find((l) => l.startsWith('background:')) ?? '')
+  }
+  ok('1.2.6 背景 fit：import 对称回读（cover / contain+color / fill / 缺省 cover）',
+    /"fit":"cover"/.test(impBg[0]) && /"fit":"contain","color":"#F8FAFC"/.test(impBg[1]) && /"fit":"fill"/.test(impBg[2]) && /"fit":"cover"/.test(impBg[3]),
+    JSON.stringify(impBg))
+  await fsp.rm(bgDir, { recursive: true, force: true })
+}
+
 // ── 9. 美学建议层（suggestion 不入门禁，冲突断言不受影响）────────────────
 const layoutM = JSON.parse(await (await import('node:fs/promises')).readFile(join(mediaDeck, 'preview', 'layout.json'), 'utf8'))
 const vM = verifyDeck(layoutM)
@@ -1556,6 +1605,60 @@ await (await import('node:fs/promises')).rm(sl.out, { force: true })
       && /fill="#1F2937"/.test(svgPoly) && /fill="#2563EB"/.test(svgStraight),
     `polyMarker=${svgPoly.includes('ln-poly-end')}｜straightMarker=${svgStraight.includes('ln-straight-end')}`)
   await fsp.rm(lp, { recursive: true, force: true })
+}
+
+// ── 31e. 1.2.6：门禁真实化——layout.json 快照形态也必须触发图专属检查；陈旧 layout.json 必须被判过期 ──
+// 背景：`ppt_verify` 吃的是 layout.json 快照（元素只有 kind），而 checkDiagram 以前只认 elementType
+// ⇒ duplicate-element / line-through-box 在生产路径静默失效；同时 layout.json 存在即用，没有新鲜度校验。
+{
+  const fsp = await import('node:fs/promises')
+  const { checkDiagram } = await import('../lib/pptd/relations.js')
+  const { deckInputsHash, layoutStale } = await import('../lib/pptd/render-html.js')
+  const gd = join(smokeDir, '.tmp-gate-real')
+  await fsp.rm(gd, { recursive: true, force: true })
+  await fsp.mkdir(join(gd, 'pages'), { recursive: true })
+  await fsp.writeFile(join(gd, 'deck.yaml'), ['version: 1', 'title: gate real', 'size: [960, 540]',
+    'theme:', '  colors: {ink: "#1F2937"}', '  textStyles:', '    body: {fontSize: 16, color: "$ink"}',
+    'pages:', '  - pages/01.yaml', ''].join('\n'))
+  await fsp.writeFile(join(gd, 'pages/01.yaml'), ['pageType: content', 'elements:',
+    '  - elementId: boxA', '    elementType: shape', '    kind: rect', '    bounds: [100, 100, 200, 100]',
+    '    fill: "#EEEEEE"', '    contains: [t1]',
+    '  - elementId: t1', '    elementType: text', '    bounds: [120, 120, 160, 40]', '    content: {text: "hi"}',
+    '  - elementId: dupA', '    elementType: shape', '    kind: rect', '    bounds: [500, 100, 80, 80]', '    fill: "#E0E0E0"',
+    '  - elementId: dupB', '    elementType: shape', '    kind: rect', '    bounds: [500, 100, 80, 80]', '    fill: "#E0E0E0"',
+    '  - elementId: cross', '    elementType: line', '    points: [[400, 140], [700, 140]]',
+    ''].join('\n'))
+  const gctx = await resolveDeck(gd)
+  const gr = await renderDeck(gctx, { out: 'preview' })
+  const gv = verifyDeck(gr.layout)
+  const gcodes = new Set(gv.errors.map((e) => e.code))
+  ok('1.2.6 门禁真实化：layout.json 快照形态也能触发 duplicate-element（此前生产路径静默失效）',
+    gcodes.has('duplicate-element'), [...gcodes].join(','))
+  ok('1.2.6 门禁真实化：layout.json 快照形态也能触发 line-through-box',
+    gcodes.has('line-through-box'), [...gcodes].join(','))
+  const dgRaw = checkDiagram(gctx.pages[0].page)
+  ok('1.2.6 门禁真实化：DSL 原文形态与快照形态结论一致（checkDiagram 两条路径都报）',
+    dgRaw.errors.some((e) => e.code === 'duplicate-element') && dgRaw.errors.some((e) => e.code === 'line-through-box'),
+    JSON.stringify(dgRaw.errors.map((e) => e.code)))
+  const plainPage = { pageNo: 1, index: 0, groups: [], elements: [
+    { id: 'a', kind: 'shape', bounds: { x: 0, y: 0, w: 10, h: 10 }, shape: 'rect' },
+    { id: 'b', kind: 'shape', bounds: { x: 0, y: 0, w: 10, h: 10 }, shape: 'rect' },
+  ] }
+  const pv = verifyDeck({ pages: [plainPage] })
+  ok('1.2.6 门禁真实化：未用结构声明的页保持旧行为（不新增 duplicate-element 误报）',
+    !pv.errors.some((e) => e.code === 'duplicate-element'), pv.errors.map((e) => e.code).join(','))
+  const layoutJson = JSON.parse(await fsp.readFile(join(gr.outDir, 'layout.json'), 'utf8'))
+  const h1 = await deckInputsHash(gd)
+  ok('1.2.6 防旧快照：layout.json 携带 inputsHash（64 hex），输入未变 ⇒ layoutStale 判新鲜',
+    typeof layoutJson.inputsHash === 'string' && /^[0-9a-f]{64}$/.test(layoutJson.inputsHash) && layoutStale(layoutJson, h1) === null,
+    String(layoutJson.inputsHash ?? '').slice(0, 16))
+  await fsp.appendFile(join(gd, 'pages/01.yaml'), '\n')
+  const h2 = await deckInputsHash(gd)
+  ok('1.2.6 防旧快照：pages 内容变化 ⇒ 指纹变化 + layoutStale 给出过期原因（触发自动重渲）',
+    h1 !== h2 && typeof layoutStale(layoutJson, h2) === 'string', `h1=${h1.slice(0, 8)} h2=${h2.slice(0, 8)}`)
+  ok('1.2.6 防旧快照：无指纹的旧版 layout.json 视为过期（自动重渲一次升级）',
+    typeof layoutStale({ pages: [] }, 'x') === 'string')
+  await fsp.rm(gd, { recursive: true, force: true })
 }
 
 // ══ 32. v1.0.0-修订：P1 表格导出结构回归 + parity + P6 线真实相交（一致性）═══════════

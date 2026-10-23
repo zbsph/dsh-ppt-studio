@@ -56,6 +56,16 @@ export function usesStructure(page) {
   return false
 }
 
+
+/**
+ * 元素类型判定：**DSL 原文**用 `elementType`，**preview/layout.json 快照**用 `kind`（snap() 只写 kind）。
+ * `ppt_verify` 吃的是快照 ⇒ 只认 elementType 的结构/图专属检查在生产路径会**静默失效**
+ * （2026-10-23 1.2.6 修复；同类坑 `line-rules.js:29` 早已修过并留有注释，relations.js 漏网）。
+ */
+function typeOf(el) {
+  return el?.elementType ?? el?.kind
+}
+
 /** 相交（容差 tol：小于 tol 的贴合不算相交）。 */
 export function intersects(a, b, tol = RELATION_DEFAULTS.overlapTol) {
   const vo = Math.min(a.bottom, b.bottom) - Math.max(a.y, b.y)
@@ -365,7 +375,7 @@ export function deriveRelations(page, opts = {}) {
     const A = els.get(aId)
     const B = els.get(bId)
     if (!A || !B) { errors.push({ code: 'declared-missing-endpoint', detail: `expectedOverlaps[${i}] 端点不存在：${!A ? aId : bId}` }); continue }
-    const contentOf = (el) => ['text', 'table', 'chart'].includes(el.elementType) || el.role === 'content'
+    const contentOf = (el) => ['text', 'table', 'chart'].includes(typeOf(el)) || el.role === 'content'
     if (contentOf(A) && contentOf(B)) { errors.push({ code: 'declared-content-collision', detail: `expectedOverlaps[${i}]（${aId} × ${bId}）两端都是内容元素——内容互压**不可声明**` }); continue }
     const hit = intersects(rectOf(A), rectOf(B), t.tol)
     relations.push({ type: 'overlapDecl', from: aId, to: bId, valid: hit, evidence: { intersects: hit }, reason: d?.reason })
@@ -434,15 +444,15 @@ export function checkDiagram(page, opts = {}) {
     for (let j = i + 1; j < els.length; j++) {
       const A = els[i]
       const B = els[j]
-      if (A.el.elementType !== B.el.elementType) continue
+      if (typeOf(A.el) !== typeOf(B.el)) continue
       const near = Math.abs(A.r.x - B.r.x) < t.duplicateTol && Math.abs(A.r.y - B.r.y) < t.duplicateTol
         && Math.abs(A.r.w - B.r.w) < t.duplicateTol && Math.abs(A.r.h - B.r.h) < t.duplicateTol
-      if (near) errors.push({ code: 'duplicate-element', detail: `"${A.id}" 与 "${B.id}" 几乎重合（Δ<${t.duplicateTol}px，同类型 ${A.el.elementType}）` })
+      if (near) errors.push({ code: 'duplicate-element', detail: `"${A.id}" 与 "${B.id}" 几乎重合（Δ<${t.duplicateTol}px，同类型 ${typeOf(A.el)}）` })
     }
   }
 
   // ② text-over-text：两个文本元素相交（内容互压，永不可声明）
-  const texts = els.filter((e) => e.el.elementType === 'text')
+  const texts = els.filter((e) => typeOf(e.el) === 'text')
   for (let i = 0; i < texts.length; i++) {
     for (let j = i + 1; j < texts.length; j++) {
       if (intersects(texts[i].r, texts[j].r, t.overlapTol)) {
@@ -454,9 +464,14 @@ export function checkDiagram(page, opts = {}) {
   // ③ line-through-box：线穿过**非端点盒子**的内部
   //    只看"盒子"：shape/image/table，排除 decoration；排除**容器**（自己声明了 contains 的元素——
   //    线在容器内部是正常的）。注意：**不能**把"容器的子元素"也排除掉，否则箭头/穿盒检查会漏掉真正的节点盒。
-  const boxes = els.filter((e) => ['shape', 'image', 'table'].includes(e.el.elementType)
+  const boxes = els.filter((e) => ['shape', 'image', 'table'].includes(typeOf(e.el))
     && e.el.role !== 'decoration' && !(Array.isArray(e.el.contains) && e.el.contains.length > 0))
-  for (const line of els.filter((e) => e.el.elementType === 'line')) {
+  // 2026-10-23 1.2.6：**箭头触边**判定要用"全部盒子"（含容器/底板）。
+  // 旧实现复用上面的 boxes（排除了容器）⇒ 箭头落在"带 contains 的底板/容器"边上会被误报
+  // `arrow-not-on-edge`（实测 examples/hand-drawn/13 的 l0/l1/l2/l3/back2 五条 attach 线全部误报）。
+  // 箭头触边目标 = **所有非线元素**（含 text/chart 与容器）：attach 可引用任意元素，箭头点到文本框/图表边同样合法
+  const touchTargets = els.filter((e) => typeOf(e.el) !== 'line')
+  for (const line of els.filter((e) => typeOf(e.el) === 'line')) {
     const pts = Array.isArray(line.el.points) ? line.el.points : []
     if (pts.length < 2) continue
     const attachRefs = new Set()
@@ -476,7 +491,20 @@ export function checkDiagram(page, opts = {}) {
   }
 
   // ④ arrow-not-on-edge：带箭头但端点没接触任何元素边界（无 attach 时仅告警）
-  for (const line of els.filter((e) => e.el.elementType === 'line')) {
+  //    "边界"包括**线元素**：时序图/泳道图的消息箭头合法终止于生命线（另一条 line），
+  //    这不是脱靶（实测 hand-drawn/09 的 m0..m4 终止于 life* 竖线；旧实现只认盒子边 ⇒ 5 条误报）。
+  const segDist = (pt, a, b) => {
+    const [x, y] = pt
+    const [x1, y1] = a
+    const [x2, y2] = b
+    const dx = x2 - x1
+    const dy = y2 - y1
+    const len2 = dx * dx + dy * dy
+    const u = len2 > 0 ? Math.max(0, Math.min(1, ((x - x1) * dx + (y - y1) * dy) / len2)) : 0
+    return Math.hypot(x - (x1 + u * dx), y - (y1 + u * dy))
+  }
+  const touchLines = els.filter((e) => typeOf(e.el) === 'line' && Array.isArray(e.el.points) && e.el.points.length >= 2)
+  for (const line of els.filter((e) => typeOf(e.el) === 'line')) {
     if (!line.el.arrow) continue
     const pts = Array.isArray(line.el.points) ? line.el.points : []
     if (pts.length < 2) continue
@@ -484,8 +512,17 @@ export function checkDiagram(page, opts = {}) {
     if (line.el.arrow === 'both') tips.push(pts[0], pts[pts.length - 1])
     else tips.push(pts[pts.length - 1])
     for (const tip of tips) {
-      const touches = boxes.some((b) => onSide('left', tip, b.r, t.tol) || onSide('right', tip, b.r, t.tol)
-        || onSide('top', tip, b.r, t.tol) || onSide('bottom', tip, b.r, t.tol))
+      // 斜边预设（平行四边形/三角形/菱形）：必须按**真实轮廓**判，不能只看包围盒边
+      //（否则 attach 解析到斜边上的锚点会被判“没落在任何边”——实测 hand-drawn/13 的 l3 就是这样）。
+      let touches = touchTargets.some((t) => ['left', 'right', 'top', 'bottom'].some((side) => onAttachSide(t.el, side, tip, t.tol)))
+      if (!touches) {
+        for (const other of touchLines) {
+          if (other.id === line.id) continue
+          const op = other.el.points
+          for (let k = 0; k + 1 < op.length; k++) if (segDist(tip, op[k], op[k + 1]) <= t.tol) { touches = true; break }
+          if (touches) break
+        }
+      }
       if (!touches) {
         const hasAttach = line.el.attach !== undefined
         const detail = `线 "${line.id}" 的箭头端未落在任何元素边界（tol=${t.tol}）`
