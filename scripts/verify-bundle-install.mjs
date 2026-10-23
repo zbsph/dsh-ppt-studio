@@ -161,7 +161,9 @@ try {
   const syncState = join(work, 'sync-state.json')
   const rel = run('node', ['scripts/release-sync.mjs', '--local', '--root', syncRoot, '--state', syncState], { env, cwd: root })
   const relOut = `${rel.stdout ?? ''}\n${rel.stderr ?? ''}`
-  check('--local：`release-sync --local` 退出码 0', rel.status === 0, relOut.trim().split(/\r?\n/).slice(-4).join(' | ').slice(0, 240))
+  // 失败时打完整输出（2026-10-23 CI 诊断需要）：只截尾部会让"tar: Error exit delayed"这类
+  // 摘要行把具体失败条目吃掉，无法定位。
+  check('--local：`release-sync --local` 退出码 0', rel.status === 0, relOut.trim().split(/\r?\n/).slice(-40).join(' | ').slice(0, 4000))
   check('--local：全程**没有**上传动作（本地迭代不发 GitHub）', !/release upload/.test(relOut),
     /release upload/.test(relOut) ? '出现了 release upload！' : '未上传 ✓')
   const st = existsSync(syncState) ? JSON.parse(readFileSync(syncState, 'utf8')) : {}

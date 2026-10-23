@@ -46,6 +46,13 @@ import { tmpdir } from 'node:os'
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const GH = process.env.GH || 'C:\\Program Files\\GitHub CLI\\gh.exe'
+// 解压用的 tar：显式优先 Windows 自带的 System32\tar.exe（bsdtar，对 `C:\…` 路径无歧义），
+// 其次 PATH。2026-10-23 CI 上出现"tar: Error exit delayed from previous errors"且只在 CI 复现，
+// 这里先消除"PATH 上解析到另一个 tar 实现"这一变量，并把完整 stdout/stderr 打进诊断（见 ⑤）。
+const TAR = process.env.PPT_SYNC_TAR
+  || (process.platform === 'win32' && existsSync(join(process.env.SystemRoot || 'C:\\Windows', 'System32', 'tar.exe'))
+    ? join(process.env.SystemRoot || 'C:\\Windows', 'System32', 'tar.exe')
+    : 'tar')
 const args = process.argv.slice(2)
 const opt = (k, d) => {
   const i = args.indexOf(k)
@@ -241,7 +248,17 @@ if (local) {
 console.log(`⑤ 本机部署（${deployRoot}\\package，源=同一 tgz）...`)
 rmSync(join(deployRoot, 'package'), { recursive: true, force: true })
 mkdirSync(deployRoot, { recursive: true })
-run(`tar -xzf "${tgzPath}" -C "${deployRoot}"`)
+// 解压失败诊断（2026-10-23 CI 实测）：`tar: Error exit delayed from previous errors` 只有最终摘要，
+// 具体是哪个条目失败要 stdout/stderr 才能定位 ⇒ 失败时把两路输出完整打出来（截断保护），再抛。
+try {
+  run(`"${TAR}" -xzf "${tgzPath}" -C "${deployRoot}"`)
+} catch (e) {
+  console.error(`✗ 解压发版 tgz 失败（tar 退出非 0；tar=${TAR}）——诊断：`)
+  console.error(`  tar stdout: ${JSON.stringify(String(e?.stdout ?? '').slice(0, 4000))}`)
+  console.error(`  tar stderr: ${JSON.stringify(String(e?.stderr ?? '').slice(0, 4000))}`)
+  console.error(`  tgz: ${tgzPath}｜目标: ${deployRoot}`)
+  throw e
+}
 console.log('    extracted')
 const installOut = run(`node "${join(deployRoot, 'package', 'scripts', 'install.mjs')}"`)
 console.log(installOut.split('\n').slice(0, 6).join('\n'))
