@@ -517,7 +517,7 @@ npm run sync -- --local   # 日常迭代：只在本机跑刚构建的字节，�
    ```
    `release: published` 唤醒 `.github/workflows/publish.yml` → 等 Release 资产出现 → **下载那个 tgz**（不重新打包，保证两条通道同一份字节）→ 用 **OIDC（Trusted Publishing）** 发到 npm → 发后自证 `registry dist.integrity == 本地 tgz 的 sha512`。**零长期 token，也不需要点任何按钮。**
 5. **发布判据只看 registry**：`npm view dsh-ppt-studio version` 与 `dist-tags` 必须等于目标版本（registry 元数据可能延迟几十秒，轮询到可见为止）。本机 `npm publish` 必然 `E401/E404`——本机没有也不该有 npm 凭据，这是**设计如此，不是故障**，它的退出码不能当发布判据。
-6. **发布后两端升级**：web 端 `dsh plugin --profile web add dsh-ppt-studio@<版本>`；桌面端在「插件管理」里升级并**重启应用**（命令行对 `desktop` profile 会被拒）。宿主有 `minimumReleaseAge`（约 12 小时）窗口，窗口期内按名字装可能静默装回旧版（见 §1.4）。
+6. **发布后两端升级**：web 端 `dsh plugin --profile web add dsh-ppt-studio@<版本>`；桌面端在「插件管理」里升级并**重启应用**（命令行对 `desktop` profile 会被拒；脚本兜底 `node scripts/install-desktop.mjs --spec dsh-ppt-studio@<版本>`，已适配桌面端 0.2.1-rc.2 的新 runtime 布局）。宿主有 `minimumReleaseAge`（约 12 小时）窗口，窗口期内按名字装可能静默装回旧版（见 §1.4）。
 
 `gh release create` 在 tag 还不存在时会按默认分支 HEAD 建 tag：本地没推时就把 tag 建在了旧提交上。v1.0.1 第一次发布就是这么错的——资产哈希全绿，而 GitHub 上的 tag 指向 v1.0.0 的代码。所以按上面的顺序**先打 tag 再建 Release**。
 

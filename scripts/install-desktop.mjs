@@ -92,26 +92,43 @@ function defaultAppDirs() {
   return out
 }
 
-/** 定位 resources 目录（含 runtime/pnpm/bin/pnpm.mjs 才算）。 */
+/** 定位 resources 目录（两种桌面端 runtime 布局都认，见 appToolchain）。 */
 function findAppDir() {
   const explicit = opt('--app-dir', null)
   const candidates = explicit ? [resolve(explicit)] : defaultAppDirs()
   for (const c of candidates) for (const r of [join(c, 'resources'), c]) {
     if (existsSync(join(r, 'runtime', 'pnpm', 'bin', 'pnpm.mjs'))) return r
+    // 2026-10-23：桌面端 0.2.1-rc.2 起 pnpm 挪到 runtime/primary-runtime/dependencies/pnpm/
+    // （旧探测恒 false ⇒ 脚本报"没找到桌面端安装目录"，即使应用就在默认位置）。
+    if (existsSync(join(r, 'runtime', 'primary-runtime', 'dependencies', 'pnpm', 'bin', 'pnpm.mjs'))) return r
   }
   return null
 }
 
-/** 内置工具链：Node 垫片、pnpm 入口、Electron 可执行文件（垫片靠它当 Node 用）。 */
+/**
+ * 内置工具链：Node 启动方式、pnpm 入口、Electron 可执行文件。
+ *
+ * 两种布局（2026-10-23 兼容）：
+ * - 旧（≤0.1.x）：`runtime/bin/node(.cmd)` 是垫片，靠 `DSH_DESKTOP_NODE_EXECUTABLE` 指向 app exe
+ *   以 Electron-as-Node 方式运行 `runtime/pnpm/bin/pnpm.mjs`；
+ * - 新（0.2.1-rc.2+）：`runtime/primary-runtime/dependencies/{node,pnpm}`，其中 **node.exe 可直接执行**
+ *   ⇒ 优先"真 node + pnpm.mjs"（不再需要垫片与 Electron 环境变量），没有才回退旧布局。
+ */
 function appToolchain(resourcesDir) {
   const isWin = platform() === 'win32'
-  const nodeShim = join(resourcesDir, 'runtime', 'bin', isWin ? 'node.cmd' : 'node')
-  const pnpmEntry = join(resourcesDir, 'runtime', 'pnpm', 'bin', 'pnpm.mjs')
   const appRoot = dirname(resourcesDir)
   const exeCandidates = isWin
     ? [join(appRoot, 'DeepSeek Harness.exe')]
     : [join(dirname(appRoot), 'MacOS', 'DeepSeek Harness'), join(appRoot, 'DeepSeek Harness')]
-  return { nodeShim, pnpmEntry, exe: exeCandidates.find((p) => existsSync(p)) ?? null }
+  const exe = exeCandidates.find((p) => existsSync(p)) ?? null
+  const legacyShim = join(resourcesDir, 'runtime', 'bin', isWin ? 'node.cmd' : 'node')
+  const legacyPnpm = join(resourcesDir, 'runtime', 'pnpm', 'bin', 'pnpm.mjs')
+  const prDeps = join(resourcesDir, 'runtime', 'primary-runtime', 'dependencies')
+  const newPnpm = join(prDeps, 'pnpm', 'bin', 'pnpm.mjs')
+  const directNode = isWin ? join(prDeps, 'node', 'bin', 'node.exe') : join(prDeps, 'node', 'bin', 'node')
+  if (existsSync(newPnpm) && existsSync(directNode)) return { nodeShim: directNode, pnpmEntry: newPnpm, exe, directNode: true }
+  if (existsSync(newPnpm)) return { nodeShim: legacyShim, pnpmEntry: newPnpm, exe, directNode: false }
+  return { nodeShim: legacyShim, pnpmEntry: legacyPnpm, exe, directNode: false }
 }
 
 // ── profile 读写 ─────────────────────────────────────────────────────────────
@@ -150,7 +167,8 @@ const run = (cmd, cmdArgs, opts = {}) => spawnSync([cmd, ...cmdArgs].map(SHQ).jo
 
 function runAppPnpm(tc, dir, pnpmArgs) {
   const env = { ...process.env }
-  if (tc.exe !== null) env.DSH_DESKTOP_NODE_EXECUTABLE = tc.exe
+  // 新布局用真 node.exe 直接跑 pnpm，不需要垫片环境变量；旧布局才需要。
+  if (!tc.directNode && tc.exe !== null) env.DSH_DESKTOP_NODE_EXECUTABLE = tc.exe
   const r = run(tc.nodeShim, [tc.pnpmEntry, ...pnpmArgs], { cwd: dir, env })
   return { code: r.status, out: `${r.stdout ?? ''}\n${r.stderr ?? ''}` }
 }
@@ -308,7 +326,7 @@ if (typeof patchRel !== 'string' || !existsSync(join(installedDir, patchRel.repl
 }
 const added = reconcileBundles(profileDir, name)
 say(`  ✓ ${name}@${installed.version} 已就位；dsh.bundle.patch=${patchRel}${added ? '；已补进 dsh.profile.bundles' : '（bundles 里已有）'}`)
-if (installed.dsh?.engines?.dsh) say(`  · 声明 dsh.engines.dsh = ${installed.dsh.engines.dsh}（桌面端 0.1.7-rc.2 满足）`)
+if (installed.dsh?.engines?.dsh) say(`  · 声明 dsh.engines.dsh = ${installed.dsh.engines.dsh}（本机桌面端见「插件管理」/应用版本）`)
 rmSync(BACKUP_BOX, { recursive: true, force: true })
 
 say(`
