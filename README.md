@@ -2,7 +2,7 @@
 
 在 DeepSeek Harness 里说需求，它把 PPT 做出来：先定大纲和版式，再逐页制作，每页过一遍自动检查，最后交付一个能用 PowerPoint 打开、继续改的 `.pptx`。
 
-当前版本 **1.2.6**，安装包约 **1.0 MB**（1.0.3 及更早的版本是 35 MB，因为随包带着 4 套没人用过的导入模板，1.0.4 把它们删了）。
+当前版本 **1.2.7**，安装包约 **1.0 MB**（1.0.3 及更早的版本是 35 MB，因为随包带着 4 套没人用过的导入模板，1.0.4 把它们删了）。
 
 **隔离是默认的**：装好之后，这套能力**只出现在「PPT 工作室」预设里**，其他预设与"没装插件"完全一样（§1.6）。
 新建会话时选「PPT 工作室」即可；预设提供的是"完整工作台"——人格 + 22 个工具 + `/ppt` 命令 + 17 本内置技能（4 本手册 + 13 本复杂图）+ 工作流提示段。
@@ -13,7 +13,7 @@
 
 ### 1.1 需要什么
 
-一台能跑 `dsh web` 的机器，或者 **DeepSeek Harness 桌面端**（桌面端见 §1.7，装法不同）。宿主版本要求 **DSH `>= 0.1.7-rc.1`**（`engines.dsh` 声明的下限）；本包 1.2.2 起按 **0.2.1-rc.2**（命令行版与**桌面端**）适配实测，1.2.6 沿同一目标版本。Office、Edge/Chrome、python-pptx 都是**可选增强**：没有它们插件照常工作，只是真渲染、截图、兜底引擎这些能力自动降级，交付说明里会写明。
+一台能跑 `dsh web` 的机器，或者 **DeepSeek Harness 桌面端**（桌面端见 §1.7，装法不同）。宿主版本要求 **DSH `>= 0.2.2-rc.3` + Node.js `>= 24.9`**（`engines.dsh` / `engines.node` 声明的下限；DSH 0.2.2 起上游不再支持 Node 22）。本包 **1.2.7** 按 **0.2.2-rc.3**（命令行版与**桌面端**）适配实测并同步了随装 standard 预设；仍停留在旧宿主（0.2.1-rc.2 及以前）的请继续用 **1.2.6**。Office、Edge/Chrome、python-pptx 都是**可选增强**：没有它们插件照常工作，只是真渲染、截图、兜底引擎这些能力自动降级，交付说明里会写明。
 
 ### 1.2 一条命令（默认走 npm）
 
@@ -36,10 +36,10 @@ dsh plugin --profile web add dsh-ppt-studio
 dsh plugin --profile web add <粘贴那条资产 URL>
 ```
 
-资产名形如 `dsh-ppt-studio-<版本>-<YYYYMMDD-HHmm>-<构建戳前 8 位>.tgz`：版本、构建时间、构建内容的前 8 位哈希。页面会保留历次构建，所以**按上传时间取最新那条**。懒得翻页面就用这行拿名字（把 `<版本>` 换成当前 tag，例如 `v1.2.6`）：
+资产名形如 `dsh-ppt-studio-<版本>-<YYYYMMDD-HHmm>-<构建戳前 8 位>.tgz`：版本、构建时间、构建内容的前 8 位哈希。页面会保留历次构建，所以**按上传时间取最新那条**。懒得翻页面就用这行拿名字（把 `<版本>` 换成当前 tag，例如 `v1.2.7`）：
 
 ```powershell
-gh release view v1.2.6 --json assets --jq '.assets | sort_by(.createdAt) | last | .name'
+gh release view v1.2.7 --json assets --jq '.assets | sort_by(.createdAt) | last | .name'
 ```
 
 也可以直接装仓库地址，产物和 tgz 一样（`lib/` 已入库）：
@@ -356,7 +356,7 @@ v1.0.0 修订前旧引擎的结构 bug（graphicFrame 里嵌了 `<a:xfrm>`，Pow
 
 ## 6. 环境要求与已知边界
 
-**环境**：DSH web `0.2.1-rc.2`（Windows 主机实测；COM/Edge 探测路径按 Windows 写的，macOS/Linux 未验证）。路径与中间层一律 UTF-8，也兼容 WPS 导出的 UTF-16 文件。
+**环境**：DSH web `0.2.2-rc.3`（Windows 主机实测；COM/Edge 探测路径按 Windows 写的，macOS/Linux 未验证）。路径与中间层一律 UTF-8，也兼容 WPS 导出的 UTF-16 文件。
 
 **支持的元素**：text / shape / line / image / table / chart。
 
@@ -483,7 +483,7 @@ ppt_visual                  # Office 真渲染复核（有 Office 时；audit �
 ```bash
 node scripts/build.mjs          # 免 tsc：src → lib 复制（纯 ESM JS，源码即产物）
 npm run test:fast               # 【每条改动默认跑】廉价跨切面守卫 + 按改动文件选影响面（实测：只改文档 ≈8s）
-npm test                        # 【批次边界/发版】全量门禁：build + LF 守卫（文本 LF + 二进制魔数）+ smoke（348 断言）+ 预设自检（--self-test）+ 常驻 prompt 成本门禁（≈5.5min）
+npm test                        # 【批次边界/发版】全量门禁：build + LF 守卫（文本 LF + 二进制魔数）+ smoke（352 断言）+ 预设自检（--self-test）+ 常驻 prompt 成本门禁（≈5.5min）
 npm run test:release            # 【发版】全量 + e2e + 隔离矩阵 + 原生图表 + 损失审计 + 安装自证（COM 相关串行、其余并行，本机实测 ≈5.3min）
 npm run test:map:audit          # 防"孤儿分节"：每个 smoke 分节都必须能被影响面选中
 npm run check:eol               # 发行字节守卫：跟踪文本必须全 LF + 跟踪二进制魔数有效（--fix 只修 LF）
@@ -517,11 +517,11 @@ npm run sync -- --local   # 日常迭代：只在本机跑刚构建的字节，�
    ```
    `release: published` 唤醒 `.github/workflows/publish.yml` → 等 Release 资产出现 → **下载那个 tgz**（不重新打包，保证两条通道同一份字节）→ 用 **OIDC（Trusted Publishing）** 发到 npm → 发后自证 `registry dist.integrity == 本地 tgz 的 sha512`。**零长期 token，也不需要点任何按钮。**
 5. **发布判据只看 registry**：`npm view dsh-ppt-studio version` 与 `dist-tags` 必须等于目标版本（registry 元数据可能延迟几十秒，轮询到可见为止）。本机 `npm publish` 必然 `E401/E404`——本机没有也不该有 npm 凭据，这是**设计如此，不是故障**，它的退出码不能当发布判据。
-6. **发布后两端升级**：web 端 `dsh plugin --profile web add dsh-ppt-studio@<版本>`；桌面端在「插件管理」里升级并**重启应用**（命令行对 `desktop` profile 会被拒；脚本兜底 `node scripts/install-desktop.mjs --spec dsh-ppt-studio@<版本>`，已适配桌面端 0.2.1-rc.2 的新 runtime 布局）。宿主有 `minimumReleaseAge`（约 12 小时）窗口，窗口期内按名字装可能静默装回旧版（见 §1.4）。
+6. **发布后两端升级**：web 端 `dsh plugin --profile web add dsh-ppt-studio@<版本>`；桌面端在「插件管理」里升级并**重启应用**（命令行对 `desktop` profile 会被拒；脚本兜底 `node scripts/install-desktop.mjs --spec dsh-ppt-studio@<版本>`，已适配桌面端 0.2.1-rc.2+ / 0.2.2-rc.3 的 runtime 布局）。宿主有 `minimumReleaseAge`（约 12 小时）窗口，窗口期内按名字装可能静默装回旧版（见 §1.4）。
 
 `gh release create` 在 tag 还不存在时会按默认分支 HEAD 建 tag：本地没推时就把 tag 建在了旧提交上。v1.0.1 第一次发布就是这么错的——资产哈希全绿，而 GitHub 上的 tag 指向 v1.0.0 的代码。所以按上面的顺序**先打 tag 再建 Release**。
 
-**npm 通道的现状（2026-10-23）**：`dsh-ppt-studio` 是公开包（无 scope），`dist-tags.latest = 1.2.6`，此后发布一律走 **Trusted Publishing（OIDC）全自动通道** —— 本机没有也不该有 npm 凭据。
+**npm 通道的现状（2026-11-14）**：`dsh-ppt-studio` 是公开包（无 scope），`dist-tags.latest = 1.2.7`，此后发布一律走 **Trusted Publishing（OIDC）全自动通道** —— 本机没有也不该有 npm 凭据。
 - 历史沿革：首版 `dsh-ppt-studio@1.1.0`（2026-09-26）是 `npm publish <发版 tgz>` 直发完成的，registry 的 tarball 与 GitHub Release 资产**逐字节相同**（sha256 `9303cc5c…`，`dist.integrity` 等于本地重算的 sha512）；从下一版起改走 OIDC 全自动通道（npm 已公告 Bypass-2FA 直发将于 2027-01 移除）。
 - 通道的**一次性人工前提**（npmjs.com 上那条 Trusted Publisher 连接）与失败排查清单写在 `docs/05-迭代流程.md`「发布-同步纪律」；通道**前提本身**由 `npm test` 的 smoke §51 四条断言钉住。
 - 手动补发 / 重发：GitHub → Actions → *Publish to npm* → *Run workflow*（填 tag）。

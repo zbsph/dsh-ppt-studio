@@ -1,6 +1,6 @@
 {
   "name": "dsh-ppt-studio",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "在 DeepSeek Harness 里做 PPT：说需求 → 逐页制作 → 导出可编辑的 .pptx。含布局检查、Office 真渲染复核，以及可扩展的本地模板库",
   "//publish": "2026-10-23：版本 1.2.6 起统一走 npm Trusted Publishing（OIDC）发布——GitHub Release（published 事件）触发 .github/workflows/publish.yml → 下载该 Release 的 tgz（不二次打包，保证 npm 字节 == Release 资产字节）→ OIDC npm publish → 发后自证 registry dist.integrity == 本地 tgz 的 sha512。零长期 token。发布纪律：发版用发版时那个 tgz；不要在 main 前进后跑裸 npm publish（会按当前工作区重新打包 ⇒ 破坏两条通道同一字节）；本机 npm publish 必然 E401/E404 属设计如此，判据只看 registry。手动补发：Actions → Publish to npm → Run workflow。见 README §10 与 docs/14 §8.2。",
   "repository": {
@@ -29,10 +29,10 @@
   "type": "module",
   "main": "./lib/index.js",
   "//lib": "lib/ 是**提交**的构建产物（src 的纯拷贝）：商店（创意工坊）对无 npm 包的条目生成的命令是 `dsh plugin add <repo URL>`，git 安装只拿得到已提交内容，lib 不入库则插件挂不上。守卫：npm run check:lib + smoke 断言。",
-  "//dsh": "profile bundle 声明（2026-09-14）：让 `dsh plugin --profile <p> add <本包>` 装完即挂载——launcher 在 profile 里跑完 pnpm 后核对 dsh.profile.bundles，声明了 dsh.bundle 的依赖自动入栈。dsh.engines.dsh（2026-09-24，DSH 0.1.7 新增字段）：本包从 1.0.7 起只支持 DSH >= 0.1.7-rc.1——不是挑剔版本，而是 0.1.7 把「预设 = 磁盘目录」换成了「预设 = 向 agentPresets 注册表声明」（旧版扫 <dshHome>/.agent-presets/；0.1.7 上游原文：the harness discovers no preset on disk），适配后的交付方式在 0.1.6 及以前没有任何效果。写上范围，让旧宿主上的用户拿到明确信号，而不是「装上却永远看不到那个预设」。",
+  "//dsh": "profile bundle 声明（2026-09-14）：让 `dsh plugin --profile <p> add <本包>` 装完即挂载——launcher 在 profile 里跑完 pnpm 后核对 dsh.profile.bundles，声明了 dsh.bundle 的依赖自动入栈。dsh.engines.dsh（2026-09-24，DSH 0.1.7 新增字段）：本包从 1.2.7 起只支持 DSH >= 0.2.2-rc.3——预设是随装 standard 预设的**全量副本**（check-preset 逐行比对），0.2.2 改了 standard 的若干行（tool-fs.applyPatch / skill-filesystem.customSkillDirs / delegation 子代理行 / 新增 tool-office）⇒ 旧宿主上这些行会挂不起来（预设 broken）。1.2.2–1.2.6 面向 0.2.1-rc.2，仍可在旧宿主使用；1.2.7 起随 DSH 0.2.2-rc.3 同步（Node 24.9+ 亦为宿主硬要求）。写上范围，让旧宿主上的用户拿到明确信号，而不是「装上却永远看不到那个预设」。",
   "dsh": {
     "engines": {
-      "dsh": ">=0.1.7-rc.1"
+      "dsh": ">=0.2.2-rc.3"
     },
     "bundle": {
       "patch": "./cordis.patch.yml"
@@ -115,5 +115,8 @@
     "verify:shape": "node scripts/verify-shape.mjs",
     "render:group": "node scripts/render-group.mjs",
     "eval:skills": "node scripts/eval-skills-score.mjs"
+  },
+  "engines": {
+    "node": ">=24.9.0"
   }
 }

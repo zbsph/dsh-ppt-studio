@@ -1,12 +1,19 @@
 /**
  * 官方 QA 通道（2026-09-26，第二轮 ②）——**第三方自证**，能力探测驱动。
  *
- * 为什么需要：我们自己的 parity/audit 都是"自己写、自己查"。官方 office 技能带来两件外部工具：
+ * 为什么需要：我们自己的 parity/audit 都是"自己写、自己查"。官方 office 生态带来两件外部工具：
  *   ① `check_office.py`：ZIP/XML/rels **完整性** + 文本抽取 + `--contains/--count` 断言（只读、不渲染）；
  *   ② LibreOffice kit CLI：**不依赖 Office/COM** 的渲染与转 PDF（`render`/`convert`/`recalculate`）。
  * 但它们在**桌面端/SDK** 才有（web/headless 出厂组合不挂 `dsh-skill-office`，npm 版也没有 Python 分发）
  * ⇒ 所以这里一律"**先探测、探不到就说清原因**"，绝不假装跑过。三个函数都返回
  * `{ available, ok, reason, … }`，调用方据此决定是打一行自证、还是打一行"本部署不可用"。
+ *
+ * **2026-11-14（DSH 0.2.2-rc.3）上游变更**：`office-skills/` 资源目录与 `check_office.py` 被删除
+ * （v0.2.2-alpha.3 office-skill-resources / office-operation-tools 指南）；office 技能改由
+ * `@deepseek-ai/dsh-skill-office` 包内 `assets/` 提供，结构/视觉校验改由 `office_render` /
+ * `office_convert` / `office_recalculate` 工具承担。⇒ 本文件的结构检查通道在 0.2.2+ 上
+ * **按设计报"不可用"**（`findOfficeAssets` 仍会定位到新 assets 根并说明缺 checker）；
+ * kit 渲染通道保持可用（kit 仍是独立包，CLI 契约未变）。
  */
 import { spawnSync } from 'node:child_process'
 import { existsSync, readdirSync, readFileSync, rmSync } from 'node:fs'
@@ -21,8 +28,8 @@ import { findAnyPython, findBundledNode, findLibreofficeCli, findOfficeAssets } 
  */
 export function runOfficeStructureCheck(file, { contains = [], count = 0, timeoutMs = 60000 } = {}) {
   const assets = findOfficeAssets()
-  if (assets === null) return { available: false, reason: '本部署没有官方 office 资产（桌面端/SDK 才有：resources/runtime/office-skills）' }
-  if (assets.checker === null) return { available: false, reason: `office 资产在（${assets.skillsDir}）但没有 scripts/check_office.py` }
+  if (assets === null) return { available: false, reason: '本部署没有官方 office 资产（桌面端/SDK 才有：dsh-skill-office 包内 assets/ 或旧版 resources/runtime/office-skills）' }
+  if (assets.checker === null) return { available: false, reason: `office 资产在（${assets.skillsDir}）但没有 scripts/check_office.py——DSH 0.2.2 起上游已移除该检查器，改由 office_render/office_convert 工具承担结构/视觉校验` }
   const py = findAnyPython()
   if (py === null) return { available: false, reason: '没有任何可用的 Python（check_office.py 需要它；捆绑 Python 与 PATH 都没探到）' }
   if (!existsSync(file)) return { available: true, ok: false, reason: `待检文件不存在：${file}` }

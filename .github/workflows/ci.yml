@@ -45,7 +45,7 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          node-version: 22
+          node-version: 24
 
       # 无 lockfile（本包只有一个运行时依赖 yaml），所以用 install 而不是 ci。
       - name: Install dependencies
@@ -116,7 +116,7 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          node-version: 22
+          node-version: 24
 
       - name: Install dsh CLI (version comes from dsh-target.json — single source of truth)
         shell: bash
